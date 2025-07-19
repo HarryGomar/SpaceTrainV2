@@ -1,0 +1,109 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --main-bg: #000000;
+    --container-background: #19161a;
+    --foreground-color: #ffeffe;
+    --accent-color: #ffeafe;
+    --selection-color: #bd95dd;
+    --glow-color: rgba(216, 196, 232, 0.15);
+  }
+
+  body {
+    background-color: black;
+    font-family: 'Share Tech Mono', monospace;
+    color: var(--foreground-color);
+  }
+}
+
+@layer components {
+  .scanlines::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.005) 20%,
+      transparent 50%
+    );
+    background-size: 100% 30px;
+    z-index: 1;
+    pointer-events: none;
+    animation: scan 60s linear infinite;
+  }
+  .noise::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiGAAAANlBMVEX8/vz3+Pf0+PHx9/fu8+7r8e3n8Ozn8Ozc693W6drS59nL5dfF49TB4dC73s602suvyMeuyMf/6s2yAAAAAXRSTlMAQObYZgAAAStJREFUeNq1z9mWgyAMAGAr8P8/3PExaDDsQmsd9DR6NNa8SSQKSsrKykpKSspKSkpKSspKSspKq2Sdy5zPZZ6rNE0zTTNNO4gSRZEkSfM4T/M8T/Neu66bGAwGg0G32+2+v+9+v+8MwzAMwzAMwzA+VTGZTCaTyWQymUz/soRote3bMwxDkixLsizLsixLsv5bIUnSJE1TNA3DMAzDMAzDMAzDMAzDMAzD+M+9ZlZWVlZWVlZWVlZWVlZWVlbpC/y5P5C/Ab+/zQAAAABJRU5ErkJggg==);
+    z-index: 2;
+    opacity: 0.09;
+    pointer-events: none;
+  }
+
+  @keyframes scan {
+    from { background-position-y: 0; }
+    to { background-position-y: 600px; }
+  }
+
+  .glow {
+    box-shadow: 0 0 25px 5px var(--glow-color);
+  }
+
+  .button-glow {
+    box-shadow: 0 0 15px 3px var(--glow-color);
+  }
+
+  /* New styles for points and popups */
+  .point {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: var(--foreground-color);
+    border-radius: 50%;
+    border: 2px solid var(--foreground-color);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    transform: translate(-50%, -50%); /* Center the point on its coordinates */
+    z-index: 10;
+  }
+
+  .point:hover {
+    background-color: var(--selection-color);
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+
+  .point.selected {
+    background-color: var(--selection-color);
+    box-shadow: 0 0 15px 5px var(--glow-color);
+  }
+
+  .popup {
+    position: absolute;
+    transform: translate(-50%, -110%); /* Position above the point */
+    background-color: var(--container-background);
+    border: 2px solid var(--selection-color);
+    padding: 1rem;
+    z-index: 20;
+    width: 280px;
+  }
+    
+  .popup-arrow {
+    position: absolute;
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid var(--selection-color);
+  }
+}

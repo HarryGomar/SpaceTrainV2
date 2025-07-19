@@ -1,0 +1,37 @@
+{
+  "name": "spacetrain-v2",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "@types/three": "^0.178.0",
+    "@vitejs/plugin-react": "4.3",
+    "vite": "^6.2.2",
+    "vite-plugin-restart": "^0.4.2"
+  },
+  "dependencies": {
+    "@headlessui/react": "^2.2.4",
+    "@heroicons/react": "^2.2.0",
+    "@react-three/drei": "^10.5.0",
+    "@react-three/fiber": "^9.2.0",
+    "@react-three/postprocessing": "^3.0.4",
+    "@tailwindcss/vite": "^4.1.11",
+    "autoprefixer": "^10.4.21",
+    "d3": "^7.9.0",
+    "gsap": "^3.13.0",
+    "headlessui": "^0.0.0",
+    "heroicons": "^2.2.0",
+    "postcss": "^8.5.6",
+    "r3f-perf": "^7.2.3",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.6.3",
+    "tailwindcss": "^4.1.11",
+    "three": "^0.174.0",
+    "zustand": "^5.0.6"
+  }
+}
