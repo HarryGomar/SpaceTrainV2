@@ -16,7 +16,7 @@ export const preloadModel = () => {
     const { setProgress, setLoading, setStatusText } = useStore.getState();
 
     setLoading(true);
-    setStatusText('Connecting to orbital systems...');
+    setStatusText('Connecting to systems...');
 
     // Simulate some initial steps for better user feedback
     setTimeout(() => {
@@ -35,7 +35,7 @@ export const preloadModel = () => {
                 setStatusText('Calibrating sensor array...');
                 setTimeout(() => {
                     setLoading(false);
-                    setStatusText('System online. Ready for initiation.');
+                    setStatusText('System online.');
                 }, 750);
             }, 500);
         },

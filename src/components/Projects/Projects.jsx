@@ -6,8 +6,21 @@ import projectsData from './projects.json';
 import MainContainer from '../MainContainer';
 import ProjectGraph from './ProjectGraph';
 
-const PAGE_SIZE = 4;
+const DESKTOP_PAGE_SIZE = 4;
+const MOBILE_PAGE_SIZE = 6;
 
+// Hook to check window width for responsive logic
+const useWindowWidth = () => {
+    const [width, setWidth] = useState(window.innerWidth);
+    useEffect(() => {
+        const handleResize = () => setWidth(window.innerWidth);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+    return width;
+};
+
+// Hook to get unique values for filters from the data
 const useUniqueValues = (data, key) => {
     return useMemo(() => {
         const values = new Set(data.flatMap(item => Array.isArray(item[key]) ? item[key] : [item[key]]));
@@ -15,13 +28,13 @@ const useUniqueValues = (data, key) => {
     }, [data, key]);
 };
 
-// --- Filter Components ---
+// --- Reusable Filter Components ---
 
 const SelectFilter = ({ title, options, active, onChange }) => (
     <div>
         <h3 className="text-sm font-semibold tracking-widest text-[var(--accent-color)] mb-2">{title}</h3>
         <div className="relative">
-            <select value={active} onChange={(e) => onChange(e.target.value)} className="w-full appearance-none bg-[var(--container-background)] border-2 border-[var(--foreground-color)] text-[var(--foreground-color)] text-sm py-1 px-2 pr-8 focus:outline-none focus:border-[var(--selection-color)] transition-colors duration-200">
+            <select value={active} onChange={(e) => onChange(e.target.value)} className="w-full appearance-none bg-[var(--container-background)] border-2 border-[var(--foreground-color)] text-[var(--foreground-color)] text-sm py-2 px-2 pr-8 focus:outline-none focus:border-[var(--selection-color)] transition-colors duration-200">
                 {options.map(opt => <option key={opt} value={opt}>{opt}</option>)}
             </select>
             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-[var(--foreground-color)]">
@@ -67,7 +80,12 @@ const Projects = () => {
     const [currentPage, setCurrentPage] = useState(0);
     const [filters, setFilters] = useState({ category: 'All', status: 'All', scope: 'All', motivation: 'All' });
     const [isGraphView, setIsGraphView] = useState(false);
+    const [showFilters, setShowFilters] = useState(false);
     const navigate = useNavigate();
+    const windowWidth = useWindowWidth();
+    const isMobile = windowWidth < 1024;
+
+    const pageSize = isMobile ? MOBILE_PAGE_SIZE : DESKTOP_PAGE_SIZE;
 
     useEffect(() => { setProjects(projectsData); }, []);
 
@@ -76,92 +94,137 @@ const Projects = () => {
     const motivations = useUniqueValues(projects, 'motivation');
 
     const filteredProjects = useMemo(() => {
-        return projects.filter(p => 
+        return projects.filter(p =>
             (filters.category === 'All' || p.category === filters.category) &&
             (filters.status === 'All' || p.status === filters.status) &&
             (filters.scope === 'All' || p.scope === filters.scope) &&
             (filters.motivation === 'All' || p.motivation === filters.motivation)
         );
     }, [projects, filters]);
-    
-    useEffect(() => { setCurrentPage(0); }, [filters]);
 
-    const totalPages = Math.ceil(filteredProjects.length / PAGE_SIZE);
-    const paginatedProjects = filteredProjects.slice(currentPage * PAGE_SIZE, (currentPage + 1) * PAGE_SIZE);
+    useEffect(() => { setCurrentPage(0); }, [filters, pageSize]);
+
+    const totalPages = Math.ceil(filteredProjects.length / pageSize);
+    const paginatedProjects = useMemo(() => {
+        return filteredProjects.slice(currentPage * pageSize, (currentPage + 1) * pageSize);
+    }, [filteredProjects, currentPage, pageSize]);
+
+    const gridProjects = useMemo(() => {
+        if (isMobile) return paginatedProjects;
+        const items = Array(DESKTOP_PAGE_SIZE).fill(null);
+        paginatedProjects.forEach((project, index) => {
+            items[index] = project;
+        });
+        return items;
+    }, [paginatedProjects, isMobile]);
 
     const handleFilterChange = (type, value) => setFilters(prev => ({ ...prev, [type]: value }));
 
     const handleNavigation = (direction) => {
-        setCurrentPage(prev => {
-            if (totalPages <= 1) return prev;
-            const next = prev + direction;
-            if (next < 0) return totalPages - 1;
-            if (next >= totalPages) return 0;
-            return next;
-        });
+        setCurrentPage(prev => (prev + direction + totalPages) % totalPages);
     };
 
+    const responsiveGap = '1.1cqi';
+
+    const FilterPanel = () => (
+        <div className="border-2 border-[var(--foreground-color)] bg-[var(--container-background)] p-4 flex flex-col gap-4">
+            <CategoryListFilter options={categories} active={filters.category} onChange={(v) => handleFilterChange('category', v)} />
+            <SelectFilter title="SCOPE" options={scopes} active={filters.scope} onChange={(v) => handleFilterChange('scope', v)} />
+            <SelectFilter title="MOTIVATION" options={motivations} active={filters.motivation} onChange={(v) => handleFilterChange('motivation', v)} />
+            <StatusFilter active={filters.status} onChange={(v) => handleFilterChange('status', v)} />
+        </div>
+    );
+
+    const PaginationControls = () => (
+        <div className="flex flex-col gap-3">
+            <div className="flex gap-3">
+                <button onClick={() => handleNavigation(-1)} disabled={totalPages <= 1} className="w-1/2 h-14 border-2 border-[var(--foreground-color)] bg-[var(--container-background)] text-3xl hover:border-[var(--selection-color)] hover:text-[var(--selection-color)] transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed">&lt;</button>
+                <button onClick={() => handleNavigation(1)} disabled={totalPages <= 1} className="w-1/2 h-14 border-2 border-[var(--foreground-color)] bg-[var(--container-background)] text-3xl hover:border-[var(--selection-color)] hover:text-[var(--selection-color)] transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed">&gt;</button>
+            </div>
+            <div className="flex items-center justify-center w-full h-5 border-2 border-[var(--foreground-color)] bg-[var(--container-background)]">
+                {totalPages > 0 &&
+                    <div className="flex w-full h-full items-center gap-2">
+                        {Array.from({ length: totalPages }).map((_, index) => (
+                            <div key={index} className={`h-full w-full transition-colors duration-200 ${index === currentPage ? 'bg-[var(--selection-color)]' : 'bg-[var(--foreground-color)] opacity-25'}`}></div>
+                        ))}
+                    </div>
+                }
+            </div>
+        </div>
+    );
+
     return (
-        <MainContainer>
-            <div className="flex flex-col lg:flex-row gap-4 flex-grow min-h-0">
-                <div className="w-full lg:w-3/4 flex flex-col">
-                    {isGraphView ? (
-                        <div className="w-full h-full"><ProjectGraph projects={filteredProjects} /></div>
-                    ) : (
-                        <div className="h-full flex-grow grid grid-cols-1 md:grid-cols-2 grid-rows-2 gap-4">
-                            {paginatedProjects.map((project) => (
-                                <div key={project.id} onClick={() => navigate(`/projects/${project.id}`)} className="cursor-pointer group flex flex-col min-h-0">
-                                    <div className="flex-grow overflow-hidden min-h-0">
-                                        <img src={project.image} alt={project.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+        <MainContainer isMobile={isMobile}>
+            <div
+                className="w-full h-full"
+                style={!isMobile ? { padding: responsiveGap } : { padding: '3rem 1.5rem 1rem' }}
+            >
+                {/* --- Main Layout Container --- */}
+                <div className={`w-full h-full ${isMobile ? 'flex flex-col' : 'flex'}`} style={{ gap: responsiveGap }}>
+
+                    {/* --- Left Column (Main Content) --- */}
+                    <div className={`w-full ${isMobile ? 'order-2' : 'lg:w-4/5'} flex flex-col min-h-0`}>
+                        {isGraphView ? (
+                            <div className="w-full h-full border-2 border-[var(--foreground-color)] bg-[var(--container-background)]"><ProjectGraph projects={filteredProjects} isMobile={isMobile} /></div>
+                        ) : (
+                            <div className="flex-grow grid grid-cols-2 grid-rows-2 min-h-0" style={{ gap: responsiveGap }}>
+                                {gridProjects.map((project, index) => (
+                                    project ? (
+                                        <div key={project.id} onClick={() => navigate(`/projects/${project.id}`)} className="cursor-pointer group flex flex-col min-h-0">
+                                            <div className="flex-grow overflow-hidden min-h-0">
+                                                <img src={project.image} alt={project.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+                                            </div>
+                                            <div className="p-2 border-2 border-[var(--foreground-color)] bg-[var(--container-background)] group-hover:border-[var(--selection-color)] group-hover:text-[var(--selection-color)] transition-colors duration-300">
+                                                <h2 className="font-mono text-sm whitespace-nowrap overflow-hidden text-ellipsis">{project.title}</h2>
+                                                <p className="text-xs text-[var(--accent-color)]">{project.years}</p>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div key={`placeholder-${index}`} className="hidden lg:block w-full h-full border-2 border-[var(--foreground-color)]/50 bg-transparent"></div>
+                                    )
+                                ))}
+                                {filteredProjects.length === 0 && (
+                                    <div className="col-span-2 row-span-2 flex items-center justify-center h-full border-2 border-[var(--foreground-color)]/50">
+                                        <p className="text-lg text-[var(--accent-color)]">No projects match the current filters.</p>
                                     </div>
-                                    <div className="p-2 border-2 border-[var(--foreground-color)] bg-[var(--container-background)] group-hover:border-[var(--selection-color)] group-hover:text-[var(--selection-color)] transition-colors duration-300">
-                                        <h2 className="font-mono text-sm whitespace-nowrap overflow-hidden text-ellipsis">{project.title}</h2>
-                                        <p className="text-xs text-[var(--accent-color)]">{project.years}</p>
-                                    </div>
-                                </div>
-                            ))}
-                            {filteredProjects.length === 0 && (
-                                <div className="md:col-span-2 md:row-span-2 flex items-center justify-center h-full">
-                                    <p className="text-lg text-[var(--accent-color)]">No projects match the current filters.</p>
+                                )}
+                            </div>
+                        )}
+                    </div>
+
+                    {/* --- Right Column (Sidebar) --- */}
+                    <div className={`w-full ${isMobile ? 'order-1' : 'lg:w-1/5'} flex flex-col`} style={{ gap: responsiveGap }}>
+                        <div className="flex justify-between items-center lg:hidden mb-4">
+                            <h2 className="text-3xl font-bold">PROJECTS</h2>
+                            <button onClick={() => setShowFilters(!showFilters)} className="py-2 px-4 border-2 border-[var(--foreground-color)] bg-[var(--container-background)] text-sm">
+                                {showFilters ? 'Hide Filters' : 'Show Filters'}
+                            </button>
+                        </div>
+
+                        <div className={`lg:flex flex-col h-full ${isMobile && !showFilters ? 'hidden' : 'flex'}`} style={{ gap: responsiveGap }}>
+                            <div className="hidden lg:block">
+                                <h2 className="text-4xl font-bold">PROJECTS</h2>
+                            </div>
+                            <button onClick={() => setIsGraphView(!isGraphView)} className="w-full py-2 text-sm font-mono tracking-widest uppercase border-y-2 border-[var(--foreground-color)] bg-transparent text-[var(--foreground-color)] transition-all duration-300 hover:border-[var(--selection-color)] hover:text-[var(--selection-color)] hover:bg-[var(--selection-color)]/20 hover:shadow-[0_0_15px_3px_var(--glow-color)]">
+                                {isGraphView ? 'View Grid' : 'View Graph'}
+                            </button>
+                            <FilterPanel />
+                            
+                            {/* Spacer to push pagination down */}
+                            <div className="flex-grow" />
+
+                            {!isGraphView && (
+                                <div className="hidden lg:block">
+                                    <PaginationControls />
                                 </div>
                             )}
                         </div>
-                    )}
-                </div>
-
-                <div className="w-full lg:w-1/4 flex flex-col">
-                    <div className="flex flex-col gap-3">
-                        <div><h2 className="text-3xl sm:text-4xl md:text-5xl font-bold">PROJECTS</h2></div>
-                        <button onClick={() => setIsGraphView(!isGraphView)} className="w-full py-2 text-sm font-mono tracking-widest uppercase border-y-2 border-[var(--foreground-color)] bg-transparent text-[var(--foreground-color)] transition-all duration-300 hover:border-[var(--selection-color)] hover:text-[var(--selection-color)] hover:bg-[var(--selection-color)]/20 hover:shadow-[0_0_15px_3px_var(--glow-color)]">
-                            {isGraphView ? 'View Grid' : 'View Graph'}
-                        </button>
-                        <div className="border-2 border-[var(--foreground-color)] bg-[var(--container-background)] p-4 flex flex-col gap-4">
-                            <CategoryListFilter options={categories} active={filters.category} onChange={(v) => handleFilterChange('category', v)} />
-                            <SelectFilter title="SCOPE" options={scopes} active={filters.scope} onChange={(v) => handleFilterChange('scope', v)} />
-                            <SelectFilter title="MOTIVATION" options={motivations} active={filters.motivation} onChange={(v) => handleFilterChange('motivation', v)} />
-                            <StatusFilter active={filters.status} onChange={(v) => handleFilterChange('status', v)} />
-                        </div>
                     </div>
-                    
-                    <div className="flex-grow" />
 
-                    {!isGraphView && (
-                        <div className="flex flex-col gap-3 pt-3">
-                            <div className="flex gap-3">
-                                <button onClick={() => handleNavigation(-1)} disabled={totalPages < 2} className="w-1/2 h-14 border-2 border-[var(--foreground-color)] bg-[var(--container-background)] text-3xl hover:border-[var(--selection-color)] hover:text-[var(--selection-color)] transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed">&lt;</button>
-                                <button onClick={() => handleNavigation(1)} disabled={totalPages < 2} className="w-1/2 h-14 border-2 border-[var(--foreground-color)] bg-[var(--container-background)] text-3xl hover:border-[var(--selection-color)] hover:text-[var(--selection-color)] transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed">&gt;</button>
-                            </div>
-                            <div className="flex items-center justify-center w-full h-5 border-2 border-[var(--foreground-color)] bg-[var(--container-background)]">
-                                {totalPages > 0 &&
-                                    <div className="flex w-full h-full items-center gap-2">
-                                        {Array.from({ length: totalPages }).map((_, index) => (
-                                            <div key={index} className={`h-full w-full transition-colors duration-200 ${index === currentPage ? 'bg-[var(--selection-color)]' : 'bg-[var(--foreground-color)] opacity-25'}`}></div>
-                                        ))}
-                                    </div>
-                                }
-                            </div>
-                        </div>
-                    )}
+                    {/* --- Mobile-only pagination --- */}
+                    <div className="lg:hidden order-3 mt-4">
+                        {!isGraphView && filteredProjects.length > 0 && <PaginationControls />}
+                    </div>
                 </div>
             </div>
         </MainContainer>

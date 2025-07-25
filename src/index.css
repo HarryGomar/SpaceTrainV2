@@ -35,18 +35,6 @@
     pointer-events: none;
     animation: scan 60s linear infinite;
   }
-  .noise::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiGAAAANlBMVEX8/vz3+Pf0+PHx9/fu8+7r8e3n8Ozn8Ozc693W6drS59nL5dfF49TB4dC73s602suvyMeuyMf/6s2yAAAAAXRSTlMAQObYZgAAAStJREFUeNq1z9mWgyAMAGAr8P8/3PExaDDsQmsd9DR6NNa8SSQKSsrKykpKSspKSkpKSspKSspKq2Sdy5zPZZ6rNE0zTTNNO4gSRZEkSfM4T/M8T/Neu66bGAwGg0G32+2+v+9+v+8MwzAMwzAMwzA+VTGZTCaTyWQymUz/soRote3bMwxDkixLsizLsixLsv5bIUnSJE1TNA3DMAzDMAzDMAzDMAzDMAzD+M+9ZlZWVlZWVlZWVlZWVlZWVlbpC/y5P5C/Ab+/zQAAAABJRU5ErkJggg==);
-    z-index: 2;
-    opacity: 0.09;
-    pointer-events: none;
-  }
 
   @keyframes scan {
     from { background-position-y: 0; }
