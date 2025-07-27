@@ -113,7 +113,7 @@ const useTrainStore = create((set, get) => ({
             duration: 2,
             x: targetTer.x,
             y: targetTer.y + 0.05,
-            z: targetTer.z - 0.05,
+            z: targetTer.z - 0.1,
             ease: 'power3.inOut',
         });
 

@@ -126,11 +126,11 @@ export default function Train(props) {
               </Select>
 
               {projectsVisible && (
-                  <group position={[5.60, 4.6, 15.95]} rotation={[0, -Math.PI / 2, 0]} scale={[0.2, 0.2, 0.2]}>
+                  <group position={[5.60, 4.7, 15.95]} rotation={[0, -Math.PI / 2, 0]} scale={[0.2, 0.2, 0.2]}>
                       <Html
                           transform
                           occlude="blending"
-                          className="w-[1000px] h-[800px] bg-transparent select-none" // 4x the original resolution
+                          className="w-[1200px] h-[800px] bg-transparent select-none" // 4x the original resolution
                           pointerEvents="auto"
                       >
                           <MemoryRouter initialEntries={['/projects']}>
@@ -143,15 +143,6 @@ export default function Train(props) {
                           </MemoryRouter>
                       </Html>
                   </group>
-              )}
-
-              {inProjects && (
-                <Select name="ExitProjects" enabled={hoveredObject === "ExitProjects"}>
-                  <mesh name="ExitProjects" onClick={handleExitProjects} position={[5.3, 3.5, 13.5]} scale={0.05} onPointerEnter={(e) => { e.stopPropagation(); setHoveredObject("ExitProjects"); }} onPointerLeave={(e) => { e.stopPropagation(); setHoveredObject(null); }} >
-                    <cylinderGeometry args={[1, 1, 1, 10]} />
-                    <meshStandardMaterial color="red" emissive="red" emissiveIntensity={2} />
-                  </mesh>
-                </Select>
               )}
 
               {/* -- TERMINAL SCREEN -- */}
@@ -182,8 +173,6 @@ export default function Train(props) {
                   </mesh>
                 </Select>
               )}
-
-
 
             </group>
           )}
@@ -256,8 +245,6 @@ export default function Train(props) {
           <mesh castShadow receiveShadow geometry={nodes.Train_17.geometry} material={materials.MetalOutside} />
           <mesh castShadow receiveShadow geometry={nodes.Train_18.geometry} material={materials.GlowRed} />
           <mesh castShadow receiveShadow geometry={nodes.Train_19.geometry} material={materials.Cables} />
-
-          
       </group>
 
       {/* Train Head interior is only visible when inside the train */}
