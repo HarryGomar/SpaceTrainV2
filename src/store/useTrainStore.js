@@ -58,10 +58,12 @@ const useTrainStore = create((set, get) => ({
         
         controls.minDistance = 0;
 
+        set({ isTransitioning: true }); // Start transition, but keep exterior visible
+
         const tl = gsap.timeline({
             onComplete: () => {
                 get().enableFreeRoamControls(controls);
-                set({ isTransitioning: false }); // End transition
+                set({ inTrain: true, isTransitioning: false }); // Now inside, hide exterior and end transition
             }
         });
 
@@ -93,8 +95,6 @@ const useTrainStore = create((set, get) => ({
             ease: 'power2.inOut',
         }, 1.2);
 
-        set({ inTrain: true, isTransitioning: true }); // Show interior immediately and start transition
-
     },
 
     /**
@@ -112,7 +112,7 @@ const useTrainStore = create((set, get) => ({
         gsap.to(camera.position, {
             duration: 2,
             x: targetTer.x,
-            y: targetTer.y + 0.05,
+            y: targetTer.y + 0.03,
             z: targetTer.z - 0.1,
             ease: 'power3.inOut',
         });
@@ -120,7 +120,7 @@ const useTrainStore = create((set, get) => ({
         gsap.to(controls.target, {
             duration: 2,
             x: targetTer.x,
-            y: targetTer.y + 0.05,
+            y: targetTer.y + 0.03,
             z: targetTer.z,
             ease: 'power3.inOut',
             onComplete: () => {

@@ -49,6 +49,27 @@
     box-shadow: 0 0 15px 3px var(--glow-color);
   }
 
+  .tab-button {
+    cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease, box-shadow 0.3s ease, transform 0.25s ease;
+  }
+
+  .tab-button:focus-visible {
+    outline: 2px solid var(--selection-color);
+    outline-offset: 3px;
+  }
+
+  .tab-button.tab-button--active {
+    box-shadow: 0 0 18px 5px rgba(189, 149, 221, 0.55);
+  }
+
+  .tab-button:not(.tab-button--active):hover:not(:disabled) {
+    border-color: var(--selection-color);
+    color: var(--selection-color);
+    transform: translateY(-0.15cqi);
+    box-shadow: 0 0 12px 3px rgba(189, 149, 221, 0.45);
+  }
+
   /* New styles for points and popups */
   .point {
     position: absolute;

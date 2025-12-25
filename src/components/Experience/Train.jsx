@@ -66,7 +66,7 @@ export default function Train(props) {
 
         if (forward && pos.z > -60) {
             let targetY = pos.y;
-            if (pos.z <= -30 && pos.z >= -45) {
+            if (pos.z <= -35 && pos.z >= -45) {
                 targetY -= 0.17;
             }
             gsap.to(pos, { duration: 0.2, z: pos.z - 0.4, y: targetY });
@@ -74,7 +74,7 @@ export default function Train(props) {
 
         if (backward && pos.z < 32) {
             let targetY = pos.y;
-            if (pos.z <= -30 && pos.z >= -45) {
+            if (pos.z <= -35 && pos.z >= -45) {
                 targetY += 0.17;
             }
             gsap.to(pos, { duration: 0.2, z: pos.z + 0.4, y: targetY });

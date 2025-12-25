@@ -2,9 +2,9 @@
 
 .point {
     position: absolute;
-    /* Use cqi for all sizes to make the points scale with the container */
-    width: 1.95cqi;
-    height: 1.95cqi;
+    /* Slightly larger node for clarity */
+    width: 2.6cqi;
+    height: 2.6cqi;
     background-color: transparent;
     border: none;
     cursor: pointer;
@@ -17,19 +17,21 @@
 .point::before {
     content: '';
     display: block;
-    width: 0.55cqi;
-    height: 0.55cqi;
+    width: 0.9cqi;
+    height: 0.9cqi;
     background-color: white;
     border-radius: 50%;
-    transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
-    box-shadow: 0 0 0.35cqi white;
+    transition: background-color 0.25s ease, transform 0.25s ease, box-shadow 0.35s ease;
+    box-shadow: 0 0 0.6cqi rgba(255, 255, 255, 0.9);
+    animation: point-breathe 2.2s ease-in-out infinite;
 }
 
 .point:hover::before,
 .point.selected::before {
     background-color: var(--selection-color);
-    box-shadow: 0 0 0.55cqi var(--selection-color), 0 0 1cqi var(--selection-color);
-    transform: scale(1.2);
+    box-shadow: 0 0 0.9cqi rgba(189, 149, 221, 0.95), 0 0 1.6cqi rgba(189, 149, 221, 0.6);
+    transform: scale(1.25);
+    animation-duration: 1.7s;
 }
 
 .corners {
@@ -51,8 +53,8 @@
 
 .corner {
     position: absolute;
-    width: 0.55cqi;
-    height: 0.55cqi;
+    width: 0.75cqi;
+    height: 0.75cqi;
     border-style: solid;
     border-color: var(--accent-color);
     border-width: 0.14cqi;
@@ -84,4 +86,15 @@
     right: 0;
     border-left: none;
     border-top: none;
+}
+
+@keyframes point-breathe {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0.6cqi rgba(255, 255, 255, 0.9);
+    }
+    50% {
+        transform: scale(1.12);
+        box-shadow: 0 0 1.35cqi rgba(189, 149, 221, 0.65);
+    }
 }

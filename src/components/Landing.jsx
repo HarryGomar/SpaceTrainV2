@@ -14,10 +14,13 @@ const pointsOfInterest = [
     { id: 1, x: '20%', y: '52%', tab: 'Move', title: 'Move', text: 'Move using [W] and [S] when inside the train', image: '/Landing/Walk.png' },
     { id: 2, x: '55%', y: '48%', tab: 'Interact', title: 'Interact', text: 'Interactable objects are highlighted when hovered', image: '/Landing/Interact.png' },
     { id: 3, x: '70%', y: '50%', tab: 'Explore', title: 'Explore', text: 'Discover details about me', image: '/Landing/Find.png' },
-    { id: 4, x: '85%', y: '45%', tab: 'Find', title: 'Find', text: 'Enter the train to explore its secrets', image: '/Landing/Explore.png' },
+    { id: 4, x: '85%', y: '45%', tab: 'Find', title: 'Find', text: 'Uncover the secrets hidden in the train', image: '/Landing/Explore.png' },
 ];
 
 const TABS = ['Move', 'Interact', 'Explore', 'Find'];
+const tabButtonBaseClass = 'tab-button w-full h-full border-2 transition-all duration-300 flex items-end justify-start bg-[var(--container-background)] rounded shadow-lg shadow-white/5';
+const tabActiveClass = 'border-[var(--selection-color)] text-[var(--selection-color)] button-glow tab-button--active';
+const tabInactiveClass = 'text-white border-white hover:border-[var(--selection-color)] hover:text-[var(--selection-color)]';
 
 // Hook to get window width for mobile detection
 const useWindowWidth = () => {
@@ -173,9 +176,26 @@ const Landing = () => {
                         {/* Cell 2,1: Tabs Area (Desktop) / Order 3 (Mobile) */}
                         <div className={`${isMobile ? 'order-3' : 'w-[75%] h-full'}`}>
                             <div className={`w-full h-full grid ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`} style={{ gap: responsiveGap }}>
-                                {TABS.map(tab => (
-                                    <button key={tab} onClick={() => handleTabClick(tab)} className={`w-full h-full border-2 transition-all duration-300 flex items-end justify-start bg-[var(--container-background)] rounded shadow-lg shadow-white/5 ${activeTab === tab ? 'border-[var(--selection-color)] text-[var(--selection-color)] button-glow' : 'text-white border-white hover:border-[var(--selection-color)] hover:text-[var(--selection-color)]'}`} style={{fontSize: isMobile ? '1rem' : '2.2cqi', padding: isMobile ? '1rem' : '0.8cqi', minHeight: isMobile ? '80px' : 'auto', borderTopWidth: activeTab === tab ? (isMobile ? '4px' : '0.55cqi') : '2px',}}><span className="leading-none">{tab}</span></button>
-                                ))}
+                                {TABS.map(tab => {
+                                    const isActive = activeTab === tab;
+                                    return (
+                                        <button
+                                            key={tab}
+                                            type="button"
+                                            onClick={() => handleTabClick(tab)}
+                                            aria-pressed={isActive}
+                                            className={`${tabButtonBaseClass} ${isActive ? tabActiveClass : tabInactiveClass}`}
+                                            style={{
+                                                fontSize: isMobile ? '1rem' : '2.2cqi',
+                                                padding: isMobile ? '1rem' : '0.8cqi',
+                                                minHeight: isMobile ? '80px' : 'auto',
+                                                borderTopWidth: isActive ? (isMobile ? '4px' : '0.55cqi') : '2px',
+                                            }}
+                                        >
+                                            <span className="leading-none">{tab}</span>
+                                        </button>
+                                    );
+                                })}
                             </div>
                         </div>
                         {/* Cell 2,2: Initiate Button Area (Desktop) / Order 2 (Mobile) */}

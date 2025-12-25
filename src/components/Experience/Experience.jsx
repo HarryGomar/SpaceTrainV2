@@ -14,7 +14,14 @@ const Experience = () => {
             ]}
         >
             <div className="w-screen h-screen">
-                <Canvas shadows>
+                <Canvas
+                    shadows
+                    camera={{
+                        position: [-3, 2, 5], // Start slightly left and above for a more cinematic angle
+                        near: 0.01,
+                        far: 2000,
+                    }}
+                >
                     <Suspense fallback={null}>
                         <OrbitControls
                             makeDefault
@@ -22,7 +29,7 @@ const Experience = () => {
                             minAzimuthAngle={-2.3}
                             maxAzimuthAngle={0}
                             maxDistance={9}
-                            minDistance={0}
+                            minDistance={3} // cap zoom-in so the camera cannot clip the train
                             maxPolarAngle={1.7}
                         />
                         <SpaceBox />
