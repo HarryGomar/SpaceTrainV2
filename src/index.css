@@ -116,3 +116,28 @@
     border-top: 10px solid var(--selection-color);
   }
 }
+@keyframes loader-progress-slide {
+    0% {
+        transform: translateX(-120%);
+    }
+    100% {
+        transform: translateX(320%);
+    }
+}
+
+.loader-progress-bar {
+    transition: width 120ms linear;
+}
+
+.loader-progress-bar--indeterminate {
+    width: 30%;
+    animation: loader-progress-slide 1.25s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .loader-progress-bar--indeterminate {
+        width: 100%;
+        animation: none;
+        opacity: 0.45;
+    }
+}

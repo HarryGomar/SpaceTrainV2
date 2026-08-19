@@ -16,19 +16,23 @@ export const preloadModel = () => {
     const { setProgress, setLoading, setStatusText } = useStore.getState();
 
     setLoading(true);
+    setProgress(null);
     setStatusText('Connecting to systems...');
 
-    // Simulate some initial steps for better user feedback
-    setTimeout(() => {
-        setStatusText('Authenticating credentials...');
-    }, 1000);
+    const loadingStatusTimer = setTimeout(() => {
+        const currentState = useStore.getState();
+        if (currentState.loading && !Number.isFinite(currentState.progress)) {
+            setStatusText('Loading train model...');
+        }
+    }, 750);
 
 
     gltfLoader.load(
         '/Train/SpaceTrainV1.glb',
         // onLoad
         (gltf) => {
-            setStatusText('Decompressing model data...');
+            clearTimeout(loadingStatusTimer);
+            setStatusText('Preparing train model...');
             setProgress(100);
 
             setTimeout(() => {
@@ -41,18 +45,19 @@ export const preloadModel = () => {
         },
         // onProgress
         (progressEvent) => {
-            // Start showing progress after the initial simulated steps
-            if (progressEvent.lengthComputable) {
-                const percentComplete = (progressEvent.loaded / progressEvent.total) * 100;
+            if (progressEvent.lengthComputable && progressEvent.total > 0) {
+                const percentComplete = Math.min(99, (progressEvent.loaded / progressEvent.total) * 100);
                 setProgress(percentComplete);
-
-                const loadedKB = Math.round(progressEvent.loaded / 1024);
-                const totalKB = Math.round(progressEvent.total / 1024);
-                setStatusText(`Downloading schematics...`);
+                setStatusText('Downloading train model...');
+            } else if (progressEvent.loaded > 0) {
+                const loadedMB = (progressEvent.loaded / (1024 * 1024)).toFixed(1);
+                setProgress(null);
+                setStatusText(`Downloading train model... ${loadedMB} MB`);
             }
         },
         // onError
         (error) => {
+            clearTimeout(loadingStatusTimer);
             console.error('An error occurred while loading the model:', error);
             setStatusText('Error: Connection timed out.');
         }

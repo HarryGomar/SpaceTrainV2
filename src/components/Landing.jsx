@@ -57,6 +57,10 @@ const Landing = () => {
     const isMobile = windowWidth < 500;
     // Restore original logic for hiding sphere on short screens
     const isSmallScreen = windowHeight < 400;
+    const hasMeasuredProgress = Number.isFinite(progress) && progress > 0;
+    const progressLabel = loading && hasMeasuredProgress && progress < 100
+        ? ` (${Math.round(progress)}%)`
+        : '';
 
     const handleEnterExperience = () => {
         setEnterExperience(true);
@@ -106,8 +110,11 @@ const Landing = () => {
     return (
         <MainContainer isMobile={isMobile}>
             {/* Progress bar */}
-            <div className="absolute top-0 left-0 w-full bg-transparent z-20" style={{ height: '0.55cqi' }}>
-                <div className="h-full bg-[var(--accent-color)] transition-all duration-100 ease-linear" style={{ width: `${progress}%` }}></div>
+            <div className="absolute top-0 left-0 w-full overflow-hidden bg-white/10 z-20" style={{ height: isMobile ? '4px' : 'max(3px, 0.55cqi)' }}>
+                <div
+                    className={`loader-progress-bar h-full bg-[var(--accent-color)] ${loading && !hasMeasuredProgress ? 'loader-progress-bar--indeterminate' : ''}`}
+                    style={hasMeasuredProgress ? { width: `${progress}%` } : undefined}
+                ></div>
             </div>
 
             {/* Main layout container */}
@@ -162,7 +169,7 @@ const Landing = () => {
                                     <div className="flex flex-col justify-center items-center min-h-0" style={{ flex: '2 1 0%', gap: '0.55cqi', paddingTop: '0.2cqi' }}>
                                         <p className="font-bold flex items-center justify-center text-center flex-shrink-0 text-[var(--accent-color)]" style={{ fontSize: '1.3cqi' }}>
                                             {statusText}
-                                            {loading && progress < 100 && ` (${Math.round(progress)}%)`}
+                                            {progressLabel}
                                         </p>
                                         <div className="w-full h-full relative"><SpinningSphere /></div>
                                     </div>
@@ -199,8 +206,13 @@ const Landing = () => {
                             </div>
                         </div>
                         {/* Cell 2,2: Initiate Button Area (Desktop) / Order 2 (Mobile) */}
-                        <div className={`${isMobile ? 'order-2' : 'w-[25%] h-full'}`} style={isMobile ? { height: '60px' } : {}}>
-                            <button onClick={handleEnterExperience} disabled={loading} className="glitch-button w-full h-full disabled:opacity-50 disabled:cursor-not-allowed" style={{ fontSize: isMobile ? '1.5rem' : '3cqi' }}><span aria-hidden></span>{loading ? 'LOADING' : 'INITIATE'}<span className="glitch-button__glitch" aria-hidden>{loading ? 'LOADING' : 'INITIATE'}</span><span className="glitch-button__tag" aria-hidden>EXP</span></button>
+                        <div className={`${isMobile ? 'order-2' : 'w-[25%] h-full'}`}>
+                            {isMobile && loading && (
+                                <p className="mb-2 min-h-4 text-center text-xs text-white/70" aria-live="polite">
+                                    {statusText}{progressLabel}
+                                </p>
+                            )}
+                            <button onClick={handleEnterExperience} disabled={loading} className={`glitch-button w-full ${isMobile ? 'h-[60px]' : 'h-full'} disabled:opacity-50 disabled:cursor-not-allowed`} style={{ fontSize: isMobile ? '1.5rem' : '3cqi' }}><span aria-hidden></span>{loading ? 'LOADING' : 'INITIATE'}<span className="glitch-button__glitch" aria-hidden>{loading ? 'LOADING' : 'INITIATE'}</span><span className="glitch-button__tag" aria-hidden>EXP</span></button>
                         </div>
                     </div>
                 </div>
