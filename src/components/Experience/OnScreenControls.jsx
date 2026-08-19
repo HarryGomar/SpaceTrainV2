@@ -3,8 +3,8 @@ import useTrainStore from '../../store/useTrainStore';
 import './OnScreenControls.css';
 
 const movementControls = [
-    { direction: 'forward', label: 'FWD', path: 'M6 11.5 12 5.5l6 6M12 6v12.5' },
-    { direction: 'backward', label: 'REV', path: 'M6 12.5 12 18.5l6-6M12 18V5.5' },
+    { direction: 'forward', label: 'FWD', symbol: '↑' },
+    { direction: 'backward', label: 'REV', symbol: '↓' },
 ];
 
 const OnScreenControls = () => {
@@ -75,17 +75,12 @@ const OnScreenControls = () => {
                     aria-label={expanded ? 'Hide movement controls' : 'Show movement controls'}
                     onClick={() => setExpanded((isExpanded) => !isExpanded)}
                 >
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M4 8h16M4 16h16M8 5v6M16 13v6" />
-                    </svg>
-                    <span>MOVE</span>
-                    <svg className="on-screen-controls__chevron" viewBox="0 0 16 16" aria-hidden="true">
-                        <path d="m6 3 5 5-5 5" />
-                    </svg>
+                    <span className="on-screen-controls__toggle-label">MOVE</span>
+                    <span className="on-screen-controls__chevron" aria-hidden="true">›</span>
                 </button>
 
                 <div id="movement-buttons" className="on-screen-controls__buttons" aria-hidden={!expanded}>
-                    {movementControls.map(({ direction, label, path }) => {
+                    {movementControls.map(({ direction, label, symbol }) => {
                         const isPressed = direction === 'forward' ? moveForward : moveBackward;
 
                         return (
@@ -121,10 +116,8 @@ const OnScreenControls = () => {
                                     }
                                 }}
                             >
-                                <svg viewBox="0 0 24 24" aria-hidden="true">
-                                    <path d={path} />
-                                </svg>
-                                <span>{label}</span>
+                                <span className="on-screen-controls__arrow" aria-hidden="true">{symbol}</span>
+                                <span className="on-screen-controls__movement-label">{label}</span>
                             </button>
                         );
                     })}
