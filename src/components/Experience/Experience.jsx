@@ -4,6 +4,7 @@ import { Canvas } from '@react-three/fiber';
 import { OrbitControls, KeyboardControls } from '@react-three/drei';
 import SpaceBox from './SpaceBox';
 import Train from './Train';
+import OnScreenControls from './OnScreenControls';
 
 const Experience = () => {
     return (
@@ -13,7 +14,7 @@ const Experience = () => {
                 { name: 'backward', keys: ['ArrowDown', 's', 'S'] },
             ]}
         >
-            <div className="w-screen h-screen">
+            <div className="relative w-screen h-screen overflow-hidden bg-black">
                 <Canvas
                     shadows
                     camera={{
@@ -37,6 +38,7 @@ const Experience = () => {
                         <Train scale={0.04} position={[0, 0, -1]} />
                     </Suspense>
                 </Canvas>
+                <OnScreenControls />
             </div>
         </KeyboardControls>
     );

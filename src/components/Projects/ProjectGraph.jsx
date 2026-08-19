@@ -81,7 +81,7 @@ const ProjectGraph = ({ projects, isMobile }) => {
             .style("cursor", d => d.type === 'project' ? 'pointer' : 'move')
             .on("click", (event, d) => {
                 if (d.type === 'project') {
-                    navigate(`/projects/${d.data.id}`);
+                    navigate(`/projects/${d.data.id}`, { replace: true });
                 }
             })
             .on("mouseover", function(event, d) {

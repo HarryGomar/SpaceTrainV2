@@ -18,7 +18,7 @@ export default function Train(props) {
 
   // R3F hooks
   const { camera, controls } = useThree();
-  const [subscribeKeys, getKeys] = useKeyboardControls();
+  const [, getKeys] = useKeyboardControls();
   
   // Refs for interactive objects
   const interior = useRef();
@@ -58,7 +58,10 @@ export default function Train(props) {
   
   // Player movement inside the train
   useFrame(() => {
-    const { forward, backward } = getKeys();
+    const keyboard = getKeys();
+    const touch = useTrainStore.getState();
+    const forward = keyboard.forward || touch.moveForward;
+    const backward = keyboard.backward || touch.moveBackward;
     const isFocused = inTerminal || inProjects || isTransitioning;
 
     if (inTrain && !isFocused && interior.current) {

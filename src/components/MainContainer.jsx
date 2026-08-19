@@ -1,11 +1,11 @@
 // src/components/MainContainer.jsx
 import React from 'react';
 
-const MainContainer = ({ children, isMobile }) => {
+const MainContainer = ({ children, isMobile, fillViewport = false }) => {
     return (
         // On Desktop: A fixed, centered container with outer padding.
         // On Mobile: A standard block element that allows the page to scroll.
-        <div className={!isMobile ? "fixed inset-0 flex items-center justify-center bg-black p-[1.1cqi]" : "bg-black"}>
+        <div className={!isMobile ? `fixed inset-0 flex items-center justify-center bg-black ${fillViewport ? 'p-2' : 'p-[1.1cqi]'}` : "bg-black"}>
             <div
                 className={`relative text-[var(--foreground-color)] bg-[var(--main-bg)] ${
                     !isMobile 
@@ -18,6 +18,12 @@ const MainContainer = ({ children, isMobile }) => {
                               // Mobile styles: container takes full width and at least 100% of the screen height.
                               containerType: 'inline-size', 
                               minHeight: '100vh' 
+                          }
+                        : fillViewport
+                        ? {
+                              containerType: 'inline-size',
+                              width: '100%',
+                              height: '100%',
                           }
                         : {
                               // Desktop styles: The container is a fixed aspect ratio box.

@@ -1,0 +1,175 @@
+.on-screen-controls {
+    position: absolute;
+    z-index: 30;
+    left: max(0.75rem, env(safe-area-inset-left));
+    bottom: max(0.75rem, env(safe-area-inset-bottom));
+    pointer-events: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.on-screen-controls__panel {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    height: 3.35rem;
+    padding: 0.3rem;
+    overflow: hidden;
+    pointer-events: auto;
+    color: var(--foreground-color);
+    border: 1px solid rgba(255, 239, 254, 0.42);
+    border-radius: 0.65rem;
+    background:
+        linear-gradient(180deg, rgba(37, 31, 39, 0.91), rgba(15, 13, 16, 0.94)),
+        var(--container-background);
+    box-shadow: 0 0 18px rgba(189, 149, 221, 0.16);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}
+
+.on-screen-controls__panel::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: inherit;
+}
+
+.on-screen-controls button {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    padding: 0;
+    color: var(--foreground-color);
+    border: 0;
+    border-radius: 0.4rem;
+    background: transparent;
+    font: 700 0.65rem/1 'Share Tech Mono', 'Courier New', monospace;
+    letter-spacing: 0.09em;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: none;
+    cursor: pointer;
+}
+
+.on-screen-controls button:focus-visible {
+    outline: 2px solid var(--selection-color);
+    outline-offset: -2px;
+}
+
+.on-screen-controls__toggle {
+    grid-template-columns: 1.15rem auto 0.8rem;
+    gap: 0.35rem;
+    padding-inline: 0.4rem 0.3rem !important;
+}
+
+.on-screen-controls__toggle > svg:first-child {
+    width: 1.15rem;
+    height: 1.15rem;
+    color: var(--selection-color);
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: square;
+    stroke-width: 1.5;
+}
+
+.on-screen-controls__chevron {
+    width: 0.75rem;
+    height: 0.75rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    transition: transform 180ms ease;
+}
+
+.on-screen-controls__panel.is-expanded .on-screen-controls__chevron {
+    transform: rotate(180deg);
+}
+
+.on-screen-controls__buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 2.75rem);
+    gap: 0.25rem;
+    width: 0;
+    margin-left: 0;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateX(-0.35rem);
+    transition: width 180ms ease, margin-left 180ms ease, opacity 120ms ease, transform 180ms ease;
+}
+
+.on-screen-controls__panel.is-expanded .on-screen-controls__buttons {
+    width: 5.75rem;
+    margin-left: 0.3rem;
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.on-screen-controls__movement {
+    grid-template-rows: 1.35rem auto;
+    align-content: center;
+    gap: 0.12rem;
+    border: 1px solid rgba(255, 239, 254, 0.24) !important;
+    background: rgba(255, 239, 254, 0.045) !important;
+    transition: color 100ms ease, border-color 100ms ease, background-color 100ms ease, box-shadow 100ms ease;
+}
+
+.on-screen-controls__movement svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: square;
+    stroke-linejoin: miter;
+    stroke-width: 1.5;
+}
+
+.on-screen-controls__movement[aria-pressed='true'] {
+    color: #160f19;
+    border-color: var(--selection-color) !important;
+    background: var(--selection-color) !important;
+    box-shadow: 0 0 14px rgba(189, 149, 221, 0.55);
+}
+
+@media (hover: hover) {
+    .on-screen-controls button:hover:not(:disabled) {
+        color: var(--selection-color);
+        background: rgba(189, 149, 221, 0.1);
+    }
+}
+
+@media (pointer: coarse) {
+    .on-screen-controls__panel {
+        height: 3.65rem;
+    }
+
+    .on-screen-controls button {
+        min-width: 3.05rem;
+        min-height: 3.05rem;
+    }
+
+    .on-screen-controls__buttons {
+        grid-template-columns: repeat(2, 3.05rem);
+    }
+
+    .on-screen-controls__panel.is-expanded .on-screen-controls__buttons {
+        width: 6.35rem;
+    }
+}
+
+@media (max-height: 30rem) {
+    .on-screen-controls {
+        bottom: max(0.4rem, env(safe-area-inset-bottom));
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .on-screen-controls__buttons,
+    .on-screen-controls__chevron {
+        transition: none;
+    }
+}

@@ -84,6 +84,7 @@ const Projects = () => {
     const navigate = useNavigate();
     const windowWidth = useWindowWidth();
     const isMobile = windowWidth < 1024;
+    const isEmbedded = window.location.pathname === '/experience';
 
     const pageSize = isMobile ? MOBILE_PAGE_SIZE : DESKTOP_PAGE_SIZE;
 
@@ -154,7 +155,7 @@ const Projects = () => {
     );
 
     return (
-        <MainContainer isMobile={isMobile}>
+        <MainContainer isMobile={isMobile} fillViewport>
             <div
                 className="w-full h-full"
                 style={!isMobile ? { padding: responsiveGap } : { padding: '3rem 1.5rem 1rem' }}
@@ -170,7 +171,7 @@ const Projects = () => {
                             <div className="flex-grow grid grid-cols-2 grid-rows-2 min-h-0" style={{ gap: responsiveGap }}>
                                 {gridProjects.map((project, index) => (
                                     project ? (
-                                        <div key={project.id} onClick={() => navigate(`/projects/${project.id}`)} className="cursor-pointer group flex flex-col min-h-0">
+                                        <button key={project.id} type="button" onClick={() => navigate(`/projects/${project.id}`, { replace: true })} className="cursor-pointer group flex flex-col min-h-0 text-left">
                                             <div className="flex-grow overflow-hidden min-h-0">
                                                 <img src={project.image} alt={project.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
                                             </div>
@@ -178,7 +179,7 @@ const Projects = () => {
                                                 <h2 className="font-mono text-sm whitespace-nowrap overflow-hidden text-ellipsis">{project.title}</h2>
                                                 <p className="text-xs text-[var(--accent-color)]">{project.years}</p>
                                             </div>
-                                        </div>
+                                        </button>
                                     ) : (
                                         <div key={`placeholder-${index}`} className="hidden lg:block w-full h-full border-2 border-[var(--foreground-color)]/50 bg-transparent"></div>
                                     )
@@ -194,7 +195,10 @@ const Projects = () => {
 
                     {/* --- Right Column (Sidebar) --- */}
                     <div className={`w-full ${isMobile ? 'order-1' : 'lg:w-1/5'} flex flex-col`} style={{ gap: responsiveGap }}>
-                        <div className="flex justify-between items-center lg:hidden mb-4">
+                        <div className="flex flex-wrap justify-between items-center gap-3 lg:hidden mb-4">
+                            {!isEmbedded && (
+                                <button aria-label="Return to main" onClick={() => navigate('/', { replace: true })} className="py-2 px-3 whitespace-nowrap border-b-2 border-[var(--foreground-color)] hover:border-[var(--selection-color)] hover:text-[var(--selection-color)] transition-colors duration-300">&larr; Main</button>
+                            )}
                             <h2 className="text-3xl font-bold">PROJECTS</h2>
                             <button onClick={() => setShowFilters(!showFilters)} className="py-2 px-4 border-2 border-[var(--foreground-color)] bg-[var(--container-background)] text-sm">
                                 {showFilters ? 'Hide Filters' : 'Show Filters'}
@@ -202,8 +206,11 @@ const Projects = () => {
                         </div>
 
                         <div className={`lg:flex flex-col h-full ${isMobile && !showFilters ? 'hidden' : 'flex'}`} style={{ gap: responsiveGap }}>
-                            <div className="hidden lg:block">
+                            <div className="hidden lg:flex items-start justify-between gap-3">
                                 <h2 className="text-4xl font-bold">PROJECTS</h2>
+                                {!isEmbedded && (
+                                    <button aria-label="Return to main" onClick={() => navigate('/', { replace: true })} className="px-2 py-1 whitespace-nowrap border-b-2 border-[var(--foreground-color)] text-xs hover:border-[var(--selection-color)] hover:text-[var(--selection-color)] transition-colors duration-300">&larr; Main</button>
+                                )}
                             </div>
                             <button onClick={() => setIsGraphView(!isGraphView)} className="w-full py-2 text-sm font-mono tracking-widest uppercase border-y-2 border-[var(--foreground-color)] bg-transparent text-[var(--foreground-color)] transition-all duration-300 hover:border-[var(--selection-color)] hover:text-[var(--selection-color)] hover:bg-[var(--selection-color)]/20 hover:shadow-[0_0_15px_3px_var(--glow-color)]">
                                 {isGraphView ? 'View Grid' : 'View Graph'}

@@ -11,7 +11,7 @@ import './GlitchButton.css';
 import './ScanButton.css';
 
 const pointsOfInterest = [
-    { id: 1, x: '20%', y: '52%', tab: 'Move', title: 'Move', text: 'Move using [W] and [S] when inside the train', image: '/Landing/Walk.png' },
+    { id: 1, x: '20%', y: '52%', tab: 'Move', title: 'Move', text: 'Use W and S, or the on-screen controls, when inside the train', image: '/Landing/Walk.png' },
     { id: 2, x: '55%', y: '48%', tab: 'Interact', title: 'Interact', text: 'Interactable objects are highlighted when hovered', image: '/Landing/Interact.png' },
     { id: 3, x: '70%', y: '50%', tab: 'Explore', title: 'Explore', text: 'Discover details about me', image: '/Landing/Find.png' },
     { id: 4, x: '85%', y: '45%', tab: 'Find', title: 'Find', text: 'Uncover the secrets hidden in the train', image: '/Landing/Explore.png' },

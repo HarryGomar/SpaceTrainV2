@@ -13,9 +13,25 @@ const useTrainStore = create((set, get) => ({
     projectsVisible: false,
     hoveredObject: null,
     lastCameraPos: new THREE.Vector3(),
+    moveForward: false,
+    moveBackward: false,
 
     // ACTIONS
     setHoveredObject: (objectName) => set({ hoveredObject: objectName }),
+    setMovement: (direction, isPressed) => set((state) => {
+        const stateKey = direction === 'forward'
+            ? 'moveForward'
+            : direction === 'backward'
+                ? 'moveBackward'
+                : null;
+
+        if (!stateKey || state[stateKey] === isPressed) return state;
+        return { [stateKey]: isPressed };
+    }),
+    clearMovement: () => set((state) => {
+        if (!state.moveForward && !state.moveBackward) return state;
+        return { moveForward: false, moveBackward: false };
+    }),
 
     /**
      * Resets camera controls to a free-roam state inside the train.

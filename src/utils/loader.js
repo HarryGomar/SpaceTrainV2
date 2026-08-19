@@ -25,7 +25,7 @@ export const preloadModel = () => {
 
 
     gltfLoader.load(
-        './Train/SpaceTrainV1.glb',
+        '/Train/SpaceTrainV1.glb',
         // onLoad
         (gltf) => {
             setStatusText('Decompressing model data...');
