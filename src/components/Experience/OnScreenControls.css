@@ -39,11 +39,21 @@
     -webkit-tap-highlight-color: transparent;
     touch-action: none;
     cursor: pointer;
+    transition: color 90ms ease, background-color 90ms ease, transform 90ms ease;
 }
 
 .on-screen-controls button:focus-visible {
-    outline: 1px solid rgba(255, 255, 255, 0.85);
+    outline: 2px solid rgba(255, 255, 255, 0.82);
     outline-offset: -2px;
+}
+
+.on-screen-controls button:active:not(:disabled) {
+    background: rgba(255, 255, 255, 0.14);
+    transform: translateY(1px);
+}
+
+.on-screen-controls button:disabled {
+    cursor: default;
 }
 
 .on-screen-controls__toggle {
@@ -87,7 +97,11 @@
     align-content: center;
     gap: 0.1rem;
     width: 2.55rem;
-    transition: color 90ms ease, background-color 90ms ease;
+}
+
+.on-screen-controls__movement + .on-screen-controls__movement {
+    border-left: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 0 0.3rem 0.3rem 0;
 }
 
 .on-screen-controls__arrow {
@@ -110,7 +124,11 @@
 @media (hover: hover) {
     .on-screen-controls button:hover:not(:disabled) {
         color: #fff;
-        background: rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .on-screen-controls__movement:hover .on-screen-controls__movement-label {
+        opacity: 1;
     }
 }
 
@@ -148,6 +166,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+    .on-screen-controls button,
     .on-screen-controls__buttons,
     .on-screen-controls__chevron {
         transition: none;

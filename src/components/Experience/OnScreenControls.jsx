@@ -92,8 +92,10 @@ const OnScreenControls = () => {
                                 aria-pressed={isPressed}
                                 tabIndex={expanded ? 0 : -1}
                                 disabled={!expanded}
+                                title={`Move ${direction}`}
                                 onContextMenu={(event) => event.preventDefault()}
                                 onPointerDown={(event) => {
+                                    if (event.pointerType === 'mouse' && event.button !== 0) return;
                                     event.preventDefault();
                                     startMovement(direction, event.pointerId, event.currentTarget);
                                 }}
@@ -103,6 +105,7 @@ const OnScreenControls = () => {
                                 }}
                                 onPointerCancel={(event) => stopMovement(direction, event.pointerId, event.currentTarget)}
                                 onLostPointerCapture={(event) => stopMovement(direction, event.pointerId, event.currentTarget)}
+                                onBlur={() => setMovement(direction, false)}
                                 onKeyDown={(event) => {
                                     if ((event.key === ' ' || event.key === 'Enter') && !event.repeat) {
                                         event.preventDefault();
