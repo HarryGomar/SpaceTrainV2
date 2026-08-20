@@ -90,7 +90,7 @@ const Projects = () => {
 
     useEffect(() => { setProjects(projectsData); }, []);
 
-    const categories = ['All', 'NLP', 'Data', 'Software', 'Hardware'];
+    const categories = ['All', 'NLP', 'Data', 'Software', 'Hardware', 'Teaching'];
     const scopes = useUniqueValues(projects, 'scope');
     const motivations = useUniqueValues(projects, 'motivation');
 
