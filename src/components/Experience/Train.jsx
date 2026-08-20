@@ -4,7 +4,7 @@ import React, { useRef, useEffect, useCallback } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import { Html, useAnimations, useGLTF, useKeyboardControls } from '@react-three/drei';
 import { Selection, Select, EffectComposer, Outline } from '@react-three/postprocessing';
-import { MemoryRouter, Routes, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import gsap from 'gsap';
 import useTrainStore from '../../store/useTrainStore';
 import Projects from '../Projects/Projects';
@@ -25,11 +25,12 @@ export default function Train(props) {
   const door = useRef();
   const terminal = useRef();
   const projectScreen = useRef();
+  const handledExitRequest = useRef(0);
 
   // Zustand store for state management
   const {
-    inTrain, inTerminal, inProjects, isTransitioning, iframeVisible, projectsVisible, hoveredObject,
-    setHoveredObject, enterTrain, enterTerminal, exitTerminal, enterProjects, exitProjects
+    inTrain, inTerminal, inProjects, isTransitioning, iframeVisible, projectsVisible, focusExitRequest, hoveredObject,
+    setHoveredObject, enterTrain, enterTerminal, exitTerminal, enterProjects, exitProjects, resetExperience
   } = useTrainStore();
 
   // Set cursor style on hover
@@ -44,6 +45,14 @@ export default function Train(props) {
   const handleEnterProjects = useCallback((e) => { e.stopPropagation(); enterProjects(camera, controls, projectScreen); }, [camera, controls, projectScreen, enterProjects]);
   const handleExitProjects = useCallback(() => { exitProjects(camera, controls); }, [camera, controls, exitProjects]);
 
+  useEffect(() => {
+    if (focusExitRequest === handledExitRequest.current) return;
+    handledExitRequest.current = focusExitRequest;
+
+    if (inTerminal) handleExitTerminal();
+    else if (inProjects) handleExitProjects();
+  }, [focusExitRequest, inTerminal, inProjects, handleExitTerminal, handleExitProjects]);
+
   // Keyboard listener to exit views with ESC key
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -55,6 +64,13 @@ export default function Train(props) {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [inTerminal, inProjects, handleExitTerminal, handleExitProjects]);
+
+  useEffect(() => () => {
+    gsap.killTweensOf(camera.position);
+    if (controls?.target) gsap.killTweensOf(controls.target);
+    document.body.style.cursor = 'auto';
+    resetExperience();
+  }, [camera, controls, resetExperience]);
   
   // Player movement inside the train
   useFrame(() => {
@@ -129,23 +145,24 @@ export default function Train(props) {
               </Select>
 
               {projectsVisible && (
-                  <group position={[5.60, 4.7, 15.95]} rotation={[0, -Math.PI / 2, 0]} scale={[0.2, 0.2, 0.2]}>
-                      <Html
-                          transform
-                          occlude="blending"
-                          className="w-[1200px] h-[800px] bg-transparent select-none" // 4x the original resolution
-                          pointerEvents="auto"
-                      >
-                          <MemoryRouter initialEntries={['/projects']}>
-                              <div className="w-full h-full bg-black/80 rounded-lg overflow-hidden">
-                                  <Routes>
-                                      <Route path="/projects" element={<Projects />} />
-                                      <Route path="/projects/:id" element={<ProjectDetail />} />
-                                  </Routes>
-                              </div>
-                          </MemoryRouter>
-                      </Html>
-                  </group>
+                <group position={[5.60, 4.7, 15.95]} rotation={[0, -Math.PI / 2, 0]} scale={[0.2, 0.2, 0.2]}>
+                  <Html
+                    transform
+                    occlude="blending"
+                    pointerEvents="auto"
+                    zIndexRange={[20, 0]}
+                    className="h-[800px] w-[1200px] select-none bg-transparent"
+                  >
+                    <MemoryRouter initialEntries={['/projects']}>
+                      <div className="h-full w-full overflow-hidden rounded-lg bg-black/90">
+                        <Routes>
+                          <Route path="/projects" element={<Projects embedded />} />
+                          <Route path="/projects/:id" element={<ProjectDetail embedded />} />
+                        </Routes>
+                      </div>
+                    </MemoryRouter>
+                  </Html>
+                </group>
               )}
 
               {/* -- TERMINAL SCREEN -- */}
@@ -164,8 +181,22 @@ export default function Train(props) {
                 />
               </Select>
               {iframeVisible && (
-                <Html position={[-4.33, 9.3, 73.2]} rotation={[0, Math.PI, 0]} transform occlude="blending" scale={0.07} pointerEvents="auto">
-                  <iframe title="Terminal" className="w-[1060px] h-[900px] border-none bg-black rounded-lg select-none" src='https://terminal-inner-website.vercel.app/' />
+                <Html
+                  position={[-4.33, 9.3, 73.2]}
+                  rotation={[0, Math.PI, 0]}
+                  transform
+                  occlude="blending"
+                  scale={0.07}
+                  pointerEvents="auto"
+                  zIndexRange={[20, 0]}
+                >
+                  <iframe
+                    title="Train terminal"
+                    className="h-[900px] w-[1060px] select-none rounded-lg border-none bg-black"
+                    src="https://terminal-inner-website.vercel.app/"
+                    referrerPolicy="strict-origin-when-cross-origin"
+                    allow="clipboard-read; clipboard-write"
+                  />
                 </Html>
               )}
               {inTerminal && (

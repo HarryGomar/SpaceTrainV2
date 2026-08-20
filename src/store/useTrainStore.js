@@ -7,12 +7,15 @@ const useTrainStore = create((set, get) => ({
     // STATE
     inTrain: false,
     inTerminal: false,
+    inProjects: false,
     inProjector: false,
     isTransitioning: false,
     iframeVisible: false,
     projectsVisible: false,
     hoveredObject: null,
     lastCameraPos: new THREE.Vector3(),
+    lastCameraTarget: new THREE.Vector3(),
+    focusExitRequest: 0,
     moveForward: false,
     moveBackward: false,
 
@@ -32,6 +35,19 @@ const useTrainStore = create((set, get) => ({
         if (!state.moveForward && !state.moveBackward) return state;
         return { moveForward: false, moveBackward: false };
     }),
+    requestFocusExit: () => set((state) => ({ focusExitRequest: state.focusExitRequest + 1 })),
+    resetExperience: () => set({
+        inTrain: false,
+        inTerminal: false,
+        inProjects: false,
+        inProjector: false,
+        isTransitioning: false,
+        iframeVisible: false,
+        projectsVisible: false,
+        hoveredObject: null,
+        moveForward: false,
+        moveBackward: false,
+    }),
 
     /**
      * Resets camera controls to a free-roam state inside the train.
@@ -39,7 +55,7 @@ const useTrainStore = create((set, get) => ({
     enableFreeRoamControls: (controls) => {
         if (!controls) return;
         controls.maxAzimuthAngle = Infinity;
-        controls.minAzimuthAngle = Infinity;
+        controls.minAzimuthAngle = -Infinity;
         controls.maxPolarAngle = Math.PI;
         controls.minPolarAngle = 0;
         controls.enableZoom = false;
@@ -61,11 +77,13 @@ const useTrainStore = create((set, get) => ({
      * The interior is made visible immediately for a better visual transition.
      */
     enterTrain: (camera, controls, doorRef, openDoorAction) => {
-        if (get().inTrain || get().isTransitioning) return;
+        if (get().inTrain || get().isTransitioning || !camera || !controls || !doorRef?.current) return;
 
         get().disableControls(controls);
 
-        openDoorAction?.setLoop(THREE.LoopOnce).play().reset();
+        if (openDoorAction) {
+            openDoorAction.setLoop(THREE.LoopOnce).reset().play();
+        }
 
         const targetDoor = new THREE.Vector3();
         doorRef.current.getWorldPosition(targetDoor);
@@ -117,11 +135,12 @@ const useTrainStore = create((set, get) => ({
      * Handles the camera animation to focus on the terminal screen.
      */
     enterTerminal: (camera, controls, terminalRef) => {
-        if (get().inTerminal || get().isTransitioning) return;
+        if (!get().inTrain || get().inTerminal || get().inProjects || get().isTransitioning || !camera || !controls || !terminalRef?.current) return;
 
         set({ isTransitioning: true });
         get().disableControls(controls);
         camera.getWorldPosition(get().lastCameraPos);
+        get().lastCameraTarget.copy(controls.target);
         const targetTer = new THREE.Vector3();
         terminalRef.current.getWorldPosition(targetTer);
 
@@ -164,9 +183,9 @@ const useTrainStore = create((set, get) => ({
 
         gsap.to(controls.target, {
             duration: 2,
-            x: get().lastCameraPos.x,
-            y: get().lastCameraPos.y,
-            z: get().lastCameraPos.z + 0.025,
+            x: get().lastCameraTarget.x,
+            y: get().lastCameraTarget.y,
+            z: get().lastCameraTarget.z,
             ease: 'power3.inOut',
             onComplete: () => {
                 get().enableFreeRoamControls(controls);
@@ -179,11 +198,12 @@ const useTrainStore = create((set, get) => ({
      * Handles the camera animation to focus on the project screen.
      */
     enterProjects: (camera, controls, projectsRef) => {
-        if (get().inProjects || get().isTransitioning) return;
+        if (!get().inTrain || get().inProjects || get().inTerminal || get().isTransitioning || !camera || !controls || !projectsRef?.current) return;
 
         set({ isTransitioning: true });
         get().disableControls(controls);
         camera.getWorldPosition(get().lastCameraPos);
+        get().lastCameraTarget.copy(controls.target);
         const targetProj = new THREE.Vector3();
         projectsRef.current.getWorldPosition(targetProj);
 
@@ -226,9 +246,9 @@ const useTrainStore = create((set, get) => ({
 
         gsap.to(controls.target, {
             duration: 2,
-            x: get().lastCameraPos.x,
-            y: get().lastCameraPos.y,
-            z: get().lastCameraPos.z + 0.025,
+            x: get().lastCameraTarget.x,
+            y: get().lastCameraTarget.y,
+            z: get().lastCameraTarget.z,
             ease: 'power3.inOut',
             onComplete: () => {
                 get().enableFreeRoamControls(controls);

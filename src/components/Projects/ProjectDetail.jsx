@@ -47,14 +47,14 @@ const useWindowWidth = () => {
     return width;
 };
 
-const ProjectDetail = () => {
+const ProjectDetail = ({ embedded = false }) => {
     const { id } = useParams();
     const navigate = useNavigate();
     const project = projectsData.find(p => p.id === parseInt(id));
     const [currentPage, setCurrentPage] = useState(0);
     const windowWidth = useWindowWidth();
-    const isMobile = windowWidth < 768; // Use md breakpoint
-    const isEmbedded = window.location.pathname === '/experience';
+    const isEmbedded = embedded || window.location.pathname === '/experience';
+    const isMobile = !isEmbedded && windowWidth < 768;
 
     const contentSections = useMemo(() => {
         if (!project) return [];
@@ -105,7 +105,7 @@ const ProjectDetail = () => {
 
     if (!project) {
         return (
-            <MainContainer isMobile={isMobile}>
+            <MainContainer isMobile={isMobile} contained={isEmbedded}>
                 <div className="w-full h-full flex flex-col items-center justify-center gap-4 p-4">
                     <h1 className="text-2xl text-center">Project Not Found</h1>
                     <button onClick={handleReturn} className="px-6 py-2 border-2 border-[var(--foreground-color)] bg-[var(--container-background)] text-lg hover:border-[var(--selection-color)] hover:text-[var(--selection-color)] transition-colors duration-300">{isEmbedded ? 'Return to Archives' : 'Return to Main'}</button>
@@ -115,28 +115,28 @@ const ProjectDetail = () => {
     }
 
     return (
-        <MainContainer isMobile={isMobile} fillViewport>
+        <MainContainer isMobile={isMobile} contained={isEmbedded}>
             <div className="flex h-full flex-col gap-6 min-h-0 p-4">
                 {/* Header Section */}
                 <div className="flex justify-between items-start gap-4">
                     <div>
-                        <h1 className="text-3xl sm:text-4xl font-bold text-[var(--selection-color)] leading-tight balance-text">{project.title}</h1>
-                        <p className="text-base sm:text-lg text-[var(--accent-color)] mt-1">{project.category}</p>
+                        <h1 className={`${isMobile ? 'text-3xl' : 'text-4xl'} font-bold text-[var(--selection-color)] leading-tight balance-text`}>{project.title}</h1>
+                        <p className={`${isMobile ? 'text-base' : 'text-lg'} text-[var(--accent-color)] mt-1`}>{project.category}</p>
                     </div>
-                     <button onClick={handleReturn} className="hidden md:block flex-shrink-0 px-3 py-1 border-b-2 border-[var(--foreground-color)] text-[var(--foreground-color)] hover:border-[var(--selection-color)] hover:text-[var(--selection-color)] transition-colors duration-300">&larr; {isEmbedded ? 'Return to Archives' : 'Return to Main'}</button>
+                    {!isMobile && <button onClick={handleReturn} className="flex-shrink-0 px-3 py-1 border-b-2 border-[var(--foreground-color)] text-[var(--foreground-color)] hover:border-[var(--selection-color)] hover:text-[var(--selection-color)] transition-colors duration-300">&larr; {isEmbedded ? 'Return to Archives' : 'Return to Main'}</button>}
                 </div>
 
                 {/* Main Content: two columns on desktop, one on mobile */}
-                <div className="flex flex-col md:flex-row gap-8 flex-grow min-h-0">
+                <div data-testid="project-detail-layout" className={`flex ${isMobile ? 'flex-col' : 'flex-row'} gap-8 flex-grow min-h-0`}>
                     {/* Left Column (Desktop) / Second block (Mobile) */}
-                    <div className="w-full md:w-1/2 flex flex-col gap-4 min-h-0 order-2 md:order-1">
+                    <div className={`${isMobile ? 'w-full order-2' : 'w-1/2 order-1'} flex flex-col gap-4 min-h-0`}>
                         <div className="flex flex-wrap gap-x-4 gap-y-2 text-sm text-[var(--accent-color)] font-mono">
                             <span className="bg-[var(--container-background)] px-2 py-1"><strong>Scope:</strong> {project.scope}</span>
                             <span className="bg-[var(--container-background)] px-2 py-1"><strong>Motivation:</strong> {project.motivation}</span>
                             <span className="bg-[var(--container-background)] px-2 py-1"><strong>Years:</strong> {project.years}</span>
                         </div>
 
-                        <div className="flex-grow flex flex-col overflow-hidden border-2 border-[var(--foreground-color)] p-4 sm:p-6 bg-[var(--container-background)] min-h-[250px] md:min-h-0">
+                        <div className={`flex-grow flex flex-col overflow-hidden border-2 border-[var(--foreground-color)] ${isMobile ? 'p-4 min-h-[250px]' : 'p-6 min-h-0'} bg-[var(--container-background)]`}>
                             {contentSections.length > 1 && (
                                 <div role="tablist" aria-label="Project information" className="flex flex-wrap gap-2 pb-4 mb-4 border-b border-[var(--foreground-color)]/30">
                                     {contentSections.map((section, index) => (
@@ -146,7 +146,7 @@ const ProjectDetail = () => {
                                             role="tab"
                                             aria-selected={index === currentPage}
                                             onClick={() => setCurrentPage(index)}
-                                            className={`px-3 py-2 border text-xs sm:text-sm transition-colors duration-200 ${index === currentPage ? 'border-[var(--selection-color)] bg-[var(--selection-color)] text-black' : 'border-[var(--foreground-color)]/50 hover:border-[var(--selection-color)] hover:text-[var(--selection-color)]'}`}
+                                            className={`px-3 py-2 border ${isMobile ? 'text-xs' : 'text-sm'} transition-colors duration-200 ${index === currentPage ? 'border-[var(--selection-color)] bg-[var(--selection-color)] text-black' : 'border-[var(--foreground-color)]/50 hover:border-[var(--selection-color)] hover:text-[var(--selection-color)]'}`}
                                         >
                                             {section.label}
                                         </button>
@@ -183,24 +183,24 @@ const ProjectDetail = () => {
                     </div>
 
                     {/* Right Column (Desktop) / First block (Mobile) */}
-                    <div className="w-full md:w-1/2 flex flex-col gap-4 min-h-0 order-1 md:order-2">
+                    <div className={`${isMobile ? 'w-full order-1' : 'w-1/2 order-2'} flex flex-col gap-4 min-h-0`}>
                         <div className="w-full flex-grow min-h-[220px] overflow-hidden bg-black border-2 border-white/10">
                             <img src={project.image} alt={project.title} className="w-full h-full object-contain" />
                         </div>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                        <div className={`grid ${isMobile ? 'grid-cols-2' : 'grid-cols-3'} gap-2`}>
                             {project.skills.map(skill => (
                                 <div key={skill} className="border-2 border-[var(--foreground-color)] bg-[var(--container-background)] p-2 flex items-center justify-center">
                                     <span className="text-sm text-center text-[var(--accent-color)]">{skill}</span>
                                 </div>
                             ))}
                         </div>
-                        <div className="flex flex-col sm:flex-row gap-4">
+                        <div className={`flex ${isMobile ? 'flex-col' : 'flex-row'} gap-4`}>
                             {project.githubUrl && <ThemedButton href={project.githubUrl}>GitHub</ThemedButton>}
                             {project.liveUrl && <ThemedButton href={project.liveUrl} isPrimary={true}>Live Demo</ThemedButton>}
                         </div>
                     </div>
                 </div>
-                 <button onClick={handleReturn} className="block md:hidden mt-4 w-full text-center py-3 border-2 border-[var(--foreground-color)] bg-[var(--container-background)]">&larr; {isEmbedded ? 'Return to Archives' : 'Return to Main'}</button>
+                {isMobile && <button onClick={handleReturn} className="mt-4 w-full text-center py-3 border-2 border-[var(--foreground-color)] bg-[var(--container-background)]">&larr; {isEmbedded ? 'Return to Archives' : 'Return to Main'}</button>}
             </div>
         </MainContainer>
     );

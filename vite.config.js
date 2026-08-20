@@ -41,4 +41,8 @@ export default {
         emptyOutDir: true, // Empty the folder first
         sourcemap: true // Add sourcemap
     },
+    test:
+    {
+        environment: 'jsdom',
+    },
 }

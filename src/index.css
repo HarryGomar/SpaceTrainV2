@@ -6,8 +6,8 @@
     --container-background: #19161a;
     --foreground-color: #ffeffe;
     --accent-color: #ffeafe;
-    --selection-color: #bd95dd;
-    --glow-color: rgba(216, 196, 232, 0.15);
+    --selection-color: #a56cc1;
+    --glow-color: rgba(165, 108, 193, 0.2);
   }
 
   body {
@@ -60,14 +60,14 @@
   }
 
   .tab-button.tab-button--active {
-    box-shadow: 0 0 18px 5px rgba(189, 149, 221, 0.55);
+    box-shadow: 0 0 18px 5px rgba(165, 108, 193, 0.55);
   }
 
   .tab-button:not(.tab-button--active):hover:not(:disabled) {
     border-color: var(--selection-color);
     color: var(--selection-color);
     transform: translateY(-0.15cqi);
-    box-shadow: 0 0 12px 3px rgba(189, 149, 221, 0.45);
+    box-shadow: 0 0 12px 3px rgba(165, 108, 193, 0.45);
   }
 
   /* New styles for points and popups */

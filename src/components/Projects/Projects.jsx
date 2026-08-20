@@ -75,7 +75,7 @@ const StatusFilter = ({ active, onChange }) => {
     );
 };
 
-const Projects = () => {
+const Projects = ({ embedded = false }) => {
     const [projects, setProjects] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [filters, setFilters] = useState({ category: 'All', status: 'All', scope: 'All', motivation: 'All' });
@@ -83,8 +83,8 @@ const Projects = () => {
     const [showFilters, setShowFilters] = useState(false);
     const navigate = useNavigate();
     const windowWidth = useWindowWidth();
-    const isMobile = windowWidth < 1024;
-    const isEmbedded = window.location.pathname === '/experience';
+    const isEmbedded = embedded || window.location.pathname === '/experience';
+    const isMobile = !isEmbedded && windowWidth < 1024;
 
     const pageSize = isMobile ? MOBILE_PAGE_SIZE : DESKTOP_PAGE_SIZE;
 
@@ -122,6 +122,7 @@ const Projects = () => {
     const handleFilterChange = (type, value) => setFilters(prev => ({ ...prev, [type]: value }));
 
     const handleNavigation = (direction) => {
+        if (totalPages <= 1) return;
         setCurrentPage(prev => (prev + direction + totalPages) % totalPages);
     };
 
@@ -155,7 +156,7 @@ const Projects = () => {
     );
 
     return (
-        <MainContainer isMobile={isMobile} fillViewport>
+        <MainContainer isMobile={isMobile} contained={isEmbedded}>
             <div
                 className="w-full h-full"
                 style={!isMobile ? { padding: responsiveGap } : { padding: '3rem 1.5rem 1rem' }}
@@ -164,9 +165,9 @@ const Projects = () => {
                 <div className={`w-full h-full ${isMobile ? 'flex flex-col' : 'flex'}`} style={{ gap: responsiveGap }}>
 
                     {/* --- Left Column (Main Content) --- */}
-                    <div className={`w-full ${isMobile ? 'order-2' : 'lg:w-4/5'} flex flex-col min-h-0`}>
+                    <div className={`${isMobile ? 'w-full order-2' : 'w-4/5'} flex flex-col min-h-0`}>
                         {isGraphView ? (
-                            <div className="w-full h-full border-2 border-[var(--foreground-color)] bg-[var(--container-background)]"><ProjectGraph projects={filteredProjects} isMobile={isMobile} /></div>
+                            <div className={`w-full h-full ${isMobile ? 'min-h-[32rem]' : 'min-h-0'} border-2 border-[var(--foreground-color)] bg-[var(--container-background)]`}><ProjectGraph projects={filteredProjects} isMobile={isMobile} /></div>
                         ) : (
                             <div className="flex-grow grid grid-cols-2 grid-rows-2 min-h-0" style={{ gap: responsiveGap }}>
                                 {gridProjects.map((project, index) => (
@@ -181,7 +182,7 @@ const Projects = () => {
                                             </div>
                                         </button>
                                     ) : (
-                                        <div key={`placeholder-${index}`} className="hidden lg:block w-full h-full border-2 border-[var(--foreground-color)]/50 bg-transparent"></div>
+                                        <div key={`placeholder-${index}`} className={`${isMobile ? 'hidden' : 'block'} w-full h-full border-2 border-[var(--foreground-color)]/50 bg-transparent`}></div>
                                     )
                                 ))}
                                 {filteredProjects.length === 0 && (
@@ -194,8 +195,8 @@ const Projects = () => {
                     </div>
 
                     {/* --- Right Column (Sidebar) --- */}
-                    <div className={`w-full ${isMobile ? 'order-1' : 'lg:w-1/5'} flex flex-col`} style={{ gap: responsiveGap }}>
-                        <div className="flex flex-wrap justify-between items-center gap-3 lg:hidden mb-4">
+                    <div className={`${isMobile ? 'w-full order-1' : 'w-1/5'} flex flex-col`} style={{ gap: responsiveGap }}>
+                        {isMobile && <div className="flex flex-wrap justify-between items-center gap-3 mb-4">
                             {!isEmbedded && (
                                 <button aria-label="Return to main" onClick={() => navigate('/', { replace: true })} className="py-2 px-3 whitespace-nowrap border-b-2 border-[var(--foreground-color)] hover:border-[var(--selection-color)] hover:text-[var(--selection-color)] transition-colors duration-300">&larr; Main</button>
                             )}
@@ -203,15 +204,15 @@ const Projects = () => {
                             <button onClick={() => setShowFilters(!showFilters)} className="py-2 px-4 border-2 border-[var(--foreground-color)] bg-[var(--container-background)] text-sm">
                                 {showFilters ? 'Hide Filters' : 'Show Filters'}
                             </button>
-                        </div>
+                        </div>}
 
-                        <div className={`lg:flex flex-col h-full ${isMobile && !showFilters ? 'hidden' : 'flex'}`} style={{ gap: responsiveGap }}>
-                            <div className="hidden lg:flex items-start justify-between gap-3">
+                        <div className={`${isMobile && !showFilters ? 'hidden' : 'flex'} flex-col h-full`} style={{ gap: responsiveGap }}>
+                            {!isMobile && <div className="flex items-start justify-between gap-3">
                                 <h2 className="text-4xl font-bold">PROJECTS</h2>
                                 {!isEmbedded && (
                                     <button aria-label="Return to main" onClick={() => navigate('/', { replace: true })} className="px-2 py-1 whitespace-nowrap border-b-2 border-[var(--foreground-color)] text-xs hover:border-[var(--selection-color)] hover:text-[var(--selection-color)] transition-colors duration-300">&larr; Main</button>
                                 )}
-                            </div>
+                            </div>}
                             <button onClick={() => setIsGraphView(!isGraphView)} className="w-full py-2 text-sm font-mono tracking-widest uppercase border-y-2 border-[var(--foreground-color)] bg-transparent text-[var(--foreground-color)] transition-all duration-300 hover:border-[var(--selection-color)] hover:text-[var(--selection-color)] hover:bg-[var(--selection-color)]/20 hover:shadow-[0_0_15px_3px_var(--glow-color)]">
                                 {isGraphView ? 'View Grid' : 'View Graph'}
                             </button>
@@ -220,8 +221,8 @@ const Projects = () => {
                             {/* Spacer to push pagination down */}
                             <div className="flex-grow" />
 
-                            {!isGraphView && (
-                                <div className="hidden lg:block">
+                            {!isGraphView && !isMobile && (
+                                <div>
                                     <PaginationControls />
                                 </div>
                             )}
@@ -229,9 +230,9 @@ const Projects = () => {
                     </div>
 
                     {/* --- Mobile-only pagination --- */}
-                    <div className="lg:hidden order-3 mt-4">
+                    {isMobile && <div className="order-3 mt-4">
                         {!isGraphView && filteredProjects.length > 0 && <PaginationControls />}
-                    </div>
+                    </div>}
                 </div>
             </div>
         </MainContainer>

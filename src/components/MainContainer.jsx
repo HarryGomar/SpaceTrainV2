@@ -1,7 +1,7 @@
 // src/components/MainContainer.jsx
 import React from 'react';
 
-const MainContainer = ({ children, isMobile, fillViewport = false }) => {
+const MainContainer = ({ children, isMobile, fillViewport = false, contained = false }) => {
     return (
         // On Desktop: A fixed, centered container with outer padding.
         // On Mobile: A standard block element that allows the page to scroll.
@@ -18,6 +18,15 @@ const MainContainer = ({ children, isMobile, fillViewport = false }) => {
                               // Mobile styles: container takes full width and at least 100% of the screen height.
                               containerType: 'inline-size', 
                               minHeight: '100vh' 
+                          }
+                        : contained
+                        ? {
+                              containerType: 'inline-size',
+                              aspectRatio: '4 / 3',
+                              width: 'auto',
+                              height: '100%',
+                              maxWidth: '100%',
+                              maxHeight: '100%',
                           }
                         : fillViewport
                         ? {

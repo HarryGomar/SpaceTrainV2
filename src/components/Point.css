@@ -29,7 +29,7 @@
 .point:hover::before,
 .point.selected::before {
     background-color: var(--selection-color);
-    box-shadow: 0 0 0.9cqi rgba(189, 149, 221, 0.95), 0 0 1.6cqi rgba(189, 149, 221, 0.6);
+    box-shadow: 0 0 0.9cqi rgba(165, 108, 193, 0.95), 0 0 1.6cqi rgba(165, 108, 193, 0.6);
     transform: scale(1.25);
     animation-duration: 1.7s;
 }
@@ -95,6 +95,6 @@
     }
     50% {
         transform: scale(1.12);
-        box-shadow: 0 0 1.35cqi rgba(189, 149, 221, 0.65);
+        box-shadow: 0 0 1.35cqi rgba(165, 108, 193, 0.65);
     }
 }
