@@ -13,7 +13,7 @@ import ProjectDetail from '../Projects/ProjectDetail';
 export default function Train(props) {
   // Asset and animation setup
   const group = useRef();
-  const { nodes, materials, animations } = useGLTF("./Train/SpaceTrainV1.glb");
+  const { nodes, materials, animations } = useGLTF("/Train/SpaceTrainV1.glb");
   const { actions } = useAnimations(animations, group);
 
   // R3F hooks
@@ -297,4 +297,4 @@ export default function Train(props) {
   );
 }
 
-useGLTF.preload('./Train/SpaceTrainV1.glb');
+useGLTF.preload('/Train/SpaceTrainV1.glb');

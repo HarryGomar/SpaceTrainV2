@@ -1,0 +1,72 @@
+// Profile facts approved in homepage study #48, transcribed from the user's CV.
+export const profile = {
+  name: 'Harry Gomar',
+  fullName: 'Rafael Harry Gomar Dawson',
+  email: 'harrygomardawson@gmail.com',
+  role: 'Computer Engineering student at ITAM',
+  introduction: 'I work on representation learning and natural language processing, with applications in law, public policy, and mobility.',
+  affiliations: 'I collaborate with Mantis at MIT CSAIL and coordinate the Computer Science division of MAKERS at ITAM.',
+  projects: [
+    {
+      id:'leyes', title:'Universo de Leyes', node:'Universo de Leyes', area:'NLP',
+      summary:'Extracting legal references to map the relationships between Mexican laws.',
+      detail:'I developed an information-extraction system that turns Mexican legal texts into citation graphs. The work included building an annotated dataset, fine-tuning RoBERTa, and training a spaCy named entity recognition pipeline.',
+      outcome:'The research led to a paper presented at ICITS 2025 and published by Springer.',
+      methods:['Information extraction','RoBERTa','spaCy','Knowledge graphs'],
+    },
+    {
+      id:'tellus', title:'Tellus', node:'Tellus', area:'Geospatial',
+      summary:'Geospatial planning for ATM locations for three major banks in Mexico.',
+      detail:'I built a geospatial decision-support platform for identifying high-potential ATM locations for three major banks in Mexico. Representation learning and machine learning were used to model local demand, competitor coverage, and transaction potential.',
+      outcome:'The platform brings these signals together to support decisions about where to expand ATM networks.',
+      methods:['Representation learning','Machine learning','Geospatial analysis'],
+    },
+    {
+      id:'semovi', title:'SEMOVI route extraction', node:'SEMOVI routes', area:'Geospatial',
+      summary:'Converting scanned public-transport records into geospatial routes.',
+      detail:'I built a route-extraction pipeline for SEMOVI that digitizes written public-transport routes. The system processes official scanned documents, extracts route information, and reconstructs the corresponding geospatial paths.',
+      outcome:'The work connects information extraction from documents with usable map data.',
+      methods:['Image processing','Information extraction','Geospatial data'],
+    },
+    {
+      id:'informality', title:'Commercial informality in Mexico', node:'Commercial informality', area:'Policy',
+      summary:'Winning INEGI Datatón 2025 analysis of where formalization policies could help.',
+      detail:'I worked on the winning INEGI Datatón 2025 analysis to identify products, regions, and business segments where targeted interventions could reduce commercial informality in Mexico.',
+      outcome:'The prioritization model used wages, social-security coverage, educational attainment, and Economic Census data to diagnose barriers to formalization and recommend targeted policy actions.',
+      methods:['Public policy','Economic Census data','Prioritization models'],
+    },
+    {
+      id:'autoparts', title:'Sustainable alternatives for car parts', node:'Auto-parts catalogues', area:'NLP',
+      summary:'Information extraction for automotive catalogues with inconsistent formats.',
+      detail:'I collaborated with InvierteSustentable and JetzApp to explore information extraction for sustainable automotive-part alternatives. I experimented with LLM-based agents that adapt Python data-processing functions to the differing characteristics of catalogues.',
+      outcome:'The work explored how to process inconsistent catalogue structures for comparison across suppliers.',
+      methods:['LLM agents','Python','Information extraction'],
+    },
+    {
+      id:'cosmic', title:'COSMIC software analysis', node:'COSMIC analysis', area:'NLP',
+      summary:'An NLP prototype for software functional size analysis at Spingere.',
+      detail:'During research internships at Spingere in 2022 and 2023, I researched, planned, and prototyped an NLP solution to automate COSMIC software functional size analysis.',
+      outcome:'The project examined how written software requirements could support automated functional analysis.',
+      methods:['NLP','Software requirements','Research prototyping'],
+    },
+  ],
+  experience:[
+    {organization:'Mantis · MIT CSAIL',role:'Collaborating Researcher',dates:'Aug 2025 to present',description:'Interdisciplinary research on representation learning and embedding-based methods across law, patents, political science, and other applied domains.'},
+    {organization:'MAKERS · ITAM',role:'Coordinator, Computer Science Division',dates:'Aug 2023 to present',description:'Led and mentored 15 students across 7 development and 9 research projects. Coordinated recruitment and work in data science and software development.'},
+    {organization:'Universo de Leyes',role:'Lead Researcher',dates:'Nov 2022 to 2025',description:'Built the annotated dataset, information-extraction pipeline, and citation graphs for Mexican legal texts.'},
+    {organization:'Spingere',role:'Research Intern',dates:'Jun to Aug 2022; Jun to Jul 2023',description:'Research and prototyping of NLP methods for COSMIC software functional size analysis.'},
+  ],
+  publication:{
+    title:'Comparative Analysis of Information Extraction Techniques in the Mexican Legal System',
+    authors:'F. Valdés-Souto, R. H. Gomar-Dawson, D. A. Méndez-Uzcátegui',
+    venue:'Information Technology and Systems, ICITS 2025. Springer, pp. 179–188.',
+    url:'https://doi.org/10.1007/978-3-031-93103-1_18',
+  },
+  teaching:'Instructor and lecturer for MIT IAP 6.S189 and 6.S187, and MIT Sloan 15.S65. Topics included applied AI, machine learning, and deployment.',
+  talks:[
+    {title:'Universo de Leyes',venue:'Seminario de Ingeniería de Software y Sus Implicaciones, Facultad de Ciencias, UNAM',date:'Nov 2024'},
+    {title:'Universo de Leyes',venue:'Seminario Recursivo, ITAM',date:'Mar 2024'},
+    {title:'¿Y si pudiéramos entender el contexto a través de los datos? · Player2Vec',venue:'Hudl StatsBomb, ITAM Sports Analytics Conference',date:'2025'},
+  ],
+  recognition:['INEGI Datatón winner, 2025','ISAC Hackathon winner, 2025','ITAM Hackathon winner, 2023','ITAM Engineering Academic Excellence Recognition, 2023–2025'],
+};

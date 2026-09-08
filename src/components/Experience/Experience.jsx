@@ -1,10 +1,15 @@
 // src/components/Experience.jsx
 import React, { Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, KeyboardControls } from '@react-three/drei';
+import { OrbitControls, KeyboardControls, Html, useProgress } from '@react-three/drei';
 import SpaceBox from './SpaceBox';
 import Train from './Train';
 import OnScreenControls from './OnScreenControls';
+
+function TrainLoading() {
+    const { progress } = useProgress();
+    return <Html center><p role="status" style={{color:'#ffeffe',whiteSpace:'nowrap',fontSize:'14px'}}>Loading train{Number.isFinite(progress)&&progress>0?` · ${Math.round(progress)}%`:''}</p></Html>;
+}
 
 const Experience = () => {
     return (
@@ -23,7 +28,7 @@ const Experience = () => {
                         far: 2000,
                     }}
                 >
-                    <Suspense fallback={null}>
+                    <Suspense fallback={<TrainLoading />}>
                         <OrbitControls
                             makeDefault
                             panSpeed={0.1}
