@@ -3,7 +3,7 @@ import {afterEach,beforeEach,describe,expect,it,vi} from 'vitest';
 import {cleanup,fireEvent,render,screen,within} from '@testing-library/react';
 import {MemoryRouter,Route,Routes,useLocation} from 'react-router-dom';
 import Home from './Home';
-import {homeProjects,fields,layoutProjectMap} from './homeProjects';
+import {homeProjects,fields,layoutProjectMap,projectConnections} from './homeProjects';
 import originalProjects from '../Projects/projects.json';
 
 function Location(){const location=useLocation();return <output data-testid="location">{location.pathname}</output>;}
@@ -28,15 +28,19 @@ describe('Live academic homepage',()=>{
         expect(screen.getByRole('link',{name:'Explore the interactive experience'}).getAttribute('href')).toBe('/experience');
         expect(container.querySelector('.home-header a[download]').getAttribute('href')).toBe('/home/harry-gomar-cv.pdf');
     });
-    it('filters only the graph, keeps the complete archive, and opens a project from a node',()=>{
+    it('highlights a field without moving nodes, keeps the archive, and opens selected details',()=>{
         const {container}=mount();
+        const positions=[...container.querySelectorAll('.home-graph-node')].map(node=>node.getAttribute('style'));
         const filter=screen.getByRole('group',{name:'Project map field'});
         fireEvent.click(within(filter).getByRole('button',{name:'Software',exact:true}));
         const software=homeProjects.filter(project=>project.category==='Software');
-        expect(container.querySelectorAll('.home-graph-node')).toHaveLength(software.length);
-        expect(container.querySelectorAll('.home-node-name')).toHaveLength(software.length);
+        expect(container.querySelectorAll('.home-graph-node')).toHaveLength(homeProjects.length);
+        expect(container.querySelectorAll('.home-graph-node:not(.is-muted)')).toHaveLength(software.length);
+        expect([...container.querySelectorAll('.home-graph-node')].map(node=>node.getAttribute('style'))).toEqual(positions);
         expect(within(screen.getByRole('region',{name:'All projects'})).getAllByRole('link')).toHaveLength(homeProjects.length);
         fireEvent.click(screen.getByRole('button',{name:'Tellus, Software'}));
+        expect(screen.getByTestId('location').textContent).toBe('/');
+        fireEvent.click(within(screen.getByRole('region',{name:'Interactive project map'})).getByRole('button',{name:'Tellus',exact:true}));
         expect(screen.getByTestId('location').textContent).toBe('/projects/16');
         expect(within(screen.getByRole('dialog')).getByRole('heading',{name:'Tellus'})).not.toBeNull();
         fireEvent.click(screen.getByRole('button',{name:'Close details'}));
@@ -66,20 +70,74 @@ describe('Live academic homepage',()=>{
 });
 
 describe('Project map geometry',()=>{
-    it('keeps all 24 nodes distinct, within the drawing, and connected to their real field',()=>{
-        const {nodes,hubs}=layoutProjectMap(homeProjects);
+    it('keeps all projects distinct and within the drawing',()=>{
+        const {nodes}=layoutProjectMap(homeProjects);
         expect(new Set(nodes.map(node=>node.id)).size).toBe(homeProjects.length);
         for(const node of nodes){
             expect(node.x).toBeGreaterThan(4);expect(node.x).toBeLessThan(96);
             expect(node.y).toBeGreaterThan(4);expect(node.y).toBeLessThan(96);
-            expect(hubs.some(hub=>hub.category===node.category&&hub.x===node.hubX&&hub.y===node.hubY)).toBe(true);
             for(const other of nodes.filter(other=>other.id!==node.id))expect(Math.hypot(node.x-other.x,node.y-other.y)).toBeGreaterThan(10);
         }
     });
-    it.each(fields)('gives %s project labels separate rows and columns',field=>{
-        const {nodes}=layoutProjectMap(homeProjects,field);
-        expect(nodes).toHaveLength(homeProjects.filter(project=>project.category===field).length);
-        expect(new Set(nodes.map(node=>`${node.x},${node.y}`)).size).toBe(nodes.length);
-        expect(nodes.every(node=>node.category===field&&node.y>=29&&node.y<=82)).toBe(true);
+    it.each(fields)('keeps every coordinate fixed when highlighting %s',field=>{
+        const overview=layoutProjectMap(homeProjects);
+        const filtered=layoutProjectMap(homeProjects,field);
+        expect(filtered.nodes.map(({id,x,y})=>({id,x,y}))).toEqual(overview.nodes.map(({id,x,y})=>({id,x,y})));
+        expect(filtered.nodes.filter(node=>node.matches).map(node=>node.id)).toEqual(homeProjects.filter(node=>node.category===field).map(node=>node.id));
+    });
+    it('uses explained, unique relationships between existing projects, with real cross-field links',()=>{
+        const {edges}=layoutProjectMap(homeProjects);
+        expect(edges).toHaveLength(projectConnections.length);
+        expect(new Set(edges.map(edge=>[edge.source,edge.target].sort().join('-'))).size).toBe(edges.length);
+        for(const edge of edges){
+            expect(edge.source).not.toBe(edge.target);
+            expect(edge.reason.length).toBeGreaterThan(15);
+            expect(edge.from.id).toBe(edge.source);expect(edge.to.id).toBe(edge.target);
+        }
+        expect(edges.some(edge=>edge.source===14&&edge.target===16&&edge.from.category!==edge.to.category)).toBe(true);
+        expect(edges.some(edge=>edge.source===27||edge.target===27)).toBe(false);
+        expect(layoutProjectMap(homeProjects.filter(project=>project.id!==7)).edges.every(edge=>edge.source!==7&&edge.target!==7)).toBe(true);
+    });
+});
+
+describe('Project relationships',()=>{
+    it('reveals neighbors on keyboard focus and restores the overview on blur',()=>{
+        const {container}=mount();
+        const node=screen.getByRole('button',{name:'SEMOVI route extraction, Data'});
+        fireEvent.focus(node);
+        const relationships=screen.getByRole('list',{name:'Related projects'});
+        expect(within(relationships).getByRole('button',{name:'Tellus'})).not.toBeNull();
+        expect(within(relationships).getByText('Geospatial pipelines and map-based analysis.')).not.toBeNull();
+        expect(container.querySelectorAll('.home-graph path.is-active')).toHaveLength(3);
+        expect(container.querySelector('[data-project-id="16"]').classList.contains('is-related')).toBe(true);
+        fireEvent.blur(node);
+        expect(screen.queryByRole('list',{name:'Related projects'})).toBeNull();
+    });
+    it('pins a selection for touch, opens a related project, and clears with Escape',()=>{
+        const {container}=mount();
+        const node=screen.getByRole('button',{name:'SEMOVI route extraction, Data'});
+        fireEvent.click(node);
+        fireEvent.pointerLeave(node);
+        expect(node.getAttribute('aria-pressed')).toBe('true');
+        const relationships=screen.getByRole('list',{name:'Related projects'});
+        fireEvent.click(within(relationships).getByRole('button',{name:'Tellus'}));
+        expect(screen.getByTestId('location').textContent).toBe('/projects/16');
+        fireEvent.click(screen.getByRole('button',{name:'Close details'}));
+        fireEvent.keyDown(node,{key:'Escape'});
+        expect(node.getAttribute('aria-pressed')).toBe('false');
+        expect(container.querySelectorAll('.home-graph path.is-active')).toHaveLength(0);
+    });
+    it('resets a pinned selection when changing fields and supports independent projects',()=>{
+        mount();
+        fireEvent.click(screen.getByRole('button',{name:'SEMOVI route extraction, Data'}));
+        const filter=screen.getByRole('group',{name:'Project map field'});
+        fireEvent.click(within(filter).getByRole('button',{name:'Hardware',exact:true}));
+        expect(screen.queryByRole('list',{name:'Related projects'})).toBeNull();
+        const cpu=screen.getByRole('button',{name:'Basic CPU from Logic Gates, Hardware'});
+        fireEvent.click(cpu);
+        expect(cpu.getAttribute('aria-pressed')).toBe('true');
+        expect(screen.queryByRole('list',{name:'Related projects'})).toBeNull();
+        fireEvent.click(screen.getByRole('button',{name:'Clear selection'}));
+        expect(cpu.getAttribute('aria-pressed')).toBe('false');
     });
 });
