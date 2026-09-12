@@ -1,7 +1,7 @@
 import React, {useMemo, useState} from 'react';
 import {fields, layoutProjectMap, projectNumber} from './homeProjects';
 
-export default function HomeProjectMap({projects,activeId,onHighlight,onOpen}) {
+export default function HomeProjectMap({projects,activeId,onHighlight,onOpen,onBrowse,onConnections}) {
     const [field,setField] = useState('All');
     const [pinnedId,setPinnedId] = useState(null);
     const {regions,nodes,edges} = useMemo(() => layoutProjectMap(projects,field),[projects,field]);
@@ -47,16 +47,13 @@ export default function HomeProjectMap({projects,activeId,onHighlight,onOpen}) {
         </div>
         <div className="home-map-caption">
             {active ? <>
-                <div className="home-map-selection"><button className="home-link" onClick={() => onOpen(active.id)}>{active.title}</button>
-                    {pinnedId!==null&&<button className="home-map-clear" onClick={reset}>Clear selection</button>}</div>
+                <div className="home-map-selection"><button className="home-link" onClick={() => onOpen(active.id)}>{active.title}</button></div>
                 <p>{active.summary}</p>
-                {connections.length>0&&<ul className="home-map-connections" aria-label="Related projects">
-                    {connections.map(edge => {
-                        const other=edge.source===active.id?edge.to:edge.from;
-                        return <li key={other.id}><button className="home-link" onClick={()=>onOpen(other.id)}>{other.title}</button><span>{edge.reason}</span></li>;
-                    })}
-                </ul>}
-            </> : <><span>{field==='All'?nodes.length+' projects across '+regions.length+' fields':nodes.filter(node=>node.matches).length+' '+field+' projects highlighted'}</span><a className="home-link" href="#all-projects">Browse the complete index</a></>}
+                <div className="home-map-actions">
+                    {connections.length>0&&<button className="home-link" onClick={()=>onConnections(active.id)}>{connections.length} related projects</button>}
+                    {pinnedId!==null&&<button className="home-map-clear" onClick={reset}>Clear selection</button>}
+                </div>
+            </> : <><span>{field==='All'?nodes.length+' projects across '+regions.length+' fields':nodes.filter(node=>node.matches).length+' '+field+' projects highlighted'}</span><a className="home-link" href="#all-projects" onClick={onBrowse}>Browse the complete index</a></>}
         </div>
     </section>;
 }

@@ -18,9 +18,12 @@ beforeEach(()=>{
 afterEach(()=>cleanup());
 
 describe('Live academic homepage',()=>{
-    it('exposes every original project in the visible archive and in the graph',()=>{
+    it('starts with a collapsed archive and exposes every project when expanded',()=>{
         const {container}=mount();
         const archive=screen.getByRole('region',{name:'All projects'});
+        expect(within(archive).queryAllByRole('link')).toHaveLength(0);
+        expect(screen.getByText('I work on representation learning and natural language processing.')).not.toBeNull();
+        fireEvent.click(within(archive).getByRole('button',{name:'All projects Show 24'}));
         const links=within(archive).getAllByRole('link');
         expect(links).toHaveLength(originalProjects.length);
         for(const item of originalProjects)expect(links.some(link=>link.getAttribute('href')===`/projects/${item.id}`)).toBe(true);
@@ -37,6 +40,8 @@ describe('Live academic homepage',()=>{
         expect(container.querySelectorAll('.home-graph-node')).toHaveLength(homeProjects.length);
         expect(container.querySelectorAll('.home-graph-node:not(.is-muted)')).toHaveLength(software.length);
         expect([...container.querySelectorAll('.home-graph-node')].map(node=>node.getAttribute('style'))).toEqual(positions);
+        expect(within(screen.getByRole('region',{name:'All projects'})).queryAllByRole('link')).toHaveLength(0);
+        fireEvent.click(screen.getByRole('link',{name:'All 24 projects'}));
         expect(within(screen.getByRole('region',{name:'All projects'})).getAllByRole('link')).toHaveLength(homeProjects.length);
         fireEvent.click(screen.getByRole('button',{name:'Tellus, Software'}));
         expect(screen.getByTestId('location').textContent).toBe('/');
@@ -105,9 +110,8 @@ describe('Project relationships',()=>{
         const {container}=mount();
         const node=screen.getByRole('button',{name:'SEMOVI route extraction, Data'});
         fireEvent.focus(node);
-        const relationships=screen.getByRole('list',{name:'Related projects'});
-        expect(within(relationships).getByRole('button',{name:'Tellus'})).not.toBeNull();
-        expect(within(relationships).getByText('Geospatial pipelines and map-based analysis.')).not.toBeNull();
+        expect(screen.queryByRole('list',{name:'Related projects'})).toBeNull();
+        expect(screen.getByRole('button',{name:'3 related projects'})).not.toBeNull();
         expect(container.querySelectorAll('.home-graph path.is-active')).toHaveLength(3);
         expect(container.querySelector('[data-project-id="16"]').classList.contains('is-related')).toBe(true);
         fireEvent.blur(node);
@@ -119,7 +123,10 @@ describe('Project relationships',()=>{
         fireEvent.click(node);
         fireEvent.pointerLeave(node);
         expect(node.getAttribute('aria-pressed')).toBe('true');
+        fireEvent.click(screen.getByRole('button',{name:'3 related projects'}));
+        expect(screen.getByRole('dialog')).not.toBeNull();
         const relationships=screen.getByRole('list',{name:'Related projects'});
+        expect(within(relationships).getByText('Geospatial pipelines and map-based analysis.')).not.toBeNull();
         fireEvent.click(within(relationships).getByRole('button',{name:'Tellus'}));
         expect(screen.getByTestId('location').textContent).toBe('/projects/16');
         fireEvent.click(screen.getByRole('button',{name:'Close details'}));
@@ -139,5 +146,27 @@ describe('Project relationships',()=>{
         expect(screen.queryByRole('list',{name:'Related projects'})).toBeNull();
         fireEvent.click(screen.getByRole('button',{name:'Clear selection'}));
         expect(cpu.getAttribute('aria-pressed')).toBe('false');
+    });
+});
+
+describe('Compact homepage',()=>{
+    it('opens the archive from its direct route and collapses it again',()=>{
+        mount('/projects');
+        const archive=screen.getByRole('region',{name:'All projects'});
+        expect(within(archive).getAllByRole('link')).toHaveLength(24);
+        fireEvent.click(within(archive).getByRole('button',{name:'All projects Hide 24'}));
+        expect(within(archive).queryAllByRole('link')).toHaveLength(0);
+        fireEvent.click(screen.getByRole('link',{name:'Browse the complete index'}));
+        expect(within(archive).getAllByRole('link')).toHaveLength(24);
+    });
+    it('keeps current work beside the map and closes relationship details with Escape',()=>{
+        const {container}=mount();
+        expect(container.querySelector('.home-project-column .home-current')).not.toBeNull();
+        expect(container.querySelector('aside .home-current')).toBeNull();
+        fireEvent.click(screen.getByRole('button',{name:'SEMOVI route extraction, Data'}));
+        fireEvent.click(screen.getByRole('button',{name:'3 related projects'}));
+        fireEvent(screen.getByRole('dialog'),new Event('cancel',{cancelable:true}));
+        expect(screen.queryByRole('dialog')).toBeNull();
+        expect(document.body.style.overflow).not.toBe('hidden');
     });
 });
