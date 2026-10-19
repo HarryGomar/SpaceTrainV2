@@ -4,8 +4,7 @@ export const profile = {
   fullName: 'Rafael Harry Gomar Dawson',
   email: 'harrygomardawson@gmail.com',
   role: 'Computer Engineering student at ITAM',
-  introduction: 'I work on representation learning and natural language processing.',
-  affiliations: 'I collaborate with Mantis at MIT CSAIL and coordinate the Computer Science division of MAKERS at ITAM.',
+  statement: 'I work on representation learning and natural language processing, collaborating with Mantis at MIT CSAIL, and coordinate the Computer Science division of MAKERS at ITAM.',
   projects: [
     {
       id:'leyes', title:'Universo de Leyes', node:'Universo de Leyes', area:'NLP',

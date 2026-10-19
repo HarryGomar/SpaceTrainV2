@@ -4,66 +4,73 @@ import { profile } from '../../data/profile';
 const cvIds = { leyes:7, tellus:16, semovi:14, informality:30, autoparts:15, cosmic:11 };
 const cvById = new Map(profile.projects.map(project => [cvIds[project.id], project]));
 
+// Research topics lead the page; the rest describe what else the archive contains.
+export const topics = [
+    {id:'nlp',name:'NLP and information extraction',label:'NLP',research:true,x:18,y:15,
+        summary:'Turning legal texts, catalogues, requirements and scanned records into structured data.',highlights:[7,14]},
+    {id:'representation',name:'Representation learning',label:'Representation learning',research:true,x:57,y:13,
+        summary:'Embedding-based methods for text, places and sequences, now with Mantis at MIT CSAIL.',highlights:[16,9]},
+    {id:'geospatial',name:'Geospatial and public data',label:'Geospatial data',research:true,x:84,y:40,
+        summary:'Location planning and policy analysis built on public and economic data.',highlights:[30,12]},
+    {id:'software',name:'Software and games',label:'Software',x:56,y:80,
+        summary:'Web apps, games and simulations, built end to end.'},
+    {id:'hardware',name:'Hardware',label:'Hardware',x:14,y:88,
+        summary:'Digital logic, embedded systems and fabrication.'},
+    {id:'teaching',name:'Teaching',label:'Teaching',x:14,y:62,
+        summary:'Applied AI courses at MIT and hands-on workshops at ITAM.'},
+];
+export const topicById = new Map(topics.map(topic => [topic.id, topic]));
+
+// The first topic is the project's home in the archive; the others are real overlaps.
+const projectTopics = {
+    7:['nlp','representation'], 8:['nlp'], 9:['nlp','representation'], 10:['representation'], 11:['nlp'],
+    12:['geospatial'], 13:['geospatial'], 14:['geospatial','nlp'], 15:['nlp'], 16:['geospatial','representation'],
+    30:['geospatial'], 31:['teaching'], 17:['software','teaching'], 18:['software'], 19:['software'],
+    20:['software'], 21:['software'], 22:['software'], 23:['software'], 24:['software'],
+    25:['software'], 26:['hardware'], 27:['hardware'], 28:['hardware','teaching'],
+};
+
+const shortNames = {
+    7:'Universo de Leyes', 8:'Catalogue agents', 9:'Ethics survey', 10:'Futbol Transformer', 11:'COSMIC',
+    12:'ANTAD pharmacies', 13:'Gol Tempranero', 14:'SEMOVI routes', 15:'Auto parts', 16:'Tellus',
+    30:'Informality', 31:'MIT teaching', 17:'El Critón', 18:'Space Train', 19:'CASAPP', 20:'Datodos',
+    21:'AuthentiQR', 22:'Latent Lull', 23:'Tic-tac-toe AI', 24:'Baldosa', 25:'Safari sim',
+    26:'Sense It', 27:'Logic-gate CPU', 28:'3D scanning',
+};
+
 export const homeProjects = archive.map(project => {
     const cv = cvById.get(project.id);
     return {
         ...project,
         title: cv?.title || project.title,
+        shortName: shortNames[project.id] || project.title,
+        topics: projectTopics[project.id] || ['software'],
         summary: cv?.summary || project.description.split(/\.\s|\.\n/)[0].replace(/\.$/, '') + '.',
         description: cv ? `${cv.detail}\n\n${cv.outcome}` : project.description,
         years: project.id === 7 ? '2022–2025' : project.id === 11 ? '2022–2023' : project.years,
     };
 });
 
-export const selectedIds = [7,16,14,30];
-export const fields = ['NLP','Data','Software','Hardware','Teaching'];
-export const projectNumber = id => String(homeProjects.findIndex(project => project.id === id) + 1).padStart(2,'0');
-
-// Connections are editorially grounded in the archive, not inferred from category alone.
-export const projectConnections = [
-    {source:7,target:11,reason:'Information extraction from legal texts and software requirements.',strong:true},
-    {source:7,target:14,reason:'Turning document references into structured relationships.',strong:true},
-    {source:8,target:15,reason:'Catalogue formatting is part of the sustainable auto-parts initiative.',strong:true},
-    {source:14,target:15,reason:'Extracting usable data from inconsistent scanned documents.'},
-    {source:14,target:16,reason:'Geospatial pipelines and map-based analysis.',strong:true},
-    {source:16,target:12,reason:'Predicting demand to compare potential expansion locations.',strong:true},
-    {source:12,target:30,reason:'Using INEGI economic and regional data to prioritize locations.'},
-    {source:10,target:13,reason:'Modelling football event sequences and tactical patterns.',strong:true},
-    {source:9,target:7,reason:'Applying NLP to structure and analyze written texts.'},
-    {source:31,target:7,reason:'Universo de Leyes research presented in seminars at UNAM and ITAM.',strong:true},
-    {source:31,target:28,reason:'Teaching technical methods through practical work.',strong:true},
-    {source:28,target:26,reason:'SolidWorks modelling and fabrication of physical parts.'},
-    {source:17,target:24,reason:'Interactive interpretations of classical texts.',strong:true},
-    {source:24,target:18,reason:'Building visual, interactive experiences.',strong:true},
-    {source:18,target:22,reason:'Personal creative work in interactive worlds.'},
-    {source:22,target:23,reason:'Game development.'},
-    {source:19,target:20,reason:'Web applications supporting students.'},
-    {source:19,target:17,reason:'Angular applications built for students.'},
-    {source:23,target:25,reason:'Modelling agents and their behavior in simulated environments.'},
-];
+export const topicNames = project => project.topics.map(id => topicById.get(id).name).join(' · ');
+export const projectsInTopic = (projects, topicId) => projects.filter(project => project.topics.includes(topicId));
 
 const positions = {
-    7:[36,18], 8:[58,12], 9:[12,30], 10:[28,38], 11:[18,13],
-    12:[85,61], 13:[34,57], 14:[51,36], 15:[78,22], 16:[77,45],
-    30:[65,68], 31:[15,48], 17:[35,72], 18:[59,92], 19:[33,91],
-    20:[22,77], 21:[86,9], 22:[70,83], 23:[49,59], 24:[47,84],
-    25:[89,93], 26:[8,82], 27:[9,95], 28:[9,65],
+    7:[38,23], 9:[35,4], 10:[83,6], 16:[72,26], 13:[95,22],
+    11:[5,30], 8:[22,40], 15:[5,47], 14:[50,42],
+    12:[94,52], 30:[80,63], 31:[30,56], 28:[5,75], 17:[27,73],
+    23:[43,69], 24:[56,66], 22:[68,70], 21:[74,82], 20:[68,93], 19:[54,95], 18:[41,92], 25:[38,81],
+    26:[29,95], 27:[5,95],
 };
-const shortNames = {7:'Universo de Leyes',14:'SEMOVI',16:'Tellus'};
-const regions = [
-    {category:'NLP',x:36,y:3}, {category:'Data',x:85,y:35},
-    {category:'Software',x:53,y:73}, {category:'Hardware',x:10,y:76},
-    {category:'Teaching',x:10,y:41},
-];
 
-// Coordinates never change on selection or filtering, preserving the reader's bearings.
-export function layoutProjectMap(projects, field = 'All') {
+// Coordinates never change on selection, preserving the reader's bearings.
+export function layoutProjectMap(projects) {
     const nodes = projects.map((project,index) => {
         const [x,y] = positions[project.id] || [12 + index % 5 * 18,12 + Math.floor(index / 5) * 18];
-        return {...project,x,y,shortName:shortNames[project.id],matches:field==='All'||project.category===field};
+        return {...project,x,y};
     });
-    const byId = new Map(nodes.map(node => [node.id,node]));
-    const edges = projectConnections.filter(edge => byId.has(edge.source)&&byId.has(edge.target))
-        .map(edge => ({...edge,from:byId.get(edge.source),to:byId.get(edge.target)}));
-    return {nodes,edges,regions:regions.filter(region=>projects.some(project=>project.category===region.category))};
+    const hubs = topics.map(topic => ({...topic,count:projectsInTopic(projects,topic.id).length})).filter(hub => hub.count>0);
+    const hubById = new Map(hubs.map(hub => [hub.id,hub]));
+    const edges = nodes.flatMap(node => node.topics.filter(id => hubById.has(id))
+        .map(id => ({project:node.id,topic:id,from:node,to:hubById.get(id)})));
+    return {nodes,hubs,edges};
 }

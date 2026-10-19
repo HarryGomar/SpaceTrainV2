@@ -1,59 +1,69 @@
 import React, {useMemo, useState} from 'react';
-import {fields, layoutProjectMap, projectNumber} from './homeProjects';
+import {layoutProjectMap, projectsInTopic, topicById} from './homeProjects';
 
-export default function HomeProjectMap({projects,activeId,onHighlight,onOpen,onBrowse,onConnections}) {
-    const [field,setField] = useState('All');
-    const [pinnedId,setPinnedId] = useState(null);
-    const {regions,nodes,edges} = useMemo(() => layoutProjectMap(projects,field),[projects,field]);
-    const selectedId = activeId ?? pinnedId;
-    const active = nodes.find(project => project.id === selectedId);
-    const connections = active ? edges.filter(edge => edge.source===active.id||edge.target===active.id) : [];
-    const neighbors = new Set(connections.flatMap(edge=>[edge.source,edge.target]));
-    const reset = () => {setPinnedId(null);onHighlight(null);};
-    const select = id => {const next=pinnedId===id?null:id;setPinnedId(next);onHighlight(next);};
+// Selection is either {kind:'project',id} or {kind:'topic',id}; hover state comes from the page.
+export default function HomeProjectMap({projects,highlight,onHighlight,onOpen,onBrowse}) {
+    const [pinned,setPinned] = useState(null);
+    const {nodes,hubs,edges} = useMemo(() => layoutProjectMap(projects),[projects]);
+    const selection = highlight ?? pinned;
+    const project = selection?.kind==='project' ? nodes.find(node => node.id===selection.id) : null;
+    const topic = selection?.kind==='topic' ? hubs.find(hub => hub.id===selection.id) : null;
+    const isPinned = (kind,id) => pinned?.kind===kind&&pinned.id===id;
+    const reset = () => {setPinned(null);onHighlight(null);};
+    const pin = next => {const value=isPinned(next.kind,next.id)?null:next;setPinned(value);onHighlight(value);};
+    const hoverProps = item => ({
+        onPointerEnter:event => {if(event.pointerType!=='touch')onHighlight(item);},
+        onPointerLeave:() => onHighlight(pinned),
+        onFocus:() => onHighlight(item),
+        onBlur:() => onHighlight(pinned),
+    });
+    const edgeActive = edge => project ? edge.project===project.id : topic ? edge.topic===topic.id : false;
+    const nodeState = node => project ? (node.id===project.id?'is-active':'is-muted')
+        : topic ? (node.topics.includes(topic.id)?'is-related':'is-muted') : '';
+    const hubState = hub => topic ? (hub.id===topic.id?'is-active':'is-muted')
+        : project ? (project.topics.includes(hub.id)?'is-related':'is-muted') : '';
 
     return <section className="home-map" aria-label="Interactive project map" onKeyDown={event=>{
         if(event.key==='Escape'){reset();event.stopPropagation();}
     }}>
-        <div className="home-map-filters" role="group" aria-label="Project map field">
-            {['All',...fields].map(name => <button key={name} aria-pressed={field===name} onClick={() => {setField(name);reset();}}>{name}</button>)}
-        </div>
-        <div className="home-graph home-graph-network">
+        <div className="home-map-heading"><h2>All {nodes.length} projects by topic</h2><span>Lines join each project to its topics</span></div>
+        <div className="home-graph">
             <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-                <g fill="none">{edges.map(edge => {
-                    const connected=edge.source===selectedId||edge.target===selectedId;
-                    const matches=edge.from.matches||edge.to.matches;
-                    return <path key={edge.source+'-'+edge.target} data-source={edge.source} data-target={edge.target}
-                        className={connected?'is-active':active||!matches?'is-muted':edge.strong?'is-strong':'is-secondary'}
-                        d={'M'+edge.from.x+' '+edge.from.y+' L'+edge.to.x+' '+edge.to.y}/>;
-                })}</g>
+                <g fill="none">{edges.map(edge => <path key={edge.project+'-'+edge.topic} data-project={edge.project} data-topic={edge.topic}
+                    className={edgeActive(edge)?'is-active':selection?'is-muted':edge.to.research?'is-research':''}
+                    d={'M'+edge.from.x+' '+edge.from.y+' L'+edge.to.x+' '+edge.to.y}/>)}</g>
             </svg>
-            {regions.map(region => <span className={'home-graph-region '+(field!=='All'&&field!==region.category?'is-muted':'')} key={region.category} style={{left:region.x+'%',top:region.y+'%'}}>{region.category}</span>)}
-            {nodes.map(node => {
-                const selected=node.id===selectedId;
-                const related=neighbors.has(node.id);
-                const muted=active?!related:!node.matches;
-                return <button key={node.id} data-project-id={node.id}
-                    className={['home-graph-node',selected?'is-active':related?'is-related':muted?'is-muted':'',
-                        node.y>78?'is-at-bottom':'',node.x<27?'is-at-left':node.x>73?'is-at-right':''].join(' ')}
-                    style={{left:node.x+'%',top:node.y+'%'}} aria-label={node.title+', '+node.category}
-                    aria-pressed={pinnedId===node.id} onClick={() => select(node.id)}
-                    onPointerEnter={event => {if(event.pointerType!=='touch')onHighlight(node.id);}}
-                    onPointerLeave={() => onHighlight(pinnedId)} onFocus={() => onHighlight(node.id)} onBlur={() => onHighlight(pinnedId)}>
-                    <i aria-hidden="true"/><span className="home-node-number" aria-hidden="true">{projectNumber(node.id)}</span>
-                    {(node.shortName||selected)&&<span className={'home-node-name '+(selected?'is-revealed':'')} aria-hidden="true">{selected?node.title:node.shortName}</span>}
-                </button>;
-            })}
+            {hubs.map(hub => <button key={hub.id} data-topic-id={hub.id}
+                className={['home-map-hub',hub.research?'is-research':'',hubState(hub)].join(' ')}
+                style={{left:hub.x+'%',top:hub.y+'%'}} aria-label={hub.name+', '+hub.count+' projects'}
+                aria-pressed={isPinned('topic',hub.id)} onClick={() => pin({kind:'topic',id:hub.id})} {...hoverProps({kind:'topic',id:hub.id})}>
+                {hub.label}<span aria-hidden="true">{hub.count}</span>
+            </button>)}
+            {nodes.map(node => <button key={node.id} data-project-id={node.id}
+                className={['home-graph-node',nodeState(node),node.x<14?'is-at-left':node.x>86?'is-at-right':''].join(' ')}
+                style={{left:node.x+'%',top:node.y+'%'}} aria-label={node.title+', '+node.topics.map(id=>topicById.get(id).name).join(', ')}
+                aria-pressed={isPinned('project',node.id)} onClick={() => pin({kind:'project',id:node.id})} {...hoverProps({kind:'project',id:node.id})}>
+                <i aria-hidden="true"/><span className="home-node-name" aria-hidden="true">{node.shortName}</span>
+            </button>)}
         </div>
-        <div className="home-map-caption">
-            {active ? <>
-                <div className="home-map-selection"><button className="home-link" onClick={() => onOpen(active.id)}>{active.title}</button></div>
-                <p>{active.summary}</p>
+        <div className="home-map-caption" aria-live="polite">
+            {project ? <>
+                <button className="home-link home-map-title" onClick={() => onOpen(project.id)}>{project.title}</button>
+                <p>{project.summary}</p>
                 <div className="home-map-actions">
-                    {connections.length>0&&<button className="home-link" onClick={()=>onConnections(active.id)}>{connections.length} related projects</button>}
-                    {pinnedId!==null&&<button className="home-map-clear" onClick={reset}>Clear selection</button>}
+                    {project.topics.map(id => <button key={id} className="home-map-chip" onClick={() => pin({kind:'topic',id})}>{topicById.get(id).name}</button>)}
+                    {pinned&&<button className="home-map-clear" onClick={reset}>Clear selection</button>}
                 </div>
-            </> : <><span>{field==='All'?nodes.length+' projects across '+regions.length+' fields':nodes.filter(node=>node.matches).length+' '+field+' projects highlighted'}</span><a className="home-link" href="#all-projects" onClick={onBrowse}>Browse the complete index</a></>}
+            </> : topic ? <>
+                <div className="home-map-title">{topic.name} <span>{topic.count} projects</span></div>
+                <p>{topic.summary}</p>
+                <ul className="home-map-list" aria-label={topic.name+' projects'}>{projectsInTopic(nodes,topic.id).map(item =>
+                    <li key={item.id}><button className="home-link" onClick={() => onOpen(item.id)}>{item.title}</button></li>)}</ul>
+                {pinned&&<button className="home-map-clear" onClick={reset}>Clear selection</button>}
+            </> : <>
+                <span>Select a topic to see its projects, or a project to see its topics.</span>
+                <a className="home-link" href="#all-projects" onClick={onBrowse}>Browse the complete index</a>
+            </>}
         </div>
     </section>;
 }

@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom';
 import {profile} from '../../data/profile';
-import {fields, homeProjects, projectConnections, projectNumber, selectedIds} from './homeProjects';
+import {homeProjects, topicNames, topics} from './homeProjects';
 import HomeProjectMap from './HomeProjectMap';
 import './Home.css';
 
@@ -21,7 +21,7 @@ function Description({text}) {
 }
 
 export default function Home() {
-    const [activeId,setActiveId]=useState(null);
+    const [highlight,setHighlight]=useState(null);
     const [extraDialog,setExtraDialog]=useState(null);
     const [archiveOpen,setArchiveOpen]=useState(false);
     const dialogRef=useRef(null);
@@ -55,8 +55,6 @@ export default function Home() {
     },[showDialog]);
 
     const revealArchive=()=>{setArchiveOpen(true);};
-    const relatedProject=homeProjects.find(project=>project.id===extraDialog?.projectId);
-    const relatedConnections=relatedProject?projectConnections.filter(edge=>edge.source===relatedProject.id||edge.target===relatedProject.id):[];
     const openProject=projectId=>{
         setExtraDialog(null);
         navigate(`/projects/${projectId}`,{state:{returnTo:location.state?.returnTo||(id?'/':location.pathname+location.hash)}});
@@ -65,10 +63,10 @@ export default function Home() {
         setExtraDialog(null);
         if(id)navigate(location.state?.returnTo||'/',{replace:true});
     };
-    const projectLink=(project,withNumber=false)=> <Link to={`/projects/${project.id}`} state={{returnTo:location.pathname+location.hash}} className={`home-link ${activeId===project.id?'is-active':''}`}
-        onPointerEnter={()=>setActiveId(project.id)} onPointerLeave={()=>setActiveId(null)} onFocus={()=>setActiveId(project.id)} onBlur={()=>setActiveId(null)}>
-        {withNumber&&<span className="home-index-number">{projectNumber(project.id)}</span>}{project.title}
-    </Link>;
+    const highlightProps=item=>({onPointerEnter:()=>setHighlight(item),onPointerLeave:()=>setHighlight(null),onFocus:()=>setHighlight(item),onBlur:()=>setHighlight(null)});
+    const projectLink=project=> <Link to={`/projects/${project.id}`} state={{returnTo:location.pathname+location.hash}}
+        className={`home-link ${highlight?.kind==='project'&&highlight.id===project.id?'is-active':''}`} {...highlightProps({kind:'project',id:project.id})}>{project.title}</Link>;
+    const research=topics.filter(topic=>topic.research);
 
     return <div className="homepage-shell">
         <a className="home-skip" href="#home-content">Skip to content</a>
@@ -77,24 +75,26 @@ export default function Home() {
                 <div><h1>{profile.name}</h1><p className="home-role">{profile.role}</p><div className="home-contact"><EmailLink/><CvLink/></div></div>
                 <div className="home-entry"><Link className="home-link" to="/experience">Explore the interactive experience</Link><p>Space Train · 3D portfolio</p></div>
             </header>
-            <div className="home-intro"><p>{profile.introduction}</p><p>{profile.affiliations}</p></div>
+            <p className="home-statement">{profile.statement}</p>
+            <section className="home-themes" aria-label="Research themes">{research.map(topic=><article key={topic.id} className={highlight?.kind==='topic'&&highlight.id===topic.id?'is-active':''} {...highlightProps({kind:'topic',id:topic.id})}>
+                <h2>{topic.name}</h2><p>{topic.summary}</p>
+                <ul>{topic.highlights.map(projectId=><li key={projectId}>{projectLink(homeProjects.find(item=>item.id===projectId))}</li>)}
+                    {topic.id==='nlp'&&<li><a className="home-link" href={profile.publication.url} target="_blank" rel="noopener noreferrer">ICITS 2025 paper</a></li>}</ul>
+            </article>)}</section>
             <div className="home-primary-grid">
-                <div className="home-project-column"><section className="home-selected" aria-labelledby="selected-heading"><h2 id="selected-heading">Selected projects</h2><ul>{selectedIds.map(projectId=>{
-                    const project=homeProjects.find(item=>item.id===projectId);
-                    return <li key={project.id}>{projectLink(project)}<p>{project.summary}</p></li>;
-                })}</ul><a className="home-link home-more" href="#all-projects" onClick={revealArchive}>All {homeProjects.length} projects</a></section>
-                    <section className="home-current"><h2>Current work</h2><div>{profile.experience.slice(0,2).map(item=><article key={item.organization}><h3>{item.organization}</h3><p>{item.role}</p><span>{item.dates}</span></article>)}</div></section>
+                <div className="home-project-column">
+                    <section className="home-current"><h2>Now</h2><div>{profile.experience.slice(0,2).map(item=><article key={item.organization}><h3>{item.organization}</h3><p>{item.role} <span>· {item.dates}</span></p><p className="home-current-detail">{item.description}</p></article>)}</div></section>
+                    <section className="home-publication"><h2>Publication</h2><a className="home-link home-paper" href={profile.publication.url} target="_blank" rel="noopener noreferrer">{profile.publication.title}</a><p className="home-authors">{profile.publication.authors}</p><p className="home-venue">{profile.publication.venue}</p></section>
                 </div>
-                <aside><HomeProjectMap projects={homeProjects} activeId={activeId} onHighlight={setActiveId} onOpen={openProject} onBrowse={revealArchive} onConnections={projectId=>setExtraDialog({type:'connections',projectId})}/></aside>
+                <aside><HomeProjectMap projects={homeProjects} highlight={highlight} onHighlight={setHighlight} onOpen={openProject} onBrowse={revealArchive}/></aside>
             </div>
             <div className="home-information">
-                <section><h2>Publication</h2><a className="home-link home-paper" href={profile.publication.url} target="_blank" rel="noopener noreferrer">{profile.publication.title}</a><p className="home-authors">{profile.publication.authors}</p><p className="home-venue">{profile.publication.venue}</p></section>
                 <section><h2>Teaching</h2><p className="home-teaching">{profile.teaching}</p><button className="home-link home-more" onClick={()=>setExtraDialog({type:'talks'})}>Seminars and talks</button></section>
+                <section className="home-recognition"><h2>Recognition</h2><ul>{profile.recognition.map(item=><li key={item}>{item}</li>)}</ul></section>
             </div>
-            <section className="home-recognition"><h2>Recognition</h2><ul>{profile.recognition.map(item=><li key={item}>{item}</li>)}</ul></section>
             <section className="home-archive" id="all-projects" ref={archiveRef} aria-label="All projects">
                 <div className="home-archive-heading"><h2 id="archive-heading"><button className="home-archive-toggle" aria-expanded={archiveOpen} aria-controls="project-archive" onClick={()=>setArchiveOpen(open=>!open)}>All projects <span>{archiveOpen?'Hide':'Show'} {homeProjects.length}</span></button></h2></div>
-                <div id="project-archive" className="home-archive-groups" hidden={!archiveOpen}>{fields.map(field=><section key={field}><h3>{field}</h3><ul>{homeProjects.filter(project=>project.category===field).map(project=><li key={project.id}>{projectLink(project,true)}</li>)}</ul></section>)}</div>
+                <div id="project-archive" className="home-archive-groups" hidden={!archiveOpen}>{topics.map(topic=><section key={topic.id}><h3>{topic.name}</h3><ul>{homeProjects.filter(project=>project.topics[0]===topic.id).map(project=><li key={project.id}>{projectLink(project)}</li>)}</ul></section>)}</div>
             </section>
             <section className="home-images" aria-label="Visual studies">{images.map((image,index)=><figure key={image.src}><button aria-label={`Enlarge ${image.title}`} onClick={()=>setExtraDialog({type:'image',index})}><img src={image.src} alt={image.alt} width={index===0?1959:1320} height={index===0?1125:1160} loading="lazy"/></button><figcaption>{index===1?<button className="home-link" onClick={()=>openProject(7)}>{image.title}</button>:image.title}</figcaption></figure>)}</section>
             <footer className="home-footer"><span>{profile.fullName}</span><div><CvLink/><EmailLink/></div></footer>
@@ -106,16 +106,12 @@ export default function Home() {
         }}>
             <button className="home-dialog-close" onClick={closeDialog} aria-label="Close details">Close</button>
             {id ? selectedProject ? <article>
-                <p className="home-detail-meta">{selectedProject.category} · {selectedProject.years}</p><h2 id="home-dialog-title">{selectedProject.title}</h2><Description text={selectedProject.description}/>
+                <p className="home-detail-meta">{topicNames(selectedProject)} · {selectedProject.years}</p><h2 id="home-dialog-title">{selectedProject.title}</h2><Description text={selectedProject.description}/>
                 {selectedProject.skills?.length>0&&<p className="home-detail-skills">{selectedProject.skills.join(' · ')}</p>}
                 {selectedProject.publications?.length>0&&<><h3>Publications</h3><ul>{selectedProject.publications.map(text=><li key={text}>{text}</li>)}</ul></>}
                 {selectedProject.presentations?.length>0&&<><h3>Presentations</h3><ul>{selectedProject.presentations.map(text=><li key={text}>{text}</li>)}</ul></>}
                 <div className="home-detail-links">{selectedProject.id===7&&<a className="home-link" href={profile.publication.url} target="_blank" rel="noopener noreferrer">Read the publication</a>}{selectedProject.githubUrl&&<a className="home-link" href={selectedProject.githubUrl} target="_blank" rel="noopener noreferrer">GitHub</a>}{selectedProject.liveUrl&&<a className="home-link" href={selectedProject.liveUrl} target="_blank" rel="noopener noreferrer">Visit project</a>}{selectedProject.id===18&&<Link className="home-link" to="/experience">Explore the interactive experience</Link>}</div>
             </article>:<article><h2 id="home-dialog-title">Project not found</h2><p>This project is not in the archive.</p><button className="home-link" onClick={closeDialog}>Return to the index</button></article>
-            :extraDialog?.type==='connections'&&relatedProject?<section><h2 id="home-dialog-title">{relatedProject.title}</h2><p className="home-detail-meta">Related projects</p><ul className="home-related-projects" aria-label="Related projects">{relatedConnections.map(edge=>{
-                const other=homeProjects.find(project=>project.id===(edge.source===relatedProject.id?edge.target:edge.source));
-                return <li key={other.id}><button className="home-link" onClick={()=>openProject(other.id)}>{other.title}</button><p>{edge.reason}</p></li>;
-            })}</ul></section>
             :extraDialog?.type==='talks'?<section><h2 id="home-dialog-title">Seminars and talks</h2>{profile.talks.map(talk=><article className="home-talk" key={talk.title+talk.date}><h3>{talk.title}</h3><p>{talk.venue}</p><span>{talk.date}</span></article>)}</section>
             :extraDialog?.type==='image'?<figure><h2 id="home-dialog-title">{images[extraDialog.index].title}</h2><img className="home-enlarged-image" src={images[extraDialog.index].src} alt={images[extraDialog.index].alt}/></figure>:null}
         </dialog>
