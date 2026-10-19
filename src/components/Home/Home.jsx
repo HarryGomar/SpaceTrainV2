@@ -12,6 +12,8 @@ const images = [
 const CvLink = () => <a className="home-link home-cv" href="/home/harry-gomar-cv.pdf" download="Rafael Harry Gomar Dawson - CV.pdf">CV <span>PDF</span></a>;
 const EmailLink = () => <a className="home-link home-email" href={`mailto:${profile.email}`}>{profile.email}</a>;
 
+const Row=({label,className='',children,...rest})=> <section className={'home-row '+className} {...rest}><h2 className="home-row-label">{label}</h2><div className="home-row-body">{children}</div></section>;
+
 function Description({text}) {
     return text.split(/\n\s*\n/).map((block,i) => {
         const lines=block.split('\n');
@@ -75,28 +77,23 @@ export default function Home() {
                 <div><h1>{profile.name}</h1><p className="home-role">{profile.role}</p><div className="home-contact"><EmailLink/><CvLink/></div></div>
                 <div className="home-entry"><Link className="home-link" to="/experience">Explore the interactive experience</Link><p>Space Train · 3D portfolio</p></div>
             </header>
-            <p className="home-statement">{profile.statement}</p>
-            <section className="home-themes" aria-label="Research themes">{research.map(topic=><article key={topic.id} className={highlight?.kind==='topic'&&highlight.id===topic.id?'is-active':''} {...highlightProps({kind:'topic',id:topic.id})}>
-                <h2>{topic.name}</h2><p>{topic.summary}</p>
+            <div className="home-statement"><p>{profile.statement}</p><ul aria-label="Highlights">{profile.highlights.map(item=><li key={item}>{item}</li>)}</ul></div>
+            <Row label="Now" className="home-current"><div className="home-current-grid">{profile.experience.slice(0,2).map(item=><article key={item.organization}><h3>{item.organization}</h3><p>{item.role}</p><p className="home-muted">{item.summary}</p><span>Since {item.dates.replace(' to present','')}</span></article>)}
+                <article className="home-teaching"><h3>{profile.teachingNow.organization}</h3><p>{profile.teachingNow.role}</p><p className="home-muted">{profile.teachingNow.summary}</p><span>Since {profile.teachingNow.since} · <button className="home-link" onClick={()=>setExtraDialog({type:'talks'})}>Seminars and talks</button></span></article></div></Row>
+            <Row label="Research"><div className="home-themes" role="region" aria-label="Research themes">{research.map(topic=><article key={topic.id} className={highlight?.kind==='topic'&&highlight.id===topic.id?'is-active':''} {...highlightProps({kind:'topic',id:topic.id})}>
+                <h3>{topic.name}</h3><p className="home-muted">{topic.summary}</p>
                 <ul>{topic.highlights.map(projectId=><li key={projectId}>{projectLink(homeProjects.find(item=>item.id===projectId))}</li>)}
                     {topic.id==='nlp'&&<li><a className="home-link" href={profile.publication.url} target="_blank" rel="noopener noreferrer">ICITS 2025 paper</a></li>}</ul>
-            </article>)}</section>
-            <div className="home-primary-grid">
-                <div className="home-project-column">
-                    <section className="home-current"><h2>Now</h2><div>{profile.experience.slice(0,2).map(item=><article key={item.organization}><h3>{item.organization}</h3><p>{item.role} <span>· {item.dates}</span></p><p className="home-current-detail">{item.description}</p></article>)}</div></section>
-                    <section className="home-publication"><h2>Publication</h2><a className="home-link home-paper" href={profile.publication.url} target="_blank" rel="noopener noreferrer">{profile.publication.title}</a><p className="home-authors">{profile.publication.authors}</p><p className="home-venue">{profile.publication.venue}</p></section>
-                </div>
-                <aside><HomeProjectMap projects={homeProjects} highlight={highlight} onHighlight={setHighlight} onOpen={openProject} onBrowse={revealArchive}/></aside>
-            </div>
-            <div className="home-information">
-                <section><h2>Teaching</h2><p className="home-teaching">{profile.teaching}</p><button className="home-link home-more" onClick={()=>setExtraDialog({type:'talks'})}>Seminars and talks</button></section>
-                <section className="home-recognition"><h2>Recognition</h2><ul>{profile.recognition.map(item=><li key={item}>{item}</li>)}</ul></section>
-            </div>
-            <section className="home-archive" id="all-projects" ref={archiveRef} aria-label="All projects">
-                <div className="home-archive-heading"><h2 id="archive-heading"><button className="home-archive-toggle" aria-expanded={archiveOpen} aria-controls="project-archive" onClick={()=>setArchiveOpen(open=>!open)}>All projects <span>{archiveOpen?'Hide':'Show'} {homeProjects.length}</span></button></h2></div>
-                <div id="project-archive" className="home-archive-groups" hidden={!archiveOpen}>{topics.map(topic=><section key={topic.id}><h3>{topic.name}</h3><ul>{homeProjects.filter(project=>project.topics[0]===topic.id).map(project=><li key={project.id}>{projectLink(project)}</li>)}</ul></section>)}</div>
+            </article>)}</div></Row>
+            <HomeProjectMap projects={homeProjects} highlight={highlight} onHighlight={setHighlight} onOpen={openProject} onBrowse={revealArchive}/>
+            <Row label="Publication" className="home-publication"><a className="home-link home-paper" href={profile.publication.url} target="_blank" rel="noopener noreferrer">{profile.publication.title}</a><p className="home-muted">{profile.publication.authors}</p><p className="home-muted">{profile.publication.venue}</p></Row>
+            <Row label="Recognition" className="home-recognition"><ul>{profile.recognition.map(item=><li key={item}>{item}</li>)}</ul></Row>
+            <section className="home-row home-archive" id="all-projects" ref={archiveRef} aria-label="All projects">
+                <h2 className="home-row-label">Index</h2>
+                <div className="home-row-body"><button className="home-archive-toggle home-link" aria-expanded={archiveOpen} aria-controls="project-archive" onClick={()=>setArchiveOpen(open=>!open)}>{archiveOpen?'Hide':'Show'} all {homeProjects.length} projects</button>
+                <div id="project-archive" className="home-archive-groups" hidden={!archiveOpen}>{topics.map(topic=><section key={topic.id}><h3>{topic.name}</h3><ul>{homeProjects.filter(project=>project.topics[0]===topic.id).map(project=><li key={project.id}>{projectLink(project)}</li>)}</ul></section>)}</div></div>
             </section>
-            <section className="home-images" aria-label="Visual studies">{images.map((image,index)=><figure key={image.src}><button aria-label={`Enlarge ${image.title}`} onClick={()=>setExtraDialog({type:'image',index})}><img src={image.src} alt={image.alt} width={index===0?1959:1320} height={index===0?1125:1160} loading="lazy"/></button><figcaption>{index===1?<button className="home-link" onClick={()=>openProject(7)}>{image.title}</button>:image.title}</figcaption></figure>)}</section>
+            <Row label="Visual studies" className="home-images" aria-label="Visual studies"><div className="home-images-grid">{images.map((image,index)=><figure key={image.src}><button aria-label={`Enlarge ${image.title}`} onClick={()=>setExtraDialog({type:'image',index})}><img src={image.src} alt={image.alt} width={index===0?1959:1320} height={index===0?1125:1160} loading="lazy"/></button><figcaption>{index===1?<button className="home-link" onClick={()=>openProject(7)}>{image.title}</button>:image.title}</figcaption></figure>)}</div></Row>
             <footer className="home-footer"><span>{profile.fullName}</span><div><CvLink/><EmailLink/></div></footer>
         </main>
         <dialog ref={dialogRef} className="home-dialog" aria-labelledby="home-dialog-title" onCancel={event=>{event.preventDefault();closeDialog();}} onClick={event=>{

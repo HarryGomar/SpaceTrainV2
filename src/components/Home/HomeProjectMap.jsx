@@ -23,11 +23,31 @@ export default function HomeProjectMap({projects,highlight,onHighlight,onOpen,on
     const hubState = hub => topic ? (hub.id===topic.id?'is-active':'is-muted')
         : project ? (project.topics.includes(hub.id)?'is-related':'is-muted') : '';
 
-    return <section className="home-map" aria-label="Interactive project map" onKeyDown={event=>{
+    return <section className="home-row home-map" aria-label="Interactive project map" onKeyDown={event=>{
         if(event.key==='Escape'){reset();event.stopPropagation();}
     }}>
-        <div className="home-map-heading"><h2>All {nodes.length} projects by topic</h2><span>Lines join each project to its topics</span></div>
-        <div className="home-graph">
+        <div className="home-row-label"><h2>Projects</h2><p className="home-map-count">{nodes.length} across {hubs.length} topics</p>
+            <div className="home-map-caption" aria-live="polite">
+                {project ? <>
+                    <button className="home-link home-map-title" onClick={() => onOpen(project.id)}>{project.title}</button>
+                    <p>{project.summary}</p>
+                    <div className="home-map-actions">
+                        {project.topics.map(id => <button key={id} className="home-map-chip" onClick={() => pin({kind:'topic',id})}>{topicById.get(id).name}</button>)}
+                        {pinned&&<button className="home-map-clear" onClick={reset}>Clear selection</button>}
+                    </div>
+                </> : topic ? <>
+                    <div className="home-map-title">{topic.name} <span>{topic.count} projects</span></div>
+                    <p>{topic.summary}</p>
+                    <ul className="home-map-list" aria-label={topic.name+' projects'}>{projectsInTopic(nodes,topic.id).map(item =>
+                        <li key={item.id}><button className="home-link" onClick={() => onOpen(item.id)}>{item.title}</button></li>)}</ul>
+                    {pinned&&<button className="home-map-clear" onClick={reset}>Clear selection</button>}
+                </> : <>
+                    <span>Lines join each project to its topics. Select a topic or a project to explore.</span>
+                    <a className="home-link" href="#all-projects" onClick={onBrowse}>Browse the complete index</a>
+                </>}
+            </div>
+            </div>
+        <div className="home-row-body home-graph">
             <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
                 <g fill="none">{edges.map(edge => <path key={edge.project+'-'+edge.topic} data-project={edge.project} data-topic={edge.topic}
                     className={edgeActive(edge)?'is-active':selection?'is-muted':edge.to.research?'is-research':''}
@@ -45,25 +65,6 @@ export default function HomeProjectMap({projects,highlight,onHighlight,onOpen,on
                 aria-pressed={isPinned('project',node.id)} onClick={() => pin({kind:'project',id:node.id})} {...hoverProps({kind:'project',id:node.id})}>
                 <i aria-hidden="true"/><span className="home-node-name" aria-hidden="true">{node.shortName}</span>
             </button>)}
-        </div>
-        <div className="home-map-caption" aria-live="polite">
-            {project ? <>
-                <button className="home-link home-map-title" onClick={() => onOpen(project.id)}>{project.title}</button>
-                <p>{project.summary}</p>
-                <div className="home-map-actions">
-                    {project.topics.map(id => <button key={id} className="home-map-chip" onClick={() => pin({kind:'topic',id})}>{topicById.get(id).name}</button>)}
-                    {pinned&&<button className="home-map-clear" onClick={reset}>Clear selection</button>}
-                </div>
-            </> : topic ? <>
-                <div className="home-map-title">{topic.name} <span>{topic.count} projects</span></div>
-                <p>{topic.summary}</p>
-                <ul className="home-map-list" aria-label={topic.name+' projects'}>{projectsInTopic(nodes,topic.id).map(item =>
-                    <li key={item.id}><button className="home-link" onClick={() => onOpen(item.id)}>{item.title}</button></li>)}</ul>
-                {pinned&&<button className="home-map-clear" onClick={reset}>Clear selection</button>}
-            </> : <>
-                <span>Select a topic to see its projects, or a project to see its topics.</span>
-                <a className="home-link" href="#all-projects" onClick={onBrowse}>Browse the complete index</a>
-            </>}
         </div>
     </section>;
 }

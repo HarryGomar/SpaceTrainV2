@@ -22,13 +22,13 @@ afterEach(()=>cleanup());
 describe('Live academic homepage',()=>{
     it('leads with one statement and the research themes, and keeps the archive collapsed',()=>{
         const {container}=mount();
-        expect(container.querySelector('.home-statement').textContent).toMatch(/^I work on representation learning and natural language processing, collaborating with Mantis at MIT CSAIL/);
+        expect(container.querySelector('.home-statement').textContent).toMatch(/^I work on representation learning and natural language processing, and collaborate with the Kellis Lab at MIT CSAIL on Mantis./);
         const themes=screen.getByRole('region',{name:'Research themes'});
         expect(within(themes).getAllByRole('heading').map(heading=>heading.textContent)).toEqual(topics.filter(topic=>topic.research).map(topic=>topic.name));
         expect(within(themes).getByRole('link',{name:'ICITS 2025 paper'}).getAttribute('href')).toMatch(/^https:\/\/doi.org\//);
         const archive=screen.getByRole('region',{name:'All projects'});
         expect(within(archive).queryAllByRole('link')).toHaveLength(0);
-        fireEvent.click(within(archive).getByRole('button',{name:'All projects Show 24'}));
+        fireEvent.click(within(archive).getByRole('button',{name:'Show all 24 projects'}));
         const links=within(archive).getAllByRole('link');
         expect(links).toHaveLength(originalProjects.length);
         for(const item of originalProjects)expect(links.some(link=>link.getAttribute('href')===`/projects/${item.id}`)).toBe(true);
@@ -37,11 +37,12 @@ describe('Live academic homepage',()=>{
         expect(screen.getByRole('link',{name:'Explore the interactive experience'}).getAttribute('href')).toBe('/experience');
         expect(container.querySelector('.home-header a[download]').getAttribute('href')).toBe('/home/harry-gomar-cv.pdf');
     });
-    it('keeps current work and the publication beside the map',()=>{
+    it('lists current work, including teaching, in one row',()=>{
         const {container}=mount();
-        expect(container.querySelector('.home-project-column .home-current')).not.toBeNull();
-        expect(container.querySelector('.home-project-column .home-publication')).not.toBeNull();
-        expect(within(container.querySelector('.home-current')).getByText(/embedding-based methods across law/)).not.toBeNull();
+        const now=container.querySelector('.home-current');
+        expect(within(now).getAllByRole('heading',{level:3}).map(heading=>heading.textContent)).toEqual(['Kellis Lab · MIT CSAIL','MAKERS · ITAM','MIT IAP · MIT Sloan']);
+        expect(within(now).getByText('Collaborating Researcher, Mantis')).not.toBeNull();
+        expect(within(now).getByRole('button',{name:'Seminars and talks'})).not.toBeNull();
     });
     it('supports deep links and closes with Escape without hiding the archive',()=>{
         mount('/projects/30');
@@ -146,7 +147,7 @@ describe('Compact homepage',()=>{
         const archive=screen.getByRole('region',{name:'All projects'});
         expect(within(archive).getAllByRole('link')).toHaveLength(24);
         expect(within(archive).getAllByRole('heading',{level:3}).map(heading=>heading.textContent)).toEqual(topics.map(topic=>topic.name));
-        fireEvent.click(within(archive).getByRole('button',{name:'All projects Hide 24'}));
+        fireEvent.click(within(archive).getByRole('button',{name:'Hide all 24 projects'}));
         expect(within(archive).queryAllByRole('link')).toHaveLength(0);
         fireEvent.click(screen.getByRole('link',{name:'Browse the complete index'}));
         expect(within(archive).getAllByRole('link')).toHaveLength(24);

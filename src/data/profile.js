@@ -4,7 +4,8 @@ export const profile = {
   fullName: 'Rafael Harry Gomar Dawson',
   email: 'harrygomardawson@gmail.com',
   role: 'Computer Engineering student at ITAM',
-  statement: 'I work on representation learning and natural language processing, collaborating with Mantis at MIT CSAIL, and coordinate the Computer Science division of MAKERS at ITAM.',
+  statement: 'I work on representation learning and natural language processing, and collaborate with the Kellis Lab at MIT CSAIL on Mantis.',
+  highlights: ['Springer publication, ICITS 2025', 'INEGI Datatón winner, 2025', 'Instructor, MIT IAP and MIT Sloan'],
   projects: [
     {
       id:'leyes', title:'Universo de Leyes', node:'Universo de Leyes', area:'NLP',
@@ -50,8 +51,8 @@ export const profile = {
     },
   ],
   experience:[
-    {organization:'Mantis · MIT CSAIL',role:'Collaborating Researcher',dates:'Aug 2025 to present',description:'Interdisciplinary research on representation learning and embedding-based methods across law, patents, political science, and other applied domains.'},
-    {organization:'MAKERS · ITAM',role:'Coordinator, Computer Science Division',dates:'Aug 2023 to present',description:'Led and mentored 15 students across 7 development and 9 research projects. Coordinated recruitment and work in data science and software development.'},
+    {organization:'Kellis Lab · MIT CSAIL',role:'Collaborating Researcher, Mantis',dates:'Aug 2025 to present',summary:'Embedding methods for law, patents and political science.',description:'Interdisciplinary research on representation learning and embedding-based methods across law, patents, political science, and other applied domains.'},
+    {organization:'MAKERS · ITAM',role:'Coordinator, Computer Science Division',dates:'Aug 2023 to present',summary:'Mentoring 15 students across 16 projects.',description:'Led and mentored 15 students across 7 development and 9 research projects. Coordinated recruitment and work in data science and software development.'},
     {organization:'Universo de Leyes',role:'Lead Researcher',dates:'Nov 2022 to 2025',description:'Built the annotated dataset, information-extraction pipeline, and citation graphs for Mexican legal texts.'},
     {organization:'Spingere',role:'Research Intern',dates:'Jun to Aug 2022; Jun to Jul 2023',description:'Research and prototyping of NLP methods for COSMIC software functional size analysis.'},
   ],
@@ -62,6 +63,7 @@ export const profile = {
     url:'https://doi.org/10.1007/978-3-031-93103-1_18',
   },
   teaching:'Instructor and lecturer for MIT IAP 6.S189 and 6.S187, and MIT Sloan 15.S65. Topics included applied AI, machine learning, and deployment.',
+  teachingNow:{organization:'MIT IAP · MIT Sloan',role:'Instructor and lecturer',summary:'6.S189, 6.S187 and 15.S65: applied AI, machine learning and deployment.',since:'2024'},
   talks:[
     {title:'Universo de Leyes',venue:'Seminario de Ingeniería de Software y Sus Implicaciones, Facultad de Ciencias, UNAM',date:'Nov 2024'},
     {title:'Universo de Leyes',venue:'Seminario Recursivo, ITAM',date:'Mar 2024'},

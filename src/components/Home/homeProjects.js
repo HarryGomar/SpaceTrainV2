@@ -9,10 +9,10 @@ export const topics = [
     {id:'nlp',name:'NLP and information extraction',label:'NLP',research:true,x:18,y:15,
         summary:'Turning legal texts, catalogues, requirements and scanned records into structured data.',highlights:[7,14]},
     {id:'representation',name:'Representation learning',label:'Representation learning',research:true,x:57,y:13,
-        summary:'Embedding-based methods for text, places and sequences, now with Mantis at MIT CSAIL.',highlights:[16,9]},
+        summary:'Embedding-based methods for text, places and sequences, now on Mantis with the Kellis Lab at MIT CSAIL.',highlights:[16,9]},
     {id:'geospatial',name:'Geospatial and public data',label:'Geospatial data',research:true,x:84,y:40,
         summary:'Location planning and policy analysis built on public and economic data.',highlights:[30,12]},
-    {id:'software',name:'Software and games',label:'Software',x:56,y:80,
+    {id:'software',name:'Software and games',label:'Software',x:62,y:80,
         summary:'Web apps, games and simulations, built end to end.'},
     {id:'hardware',name:'Hardware',label:'Hardware',x:14,y:88,
         summary:'Digital logic, embedded systems and fabrication.'},
@@ -57,8 +57,8 @@ export const projectsInTopic = (projects, topicId) => projects.filter(project =>
 const positions = {
     7:[38,23], 9:[35,4], 10:[83,6], 16:[72,26], 13:[95,22],
     11:[5,30], 8:[22,40], 15:[5,47], 14:[50,42],
-    12:[94,52], 30:[80,63], 31:[30,56], 28:[5,75], 17:[27,73],
-    23:[43,69], 24:[56,66], 22:[68,70], 21:[74,82], 20:[68,93], 19:[54,95], 18:[41,92], 25:[38,81],
+    12:[95,52], 30:[88,64], 31:[30,56], 28:[5,75], 17:[27,73],
+    23:[49,69], 24:[62,66], 22:[74,70], 21:[80,82], 20:[74,93], 19:[60,95], 18:[47,92], 25:[44,81],
     26:[29,95], 27:[5,95],
 };
 
