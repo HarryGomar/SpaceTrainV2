@@ -51,7 +51,7 @@ export default function HomeProjectMap({projects,highlight,onHighlight,onOpen,pi
     return <section className="home-map" aria-label="Interactive project map" onKeyDown={event=>{
         if(event.key==='Escape'){reset();event.stopPropagation();}
     }}>
-        <div className="home-map-heading"><h2>Work and connections</h2><p className="home-map-count">{nodes.length} across {hubs.length} topics</p>
+        <div className="home-map-heading"><h2>Work and connections</h2>
         </div>
         <div className="home-graph-legend" aria-label="Graph legend"><span><i className="project"/>Project</span><span><i/>Publication</span><span><i className="seminar"/>Seminar</span></div>
         <div className="home-graph" ref={graphRef}>

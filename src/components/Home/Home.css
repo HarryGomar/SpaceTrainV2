@@ -47,7 +47,6 @@
 .home-themes .home-muted{margin-top:6px}
 .home-themes ul{list-style:none;padding:0;margin:12px 0 0;display:flex;flex-wrap:wrap;gap:6px 18px;font-size:14px}
 
-.home-map-count{font-size:13px;color:var(--home-muted);margin-top:4px}
 .home-map-caption{margin-top:22px;font-size:13px}
 .home-map-caption>span{display:block;color:var(--home-muted);font-size:13px;line-height:1.55;margin-bottom:10px}
 .home-map-caption>.home-link{font-size:13px}
@@ -169,7 +168,6 @@
 .home-research-sidebar .home-themes ul{font-size:12px;margin-top:9px;gap:5px 12px}
 .home-map{min-width:0;display:flex;flex-direction:column;border:0;padding:0}
 .home-map-heading{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:10px}
-.home-map-count{margin:0;font-size:12px}
 .home-map .home-graph{aspect-ratio:1.55}
 .home-map-caption{margin-top:20px;padding-top:12px;height:136px;min-height:136px;flex:0 0 136px;overflow:auto;scrollbar-gutter:stable}
 .home-map-caption>span{display:inline;margin-right:14px;font-size:12px}
