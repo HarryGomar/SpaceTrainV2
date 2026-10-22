@@ -1,9 +1,11 @@
+import {readFileSync} from 'node:fs';
+const homeStyles=readFileSync('src/components/Home/Home.css','utf8');
 import React from 'react';
 import {afterEach,beforeEach,describe,expect,it,vi} from 'vitest';
 import {cleanup,fireEvent,render,screen,within} from '@testing-library/react';
 import {MemoryRouter,Route,Routes,useLocation} from 'react-router-dom';
 import Home from './Home';
-import {homeProjects,layoutProjectMap,projectsInTopic,topicById,topics} from './homeProjects';
+import {homeProjects,layoutProjectMap,projectInTopic,projectsInTopic,relatedRecords,topicById,topics} from './homeProjects';
 import originalProjects from '../Projects/projects.json';
 
 function Location(){const location=useLocation();return <output data-testid="location">{location.pathname}</output>;}
@@ -11,7 +13,7 @@ function mount(path='/'){
     return render(<MemoryRouter initialEntries={[path]}><Location/><Routes><Route path="/" element={<Home/>}/><Route path="/projects" element={<Home/>}/><Route path="/projects/:id" element={<Home/>}/></Routes></MemoryRouter>);
 }
 const map=()=>screen.getByRole('region',{name:'Interactive project map'});
-const semovi='SEMOVI route extraction, Geospatial and public data, NLP and information extraction';
+const semovi='SEMOVI route extraction, Geospatial, NLP and information extraction';
 beforeEach(()=>{
     HTMLDialogElement.prototype.showModal=function(){this.setAttribute('open','');};
     HTMLDialogElement.prototype.close=function(){this.removeAttribute('open');};
@@ -22,7 +24,7 @@ afterEach(()=>cleanup());
 describe('Live academic homepage',()=>{
     it('leads with one statement and the research themes, and keeps the archive collapsed',()=>{
         const {container}=mount();
-        expect(container.querySelector('.home-statement').textContent).toMatch(/^I work on representation learning and natural language processing, and collaborate with the Kellis Lab at MIT CSAIL on Mantis./);
+        expect(container.querySelector('.home-statement').textContent).toMatch(/^I study representation learning and natural language processing\./);
         const themes=screen.getByRole('region',{name:'Research themes'});
         expect(within(themes).getAllByRole('heading').map(heading=>heading.textContent)).toEqual(topics.filter(topic=>topic.research).map(topic=>topic.name));
         expect(within(themes).getByRole('link',{name:'ICITS 2025 paper'}).getAttribute('href')).toMatch(/^https:\/\/doi.org\//);
@@ -37,25 +39,25 @@ describe('Live academic homepage',()=>{
         expect(screen.getByRole('link',{name:'Explore the interactive experience'}).getAttribute('href')).toBe('/experience');
         expect(container.querySelector('.home-header a[download]').getAttribute('href')).toBe('/home/harry-gomar-cv.pdf');
     });
-    it('lists current work, including teaching, in one row',()=>{
+    it('limits current work to the ongoing research and MAKERS roles',()=>{
         const {container}=mount();
         const now=container.querySelector('.home-current');
-        expect(within(now).getAllByRole('heading',{level:3}).map(heading=>heading.textContent)).toEqual(['Kellis Lab · MIT CSAIL','MAKERS · ITAM','MIT IAP · MIT Sloan']);
+        expect(within(now).getAllByRole('heading',{level:3}).map(heading=>heading.textContent)).toEqual(['Kellis Lab · MIT CSAIL','MAKERS · ITAM']);
         expect(within(now).getByText('Collaborating Researcher, Mantis')).not.toBeNull();
-        expect(within(now).getByRole('button',{name:'Seminars and talks'})).not.toBeNull();
+        expect(within(now).queryByText('Instructor and lecturer')).toBeNull();
     });
     it('supports deep links and closes with Escape without hiding the archive',()=>{
         mount('/projects/30');
         const dialog=screen.getByRole('dialog');
         expect(within(dialog).getByRole('heading',{name:'Commercial informality in Mexico'})).not.toBeNull();
-        expect(within(dialog).getByText('Geospatial and public data · 2025')).not.toBeNull();
+        expect(within(dialog).getByText('Geospatial · 2025')).not.toBeNull();
         fireEvent(dialog,new Event('cancel',{cancelable:true}));
         expect(screen.queryByRole('dialog')).toBeNull();
         expect(screen.getByRole('region',{name:'All projects'})).not.toBeNull();
     });
     it('opens talks and image enlargement and handles unknown project URLs',()=>{
         const view=mount();
-        fireEvent.click(screen.getByRole('button',{name:'Seminars and talks'}));
+        fireEvent.click(within(map()).getByRole('button',{name:/^seminar:.*Player2Vec/}));
         expect(within(screen.getByRole('dialog')).getByText(/Player2Vec/)).not.toBeNull();
         fireEvent.click(screen.getByRole('button',{name:'Close details'}));
         fireEvent.click(screen.getByRole('button',{name:'Enlarge Point-cloud study'}));
@@ -74,13 +76,13 @@ describe('Topic map data',()=>{
         }
         for(const topic of topics)expect(projectsInTopic(homeProjects,topic.id).length).toBeGreaterThan(0);
         for(const topic of topics.filter(topic=>topic.research))
-            for(const id of topic.highlights)expect(homeProjects.find(project=>project.id===id)?.topics).toContain(topic.id);
+            for(const id of topic.highlights)expect(projectInTopic(homeProjects.find(project=>project.id===id),topic.id)).toBe(true);
     });
     it('draws one edge per project topic and keeps nodes and hubs apart inside the drawing',()=>{
         const {nodes,hubs,edges}=layoutProjectMap(homeProjects);
         expect(edges).toHaveLength(homeProjects.reduce((sum,project)=>sum+project.topics.length,0));
         expect(new Set(nodes.map(node=>node.id)).size).toBe(homeProjects.length);
-        const points=[...nodes,...hubs];
+        const points=[...nodes,...hubs,...relatedRecords];
         for(const point of points){
             expect(point.x).toBeGreaterThan(4);expect(point.x).toBeLessThan(96);
             expect(point.y).toBeGreaterThan(3);expect(point.y).toBeLessThan(97);
@@ -90,17 +92,15 @@ describe('Topic map data',()=>{
 });
 
 describe('Topic map interaction',()=>{
-    it('selects a topic without moving nodes and opens its projects from the caption',()=>{
+    it('selects a topic without moving nodes and opens a project directly',()=>{
         const {container}=mount();
         const positions=[...container.querySelectorAll('.home-graph-node')].map(node=>node.getAttribute('style'));
-        fireEvent.click(within(map()).getByRole('button',{name:'Software and games, 9 projects'}));
+        fireEvent.click(within(map()).getByRole('button',{name:'Software and games, 10 projects'}));
         const software=projectsInTopic(homeProjects,'software');
         expect(container.querySelectorAll('.home-graph-node:not(.is-muted)')).toHaveLength(software.length);
-        expect(container.querySelectorAll('.home-graph path.is-active')).toHaveLength(software.length);
+        expect(container.querySelectorAll('.home-graph path[data-project].is-active')).toHaveLength(software.length);
         expect([...container.querySelectorAll('.home-graph-node')].map(node=>node.getAttribute('style'))).toEqual(positions);
-        const list=screen.getByRole('list',{name:'Software and games projects'});
-        expect(within(list).getAllByRole('button')).toHaveLength(software.length);
-        fireEvent.click(within(list).getByRole('button',{name:'Space Train'}));
+        fireEvent.click(within(map()).getByRole('button',{name:'Space Train, Software and games'}));
         expect(screen.getByTestId('location').textContent).toBe('/projects/18');
         fireEvent.click(screen.getByRole('button',{name:'Close details'}));
         expect(screen.getByTestId('location').textContent).toBe('/');
@@ -116,19 +116,14 @@ describe('Topic map interaction',()=>{
         fireEvent.blur(node);
         expect(container.querySelectorAll('.home-graph path.is-active')).toHaveLength(0);
     });
-    it('pins a project for touch, jumps to one of its topics, and clears with Escape',()=>{
+    it('pins a topic for touch and clears with Escape',()=>{
         const {container}=mount();
-        const node=within(map()).getByRole('button',{name:semovi});
-        fireEvent.click(node);
-        fireEvent.pointerLeave(node);
-        expect(node.getAttribute('aria-pressed')).toBe('true');
-        fireEvent.click(within(map()).getByRole('button',{name:'Geospatial and public data'}));
-        expect(node.getAttribute('aria-pressed')).toBe('false');
-        expect(screen.getByRole('list',{name:'Geospatial and public data projects'})).not.toBeNull();
-        fireEvent.click(within(map()).getByRole('button',{name:semovi}));
-        within(map()).getByRole('button',{name:'SEMOVI route extraction'});
-        fireEvent.keyDown(node,{key:'Escape'});
-        expect(node.getAttribute('aria-pressed')).toBe('false');
+        const topic=within(map()).getByRole('button',{name:'Geospatial, 4 projects'});
+        fireEvent.click(topic);fireEvent.pointerLeave(topic);
+        expect(topic.getAttribute('aria-pressed')).toBe('true');
+        expect(container.querySelector('[data-project-id="14"]').classList.contains('is-related')).toBe(true);
+        fireEvent.keyDown(topic,{key:'Escape'});
+        expect(topic.getAttribute('aria-pressed')).toBe('false');
         expect(container.querySelectorAll('.home-graph path.is-active')).toHaveLength(0);
     });
     it('highlights a topic hub from its theme on the page',()=>{
@@ -149,7 +144,107 @@ describe('Compact homepage',()=>{
         expect(within(archive).getAllByRole('heading',{level:3}).map(heading=>heading.textContent)).toEqual(topics.map(topic=>topic.name));
         fireEvent.click(within(archive).getByRole('button',{name:'Hide all 24 projects'}));
         expect(within(archive).queryAllByRole('link')).toHaveLength(0);
-        fireEvent.click(screen.getByRole('link',{name:'Browse the complete index'}));
+        fireEvent.click(screen.getByRole('button',{name:'Show all 24 projects'}));
         expect(within(archive).getAllByRole('link')).toHaveLength(24);
     });
 });
+
+ describe('Connected work',()=>{
+ it('places football in data science and keeps Tellus connected to software',()=>{
+ expect(homeProjects.find(p=>p.id===13).topics).toEqual(['data-science']);
+ expect(projectsInTopic(homeProjects,'data-science').map(p=>p.id)).toEqual(expect.arrayContaining([12,13,14,16,30]));
+ expect(projectsInTopic(homeProjects,'software').map(p=>p.id)).toContain(16);
+ });
+ it('pins MAKERS projects across hover and clears the selection',()=>{
+ const {container}=mount();
+ fireEvent.click(screen.getByRole('button',{name:'MAKERS · ITAM'}));
+ expect(container.querySelectorAll('.home-graph-node.is-related')).toHaveLength(7);
+ expect(container.querySelector('[data-project-id="7"]').classList.contains('is-related')).toBe(true);
+ expect(container.querySelector('[data-project-id="16"]').classList.contains('is-muted')).toBe(true);
+ const node=container.querySelector('[data-project-id="16"]');
+ fireEvent.pointerEnter(node);fireEvent.pointerLeave(node);
+ expect(container.querySelectorAll('.home-graph-node.is-related')).toHaveLength(7);
+ fireEvent.keyDown(node,{key:'Escape'});
+ expect(container.querySelectorAll('.home-graph-node.is-muted')).toHaveLength(0);
+ });
+ it('connects seminars and publication to the graph and provides honest writing status',()=>{
+ const {container}=mount();
+ const seminars=container.querySelector('.home-seminars');
+ fireEvent.click(within(seminars).getAllByRole('button',{name:'View seminar in graph'})[0]);
+ expect(container.querySelector('[data-record-id="seminar-0"]').classList.contains('is-active')).toBe(true);
+ expect(container.querySelector('.home-publication').classList.contains('is-related')).toBe(false);
+ expect(screen.getByText('No posts published yet')).not.toBeNull();
+ expect(screen.getByRole('link',{name:'https://mantis.csail.mit.edu/'}).getAttribute('href')).toBe('https://mantis.csail.mit.edu/');
+ });
+ });
+
+it('selects the data science cluster with all geospatial descendants',()=>{
+ const {container}=mount();
+ fireEvent.click(within(map()).getByRole('button',{name:'Data science, 5 projects'}));
+ expect(container.querySelector('[data-topic-id="geospatial"]').classList.contains('is-related')).toBe(true);
+ expect(container.querySelectorAll('.home-graph-node.is-related')).toHaveLength(5);
+
+});
+
+it('links the publication and each seminar to its project in both directions',()=>{
+ const {container}=mount();
+ const publication=container.querySelector('.home-publication');
+ expect(within(publication).getByRole('heading',{name:'Publications'})).not.toBeNull();
+ fireEvent.pointerEnter(publication);
+ expect(container.querySelector('[data-record-id="icits-2025"]').classList.contains('is-active')).toBe(true);
+ expect(container.querySelector('[data-project-id="7"]').classList.contains('is-related')).toBe(true);
+ fireEvent.pointerLeave(publication);
+ const project=container.querySelector('[data-project-id="7"]');
+ fireEvent.focus(project);
+ expect(container.querySelectorAll('.home-record-node.is-related')).toHaveLength(4);
+ expect(container.querySelectorAll('.home-map-chip')).toHaveLength(0);
+ for(const edge of container.querySelectorAll('.home-graph path[data-project]'))expect(edge.getAttribute('d')).not.toMatch(/[QC]/);
+});
+
+ it('keeps every graph relationship visible in the overview',()=>{
+ const style=document.createElement('style');style.textContent=homeStyles;document.head.append(style);
+ try {
+ const {container}=mount();
+ const edges=container.querySelectorAll('.home-graph path');
+ expect(edges.length).toBeGreaterThan(0);
+ for(const edge of edges)expect(Number(getComputedStyle(edge).opacity),edge.outerHTML).toBeGreaterThanOrEqual(.25);
+ } finally {style.remove();}
+ });
+
+
+ it('keeps graph text and node positions unchanged on hover and selection',()=>{
+ const {container}=mount();
+ const graph=map();const text=graph.textContent;
+ const positions=[...container.querySelectorAll('.home-graph-node,.home-record-node')].map(node=>node.getAttribute('style'));
+ const node=container.querySelector('[data-project-id="17"]');
+ fireEvent.pointerEnter(node);expect(graph.textContent).toBe(text);
+ fireEvent.pointerLeave(node);
+ fireEvent.click(container.querySelector('[data-topic-id="software"]'));
+ expect(graph.textContent).toBe(text);
+ expect([...container.querySelectorAll('.home-graph-node,.home-record-node')].map(node=>node.getAttribute('style'))).toEqual(positions);
+ expect(container.querySelector('.home-map-caption')).toBeNull();
+ expect(screen.queryByText(/All relationships are shown/)).toBeNull();
+ });
+
+ it('lays out all relationships without crossing unrelated edges',()=>{
+ const {nodes,hubs,edges}=layoutProjectMap(homeProjects);
+ const segments=[...edges.map(edge=>[edge.from,edge.to]),...relatedRecords.map(record=>[record,record.projectId?nodes.find(node=>node.id===record.projectId):hubs.find(hub=>hub.id===record.topicId)]),...hubs.filter(hub=>hub.parent).map(hub=>[hub,hubs.find(parent=>parent.id===hub.parent)])];
+ const side=(a,b,c)=>(b.x-a.x)*(c.y-a.y)-(b.y-a.y)*(c.x-a.x);
+ for(let i=0;i<segments.length;i++)for(let j=i+1;j<segments.length;j++){
+ const [a,b]=segments[i],[c,d]=segments[j];
+ const crosses=side(a,b,c)*side(a,b,d)<-0.0001&&side(c,d,a)*side(c,d,b)<-0.0001;
+ expect(crosses,JSON.stringify([[a.id,b.id],[c.id,d.id]])).toBe(false);
+ }
+ });
+
+ it('adds cognitive cartography to its topic and opens its own seminar details',()=>{
+ const {container}=mount();
+ const seminar=container.querySelector('[data-record-id="seminar-3"]');
+ fireEvent.focus(seminar);
+ expect(container.querySelector('[data-topic-id="representation"]').classList.contains('is-active')).toBe(true);
+ expect(container.querySelector('[data-record-edge="seminar-3"]').classList.contains('is-active')).toBe(true);
+ fireEvent.click(seminar);
+ const dialog=screen.getByRole('dialog');
+ expect(within(dialog).getByRole('heading',{name:'Cartografías cognitivas'})).not.toBeNull();
+ expect(within(dialog).getByText('Seminario Recursivo, ITAM')).not.toBeNull();
+ });

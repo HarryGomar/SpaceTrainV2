@@ -1,68 +1,77 @@
-import React, {useMemo, useState} from 'react';
-import {layoutProjectMap, projectsInTopic, topicById} from './homeProjects';
+import React, {useId, useLayoutEffect, useMemo, useRef, useState} from 'react';
+import {layoutProjectMap, projectInTopic, relatedRecords, topicById} from './homeProjects';
 
-// Selection is either {kind:'project',id} or {kind:'topic',id}; hover state comes from the page.
-export default function HomeProjectMap({projects,highlight,onHighlight,onOpen,onBrowse}) {
-    const [pinned,setPinned] = useState(null);
+// Persistent selection is shared with the page; hover previews it temporarily.
+export default function HomeProjectMap({projects,highlight,onHighlight,onOpen,pinned,onPin,onOpenRecord}) {
     const {nodes,hubs,edges} = useMemo(() => layoutProjectMap(projects),[projects]);
+    const graphRef=useRef(null);
+    const maskId='graph-labels-'+useId().replaceAll(':','');
+    const [labelMasks,setLabelMasks]=useState([]);
+    useLayoutEffect(()=>{
+        const graph=graphRef.current;
+        const measure=()=>{
+            if(!graph.isConnected)return;
+            const bounds=graph.getBoundingClientRect();
+            if(!bounds.width||!bounds.height)return;
+            const masks=[...graph.querySelectorAll('.home-map-hub,.home-node-name')].map(label=>{
+                const box=label.getBoundingClientRect();
+                return {x:(box.left-bounds.left-4)/bounds.width*100,y:(box.top-bounds.top-3)/bounds.height*100,width:(box.width+8)/bounds.width*100,height:(box.height+6)/bounds.height*100};
+            });
+            setLabelMasks(previous=>JSON.stringify(previous)===JSON.stringify(masks)?previous:masks);
+        };
+        measure();
+        document.fonts?.ready.then(measure);
+        const observer=typeof ResizeObserver==='undefined'?null:new ResizeObserver(measure);
+        observer?.observe(graph);
+        window.addEventListener('resize',measure);
+        return ()=>{observer?.disconnect();window.removeEventListener('resize',measure);};
+    },[nodes,hubs]);
     const selection = highlight ?? pinned;
-    const project = selection?.kind==='project' ? nodes.find(node => node.id===selection.id) : null;
-    const topic = selection?.kind==='topic' ? hubs.find(hub => hub.id===selection.id) : null;
+    const record=selection?.kind==='record'?relatedRecords.find(item=>item.id===selection.id):null;
+    const project = record ? nodes.find(node=>node.id===record.projectId) : selection?.kind==='project' ? nodes.find(node => node.id===selection.id) : null;
+    const topic = selection?.kind==='topic' ? hubs.find(hub => hub.id===selection.id) : record?.topicId ? hubs.find(hub=>hub.id===record.topicId) : null;
+    const affiliation = selection?.kind==='affiliation' ? selection.id : null;
+    const affiliated = nodes.filter(node=>node.affiliations.includes(affiliation));
     const isPinned = (kind,id) => pinned?.kind===kind&&pinned.id===id;
-    const reset = () => {setPinned(null);onHighlight(null);};
-    const pin = next => {const value=isPinned(next.kind,next.id)?null:next;setPinned(value);onHighlight(value);};
+    const reset = () => {onPin(null);onHighlight(null);};
+    const pin = next => {const value=isPinned(next.kind,next.id)?null:next;onPin(value);onHighlight(value);};
     const hoverProps = item => ({
         onPointerEnter:event => {if(event.pointerType!=='touch')onHighlight(item);},
         onPointerLeave:() => onHighlight(pinned),
         onFocus:() => onHighlight(item),
         onBlur:() => onHighlight(pinned),
     });
-    const edgeActive = edge => project ? edge.project===project.id : topic ? edge.topic===topic.id : false;
-    const nodeState = node => project ? (node.id===project.id?'is-active':'is-muted')
-        : topic ? (node.topics.includes(topic.id)?'is-related':'is-muted') : '';
-    const hubState = hub => topic ? (hub.id===topic.id?'is-active':'is-muted')
-        : project ? (project.topics.includes(hub.id)?'is-related':'is-muted') : '';
+    const edgeActive = edge => project ? edge.project===project.id : topic ? projectInTopic(edge.from,topic.id)&& (edge.topic===topic.id||topicById.get(edge.topic)?.parent===topic.id) : affiliation ? affiliated.some(node=>node.id===edge.project) : false;
+    const nodeState = node => project ? (node.id===project.id?(record?'is-related':'is-active'):'is-muted')
+        : topic ? (projectInTopic(node,topic.id)?'is-related':'is-muted') : affiliation ? (node.affiliations.includes(affiliation)?'is-related':'is-muted') : '';
+    const hubState = hub => topic ? (hub.id===topic.id?'is-active':hub.parent===topic.id||topic.parent===hub.id?'is-related':'is-muted')
+        : project ? (projectInTopic(project,hub.id)?'is-related':'is-muted') : affiliation ? (affiliated.some(node=>projectInTopic(node,hub.id))?'is-related':'is-muted') : '';
 
-    return <section className="home-row home-map" aria-label="Interactive project map" onKeyDown={event=>{
+    const recordRelated = item => record ? record.id===item.id : project ? project.id===item.projectId || item.topicId&&projectInTopic(project,item.topicId) : topic ? item.topicId===topic.id || Boolean(item.projectId&&projectInTopic(nodes.find(node=>node.id===item.projectId),topic.id)) : affiliation ? affiliated.some(node=>node.id===item.projectId) : false;
+    return <section className="home-map" aria-label="Interactive project map" onKeyDown={event=>{
         if(event.key==='Escape'){reset();event.stopPropagation();}
     }}>
-        <div className="home-row-label"><h2>Projects</h2><p className="home-map-count">{nodes.length} across {hubs.length} topics</p>
-            <div className="home-map-caption" aria-live="polite">
-                {project ? <>
-                    <button className="home-link home-map-title" onClick={() => onOpen(project.id)}>{project.title}</button>
-                    <p>{project.summary}</p>
-                    <div className="home-map-actions">
-                        {project.topics.map(id => <button key={id} className="home-map-chip" onClick={() => pin({kind:'topic',id})}>{topicById.get(id).name}</button>)}
-                        {pinned&&<button className="home-map-clear" onClick={reset}>Clear selection</button>}
-                    </div>
-                </> : topic ? <>
-                    <div className="home-map-title">{topic.name} <span>{topic.count} projects</span></div>
-                    <p>{topic.summary}</p>
-                    <ul className="home-map-list" aria-label={topic.name+' projects'}>{projectsInTopic(nodes,topic.id).map(item =>
-                        <li key={item.id}><button className="home-link" onClick={() => onOpen(item.id)}>{item.title}</button></li>)}</ul>
-                    {pinned&&<button className="home-map-clear" onClick={reset}>Clear selection</button>}
-                </> : <>
-                    <span>Lines join each project to its topics. Select a topic or a project to explore.</span>
-                    <a className="home-link" href="#all-projects" onClick={onBrowse}>Browse the complete index</a>
-                </>}
-            </div>
-            </div>
-        <div className="home-row-body home-graph">
+        <div className="home-map-heading"><h2>Work and connections</h2><p className="home-map-count">{nodes.length} across {hubs.length} topics</p>
+        </div>
+        <div className="home-graph-legend" aria-label="Graph legend"><span><i className="project"/>Project</span><span><i/>Publication</span><span><i className="seminar"/>Seminar</span></div>
+        <div className="home-graph" ref={graphRef}>
             <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-                <g fill="none">{edges.map(edge => <path key={edge.project+'-'+edge.topic} data-project={edge.project} data-topic={edge.topic}
-                    className={edgeActive(edge)?'is-active':selection?'is-muted':edge.to.research?'is-research':''}
-                    d={'M'+edge.from.x+' '+edge.from.y+' L'+edge.to.x+' '+edge.to.y}/>)}</g>
+                <defs><mask id={maskId} maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="100"><rect x="0" y="0" width="100" height="100" fill="white"/>{labelMasks.map((box,index)=><rect key={index} {...box} fill="black"/>)}</mask></defs>
+                <g fill="none" mask={`url(#${maskId})`}>{hubs.filter(hub=>hub.parent).map(hub=><path key={hub.id} className="home-topic-parent" d={`M${hub.x} ${hub.y} L${topicById.get(hub.parent).x} ${topicById.get(hub.parent).y}`}/>)}{relatedRecords.map(item=>{const target=item.projectId?nodes.find(node=>node.id===item.projectId):hubs.find(hub=>hub.id===item.topicId);return <path key={item.id} data-record-edge={item.id} className={'is-record-edge'+(recordRelated(item)?' is-active':'')} d={`M${item.x} ${item.y} L${target.x} ${target.y}`}/>;})}{edges.map(edge => <path key={edge.project+'-'+edge.topic} data-project={edge.project} data-topic={edge.topic}
+                    className={'is-connection'+(edgeActive(edge)?' is-active':'')}
+                    d={edge.path}/>)}</g>
             </svg>
             {hubs.map(hub => <button key={hub.id} data-topic-id={hub.id}
-                className={['home-map-hub',hub.research?'is-research':'',hubState(hub)].join(' ')}
+                className={['home-map-hub',hub.research?'is-research':hub.parent?'is-subtopic':'',hubState(hub)].join(' ')}
                 style={{left:hub.x+'%',top:hub.y+'%'}} aria-label={hub.name+', '+hub.count+' projects'}
                 aria-pressed={isPinned('topic',hub.id)} onClick={() => pin({kind:'topic',id:hub.id})} {...hoverProps({kind:'topic',id:hub.id})}>
                 {hub.label}<span aria-hidden="true">{hub.count}</span>
             </button>)}
+            {relatedRecords.map(item=><button key={item.id} data-record-id={item.id} className={['home-record-node',item.kind,recordRelated(item)?record?.id===item.id?'is-active':'is-related':selection?'is-muted':''].join(' ')} style={{left:item.x+'%',top:item.y+'%'}} aria-label={item.kind+': '+item.title+(item.venue?', '+item.venue:'')} aria-pressed={isPinned('record',item.id)} onClick={()=>onOpenRecord(item)} {...hoverProps({kind:'record',id:item.id})}><i aria-hidden="true"/><span className="home-node-name" aria-hidden="true">{item.shortName}</span></button>)}
             {nodes.map(node => <button key={node.id} data-project-id={node.id}
                 className={['home-graph-node',nodeState(node),node.x<14?'is-at-left':node.x>86?'is-at-right':''].join(' ')}
                 style={{left:node.x+'%',top:node.y+'%'}} aria-label={node.title+', '+node.topics.map(id=>topicById.get(id).name).join(', ')}
-                aria-pressed={isPinned('project',node.id)} onClick={() => pin({kind:'project',id:node.id})} {...hoverProps({kind:'project',id:node.id})}>
+                aria-pressed={isPinned('project',node.id)} onClick={() => onOpen(node.id)} {...hoverProps({kind:'project',id:node.id})}>
                 <i aria-hidden="true"/><span className="home-node-name" aria-hidden="true">{node.shortName}</span>
             </button>)}
         </div>

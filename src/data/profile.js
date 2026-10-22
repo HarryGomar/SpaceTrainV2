@@ -4,8 +4,9 @@ export const profile = {
   fullName: 'Rafael Harry Gomar Dawson',
   email: 'harrygomardawson@gmail.com',
   role: 'Computer Engineering student at ITAM',
-  statement: 'I work on representation learning and natural language processing, and collaborate with the Kellis Lab at MIT CSAIL on Mantis.',
-  highlights: ['Springer publication, ICITS 2025', 'INEGI Datatón winner, 2025', 'Instructor, MIT IAP and MIT Sloan'],
+  statement: 'I study representation learning and natural language processing.',
+  highlights: ['Springer publication, ICITS 2025', 'INEGI Datatón winner, 2025', 'Past teaching, MIT IAP and MIT Sloan'],
+  writingTopics: ['Representation learning', 'Data science', 'Building software'],
   projects: [
     {
       id:'leyes', title:'Universo de Leyes', node:'Universo de Leyes', area:'NLP',
@@ -63,11 +64,11 @@ export const profile = {
     url:'https://doi.org/10.1007/978-3-031-93103-1_18',
   },
   teaching:'Instructor and lecturer for MIT IAP 6.S189 and 6.S187, and MIT Sloan 15.S65. Topics included applied AI, machine learning, and deployment.',
-  teachingNow:{organization:'MIT IAP · MIT Sloan',role:'Instructor and lecturer',summary:'6.S189, 6.S187 and 15.S65: applied AI, machine learning and deployment.',since:'2024'},
   talks:[
     {title:'Universo de Leyes',venue:'Seminario de Ingeniería de Software y Sus Implicaciones, Facultad de Ciencias, UNAM',date:'Nov 2024'},
-    {title:'Universo de Leyes',venue:'Seminario Recursivo, ITAM',date:'Mar 2024'},
+    {title:'Universo de Leyes',subtitle:'Universo de Leyes: Aplicando el procesamiento del lenguaje natural para vincular textos jurídicos con un enfoque integral',venue:'Seminario Recursivo, ITAM',date:'14 Nov'},
     {title:'¿Y si pudiéramos entender el contexto a través de los datos? · Player2Vec',venue:'Hudl StatsBomb, ITAM Sports Analytics Conference',date:'2025'},
+    {title:'Cartografías cognitivas',venue:'Seminario Recursivo, ITAM',date:null,topicId:'representation'},
   ],
   recognition:['INEGI Datatón winner, 2025','ISAC Hackathon winner, 2025','ITAM Hackathon winner, 2023','ITAM Engineering Academic Excellence Recognition, 2023–2025'],
 };
