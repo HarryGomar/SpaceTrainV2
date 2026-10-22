@@ -96,15 +96,24 @@ export default function Home() {
             </article>)}</div></aside>
             <HomeProjectMap projects={homeProjects} highlight={highlight} onHighlight={setHighlight} onOpen={openProject} pinned={pinned} onPin={setPinned} onOpenRecord={record=>setExtraDialog({type:record.kind==='publication'?'publication':'talks',recordId:record.id})}/>
             </div>
-            <Row label="Publications" {...highlightProps({kind:'record',id:'icits-2025'})} className={`home-publication ${recordRelated('icits-2025')?'is-related':''}`}><button className="home-link home-related-link" onClick={()=>{pin({kind:'record',id:'icits-2025'});document.querySelector('.home-map')?.scrollIntoView({block:'center'});}}>View publication in graph</button><a className="home-link home-paper" href={profile.publication.url} target="_blank" rel="noopener noreferrer">{profile.publication.title}</a><p className="home-muted">{profile.publication.authors}</p><p className="home-muted">{profile.publication.venue}</p></Row>
-            <Row label="Seminars" className="home-seminars"><div className="home-seminar-grid">{profile.talks.map((talk,index)=><article key={talk.title+talk.date} className={recordRelated('seminar-'+index)?'is-active':''} {...highlightProps({kind:'record',id:'seminar-'+index})}><span className="home-muted">{talk.date}</span><h3>{talk.title}</h3><p className="home-muted">{talk.venue}</p><button className="home-link home-related-link" onClick={()=>{pin({kind:'record',id:'seminar-'+index});document.querySelector('.home-map')?.scrollIntoView({block:'center'});}}>View seminar in graph</button></article>)}</div></Row>
-            <Row label="Writing" className="home-writing" id="writing"><div><h3>Technical notes</h3><p className="home-muted">Notes on methods, experiments and building software. First posts are in preparation.</p><ul aria-label="Planned writing topics">{profile.writingTopics.map(topic=><li key={topic}>{topic}</li>)}</ul></div><span className="home-writing-status">No posts published yet</span></Row>
-            <Row label="Recognition" className="home-recognition"><ul>{profile.recognition.map(item=><li key={item}>{item}</li>)}</ul></Row>
-            <section className="home-row home-archive" id="all-projects" ref={archiveRef} aria-label="All projects">
-                <h2 className="home-row-label">Index</h2>
-                <div className="home-row-body"><button className="home-archive-toggle home-link" aria-expanded={archiveOpen} aria-controls="project-archive" onClick={()=>setArchiveOpen(open=>!open)}>{archiveOpen?'Hide':'Show'} all {homeProjects.length} projects</button>
-                <div id="project-archive" className="home-archive-groups" hidden={!archiveOpen}>{topics.map(topic=><section key={topic.id}><h3>{topic.name}</h3><ul>{homeProjects.filter(project=>project.topics[0]===topic.id).map(project=><li key={project.id}>{projectLink(project)}</li>)}</ul></section>)}</div></div>
-            </section>
+            <div className="home-reading">
+                <Row label="Publications" {...highlightProps({kind:'record',id:'icits-2025'})} className={`home-publication ${recordRelated('icits-2025')?'is-related':''}`}>
+                    <a className="home-link home-paper" href={profile.publication.url} target="_blank" rel="noopener noreferrer">{profile.publication.title}</a>
+                    <p className="home-muted">{profile.publication.authors}</p><p className="home-muted">{profile.publication.shortVenue}</p>
+                </Row>
+                <Row label="Seminars and talks" className="home-seminars">
+                    <ul className="home-seminar-list">{profile.talks.map((talk,index)=><li key={talk.title+talk.date} className={recordRelated('seminar-'+index)?'is-active':''} {...highlightProps({kind:'record',id:'seminar-'+index})}>
+                        <time className="home-seminar-date">{talk.date}</time>
+                        <article><h3><button className="home-talk-title" onClick={()=>setExtraDialog({type:'talks',recordId:'seminar-'+index})}>{talk.shortTitle||talk.title}</button></h3><p className="home-muted">{talk.shortVenue||talk.venue}</p></article>
+                    </li>)}</ul>
+                </Row>
+                <Row label="Writing" className="home-writing" id="writing"><p className="home-muted">Technical notes are in preparation.</p></Row>
+                <Row label="Recognition" className="home-recognition"><ul>{profile.recognition.map(item=>{const parts=item.match(/^(.*), (\d{4}(?:–\d{4})?)$/);return <li key={item}><span className="home-award-year">{parts?.[2]}</span><span>{parts?.[1]||item}</span></li>;})}</ul></Row>
+                <section className="home-archive" id="all-projects" ref={archiveRef} aria-label="All projects">
+                    <button className="home-archive-toggle home-link" aria-expanded={archiveOpen} aria-controls="project-archive" onClick={()=>setArchiveOpen(open=>!open)}>{archiveOpen?'Hide projects':'View all projects'}</button>
+                    <div id="project-archive" className="home-archive-groups" hidden={!archiveOpen}>{topics.map(topic=><section key={topic.id}><h3>{topic.name}</h3><ul>{homeProjects.filter(project=>project.topics[0]===topic.id).map(project=><li key={project.id}>{projectLink(project)}</li>)}</ul></section>)}</div>
+                </section>
+            </div>
             <Row label="Visual studies" className="home-images" aria-label="Visual studies"><div className="home-images-grid">{images.map((image,index)=><figure key={image.src}><button aria-label={`Enlarge ${image.title}`} onClick={()=>setExtraDialog({type:'image',index})}><img src={image.src} alt={image.alt} width={index===0?1959:1320} height={index===0?1125:1160} loading="lazy"/></button><figcaption>{index===1?<button className="home-link" onClick={()=>openProject(7)}>{image.title}</button>:image.title}</figcaption></figure>)}</div></Row>
             <footer className="home-footer"><span>{profile.fullName}</span><div><CvLink/><EmailLink/></div></footer>
         </main>

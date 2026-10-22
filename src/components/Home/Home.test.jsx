@@ -30,7 +30,7 @@ describe('Live academic homepage',()=>{
         expect(within(themes).getByRole('link',{name:'ICITS 2025 paper'}).getAttribute('href')).toMatch(/^https:\/\/doi.org\//);
         const archive=screen.getByRole('region',{name:'All projects'});
         expect(within(archive).queryAllByRole('link')).toHaveLength(0);
-        fireEvent.click(within(archive).getByRole('button',{name:'Show all 24 projects'}));
+        fireEvent.click(within(archive).getByRole('button',{name:'View all projects'}));
         const links=within(archive).getAllByRole('link');
         expect(links).toHaveLength(originalProjects.length);
         for(const item of originalProjects)expect(links.some(link=>link.getAttribute('href')===`/projects/${item.id}`)).toBe(true);
@@ -142,9 +142,9 @@ describe('Compact homepage',()=>{
         const archive=screen.getByRole('region',{name:'All projects'});
         expect(within(archive).getAllByRole('link')).toHaveLength(24);
         expect(within(archive).getAllByRole('heading',{level:3}).map(heading=>heading.textContent)).toEqual(topics.map(topic=>topic.name));
-        fireEvent.click(within(archive).getByRole('button',{name:'Hide all 24 projects'}));
+        fireEvent.click(within(archive).getByRole('button',{name:'Hide projects'}));
         expect(within(archive).queryAllByRole('link')).toHaveLength(0);
-        fireEvent.click(screen.getByRole('button',{name:'Show all 24 projects'}));
+        fireEvent.click(screen.getByRole('button',{name:'View all projects'}));
         expect(within(archive).getAllByRole('link')).toHaveLength(24);
     });
 });
@@ -170,10 +170,10 @@ describe('Compact homepage',()=>{
  it('connects seminars and publication to the graph and provides honest writing status',()=>{
  const {container}=mount();
  const seminars=container.querySelector('.home-seminars');
- fireEvent.click(within(seminars).getAllByRole('button',{name:'View seminar in graph'})[0]);
+ fireEvent.focus(within(seminars).getAllByRole('button',{name:'Universo de Leyes'})[0]);
  expect(container.querySelector('[data-record-id="seminar-0"]').classList.contains('is-active')).toBe(true);
  expect(container.querySelector('.home-publication').classList.contains('is-related')).toBe(false);
- expect(screen.getByText('No posts published yet')).not.toBeNull();
+ expect(screen.getByText('Technical notes are in preparation.')).not.toBeNull();
  expect(screen.getByRole('link',{name:'https://mantis.csail.mit.edu/'}).getAttribute('href')).toBe('https://mantis.csail.mit.edu/');
  });
  });
@@ -247,4 +247,13 @@ it('links the publication and each seminar to its project in both directions',()
  const dialog=screen.getByRole('dialog');
  expect(within(dialog).getByRole('heading',{name:'Cartografías cognitivas'})).not.toBeNull();
  expect(within(dialog).getByText('Seminario Recursivo, ITAM')).not.toBeNull();
+ });
+
+ it('uses the single reading column and opens the full seminar details from its title',()=>{
+ const {container}=mount();
+ const reading=container.querySelector('.home-reading');
+ expect(within(reading).getAllByRole('heading',{level:2}).map(node=>node.textContent)).toEqual(['Publications','Seminars and talks','Writing','Recognition']);
+ expect(within(reading).queryByRole('button',{name:'View publication in graph'})).toBeNull();
+ fireEvent.click(within(reading).getByRole('button',{name:'Player2Vec',exact:true}));
+ expect(within(screen.getByRole('dialog')).getByRole('heading',{name:/¿Y si pudiéramos/})).not.toBeNull();
  });

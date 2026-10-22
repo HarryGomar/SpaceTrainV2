@@ -210,3 +210,28 @@
 
 .home-seminar-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 @media(max-width:760px){.home-seminar-grid{grid-template-columns:1fr}}
+
+/* The selected single-column layout for publications and supporting work. */
+.home-reading{width:100%;max-width:790px;margin:26px auto 30px}
+.home-reading>.home-row{display:block;padding:0;margin-top:29px;border:0}
+.home-reading>.home-row:first-child{margin-top:0}
+.home-reading>.home-row>h2{font-size:16px;margin-bottom:15px}
+.home-reading .home-paper{font-size:18px;line-height:1.5;font-weight:400;max-width:none}
+.home-reading .home-publication .home-muted{font-size:12px;line-height:1.6;margin-top:7px}
+.home-reading .home-publication .home-muted+.home-muted{margin-top:2px}
+.home-reading>.home-seminars{border-top:1px solid var(--home-line);padding-top:24px}
+.home-seminar-list{list-style:none;margin:0;padding:0}
+.home-seminar-list>li{display:grid;grid-template-columns:78px minmax(0,1fr);gap:15px;padding:11px 0}
+.home-seminar-date{color:var(--home-muted);font-size:12px;line-height:1.9}
+.home-talk-title{font:inherit;font-size:15px;font-weight:500;line-height:1.5;background:none;border:0;padding:0;color:var(--home-ink);text-align:left}
+.home-talk-title:hover,.home-seminar-list>li.is-active .home-talk-title{color:var(--home-link)}
+.home-seminar-list .home-muted{font-size:12px;line-height:1.6;margin-top:3px}
+.home-reading .home-writing>.home-row-body{display:block}
+.home-reading .home-writing .home-muted{margin:0;max-width:none;font-size:14px}
+.home-reading .home-recognition ul{display:grid;grid-template-columns:1fr;gap:0;font-size:13px}
+.home-reading .home-recognition li{display:grid;grid-template-columns:78px minmax(0,1fr);gap:15px;padding:3px 0;line-height:1.6}
+.home-award-year{color:var(--home-muted);font-size:12px;font-variant-numeric:tabular-nums}
+.home-reading .home-archive{margin-top:24px}
+.home-reading .home-archive-toggle{font-size:13px}
+.home-reading .home-archive-groups{columns:1}
+@media(max-width:580px){.home-reading .home-paper{font-size:17px}.home-seminar-list>li,.home-reading .home-recognition li{grid-template-columns:62px minmax(0,1fr);gap:11px}.home-talk-title{font-size:14px}}
