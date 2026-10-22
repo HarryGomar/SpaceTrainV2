@@ -82,7 +82,6 @@ export default function Home() {
                 <div><h1>{profile.name}</h1><p className="home-role">{profile.role}</p><div className="home-contact"><EmailLink/><CvLink/><a className="home-link" href="#writing">Writing</a></div></div>
                 <div className="home-entry"><Link className="home-link" to="/experience">Explore the interactive experience</Link><p>Space Train · 3D portfolio</p></div>
             </header>
-            <div className="home-statement"><p>{profile.statement}</p></div>
             <Row label="Now" className="home-current"><div className="home-current-grid">{profile.experience.slice(0,2).map(item=><article key={item.organization}>
                 <div className="home-current-heading"><h3>{item.organization.startsWith('MAKERS')?<button className="home-current-select" aria-pressed={pinned?.id==='makers'} onClick={()=>{pin({kind:'affiliation',id:'makers'});document.querySelector('.home-map')?.scrollIntoView({block:'center'});}}>{item.organization}</button>:item.organization}</h3><span>{item.dates.replace(' to present','–present')}</span></div>
                 <p>{item.role}</p>
@@ -107,6 +106,14 @@ export default function Home() {
                         <article><h3><button className="home-talk-title" onClick={()=>setExtraDialog({type:'talks',recordId:'seminar-'+index})}>{talk.shortTitle||talk.title}</button></h3><p className="home-muted">{talk.shortVenue||talk.venue}</p></article>
                     </li>)}</ul>
                 </Row>
+                <Row label="Past teaching" className="home-teaching" {...highlightProps({kind:'project',id:31})}>
+                    <h3><button className="home-talk-title" onClick={()=>openProject(31)}>MIT IAP · MIT Sloan</button></h3>
+                    <p className="home-muted">{profile.teaching}</p>
+                </Row>
+                <Row label="Past experience" className="home-history"><ul>{profile.experience.slice(2).map(item=><li key={item.organization}>
+                    <div className="home-history-heading"><h3>{item.organization}</h3><span className="home-muted">{item.dates}</span></div>
+                    <p>{item.role}</p><p className="home-muted">{item.description}</p>
+                </li>)}</ul></Row>
                 <Row label="Writing" className="home-writing" id="writing"><p className="home-muted">Technical notes are in preparation.</p></Row>
                 <Row label="Recognition" className="home-recognition"><ul>{profile.recognition.map(item=>{const parts=item.match(/^(.*), (\d{4}(?:–\d{4})?)$/);return <li key={item}><span className="home-award-year">{parts?.[2]}</span><span>{parts?.[1]||item}</span></li>;})}</ul></Row>
                 <section className="home-archive" id="all-projects" ref={archiveRef} aria-label="All projects">

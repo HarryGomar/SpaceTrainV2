@@ -4,7 +4,6 @@ export const profile = {
   fullName: 'Rafael Harry Gomar Dawson',
   email: 'harrygomardawson@gmail.com',
   role: 'Computer Engineering student at ITAM',
-  statement: 'I study representation learning and natural language processing.',
   highlights: ['Springer publication, ICITS 2025', 'INEGI Datatón winner, 2025', 'Past teaching, MIT IAP and MIT Sloan'],
   writingTopics: ['Representation learning', 'Data science', 'Building software'],
   projects: [
@@ -64,7 +63,7 @@ export const profile = {
     shortVenue:'ICITS 2025 · Springer · pp. 179–188',
     url:'https://doi.org/10.1007/978-3-031-93103-1_18',
   },
-  teaching:'Instructor and lecturer for MIT IAP 6.S189 and 6.S187, and MIT Sloan 15.S65. Topics included applied AI, machine learning, and deployment.',
+  teaching:'Former instructor and lecturer for 6.S189, 6.S187 and 15.S65. Topics included applied AI, machine learning and deployment.',
   talks:[
     {title:'Universo de Leyes',venue:'Seminario de Ingeniería de Software y Sus Implicaciones, Facultad de Ciencias, UNAM',shortVenue:'Facultad de Ciencias, UNAM',date:'Nov 2024'},
     {title:'Universo de Leyes',subtitle:'Universo de Leyes: Aplicando el procesamiento del lenguaje natural para vincular textos jurídicos con un enfoque integral',venue:'Seminario Recursivo, ITAM',date:'14 Nov'},

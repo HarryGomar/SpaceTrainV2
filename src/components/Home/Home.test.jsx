@@ -22,9 +22,9 @@ beforeEach(()=>{
 afterEach(()=>cleanup());
 
 describe('Live academic homepage',()=>{
-    it('leads with one statement and the research themes, and keeps the archive collapsed',()=>{
+    it('shows the research themes without an introductory statement, and keeps the archive collapsed',()=>{
         const {container}=mount();
-        expect(container.querySelector('.home-statement').textContent).toMatch(/^I study representation learning and natural language processing\./);
+        expect(container.querySelector('.home-statement')).toBeNull();
         const themes=screen.getByRole('region',{name:'Research themes'});
         expect(within(themes).getAllByRole('heading').map(heading=>heading.textContent)).toEqual(topics.filter(topic=>topic.research).map(topic=>topic.name));
         expect(within(themes).getByRole('link',{name:'ICITS 2025 paper'}).getAttribute('href')).toMatch(/^https:\/\/doi.org\//);
@@ -252,7 +252,9 @@ it('links the publication and each seminar to its project in both directions',()
  it('uses the single reading column and opens the full seminar details from its title',()=>{
  const {container}=mount();
  const reading=container.querySelector('.home-reading');
- expect(within(reading).getAllByRole('heading',{level:2}).map(node=>node.textContent)).toEqual(['Publications','Seminars and talks','Writing','Recognition']);
+ expect(within(reading).getAllByRole('heading',{level:2}).map(node=>node.textContent)).toEqual(['Publications','Seminars and talks','Past teaching','Past experience','Writing','Recognition']);
+ expect(within(reading).getByText(/Former instructor and lecturer for 6.S189/)).not.toBeNull();
+ expect(within(reading).getByRole('heading',{name:'Spingere'})).not.toBeNull();
  expect(within(reading).queryByRole('button',{name:'View publication in graph'})).toBeNull();
  fireEvent.click(within(reading).getByRole('button',{name:'Player2Vec',exact:true}));
  expect(within(screen.getByRole('dialog')).getByRole('heading',{name:/¿Y si pudiéramos/})).not.toBeNull();

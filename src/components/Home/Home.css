@@ -234,4 +234,9 @@
 .home-reading .home-archive{margin-top:24px}
 .home-reading .home-archive-toggle{font-size:13px}
 .home-reading .home-archive-groups{columns:1}
+.home-teaching .home-muted,.home-history .home-muted{font-size:12px;line-height:1.6;margin-top:4px}
+.home-history ul{list-style:none;margin:0;padding:0;display:grid;gap:18px}
+.home-history-heading{display:flex;align-items:baseline;flex-wrap:wrap;gap:3px 16px}
+.home-history-heading .home-muted{margin:0}
+.home-history li>p:not(.home-muted){font-size:14px;margin-top:3px}
 @media(max-width:580px){.home-reading .home-paper{font-size:17px}.home-seminar-list>li,.home-reading .home-recognition li{grid-template-columns:62px minmax(0,1fr);gap:11px}.home-talk-title{font-size:14px}}
