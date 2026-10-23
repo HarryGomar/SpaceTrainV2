@@ -36,7 +36,7 @@ export const profile = {
       methods:['Public policy','Economic Census data','Prioritization models'],
     },
     {
-      id:'autoparts', title:'Sustainable alternatives for car parts', node:'Auto-parts catalogues', area:'NLP',
+      id:'autoparts', title:'Auto-parts catalogue extraction and matching', node:'Auto-parts catalogues', area:'NLP',
       summary:'Information extraction for automotive catalogues with inconsistent formats.',
       detail:'I collaborated with InvierteSustentable and JetzApp to explore information extraction for sustainable automotive-part alternatives. I experimented with LLM-based agents that adapt Python data-processing functions to the differing characteristics of catalogues.',
       outcome:'The work explored how to process inconsistent catalogue structures for comparison across suppliers.',
@@ -65,10 +65,33 @@ export const profile = {
   },
   teaching:'Former instructor and lecturer for 6.S189, 6.S187 and 15.S65. Topics included applied AI, machine learning and deployment.',
   talks:[
-    {title:'Universo de Leyes',venue:'Seminario de Ingeniería de Software y Sus Implicaciones, Facultad de Ciencias, UNAM',shortVenue:'Facultad de Ciencias, UNAM',date:'Nov 2024'},
-    {title:'Universo de Leyes',subtitle:'Universo de Leyes: Aplicando el procesamiento del lenguaje natural para vincular textos jurídicos con un enfoque integral',venue:'Seminario Recursivo, ITAM',date:'14 Nov'},
-    {title:'¿Y si pudiéramos entender el contexto a través de los datos? · Player2Vec',shortTitle:'Player2Vec',venue:'Hudl StatsBomb, ITAM Sports Analytics Conference',date:'2025'},
-    {title:'Cartografías cognitivas',venue:'Seminario Recursivo, ITAM',date:null,topicId:'representation'},
+    {
+      title:'Universo de Leyes',shortTitle:'Universo de Leyes',
+      series:'Seminario de Ingeniería de Software y sus implicaciones',institution:'Facultad de Ciencias, UNAM',
+      graphLabel:'Ing. de software\nUNAM',date:'Nov 2024',projectId:7,
+      summary:'Presentación de los métodos de extracción de información y grafos de conocimiento de Universo de Leyes, aplicados al análisis de textos jurídicos mexicanos.',
+      seriesUrl:'https://www.fciencias.unam.mx/vida-en-ciencias/actividades/eventos/seminarios-2022',
+    },
+    {
+      title:'Universo de Leyes: Aplicando el procesamiento del lenguaje natural para vincular textos jurídicos con un enfoque integral',shortTitle:'Universo de Leyes',
+      series:'Seminario Recursivo',institution:'División Académica de Ciencias de la Computación, ITAM',
+      graphLabel:'Seminario Recursivo\nUniverso de Leyes',date:'14 Nov',time:'14:00–15:00',location:'Salón 310',projectId:7,
+      poster:'/home/talks/universo-de-leyes-itam.png',
+      abstract:'"El Universo de Leyes" es un proyecto centrado en el desarrollo de herramientas de procesamiento de lenguaje natural (PLN) para facilitar el acceso y análisis en el ámbito jurídico. Desde funciones básicas de regex hasta modelos de Reconocimiento de Entidades Nombradas (NER), el proyecto se enfoca en optimizar la extracción de información, brindando una nueva perspectiva para visualizar el vasto universo jurídico de México.\n\nEn un estudio comparativo, se evaluaron diversos enfoques de extracción de información en el sistema legal mexicano, contrastando métodos tradicionales basados en reglas con técnicas modernas que emplean transformadores. Los resultados subrayan que los modelos NER, especialmente aquellos basados en arquitecturas BERT, ofrecen una destacada adaptabilidad y capacidad de recuperación en el tratamiento de documentos legales.\n\nEste enfoque automatizado de PLN se presenta como una herramienta esencial que supera las búsquedas manuales en rapidez y, en algunos casos, en precisión, estableciendo una base sólida para el desarrollo de soluciones robustas e innovadoras en el análisis legal.',
+    },
+    {
+      title:'¿Y si pudiéramos entender el contexto a través de los datos? · Player2Vec',shortTitle:'Player2Vec',
+      series:'ITAM Sports Analytics Conference',institution:'Hudl StatsBomb · ITAM',
+      graphLabel:'StatsBomb\nPlayer2Vec',date:'2025',projectId:10,
+      summary:'Presentación de Player2Vec, un experimento que representa jugadores y eventos de fútbol mediante embeddings aprendidos para estudiar el contexto de las secuencias de juego.',
+    },
+    {
+      title:'Cartografías cognitivas: Abstracciones y aprendizaje de representaciones',shortTitle:'Cartografías cognitivas',
+      series:'Seminario Recursivo',institution:'División Académica de Ciencias de la Computación, ITAM',
+      graphLabel:'Seminario Recursivo\nCartografías cognitivas',date:'10 Mar',time:'14:00',location:'Sala de conferencias',topicId:'representation',
+      poster:'/home/talks/cartografias-cognitivas.jpg',
+      abstract:'Los mapas son herramientas fundamentales que, a lo largo de la historia, han estructurado nuestro entendimiento, impulsado la exploración y facilitado la toma de decisiones. Con el desarrollo del aprendizaje de representaciones, nuestra capacidad cartográfica ya no se limita a la geografía física; hoy existen nuevos esfuerzos por trazar territorios semánticos, lo cual abre paso a nuevas preguntas y respuestas.\n\nEste seminario explora la importancia de estas abstracciones, detalla algunos métodos computacionales para generarlas y presenta ejemplos de su aplicación en diversas industrias. Su objetivo es poner en perspectiva el potencial de estas herramientas y motivar la curiosidad de estos nuevos enfoques analíticos.',
+    },
   ],
   recognition:['INEGI Datatón winner, 2025','ISAC Hackathon winner, 2025','ITAM Hackathon winner, 2023','ITAM Engineering Academic Excellence Recognition, 2023–2025'],
 };

@@ -58,7 +58,7 @@ describe('Live academic homepage',()=>{
     it('opens talks and image enlargement and handles unknown project URLs',()=>{
         const view=mount();
         fireEvent.click(within(map()).getByRole('button',{name:/^seminar:.*Player2Vec/}));
-        expect(within(screen.getByRole('dialog')).getByText(/Player2Vec/)).not.toBeNull();
+        expect(within(screen.getByRole('dialog')).getByRole('heading',{name:/Player2Vec/})).not.toBeNull();
         fireEvent.click(screen.getByRole('button',{name:'Close details'}));
         fireEvent.click(screen.getByRole('button',{name:'Enlarge Point-cloud study'}));
         expect(within(screen.getByRole('dialog')).getByRole('img').getAttribute('src')).toBe('/home/clusters-overview.png');
@@ -140,12 +140,12 @@ describe('Compact homepage',()=>{
     it('opens the archive from its direct route, grouped by topic, and collapses it again',()=>{
         mount('/projects');
         const archive=screen.getByRole('region',{name:'All projects'});
-        expect(within(archive).getAllByRole('link')).toHaveLength(24);
+        expect(within(archive).getAllByRole('link')).toHaveLength(originalProjects.length);
         expect(within(archive).getAllByRole('heading',{level:3}).map(heading=>heading.textContent)).toEqual(topics.map(topic=>topic.name));
         fireEvent.click(within(archive).getByRole('button',{name:'Hide projects'}));
         expect(within(archive).queryAllByRole('link')).toHaveLength(0);
         fireEvent.click(screen.getByRole('button',{name:'View all projects'}));
-        expect(within(archive).getAllByRole('link')).toHaveLength(24);
+        expect(within(archive).getAllByRole('link')).toHaveLength(originalProjects.length);
     });
 });
 
@@ -158,19 +158,19 @@ describe('Compact homepage',()=>{
  it('pins MAKERS projects across hover and clears the selection',()=>{
  const {container}=mount();
  fireEvent.click(screen.getByRole('button',{name:'MAKERS · ITAM'}));
- expect(container.querySelectorAll('.home-graph-node.is-related')).toHaveLength(7);
+ expect(container.querySelectorAll('.home-graph-node.is-related')).toHaveLength(6);
  expect(container.querySelector('[data-project-id="7"]').classList.contains('is-related')).toBe(true);
  expect(container.querySelector('[data-project-id="16"]').classList.contains('is-muted')).toBe(true);
  const node=container.querySelector('[data-project-id="16"]');
  fireEvent.pointerEnter(node);fireEvent.pointerLeave(node);
- expect(container.querySelectorAll('.home-graph-node.is-related')).toHaveLength(7);
+ expect(container.querySelectorAll('.home-graph-node.is-related')).toHaveLength(6);
  fireEvent.keyDown(node,{key:'Escape'});
  expect(container.querySelectorAll('.home-graph-node.is-muted')).toHaveLength(0);
  });
  it('connects seminars and publication to the graph and provides honest writing status',()=>{
  const {container}=mount();
  const seminars=container.querySelector('.home-seminars');
- fireEvent.focus(within(seminars).getAllByRole('button',{name:'Universo de Leyes'})[0]);
+ fireEvent.focus(within(seminars).getByRole('button',{name:'Seminario de Ingeniería de Software y sus implicaciones',exact:true}));
  expect(container.querySelector('[data-record-id="seminar-0"]').classList.contains('is-active')).toBe(true);
  expect(container.querySelector('.home-publication').classList.contains('is-related')).toBe(false);
  expect(screen.getByText('Technical notes are in preparation.')).not.toBeNull();
@@ -245,17 +245,49 @@ it('links the publication and each seminar to its project in both directions',()
  expect(container.querySelector('[data-record-edge="seminar-3"]').classList.contains('is-active')).toBe(true);
  fireEvent.click(seminar);
  const dialog=screen.getByRole('dialog');
- expect(within(dialog).getByRole('heading',{name:'Cartografías cognitivas'})).not.toBeNull();
- expect(within(dialog).getByText('Seminario Recursivo, ITAM')).not.toBeNull();
+ expect(within(dialog).getByRole('heading',{name:'Cartografías cognitivas: Abstracciones y aprendizaje de representaciones'})).not.toBeNull();
+ expect(within(dialog).getByText(/División Académica de Ciencias de la Computación, ITAM/)).not.toBeNull();
+ expect(within(dialog).getByText(/Los mapas son herramientas fundamentales/)).not.toBeNull();
+ expect(within(dialog).getByText('10 Mar · 14:00 · Sala de conferencias')).not.toBeNull();
+ expect(within(dialog).getByRole('link',{name:'Ver cartel'}).getAttribute('href')).toBe('/home/talks/cartografias-cognitivas.jpg');
+ });
+
+ it('keeps one catalogue project and preserves its old experiment URL',()=>{
+ const view=mount('/projects/8');
+ const dialog=screen.getByRole('dialog');
+ expect(homeProjects.filter(project=>[8,15].includes(project.id))).toHaveLength(1);
+ expect(within(dialog).getByRole('heading',{name:'Auto-parts catalogue extraction and matching'})).not.toBeNull();
+ expect(within(dialog).getByText(/correctly formatted 4 of 10 brand catalogues/)).not.toBeNull();
+ view.unmount();
+ mount('/projects/30');
+ expect(within(screen.getByRole('dialog')).getByRole('link',{name:'Visit project'}).getAttribute('href')).toBe('https://informal-dataton-2025.vercel.app/');
+ });
+
+ it('opens the ITAM poster abstract from the project and keeps invited talks out of MIT teaching',()=>{
+ const view=mount('/projects/7');
+ fireEvent.click(within(screen.getByRole('dialog')).getByRole('button',{name:'Seminario Recursivo',exact:true}));
+ const dialog=screen.getByRole('dialog');
+ expect(within(dialog).getByRole('heading',{name:/Universo de Leyes: Aplicando/})).not.toBeNull();
+ expect(within(dialog).getByText(/En un estudio comparativo/)).not.toBeNull();
+ expect(within(dialog).getByText('14 Nov · 14:00–15:00 · Salón 310')).not.toBeNull();
+ view.unmount();
+ mount('/projects/31');
+ const teaching=screen.getByRole('dialog');
+ expect(within(teaching).getByText(/MIT IAP courses 6.S189/)).not.toBeNull();
+ expect(within(teaching).queryByText(/My invited talks/)).toBeNull();
+ expect(within(teaching).queryByRole('heading',{name:'Presentations'})).toBeNull();
  });
 
  it('uses the single reading column and opens the full seminar details from its title',()=>{
  const {container}=mount();
  const reading=container.querySelector('.home-reading');
- expect(within(reading).getAllByRole('heading',{level:2}).map(node=>node.textContent)).toEqual(['Publications','Seminars and talks','Past teaching','Past experience','Writing','Recognition']);
- expect(within(reading).getByText(/Former instructor and lecturer for 6.S189/)).not.toBeNull();
+ expect(within(reading).getAllByRole('heading',{level:2}).map(node=>node.textContent)).toEqual(['Publications','Seminars and talks','Past experience','Writing','Recognition']);
+ const teaching=container.querySelector('.home-sidebar-teaching');
+ expect(within(teaching).getByText(/Former instructor and lecturer for 6.S189/)).not.toBeNull();
+ fireEvent.pointerEnter(within(teaching).getByRole('button',{name:'MIT IAP · MIT Sloan'}).closest('article'));
+ expect(container.querySelector('[data-project-id="31"]').classList.contains('is-active')).toBe(true);
  expect(within(reading).getByRole('heading',{name:'Spingere'})).not.toBeNull();
  expect(within(reading).queryByRole('button',{name:'View publication in graph'})).toBeNull();
- fireEvent.click(within(reading).getByRole('button',{name:'Player2Vec',exact:true}));
+ fireEvent.click(within(reading).getByRole('button',{name:'ITAM Sports Analytics Conference',exact:true}));
  expect(within(screen.getByRole('dialog')).getByRole('heading',{name:/¿Y si pudiéramos/})).not.toBeNull();
  });

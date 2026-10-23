@@ -3,6 +3,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import projectsData from './projects.json';
+import {canonicalProjectId} from '../../data/projectAliases';
 import MainContainer from '../MainContainer'; 
 
 const parseDescription = (description = '') => {
@@ -50,7 +51,7 @@ const useWindowWidth = () => {
 const ProjectDetail = ({ embedded = false }) => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const project = projectsData.find(p => p.id === parseInt(id));
+    const project = projectsData.find(p => p.id === canonicalProjectId(id));
     const [currentPage, setCurrentPage] = useState(0);
     const windowWidth = useWindowWidth();
     const isEmbedded = embedded || window.location.pathname === '/experience';

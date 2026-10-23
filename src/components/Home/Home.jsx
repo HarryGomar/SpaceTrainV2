@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom';
 import {profile} from '../../data/profile';
+import {canonicalProjectId} from '../../data/projectAliases';
 import {homeProjects, projectInTopic, relatedRecords, topicNames, topics} from './homeProjects';
 import HomeProjectMap from './HomeProjectMap';
 import './Home.css';
@@ -34,7 +35,8 @@ export default function Home() {
     const navigate=useNavigate();
     const location=useLocation();
     const {id}=useParams();
-    const selectedProject=id ? homeProjects.find(project=>project.id===Number(id)) : null;
+    const selectedProject=id ? homeProjects.find(project=>project.id===canonicalProjectId(id)) : null;
+    const selectedTalk=extraDialog?.type==='talks'?profile.talks.find((_,index)=>extraDialog.recordId==='seminar-'+index):null;
     const showDialog=Boolean(id||extraDialog);
 
     useEffect(()=>{
@@ -92,7 +94,13 @@ export default function Home() {
                 <h3><button className="home-theme-button" aria-pressed={pinned?.kind==='topic'&&pinned.id===topic.id} onClick={()=>pin({kind:'topic',id:topic.id})}>{topic.name}</button></h3><p className="home-muted">{topic.summary}</p>{topic.id==='data-science'&&<button className="home-link home-subtopic" onClick={()=>pin({kind:'topic',id:'geospatial'})}>Geospatial projects ↗</button>}
                 <ul>{topic.highlights.map(projectId=><li key={projectId}>{projectLink(homeProjects.find(item=>item.id===projectId))}</li>)}
                     {topic.id==='nlp'&&<li><a className="home-link" {...highlightProps({kind:'record',id:'icits-2025'})} href={profile.publication.url} target="_blank" rel="noopener noreferrer">ICITS 2025 paper</a></li>}</ul>
-            </article>)}</div></aside>
+            </article>)}</div>
+                <section className="home-sidebar-teaching" aria-label="Teaching">
+                    <h2><button className="home-theme-button" aria-pressed={pinned?.kind==='topic'&&pinned.id==='teaching'} onClick={()=>pin({kind:'topic',id:'teaching'})}>Teaching</button></h2>
+                    <article {...highlightProps({kind:'project',id:31})}><h3><button className="home-talk-title" onClick={()=>openProject(31)}>MIT IAP · MIT Sloan</button></h3><p className="home-muted">{profile.teaching}</p></article>
+                    <ul><li>{projectLink(homeProjects.find(project=>project.id===28))}</li></ul>
+                </section>
+            </aside>
             <HomeProjectMap projects={homeProjects} highlight={highlight} onHighlight={setHighlight} onOpen={openProject} pinned={pinned} onPin={setPinned} onOpenRecord={record=>setExtraDialog({type:record.kind==='publication'?'publication':'talks',recordId:record.id})}/>
             </div>
             <div className="home-reading">
@@ -103,12 +111,8 @@ export default function Home() {
                 <Row label="Seminars and talks" className="home-seminars">
                     <ul className="home-seminar-list">{profile.talks.map((talk,index)=><li key={talk.title+talk.date} className={recordRelated('seminar-'+index)?'is-active':''} {...highlightProps({kind:'record',id:'seminar-'+index})}>
                         <time className="home-seminar-date">{talk.date}</time>
-                        <article><h3><button className="home-talk-title" onClick={()=>setExtraDialog({type:'talks',recordId:'seminar-'+index})}>{talk.shortTitle||talk.title}</button></h3><p className="home-muted">{talk.shortVenue||talk.venue}</p></article>
+                        <article><h3><button className="home-talk-title" aria-describedby={'home-talk-subject-'+index} onClick={()=>setExtraDialog({type:'talks',recordId:'seminar-'+index})}>{talk.series}</button></h3><p className="home-seminar-subject" id={'home-talk-subject-'+index}>{talk.shortTitle||talk.title}</p><p className="home-muted">{talk.institution}</p></article>
                     </li>)}</ul>
-                </Row>
-                <Row label="Past teaching" className="home-teaching" {...highlightProps({kind:'project',id:31})}>
-                    <h3><button className="home-talk-title" onClick={()=>openProject(31)}>MIT IAP · MIT Sloan</button></h3>
-                    <p className="home-muted">{profile.teaching}</p>
                 </Row>
                 <Row label="Past experience" className="home-history"><ul>{profile.experience.slice(2).map(item=><li key={item.organization}>
                     <div className="home-history-heading"><h3>{item.organization}</h3><span className="home-muted">{item.dates}</span></div>
@@ -135,9 +139,16 @@ export default function Home() {
                 {selectedProject.skills?.length>0&&<p className="home-detail-skills">{selectedProject.skills.join(' · ')}</p>}
                 {selectedProject.publications?.length>0&&<><h3>Publications</h3><ul>{selectedProject.publications.map(text=><li key={text}>{text}</li>)}</ul></>}
                 {selectedProject.presentations?.length>0&&<><h3>Presentations</h3><ul>{selectedProject.presentations.map(text=><li key={text}>{text}</li>)}</ul></>}
+                {profile.talks.some(talk=>talk.projectId===selectedProject.id)&&<><h3>Seminars and talks</h3><ul className="home-project-talks">{profile.talks.map((talk,index)=>talk.projectId===selectedProject.id&&<li key={index}><button className="home-link" onClick={()=>{navigate(location.state?.returnTo||'/',{replace:true});setExtraDialog({type:'talks',recordId:'seminar-'+index});}}>{talk.series}</button><p>{talk.shortTitle||talk.title} · {talk.institution}</p></li>)}</ul></>}
                 <div className="home-detail-links">{selectedProject.id===7&&<a className="home-link" href={profile.publication.url} target="_blank" rel="noopener noreferrer">Read the publication</a>}{selectedProject.githubUrl&&<a className="home-link" href={selectedProject.githubUrl} target="_blank" rel="noopener noreferrer">GitHub</a>}{selectedProject.liveUrl&&<a className="home-link" href={selectedProject.liveUrl} target="_blank" rel="noopener noreferrer">Visit project</a>}{selectedProject.id===18&&<Link className="home-link" to="/experience">Explore the interactive experience</Link>}</div>
             </article>:<article><h2 id="home-dialog-title">Project not found</h2><p>This project is not in the archive.</p><button className="home-link" onClick={closeDialog}>Return to the index</button></article>
-            :extraDialog?.type==='talks'?<section><h2 id="home-dialog-title">Seminars and talks</h2>{profile.talks.filter((_,index)=>!extraDialog.recordId||extraDialog.recordId==='seminar-'+index).map(talk=><article className="home-talk" key={talk.title+talk.date}><h3>{talk.subtitle||talk.title}</h3><p>{talk.venue}</p><span>{talk.date}</span></article>)}</section>
+            :selectedTalk?<article className="home-talk-detail">
+                <p className="home-detail-meta">{selectedTalk.series}<br/>{selectedTalk.institution}</p>
+                <h2 id="home-dialog-title">{selectedTalk.title}</h2>
+                <p className="home-detail-meta">{[selectedTalk.date,selectedTalk.time,selectedTalk.location].filter(Boolean).join(' · ')}</p>
+                <section lang="es"><h3>{selectedTalk.abstract?'Resumen':'Sobre la charla'}</h3><Description text={selectedTalk.abstract||selectedTalk.summary}/></section>
+                <div className="home-detail-links">{selectedTalk.projectId&&<button className="home-link" onClick={()=>openProject(selectedTalk.projectId)}>{homeProjects.find(project=>project.id===selectedTalk.projectId)?.title}</button>}{selectedTalk.poster&&<a className="home-link" href={selectedTalk.poster} target="_blank" rel="noopener noreferrer">Ver cartel</a>}{selectedTalk.seriesUrl&&<a className="home-link" href={selectedTalk.seriesUrl} target="_blank" rel="noopener noreferrer">About the seminar</a>}</div>
+            </article>
             :extraDialog?.type==='publication'?<article><h2 id="home-dialog-title">{profile.publication.title}</h2><p>{profile.publication.authors}</p><p>{profile.publication.venue}</p><a className="home-link" href={profile.publication.url} target="_blank" rel="noopener noreferrer">Read publication</a></article>:extraDialog?.type==='image'?<figure><h2 id="home-dialog-title">{images[extraDialog.index].title}</h2><img className="home-enlarged-image" src={images[extraDialog.index].src} alt={images[extraDialog.index].alt}/></figure>:null}
         </dialog>
     </div>;

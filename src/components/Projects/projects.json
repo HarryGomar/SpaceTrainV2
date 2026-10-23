@@ -8,33 +8,20 @@
     "scope": "Massive",
     "motivation": "Research",
     "years": "2023 - Present",
-    "skills": ["NLP", "Information Extraction", "Graph Analysis", "Text Embeddings"],
+    "skills": [
+      "NLP",
+      "Information Extraction",
+      "Graph Analysis",
+      "Text Embeddings"
+    ],
     "status": "Active",
     "githubUrl": null,
     "liveUrl": null,
     "publications": [
-      "Valdés, F., Gomar, R. H., & Méndez, D. A. (2025). Comparative Analysis of Information Extraction Techniques in the Mexican Legal System. In Information Technology and Systems, ICITS 2025, Volume 3, Conference proceedings, Lecture Notes in Networks and Systems.",
-      "\"Universo de Leyes: Aplicando el Procesamiento del Lenguaje Natural para vincular textos jurídicos con un enfoque integral\" at Seminario de Ingeniería de Software y Sus Implicaciones, Facultad de Ciencias, UNAM (Nov 2024).",
-      "\"Universo de Leyes...\" at Seminario Recursivo, División Académica de Ciencias de la Computación, ITAM (14 Nov)."
+      "Valdés, F., Gomar, R. H., & Méndez, D. A. (2025). Comparative Analysis of Information Extraction Techniques in the Mexican Legal System. In Information Technology and Systems, ICITS 2025, Volume 3, Conference proceedings, Lecture Notes in Networks and Systems."
     ]
   },
-  {
-    "id": 8,
-    "title": "Agentic Car Catalogue Formatting",
-    "image": "/ProjectImages/WIP.png",
-    "description": "As a component of a larger initiative focused on sustainable automotive part replacements in Mexico, this project aimed to create a three-agent LLM system. Inspired by the TEXT2DB \"Observer-Analyzer-Coder\" framework, the system was designed to automatically generate and refine Python Pandas code to clean, structure, and homogenize diverse car part catalogues. The catalogues were initially digitized from physical copies using Camelot and various OCR tools.\n\nThe project achieved several successful cases where previously unseen catalogues were correctly formatted without human intervention. However, out of 10 different brand catalogues tested, only 4 were formatted correctly. The project is currently on hold, with plans to resume when open-source models become more powerful and capable of handling the lack of consistent structural patterns found across different manufacturers' catalogues.",
-    "category": "NLP",
-    "scope": "Medium",
-    "motivation": "Makers",
-    "years": "2024 - 2025",
-    "skills": ["LLMs", "Agentic AI", "Python", "Pandas", "Camelot", "OCR"],
-    "status": "Active",
-    "githubUrl": null,
-    "liveUrl": null,
-    "presentations": [
-      "Presented at the Centro ITAM para Datos + Algoritmos + Sociedad annual project presentation in 2024 and 2025."
-    ]
-  },
+
   {
     "id": 9,
     "title": "Ethics Survey Answer Clustering",
@@ -121,17 +108,27 @@
   },
   {
     "id": 15,
-    "title": "Sustainable Auto Parts Matching",
+    "title": "Auto-parts catalogue extraction and matching",
     "image": "/ProjectImages/WIP.png",
-    "description": "InvierteSustentable and JetzApp needed a way to compare automotive parts across supplier catalogues that use different schemas, labels, and document formats. We built a prototype that extracts catalogue data and matches compatible alternatives so buyers can consider repair and lower-impact replacement options.\n\nI prototyped LLM agents that generate and revise Python preprocessing functions for each catalogue, then developed a shared categorization scheme for cross-supplier matching. The broader system tracks parts and repair options for more than 300 vehicle models. A companion study evaluates where open-source multimodal extraction works, and where inconsistent catalogues still require human review.",
+    "description": "I collaborated with InvierteSustentable and JetzApp on a prototype for comparing automotive parts across supplier catalogues with different schemas, labels and document formats. The work combined catalogue extraction, a shared categorization scheme and matching of compatible alternatives. The broader system tracks parts and repair options for more than 300 vehicle models.\n\nThe catalogue extraction experiment was part of this project. An Observer–Analyzer–Coder agent system generated and revised Python Pandas code to clean and standardize catalogues digitized with Camelot and OCR. It correctly formatted 4 of 10 brand catalogues without human intervention. Inconsistent manufacturer layouts remained a limitation, and this experiment was put on hold.",
     "category": "Data",
     "scope": "Large",
     "motivation": "Makers",
     "years": "2024 - Present",
-    "skills": ["LLM Agents", "Python", "Information Extraction"],
+    "skills": [
+      "LLM Agents",
+      "Python",
+      "Information Extraction",
+      "Pandas",
+      "Camelot",
+      "OCR"
+    ],
     "status": "Active",
     "githubUrl": null,
-    "liveUrl": null
+    "liveUrl": null,
+    "presentations": [
+      "Presented at the Centro ITAM para Datos + Algoritmos + Sociedad annual project presentation in 2024 and 2025."
+    ]
   },
   {
     "id": 16,
@@ -156,30 +153,37 @@
     "scope": "Medium",
     "motivation": "Competition",
     "years": "2025",
-    "skills": ["Python", "Policy Analysis", "Economic Census", "Machine Learning", "Data Visualization"],
+    "skills": [
+      "Python",
+      "Policy Analysis",
+      "Economic Census",
+      "Machine Learning",
+      "Data Visualization"
+    ],
     "status": "Inactive",
     "githubUrl": null,
-    "liveUrl": null
+    "liveUrl": "https://informal-dataton-2025.vercel.app/"
   },
   {
     "id": 31,
-    "title": "Teaching & Technical Presentations",
+    "title": "Teaching at MIT IAP and MIT Sloan",
     "image": "/ProjectImages/UOL.png",
-    "description": "I teach applied AI by connecting the underlying methods to systems people can build and evaluate. At MIT, I served as an instructor and lecturer for IAP courses 6.S189 and 6.S187 and for MIT Sloan 15.S65, covering machine learning, applied AI, and deployment.\n\nMy invited talks draw from projects I have worked on directly. At UNAM and ITAM, I presented the information-extraction and knowledge-graph methods behind Universo de Leyes. At the ITAM Sports Analytics Conference, I presented Player2Vec, an experiment that represents football players and match events as learned embeddings. The goal in both settings is the same: explain the technical choices clearly, show where the method fails, and give the audience enough structure to question the result.",
+    "description": "I served as an instructor and lecturer for MIT IAP courses 6.S189 and 6.S187 and MIT Sloan 15.S65. Teaching covered applied AI, machine learning and deployment.",
     "category": "Teaching",
     "scope": "Medium",
     "motivation": "Research",
-    "years": "2024 - Present",
-    "skills": ["Technical Teaching", "Applied AI", "Machine Learning", "NLP", "Public Speaking", "Course Design"],
-    "status": "Active",
+    "years": "Past teaching",
+    "skills": [
+      "Technical Teaching",
+      "Applied AI",
+      "Machine Learning",
+      "NLP",
+      "Public Speaking",
+      "Course Design"
+    ],
+    "status": "Inactive",
     "githubUrl": null,
-    "liveUrl": null,
-    "presentations": [
-      "Instructor and lecturer for MIT IAP 6.S189 and 6.S187, and MIT Sloan 15.S65, covering applied AI, machine learning, and deployment.",
-      "“Universo de Leyes: Aplicando el Procesamiento del Lenguaje Natural para vincular textos jurídicos con un enfoque integral,” Seminario de Ingeniería de Software y Sus Implicaciones, Facultad de Ciencias, UNAM (Nov 2024).",
-      "“Universo de Leyes,” Seminario Recursivo, División Académica de Ciencias de la Computación, ITAM (14 Nov).",
-      "“¿Y si pudiéramos entender el contexto a través de los datos? | Player2Vec,” Hudl StatsBomb and ITAM Sports Analytics Conference (2025)."
-    ]
+    "liveUrl": null
   },
   {
     "id": 17,

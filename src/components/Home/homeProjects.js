@@ -25,7 +25,7 @@ export const topicById = new Map(topics.map(topic => [topic.id, topic]));
 
 // The first topic is the project's home in the archive; the others are real overlaps.
 const projectTopics = {
-    7:['nlp','representation'], 8:['nlp'], 9:['nlp','representation'], 10:['representation'], 11:['nlp'],
+    7:['nlp','representation'], 9:['nlp','representation'], 10:['representation'], 11:['nlp'],
     12:['geospatial'], 13:['data-science'], 14:['geospatial','nlp'], 15:['nlp'], 16:['software','geospatial','representation'],
     30:['geospatial'], 31:['teaching'], 17:['software','teaching'], 18:['software'], 19:['software'],
     20:['software'], 21:['software'], 22:['software'], 23:['software'], 24:['software'],
@@ -33,8 +33,8 @@ const projectTopics = {
 };
 
 const shortNames = {
-    7:'Universo de Leyes', 8:'Catalogue agents', 9:'Ethics survey', 10:'Futbol Transformer', 11:'COSMIC',
-    12:'ANTAD pharmacies', 13:'Gol Tempranero', 14:'SEMOVI routes', 15:'Auto parts', 16:'Tellus',
+    7:'Universo de Leyes', 9:'Ethics survey', 10:'Futbol Transformer', 11:'COSMIC',
+    12:'ANTAD pharmacies', 13:'Gol Tempranero', 14:'SEMOVI routes', 15:'Auto-parts catalogues', 16:'Tellus',
     30:'Informality', 31:'MIT teaching', 17:'El Critón', 18:'Space Train', 19:'CASAPP', 20:'Datodos',
     21:'AuthentiQR', 22:'Latent Lull', 23:'Tic-tac-toe AI', 24:'Baldosa', 25:'Safari sim',
     26:'Sense It', 27:'Logic-gate CPU', 28:'3D scanning',
@@ -49,7 +49,7 @@ export const homeProjects = archive.map(project => {
         topics: projectTopics[project.id] || ['software'],
         affiliations: project.motivation==='Makers'||[7,17].includes(project.id) ? ['makers'] : [],
         summary: cv?.summary || project.description.split(/\.\s|\.\n/)[0].replace(/\.$/, '') + '.',
-        description: cv ? `${cv.detail}\n\n${cv.outcome}` : project.description,
+        description: project.description,
         years: project.id === 7 ? '2022–2025' : project.id === 11 ? '2022–2023' : project.years,
     };
 });
@@ -59,7 +59,7 @@ export const projectInTopic = (project, topicId) => project.topics.some(id => id
 export const projectsInTopic = (projects, topicId) => projects.filter(project => projectInTopic(project,topicId));
 
 const positions = {
-    7:[20,39], 9:[34,24], 10:[42,54], 11:[5,6], 8:[5,21], 15:[32,6],
+    7:[20,39], 9:[34,24], 10:[42,54], 11:[5,6], 15:[32,6],
     13:[94,28], 14:[55,9], 12:[94,45], 30:[81,60], 16:[68,54],
     17:[36,74], 18:[60,95], 19:[73,94], 20:[88,92], 21:[94,77],
     22:[82,72], 23:[53,67], 24:[48,88], 25:[91,62],
@@ -87,7 +87,6 @@ export function layoutProjectMap(projects) {
 export const relatedRecords = [
     {id:'icits-2025',kind:'publication',title:profile.publication.title,shortName:'ICITS 2025 paper',projectId:7,x:7,y:52,url:profile.publication.url},
     ...profile.talks.map((talk,index)=>({...talk,id:'seminar-'+index,kind:'seminar',
-        shortName:['UNAM seminar','ITAM seminar','StatsBomb talk','Cartografías cognitivas'][index],
-        projectId:talk.topicId?null:talk.title.includes('Player2Vec')?10:7,
+        shortName:talk.graphLabel,
         x:[7,25,37,60][index],y:[34,54,64,28][index]})),
 ];
