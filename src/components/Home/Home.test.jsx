@@ -95,7 +95,7 @@ describe('Topic map interaction',()=>{
     it('selects a topic without moving nodes and opens a project directly',()=>{
         const {container}=mount();
         const positions=[...container.querySelectorAll('.home-graph-node')].map(node=>node.getAttribute('style'));
-        fireEvent.click(within(map()).getByRole('button',{name:'Software and games, 10 projects'}));
+        fireEvent.click(within(map()).getByRole('button',{name:'Software and games, 13 projects'}));
         const software=projectsInTopic(homeProjects,'software');
         expect(container.querySelectorAll('.home-graph-node:not(.is-muted)')).toHaveLength(software.length);
         expect(container.querySelectorAll('.home-graph path[data-project].is-active')).toHaveLength(software.length);
@@ -169,12 +169,12 @@ describe('Compact homepage',()=>{
  it('pins MAKERS projects across hover and clears the selection',()=>{
  const {container}=mount();
  fireEvent.click(screen.getByRole('button',{name:'MAKERS · ITAM'}));
- expect(container.querySelectorAll('.home-graph-node.is-related')).toHaveLength(6);
+ expect(container.querySelectorAll('.home-graph-node.is-related')).toHaveLength(12);
  expect(container.querySelector('[data-project-id="7"]').classList.contains('is-related')).toBe(true);
  expect(container.querySelector('[data-project-id="16"]').classList.contains('is-muted')).toBe(true);
  const node=container.querySelector('[data-project-id="16"]');
  fireEvent.pointerEnter(node);fireEvent.pointerLeave(node);
- expect(container.querySelectorAll('.home-graph-node.is-related')).toHaveLength(6);
+ expect(container.querySelectorAll('.home-graph-node.is-related')).toHaveLength(12);
  fireEvent.keyDown(node,{key:'Escape'});
  expect(container.querySelectorAll('.home-graph-node.is-muted')).toHaveLength(0);
  });
@@ -302,3 +302,49 @@ it('links the publication and each seminar to its project in both directions',()
  fireEvent.click(within(reading).getByRole('button',{name:'ITAM Sports Analytics Conference',exact:true}));
  expect(within(screen.getByRole('dialog')).getByRole('heading',{name:/¿Y si pudiéramos/})).not.toBeNull();
  });
+
+describe('MAKERS additions',()=>{
+    it('connects all six additions to valid topics, affiliations and related work without adding Vaso',()=>{
+        const additions=homeProjects.filter(project=>project.id>=32);
+        expect(additions.map(project=>project.id)).toEqual([32,33,34,35,36,37]);
+        expect(homeProjects.some(project=>/vaso|cup.wallet/i.test(project.title))).toBe(false);
+        for(const project of additions){
+            expect(project.affiliations).toContain('makers');
+            expect(project.contribution).toBeTruthy();
+            for(const relatedId of project.relatedProjectIds)expect(homeProjects.some(item=>item.id===relatedId)).toBe(true);
+        }
+        expect(homeProjects.find(project=>project.id===35).topics).toEqual(['teaching','software']);
+    });
+
+    it('presents platform engineering and event organization, with working links between project details',()=>{
+        const view=mount('/projects/33');
+        const platform=screen.getByRole('dialog');
+        expect(within(platform).getByText(/kill a mosquito with a bazooka/)).not.toBeNull();
+        expect(within(platform).getByText(/pnpm and Turborepo monorepo/)).not.toBeNull();
+        expect(within(platform).getByRole('link',{name:'MAKERS public site'}).getAttribute('href')).toBe('https://makers.itam.mx/');
+        fireEvent.click(within(platform).getByRole('button',{name:'Mapa ITAM and the academic atlas'}));
+        expect(screen.getByTestId('location').textContent).toBe('/projects/34');
+        view.unmount();
+        mount('/projects/35');
+        const event=screen.getByRole('dialog');
+        expect(within(event).getByText('Organizing collaboration and web development')).not.toBeNull();
+        expect(within(event).getByText(/I collaborated on organizing Espacios Latentes/)).not.toBeNull();
+        expect(within(event).getByRole('link',{name:'Visit project'}).getAttribute('href')).toBe('https://espacioslatentes.org/es/');
+    });
+
+    it('connects the CDAS talk to Congreso in the graph and in both detail views',()=>{
+        const {container}=mount();
+        fireEvent.focus(screen.getByRole('button',{name:'CDAS',exact:true}));
+        expect(container.querySelector('[data-record-id="seminar-4"]').classList.contains('is-active')).toBe(true);
+        expect(container.querySelector('[data-project-id="36"]').classList.contains('is-related')).toBe(true);
+        expect(container.querySelectorAll('.home-graph path[data-project="36"].is-active')).toHaveLength(2);
+        fireEvent.click(screen.getByRole('button',{name:'CDAS',exact:true}));
+        const talk=screen.getByRole('dialog');
+        expect(within(talk).getByRole('heading',{name:'La geometría de la política: mapas, conceptos y lenguaje'})).not.toBeNull();
+        expect(within(talk).getByRole('heading',{name:'Sobre la charla'})).not.toBeNull();
+        fireEvent.click(within(talk).getByRole('button',{name:'Mexican parliamentary discourse'}));
+        expect(screen.getByTestId('location').textContent).toBe('/projects/36');
+        fireEvent.click(within(screen.getByRole('dialog')).getByRole('button',{name:'CDAS'}));
+        expect(within(screen.getByRole('dialog')).getByRole('heading',{name:/La geometría de la política/})).not.toBeNull();
+    });
+});

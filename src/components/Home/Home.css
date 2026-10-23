@@ -171,7 +171,7 @@
 .home-research-sidebar .home-themes ul{font-size:12px;margin-top:9px;gap:5px 12px}
 .home-map{min-width:0;display:flex;flex-direction:column;border:0;padding:0}
 .home-map-heading{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:10px}
-.home-map .home-graph{aspect-ratio:1.55}
+.home-map .home-graph{aspect-ratio:1.25}
 .home-map-caption{margin-top:20px;padding-top:12px;height:136px;min-height:136px;flex:0 0 136px;overflow:auto;scrollbar-gutter:stable}
 .home-map-caption>span{display:inline;margin-right:14px;font-size:12px}
 .home-map-caption>.home-link{font-size:12px}
@@ -233,6 +233,9 @@
 .home-record-node.seminar .home-node-name{white-space:pre-line;text-align:center;width:max-content;max-width:125px}
 .home-record-node.is-at-left .home-node-name{left:0;transform:none;text-align:left}
 .home-project-talks p{font-size:13px;color:var(--home-muted);margin:4px 0 0}
+.home-dialog .home-detail-contribution{font-size:13px;line-height:1.5;color:var(--home-muted);margin-top:-10px;margin-bottom:22px}
+.home-related-work ul{list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:7px 20px;font-size:14px}
+.home-related-work li{margin:0}
 .home-sidebar-teaching{margin-top:24px;font-size:13px}
 .home-sidebar-teaching>h2{color:var(--home-muted);margin-bottom:12px}
 .home-sidebar-teaching .home-muted{font-size:13px;margin-top:6px}
@@ -255,6 +258,13 @@
 
 .home-map-view,.home-mobile-work-list{display:none}
 .home-map-viewport{min-width:0}
+@media(min-width:761px) and (max-width:1050px){
+    .home-workspace{grid-template-columns:1fr}
+    .home-workspace>.home-map{order:1}
+    .home-workspace>.home-research-sidebar{order:2}
+    .home-research-sidebar .home-themes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+    .home-sidebar-teaching{max-width:420px}
+}
 @media(max-width:760px){
     .homepage{padding:28px max(20px,env(safe-area-inset-right)) 28px max(20px,env(safe-area-inset-left))}
     .home-header{gap:15px;padding-bottom:15px}

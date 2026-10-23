@@ -92,6 +92,12 @@ export const profile = {
       poster:'/home/talks/cartografias-cognitivas.jpg',
       abstract:'Los mapas son herramientas fundamentales que, a lo largo de la historia, han estructurado nuestro entendimiento, impulsado la exploración y facilitado la toma de decisiones. Con el desarrollo del aprendizaje de representaciones, nuestra capacidad cartográfica ya no se limita a la geografía física; hoy existen nuevos esfuerzos por trazar territorios semánticos, lo cual abre paso a nuevas preguntas y respuestas.\n\nEste seminario explora la importancia de estas abstracciones, detalla algunos métodos computacionales para generarlas y presenta ejemplos de su aplicación en diversas industrias. Su objetivo es poner en perspectiva el potencial de estas herramientas y motivar la curiosidad de estos nuevos enfoques analíticos.',
     },
+    {
+      title:'La geometría de la política: mapas, conceptos y lenguaje',shortTitle:'La geometría de la política',
+      series:'CDAS',institution:'Centro ITAM Datos + Algoritmos + Sociedad',
+      graphLabel:'CDAS',date:'',projectId:36,
+      summary:'Charla sobre el uso de representaciones del lenguaje para explorar el discurso político. La presentación introduce el modelado de temas y de conceptos, explica el contraste entre lenguaje orientado a evidencia e intuición, y muestra exploraciones de ese contraste en debates parlamentarios mexicanos.\n\nLos mapas y las medidas se presentan como herramientas para estudiar patrones del discurso, con atención a las decisiones de representación e interpretación.',
+    },
   ],
   recognition:['INEGI Datatón winner, 2025','ISAC Hackathon winner, 2025','ITAM Hackathon winner, 2023','ITAM Engineering Academic Excellence Recognition, 2023–2025'],
 };

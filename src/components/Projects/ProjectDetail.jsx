@@ -124,6 +124,7 @@ const ProjectDetail = ({ embedded = false,mobileDisplay = false,projectId,onRetu
                     <div>
                         <h1 className={`${isMobile ? 'text-3xl' : 'text-4xl'} font-bold text-[var(--selection-color)] leading-tight balance-text`}>{project.title}</h1>
                         <p className={`${isMobile ? 'text-base' : 'text-lg'} text-[var(--accent-color)] mt-1`}>{project.category}</p>
+                        {project.contribution&&<p className="text-sm text-[var(--accent-color)] mt-2">{project.contribution}</p>}
                     </div>
                     {!isMobile && <button onClick={handleReturn} className="flex-shrink-0 px-3 py-1 border-b-2 border-[var(--foreground-color)] text-[var(--foreground-color)] hover:border-[var(--selection-color)] hover:text-[var(--selection-color)] transition-colors duration-300">&larr; {isEmbedded ? 'Return to Archives' : 'Return to Main'}</button>}
                 </div>
@@ -198,7 +199,8 @@ const ProjectDetail = ({ embedded = false,mobileDisplay = false,projectId,onRetu
                         </div>
                         <div className={`flex ${isMobile ? 'flex-col' : 'flex-row'} gap-4`}>
                             {project.githubUrl && <ThemedButton href={project.githubUrl}>GitHub</ThemedButton>}
-                            {project.liveUrl && <ThemedButton href={project.liveUrl} isPrimary={true}>Live Demo</ThemedButton>}
+                            {project.liveUrl && <ThemedButton href={project.liveUrl} isPrimary={true}>Visit project</ThemedButton>}
+                            {project.links?.map(link=><ThemedButton key={link.url} href={link.url}>{link.label}</ThemedButton>)}
                         </div>
                     </div>
                 </div>
