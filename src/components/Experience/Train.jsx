@@ -10,7 +10,7 @@ import useTrainStore from '../../store/useTrainStore';
 import Projects from '../Projects/Projects';
 import ProjectDetail from '../Projects/ProjectDetail';
 
-export default function Train(props) {
+export default function Train({compact=false,...props}) {
   // Asset and animation setup
   const group = useRef();
   const { nodes, materials, animations } = useGLTF("/Train/SpaceTrainV1.glb");
@@ -26,10 +26,11 @@ export default function Train(props) {
   const terminal = useRef();
   const projectScreen = useRef();
   const handledExitRequest = useRef(0);
+  const handledEntryRequest = useRef(0);
 
   // Zustand store for state management
   const {
-    inTrain, inTerminal, inProjects, isTransitioning, iframeVisible, projectsVisible, focusExitRequest, hoveredObject,
+    inTrain, inTerminal, inProjects, isTransitioning, iframeVisible, projectsVisible, focusExitRequest, entryRequest, hoveredObject,
     setHoveredObject, enterTrain, enterTerminal, exitTerminal, enterProjects, exitProjects, resetExperience
   } = useTrainStore();
 
@@ -44,6 +45,13 @@ export default function Train(props) {
   const handleExitTerminal = useCallback(() => { exitTerminal(camera, controls); }, [camera, controls, exitTerminal]);
   const handleEnterProjects = useCallback((e) => { e.stopPropagation(); enterProjects(camera, controls, projectScreen); }, [camera, controls, projectScreen, enterProjects]);
   const handleExitProjects = useCallback(() => { exitProjects(camera, controls); }, [camera, controls, exitProjects]);
+
+  useEffect(()=>{
+    if(entryRequest===handledEntryRequest.current)return;
+    if(!controls||!door.current||!actions.OpenDoor)return;
+    handledEntryRequest.current=entryRequest;
+    handleEnterTrain({stopPropagation(){}});
+  },[entryRequest,handleEnterTrain]);
 
   useEffect(() => {
     if (focusExitRequest === handledExitRequest.current) return;
@@ -105,9 +113,9 @@ export default function Train(props) {
     <group {...props} dispose={null} ref={group}>
       <group name="Interior" ref={interior}>
         <Selection>
-          <EffectComposer autoClear={false}>
+          {!compact&&<EffectComposer autoClear={false}>
             <Outline visibleEdgeColor="white" hiddenEdgeColor="white" blur width={500} edgeStrength={100} />
-          </EffectComposer>
+          </EffectComposer>}
           
           {/* Door is interactable from the outside */}
           <group name="DoorRight" position={[-5.775, 3.426, 3.837]} rotation={[Math.PI / 2, 0, -Math.PI]} scale={[0.904, 0.904, 0.956]}>
@@ -144,7 +152,7 @@ export default function Train(props) {
                 />
               </Select>
 
-              {projectsVisible && (
+              {projectsVisible && !compact && (
                 <group position={[5.60, 4.7, 15.95]} rotation={[0, -Math.PI / 2, 0]} scale={[0.2, 0.2, 0.2]}>
                   <Html
                     transform
@@ -180,7 +188,7 @@ export default function Train(props) {
                   onPointerLeave={(e) => { e.stopPropagation(); setHoveredObject(null); }}
                 />
               </Select>
-              {iframeVisible && (
+              {iframeVisible && !compact && (
                 <Html
                   position={[-4.33, 9.3, 73.2]}
                   rotation={[0, Math.PI, 0]}

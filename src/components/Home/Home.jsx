@@ -82,7 +82,7 @@ export default function Home() {
         <main className="homepage" id="home-content">
             <header className="home-header">
                 <div><h1>{profile.name}</h1><p className="home-role">{profile.role}</p><div className="home-contact"><EmailLink/><CvLink/><a className="home-link" href="#writing">Writing</a></div></div>
-                <div className="home-entry"><Link className="home-link" to="/experience">Explore the interactive experience</Link><p>Space Train · 3D portfolio</p></div>
+                <div className="home-entry"><Link className="home-link" to="/experience"><svg className="home-experience-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="5.5"/><ellipse cx="12" cy="12" rx="11" ry="3.8" transform="rotate(-32 12 12)"/><circle cx="19.4" cy="4.7" r="1.5" className="home-experience-star"/></svg><span>Explore the interactive experience</span></Link><p>Space Train · 3D portfolio</p></div>
             </header>
             <Row label="Now" className="home-current"><div className="home-current-grid">{profile.experience.slice(0,2).map(item=><article key={item.organization}>
                 <div className="home-current-heading"><h3>{item.organization.startsWith('MAKERS')?<button className="home-current-select" aria-pressed={pinned?.id==='makers'} onClick={()=>{pin({kind:'affiliation',id:'makers'});document.querySelector('.home-map')?.scrollIntoView({block:'center'});}}>{item.organization}</button>:item.organization}</h3><span>{item.dates.replace(' to present','–present')}</span></div>

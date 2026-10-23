@@ -1,21 +1,15 @@
-import { CubeTextureLoader } from "three";
+import {useEffect} from 'react';
+import {useCubeTexture} from '@react-three/drei';
 import { useThree } from "@react-three/fiber";
 
 export default function SpaceBox() {
-    const { scene } = useThree();
-    const loader = new CubeTextureLoader();
-    // The CubeTextureLoader load method takes an array of urls representing all 6 sides of the cube.
-    const texture = loader.load([
-        '/SkyboxTextures/right.png', // right
-        '/SkyboxTextures/left.png',  // left
-        '/SkyboxTextures/top.png',   // top
-        '/SkyboxTextures/bottom.png',// bottom
-        '/SkyboxTextures/front.png', // front
-        '/SkyboxTextures/back.png',  // back
-    ]);
-
-    // Set the scene background property to the resulting texture.
-    scene.background = texture;
+    const scene = useThree(state=>state.scene);
+    const texture = useCubeTexture(['right.png','left.png','top.png','bottom.png','front.png','back.png'],{path:'/SkyboxTextures/'});
+    useEffect(()=>{
+        const previous=scene.background;
+        scene.background=texture;
+        return ()=>{scene.background=previous;};
+    },[scene,texture]);
 
     return null;
 }

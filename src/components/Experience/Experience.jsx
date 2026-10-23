@@ -1,10 +1,13 @@
 // src/components/Experience.jsx
-import React, { Suspense } from 'react';
+import React, { Suspense,useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, KeyboardControls, Html, useProgress } from '@react-three/drei';
 import SpaceBox from './SpaceBox';
 import Train from './Train';
 import OnScreenControls from './OnScreenControls';
+import MobileDisplay from './MobileDisplay';
+import useCompactViewport from '../../hooks/useCompactViewport';
+import useTrainStore from '../../store/useTrainStore';
 
 function TrainLoading() {
     const { progress } = useProgress();
@@ -12,6 +15,13 @@ function TrainLoading() {
 }
 
 const Experience = () => {
+    const compact=useCompactViewport();
+    const [mobileScreen,setMobileScreen]=useState(null);
+    const projectsVisible=useTrainStore(state=>state.projectsVisible);
+    const iframeVisible=useTrainStore(state=>state.iframeVisible);
+    const requestFocusExit=useTrainStore(state=>state.requestFocusExit);
+    const screen=compact?(mobileScreen||(projectsVisible?'projects':iframeVisible?'terminal':null)):null;
+    const closeScreen=()=>{setMobileScreen(null);if(projectsVisible||iframeVisible)requestFocusExit();};
     return (
         <KeyboardControls
             map={[
@@ -19,9 +29,11 @@ const Experience = () => {
                 { name: 'backward', keys: ['ArrowDown', 's', 'S'] },
             ]}
         >
-            <div className="relative w-screen h-screen overflow-hidden bg-black">
+            <div className="experience-shell">
                 <Canvas
-                    shadows
+                    shadows={!compact}
+                    dpr={[1,compact?1.5:2]}
+                    frameloop={screen?'demand':'always'}
                     camera={{
                         position: [-3, 2, 5], // Start slightly left and above for a more cinematic angle
                         near: 0.01,
@@ -40,10 +52,10 @@ const Experience = () => {
                         />
                         <SpaceBox />
                         <ambientLight intensity={1} />
-                        <Train scale={0.04} position={[0, 0, -1]} />
+                        <Train compact={compact} scale={0.04} position={[0, 0, -1]} />
                     </Suspense>
                 </Canvas>
-                <OnScreenControls />
+                {screen?<MobileDisplay screen={screen} onClose={closeScreen}/>:<OnScreenControls onOpenProjects={()=>setMobileScreen('projects')} onOpenTerminal={()=>setMobileScreen('terminal')}/>}
             </div>
         </KeyboardControls>
     );

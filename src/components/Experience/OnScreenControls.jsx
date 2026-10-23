@@ -9,12 +9,11 @@ const movementControls = [
     { direction: 'backward', label: 'REV', symbol: '↓' },
 ];
 
-const OnScreenControls = () => {
+const OnScreenControls = ({onOpenProjects,onOpenTerminal}) => {
     const navigate = useNavigate();
     const [expanded, setExpanded] = useState(() => (
-        typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches
+        typeof window !== 'undefined' && (window.innerWidth<=760||window.innerWidth<=1024&&window.innerHeight<=600||window.matchMedia('(pointer: coarse)').matches)
     ));
-    const [portraitNoticeDismissed, setPortraitNoticeDismissed] = useState(false);
     const activePointers = useRef({ forward: new Set(), backward: new Set() });
     const inTrain = useTrainStore((state) => state.inTrain);
     const inTerminal = useTrainStore((state) => state.inTerminal);
@@ -25,6 +24,7 @@ const OnScreenControls = () => {
     const setMovement = useTrainStore((state) => state.setMovement);
     const requestFocusExit = useTrainStore((state) => state.requestFocusExit);
     const resetExperience = useTrainStore((state) => state.resetExperience);
+    const requestTrainEntry = useTrainStore((state) => state.requestTrainEntry);
     const setEnterExperience = useStore((state) => state.setEnterExperience);
 
     const canMove = inTrain && !inTerminal && !inProjects && !isTransitioning;
@@ -79,6 +79,9 @@ const OnScreenControls = () => {
     return (
         <>
             <nav className="experience-navigation" aria-label="Experience navigation">
+                {!inTrain&&<button type="button" className="experience-navigation__button experience-navigation__button--mobile" disabled={isTransitioning} onClick={requestTrainEntry}>{isTransitioning?'Entering…':'Enter train'}</button>}
+                {onOpenProjects&&<button type="button" className="experience-navigation__button experience-navigation__button--mobile" onClick={onOpenProjects}>Projects</button>}
+                {onOpenTerminal&&<button type="button" className="experience-navigation__button experience-navigation__button--mobile" onClick={onOpenTerminal}>Terminal</button>}
                 {(inTerminal || inProjects) && (
                     <button type="button" onClick={requestFocusExit} className="experience-navigation__button experience-navigation__button--primary">
                         <span aria-hidden="true">←</span> Return to train
@@ -88,13 +91,6 @@ const OnScreenControls = () => {
                     Main screen
                 </button>
             </nav>
-
-            {!portraitNoticeDismissed && (
-                <aside className="portrait-notice" aria-label="Portrait mode notice">
-                    <p><strong>Limited in portrait.</strong> Rotate your device for more room to move and use the train displays.</p>
-                    <button type="button" onClick={() => setPortraitNoticeDismissed(true)} aria-label="Dismiss portrait mode notice">Dismiss</button>
-                </aside>
-            )}
 
             {canMove && (
                 <aside className="on-screen-controls" aria-label="Movement controls">

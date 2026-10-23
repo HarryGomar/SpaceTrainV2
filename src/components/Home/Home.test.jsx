@@ -137,6 +137,17 @@ describe('Topic map interaction',()=>{
 });
 
 describe('Compact homepage',()=>{
+    it('lets the phone work list open a topic and project, with an explicit map view',()=>{
+        const {container}=mount();
+        const list=container.querySelector('.home-mobile-work-list');
+        fireEvent.click(within(list).getByRole('button',{name:'NLP and information extraction'}));
+        expect(within(list).getByRole('button',{name:'NLP and information extraction'}).getAttribute('aria-expanded')).toBe('true');
+        fireEvent.click(within(list).getByRole('button',{name:/Auto-parts catalogue extraction and matching/}));
+        expect(within(screen.getByRole('dialog')).getByRole('heading',{name:'Auto-parts catalogue extraction and matching'})).not.toBeNull();
+        fireEvent.click(screen.getByRole('button',{name:'Close details'}));
+        fireEvent.click(within(map()).getByRole('button',{name:'Map',exact:true}));
+        expect(map().getAttribute('data-mobile-view')).toBe('map');
+    });
     it('opens the archive from its direct route, grouped by topic, and collapses it again',()=>{
         mount('/projects');
         const archive=screen.getByRole('region',{name:'All projects'});
@@ -214,7 +225,7 @@ it('links the publication and each seminar to its project in both directions',()
 
  it('keeps graph text and node positions unchanged on hover and selection',()=>{
  const {container}=mount();
- const graph=map();const text=graph.textContent;
+ const graph=container.querySelector('.home-graph');const text=graph.textContent;
  const positions=[...container.querySelectorAll('.home-graph-node,.home-record-node')].map(node=>node.getAttribute('style'));
  const node=container.querySelector('[data-project-id="17"]');
  fireEvent.pointerEnter(node);expect(graph.textContent).toBe(text);

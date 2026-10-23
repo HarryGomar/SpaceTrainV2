@@ -1,5 +1,5 @@
 import React from 'react';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it,vi } from 'vitest';
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import OnScreenControls from './OnScreenControls';
@@ -54,5 +54,21 @@ describe('OnScreenControls', () => {
         });
 
         expect(screen.getByLabelText('Movement controls')).not.toBeNull();
+    });
+
+    it('exposes entry and project shortcuts and stops movement after pointer cancellation',()=>{
+        const onOpenProjects=vi.fn();
+        const view=render(<MemoryRouter><OnScreenControls onOpenProjects={onOpenProjects}/></MemoryRouter>);
+        fireEvent.click(screen.getByRole('button',{name:'Enter train'}));
+        expect(useTrainStore.getState().entryRequest).toBe(1);
+        fireEvent.click(screen.getByRole('button',{name:'Projects'}));
+        expect(onOpenProjects).toHaveBeenCalledOnce();
+        act(()=>useTrainStore.setState({inTrain:true}));
+        fireEvent.click(screen.getByRole('button',{name:'Show movement controls'}));
+        fireEvent.pointerDown(screen.getByRole('button',{name:'Move forward'}));
+        expect(useTrainStore.getState().moveForward).toBe(true);
+        fireEvent.pointerCancel(screen.getByRole('button',{name:'Move forward'}));
+        expect(useTrainStore.getState().moveForward).toBe(false);
+        view.unmount();
     });
 });

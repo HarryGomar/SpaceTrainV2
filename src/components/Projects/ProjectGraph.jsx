@@ -5,7 +5,7 @@ import * as d3 from 'd3';
 const scopeRadius = { Small: 7, Medium: 10, Large: 13, Massive: 16 };
 const shorten = (text, length) => text.length > length ? `${text.slice(0, length - 1)}…` : text;
 
-const ProjectGraph = ({ projects, isMobile }) => {
+const ProjectGraph = ({ projects, isMobile, onOpenProject }) => {
     const containerRef = useRef(null);
     const svgRef = useRef(null);
     const zoomRef = useRef(null);
@@ -102,13 +102,15 @@ const ProjectGraph = ({ projects, isMobile }) => {
 
         const openProject = (event, item) => {
             if (item.type === 'project' && !item.wasDragged && !event.defaultPrevented) {
-                navigate(`/projects/${item.data.id}`, { replace: true });
+                if (onOpenProject) onOpenProject(item.data.id);
+                else navigate(`/projects/${item.data.id}`, { replace: true });
             }
         };
         node.on('click', openProject).on('keydown', (event, item) => {
             if ((event.key === 'Enter' || event.key === ' ') && item.type === 'project') {
                 event.preventDefault();
-                navigate(`/projects/${item.data.id}`, { replace: true });
+                if (onOpenProject) onOpenProject(item.data.id);
+                else navigate(`/projects/${item.data.id}`, { replace: true });
             }
         });
 
@@ -195,7 +197,7 @@ const ProjectGraph = ({ projects, isMobile }) => {
             zoomRef.current = null;
             svg.on('.zoom', null);
         };
-    }, [projects, navigate, isMobile, dimensions]);
+    }, [projects, navigate, isMobile, dimensions, onOpenProject]);
 
     const changeZoom = useCallback((factor) => {
         const current = zoomRef.current;

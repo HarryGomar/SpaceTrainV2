@@ -5,6 +5,7 @@ import {layoutProjectMap, projectInTopic, relatedRecords, topicById} from './hom
 export default function HomeProjectMap({projects,highlight,onHighlight,onOpen,pinned,onPin,onOpenRecord}) {
     const {nodes,hubs,edges} = useMemo(() => layoutProjectMap(projects),[projects]);
     const graphRef=useRef(null);
+    const [mobileView,setMobileView]=useState('list');
     const maskId='graph-labels-'+useId().replaceAll(':','');
     const [labelMasks,setLabelMasks]=useState([]);
     useLayoutEffect(()=>{
@@ -25,7 +26,7 @@ export default function HomeProjectMap({projects,highlight,onHighlight,onOpen,pi
         observer?.observe(graph);
         window.addEventListener('resize',measure);
         return ()=>{observer?.disconnect();window.removeEventListener('resize',measure);};
-    },[nodes,hubs]);
+    },[nodes,hubs,mobileView]);
     const selection = highlight ?? pinned;
     const record=selection?.kind==='record'?relatedRecords.find(item=>item.id===selection.id):null;
     const project = record ? nodes.find(node=>node.id===record.projectId) : selection?.kind==='project' ? nodes.find(node => node.id===selection.id) : null;
@@ -48,11 +49,20 @@ export default function HomeProjectMap({projects,highlight,onHighlight,onOpen,pi
         : project ? (projectInTopic(project,hub.id)?'is-related':'is-muted') : affiliation ? (affiliated.some(node=>projectInTopic(node,hub.id))?'is-related':'is-muted') : '';
 
     const recordRelated = item => record ? record.id===item.id : project ? project.id===item.projectId || item.topicId&&projectInTopic(project,item.topicId) : topic ? item.topicId===topic.id || Boolean(item.projectId&&projectInTopic(nodes.find(node=>node.id===item.projectId),topic.id)) : affiliation ? affiliated.some(node=>node.id===item.projectId) : false;
-    return <section className="home-map" aria-label="Interactive project map" onKeyDown={event=>{
+    return <section className="home-map" data-mobile-view={mobileView} aria-label="Interactive project map" onKeyDown={event=>{
         if(event.key==='Escape'){reset();event.stopPropagation();}
     }}>
         <div className="home-map-heading"><h2>Work and connections</h2>
+            <div className="home-map-view" role="group" aria-label="Work view"><button aria-pressed={mobileView==='list'} onClick={()=>setMobileView('list')}>List</button><button aria-pressed={mobileView==='map'} onClick={()=>setMobileView('map')}>Map</button></div>
         </div>
+        <div className="home-mobile-work-list">{hubs.map(hub=>{
+            const expanded=pinned?.kind==='topic'&&pinned.id===hub.id;
+            const records=relatedRecords.filter(item=>item.topicId===hub.id||item.projectId&&projectInTopic(nodes.find(node=>node.id===item.projectId),hub.id));
+            return <section key={hub.id}><h3><button className="home-mobile-topic" aria-expanded={expanded} aria-controls={'mobile-topic-'+hub.id} onClick={()=>pin({kind:'topic',id:hub.id})}>{hub.name}<span aria-hidden="true">{expanded?'−':'+'}</span></button></h3>
+                <div id={'mobile-topic-'+hub.id} hidden={!expanded}><p className="home-mobile-topic-summary">{hub.summary}</p><ul>{nodes.filter(node=>projectInTopic(node,hub.id)).map(node=><li key={node.id}><button className="home-mobile-work" onClick={()=>onOpen(node.id)}><span>{node.title}</span><small>{node.years}</small></button></li>)}{records.map(item=><li key={item.id}><button className="home-mobile-work" onClick={()=>onOpenRecord(item)}><span>{item.shortTitle||item.title}</span><small>{item.kind==='publication'?'Publication':item.series}</small></button></li>)}</ul></div>
+            </section>;
+        })}</div>
+        <div className="home-map-viewport" tabIndex={mobileView==='map'?0:-1} aria-label="Project relationship map">
         <div className="home-graph-legend" aria-label="Graph legend"><span><i className="project"/>Project</span><span><i/>Publication</span><span><i className="seminar"/>Seminar</span></div>
         <div className="home-graph" ref={graphRef}>
             <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
@@ -74,6 +84,7 @@ export default function HomeProjectMap({projects,highlight,onHighlight,onOpen,pi
                 aria-pressed={isPinned('project',node.id)} onClick={() => onOpen(node.id)} {...hoverProps({kind:'project',id:node.id})}>
                 <i aria-hidden="true"/><span className="home-node-name" aria-hidden="true">{node.shortName}</span>
             </button>)}
+        </div>
         </div>
     </section>;
 }

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import projectsData from './projects.json';
+import {homeProjects as projectsData} from '../Home/homeProjects';
 import MainContainer from '../MainContainer';
 import ProjectGraph from './ProjectGraph';
 
@@ -75,7 +75,7 @@ const StatusFilter = ({ active, onChange }) => {
     );
 };
 
-const Projects = ({ embedded = false }) => {
+const Projects = ({ embedded = false,mobileDisplay = false,onOpenProject }) => {
     const [projects, setProjects] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [filters, setFilters] = useState({ category: 'All', status: 'All', scope: 'All', motivation: 'All' });
@@ -84,7 +84,7 @@ const Projects = ({ embedded = false }) => {
     const navigate = useNavigate();
     const windowWidth = useWindowWidth();
     const isEmbedded = embedded || window.location.pathname === '/experience';
-    const isMobile = !isEmbedded && windowWidth < 1024;
+    const isMobile = mobileDisplay || !isEmbedded && windowWidth < 1024;
 
     const pageSize = isMobile ? MOBILE_PAGE_SIZE : DESKTOP_PAGE_SIZE;
 
@@ -140,8 +140,8 @@ const Projects = ({ embedded = false }) => {
     const PaginationControls = () => (
         <div className="flex flex-col gap-3">
             <div className="flex gap-3">
-                <button onClick={() => handleNavigation(-1)} disabled={totalPages <= 1} className="w-1/2 h-14 border-2 border-[var(--foreground-color)] bg-[var(--container-background)] text-3xl hover:border-[var(--selection-color)] hover:text-[var(--selection-color)] transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed">&lt;</button>
-                <button onClick={() => handleNavigation(1)} disabled={totalPages <= 1} className="w-1/2 h-14 border-2 border-[var(--foreground-color)] bg-[var(--container-background)] text-3xl hover:border-[var(--selection-color)] hover:text-[var(--selection-color)] transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed">&gt;</button>
+                <button aria-label="Previous project page" onClick={() => handleNavigation(-1)} disabled={totalPages <= 1} className="w-1/2 h-14 border-2 border-[var(--foreground-color)] bg-[var(--container-background)] text-3xl hover:border-[var(--selection-color)] hover:text-[var(--selection-color)] transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed">&lt;</button>
+                <button aria-label="Next project page" onClick={() => handleNavigation(1)} disabled={totalPages <= 1} className="w-1/2 h-14 border-2 border-[var(--foreground-color)] bg-[var(--container-background)] text-3xl hover:border-[var(--selection-color)] hover:text-[var(--selection-color)] transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed">&gt;</button>
             </div>
             <div className="flex items-center justify-center w-full h-5 border-2 border-[var(--foreground-color)] bg-[var(--container-background)]">
                 {totalPages > 0 &&
@@ -159,7 +159,7 @@ const Projects = ({ embedded = false }) => {
         <MainContainer isMobile={isMobile} contained={isEmbedded}>
             <div
                 className="w-full h-full"
-                style={!isMobile ? { padding: responsiveGap } : { padding: '3rem 1.5rem 1rem' }}
+                style={!isMobile ? { padding: responsiveGap } : { padding: '1.25rem' }}
             >
                 {/* --- Main Layout Container --- */}
                 <div className={`w-full h-full ${isMobile ? 'flex flex-col' : 'flex'}`} style={{ gap: responsiveGap }}>
@@ -167,17 +167,17 @@ const Projects = ({ embedded = false }) => {
                     {/* --- Left Column (Main Content) --- */}
                     <div className={`${isMobile ? 'w-full order-2' : 'w-4/5'} flex flex-col min-h-0`}>
                         {isGraphView ? (
-                            <div className={`w-full h-full ${isMobile ? 'min-h-[32rem]' : 'min-h-0'} border-2 border-[var(--foreground-color)] bg-[var(--container-background)]`}><ProjectGraph projects={filteredProjects} isMobile={isMobile} /></div>
+                            <div className={`w-full h-full ${isMobile ? 'min-h-[32rem]' : 'min-h-0'} border-2 border-[var(--foreground-color)] bg-[var(--container-background)]`}><ProjectGraph projects={filteredProjects} isMobile={isMobile} onOpenProject={onOpenProject} /></div>
                         ) : (
-                            <div className="flex-grow grid grid-cols-2 grid-rows-2 min-h-0" style={{ gap: responsiveGap }}>
+                            <div className={`flex-grow grid min-h-0 ${isMobile?'grid-cols-1 gap-4':'grid-cols-2 grid-rows-2'}`} style={isMobile?undefined:{ gap: responsiveGap }}>
                                 {gridProjects.map((project, index) => (
                                     project ? (
-                                        <button key={project.id} type="button" onClick={() => navigate(`/projects/${project.id}`, { replace: true })} className="cursor-pointer group flex flex-col min-h-0 text-left">
-                                            <div className="flex-grow overflow-hidden min-h-0">
+                                        <button key={project.id} type="button" onClick={() => onOpenProject?onOpenProject(project.id):navigate(`/projects/${project.id}`, { replace: true })} className="cursor-pointer group flex flex-col min-h-0 text-left">
+                                            {(!isMobile||!project.image.includes('/WIP.'))&&<div className={`flex-grow overflow-hidden min-h-0 ${isMobile?'h-36':''}`}>
                                                 <img src={project.image} alt={project.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
-                                            </div>
+                                            </div>}
                                             <div className="p-2 border-2 border-[var(--foreground-color)] bg-[var(--container-background)] group-hover:border-[var(--selection-color)] group-hover:text-[var(--selection-color)] transition-colors duration-300">
-                                                <h2 className="font-mono text-sm whitespace-nowrap overflow-hidden text-ellipsis">{project.title}</h2>
+                                                <h2 className={`font-mono text-sm ${isMobile?'leading-relaxed':'whitespace-nowrap overflow-hidden text-ellipsis'}`}>{project.title}</h2>
                                                 <p className="text-xs text-[var(--accent-color)]">{project.years}</p>
                                             </div>
                                         </button>

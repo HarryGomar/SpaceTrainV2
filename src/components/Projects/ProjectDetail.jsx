@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import projectsData from './projects.json';
+import {homeProjects as projectsData} from '../Home/homeProjects';
 import {canonicalProjectId} from '../../data/projectAliases';
 import MainContainer from '../MainContainer'; 
 
@@ -48,14 +48,15 @@ const useWindowWidth = () => {
     return width;
 };
 
-const ProjectDetail = ({ embedded = false }) => {
-    const { id } = useParams();
+const ProjectDetail = ({ embedded = false,mobileDisplay = false,projectId,onReturn }) => {
+    const { id:routeId } = useParams();
+    const id=projectId??routeId;
     const navigate = useNavigate();
     const project = projectsData.find(p => p.id === canonicalProjectId(id));
     const [currentPage, setCurrentPage] = useState(0);
     const windowWidth = useWindowWidth();
     const isEmbedded = embedded || window.location.pathname === '/experience';
-    const isMobile = !isEmbedded && windowWidth < 768;
+    const isMobile = mobileDisplay || !isEmbedded && windowWidth < 768;
 
     const contentSections = useMemo(() => {
         if (!project) return [];
@@ -79,7 +80,7 @@ const ProjectDetail = ({ embedded = false }) => {
     }, [id]);
 
     const activeSection = contentSections[currentPage] || contentSections[0];
-    const handleReturn = () => navigate(isEmbedded ? '/projects' : '/', { replace: !isEmbedded });
+    const handleReturn = () => onReturn?onReturn():navigate(isEmbedded ? '/projects' : '/', { replace: !isEmbedded });
 
     const ThemedButton = ({ onClick, href, children, isPrimary = false }) => {
         const baseClasses = "w-full text-center px-4 py-3 text-base border-2 transition-colors duration-300";
@@ -130,7 +131,7 @@ const ProjectDetail = ({ embedded = false }) => {
                 {/* Main Content: two columns on desktop, one on mobile */}
                 <div data-testid="project-detail-layout" className={`flex ${isMobile ? 'flex-col' : 'flex-row'} gap-8 flex-grow min-h-0`}>
                     {/* Left Column (Desktop) / Second block (Mobile) */}
-                    <div className={`${isMobile ? 'w-full order-2' : 'w-1/2 order-1'} flex flex-col gap-4 min-h-0`}>
+                    <div className={`${isMobile ? 'w-full order-1' : 'w-1/2 order-1'} flex flex-col gap-4 min-h-0`}>
                         <div className="flex flex-wrap gap-x-4 gap-y-2 text-sm text-[var(--accent-color)] font-mono">
                             <span className="bg-[var(--container-background)] px-2 py-1"><strong>Scope:</strong> {project.scope}</span>
                             <span className="bg-[var(--container-background)] px-2 py-1"><strong>Motivation:</strong> {project.motivation}</span>
@@ -184,10 +185,10 @@ const ProjectDetail = ({ embedded = false }) => {
                     </div>
 
                     {/* Right Column (Desktop) / First block (Mobile) */}
-                    <div className={`${isMobile ? 'w-full order-1' : 'w-1/2 order-2'} flex flex-col gap-4 min-h-0`}>
-                        <div className="w-full flex-grow min-h-[220px] overflow-hidden bg-black border-2 border-white/10">
+                    <div className={`${isMobile ? 'w-full order-2' : 'w-1/2 order-2'} flex flex-col gap-4 min-h-0`}>
+                        {(!isMobile||!project.image.includes('/WIP.'))&&<div className="w-full flex-grow min-h-[220px] overflow-hidden bg-black border-2 border-white/10">
                             <img src={project.image} alt={project.title} className="w-full h-full object-contain" />
-                        </div>
+                        </div>}
                         <div className={`grid ${isMobile ? 'grid-cols-2' : 'grid-cols-3'} gap-2`}>
                             {project.skills.map(skill => (
                                 <div key={skill} className="border-2 border-[var(--foreground-color)] bg-[var(--container-background)] p-2 flex items-center justify-center">

@@ -17,7 +17,7 @@ const MainContainer = ({ children, isMobile, fillViewport = false, contained = f
                         ? { 
                               // Mobile styles: container takes full width and at least 100% of the screen height.
                               containerType: 'inline-size', 
-                              minHeight: '100vh' 
+                              minHeight: '100dvh'
                           }
                         : contained
                         ? {

@@ -16,6 +16,7 @@ const useTrainStore = create((set, get) => ({
     lastCameraPos: new THREE.Vector3(),
     lastCameraTarget: new THREE.Vector3(),
     focusExitRequest: 0,
+    entryRequest: 0,
     moveForward: false,
     moveBackward: false,
 
@@ -36,8 +37,10 @@ const useTrainStore = create((set, get) => ({
         return { moveForward: false, moveBackward: false };
     }),
     requestFocusExit: () => set((state) => ({ focusExitRequest: state.focusExitRequest + 1 })),
+    requestTrainEntry: () => set(state=>({entryRequest:state.entryRequest+1})),
     resetExperience: () => set({
         inTrain: false,
+        entryRequest: 0,
         inTerminal: false,
         inProjects: false,
         inProjector: false,
