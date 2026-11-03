@@ -1,0 +1,145 @@
+<!doctype html>
+<!-- Source of public/home/harry-gomar-cv.pdf. Print to PDF with: node cv/build.mjs -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Rafael Harry Gomar Dawson - CV</title>
+<style>
+  @page { size: letter; margin: 0.6in 0.7in; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: "Times New Roman", Times, serif; font-size: 10.5pt; line-height: 1.32; color: #1a1a1a; }
+  a { color: inherit; text-decoration: none; }
+
+  header { text-align: center; margin-bottom: 6pt; }
+  h1 { font-size: 18pt; font-weight: bold; letter-spacing: 0.06em; text-transform: uppercase; }
+  header p { font-size: 11pt; margin-top: 2pt; }
+  header .contact { font-size: 10.5pt; margin-top: 4pt; }
+
+  h2 { font-size: 12pt; font-weight: bold; letter-spacing: 0.08em; text-transform: uppercase; border-bottom: 0.75pt solid #1a1a1a; padding-bottom: 2pt; margin: 14pt 0 7pt; }
+  section { break-inside: auto; }
+  .entry { margin-bottom: 8pt; break-inside: avoid; }
+  .entry:last-child { margin-bottom: 0; }
+  h3 { font-size: 11pt; font-weight: bold; }
+  .line { display: flex; justify-content: space-between; gap: 12pt; }
+  .role { font-style: italic; }
+  .date { white-space: nowrap; }
+  .entry > p { margin-top: 1pt; }
+  ul { margin: 2pt 0 0 14pt; }
+  li { margin-top: 1pt; padding-left: 2pt; }
+
+  .awards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12pt; text-align: center; }
+  .awards h3, .award-line h3 { font-size: 10.5pt; }
+  .award-line { text-align: center; margin-top: 7pt; }
+  .award-line h3 { display: inline; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Rafael Harry Gomar Dawson</h1>
+  <p>Computer Engineering Student, Instituto Tecnológico Autónomo de México</p>
+  <p class="contact"><a href="mailto:harrygomardawson@gmail.com">harrygomardawson@gmail.com</a> · <a href="https://harrygomar.com">harrygomar.com</a></p>
+</header>
+
+<section>
+  <h2>Experience</h2>
+  <div class="entry">
+    <div class="line"><h3>MIT CSAIL – Kellis Lab</h3><span class="date">08/2025 – Present</span></div>
+    <p class="role">Collaborating Researcher</p>
+    <ul>
+      <li>Led interdisciplinary research on representation learning and embedding-based methods across law, patents, political science, and other applied domains.</li>
+      <li>Served as an instructor and lecturer for MIT IAP 6.S189, 6.S187, and MIT Sloan 15.S65, covering applied AI, machine learning, and deployment.</li>
+    </ul>
+  </div>
+  <div class="entry">
+    <div class="line"><h3>Mantis</h3><span class="date">Present</span></div>
+    <p class="role">Founding Team</p>
+  </div>
+  <div class="entry">
+    <div class="line"><h3>MAKERS – ITAM</h3><span class="date">08/2023 – Present</span></div>
+    <p class="role">Coordinator, Computer Science Division</p>
+    <ul>
+      <li>Led and mentored 15 students in 7 development and 9 research projects that integrate computing to benefit the ITAM community, fostering collaboration and technical growth.</li>
+      <li>Oversaw recruitment, organization, and participation across the division’s 2 areas (Data science and Software Development).</li>
+    </ul>
+  </div>
+  <div class="entry">
+    <div class="line"><h3>Universo de Leyes Initiative</h3><span class="date">11/2022 – 2025</span></div>
+    <p class="role">Lead Researcher</p>
+    <ul>
+      <li>Developed an NLP-based information extraction system that generates knowledge graphs to visually represent citational relationships of Mexican legal domains.</li>
+      <li>Created a comprehensive annotated dataset to fine-tune a RoBERTa model and train a named entity recognition pipeline using SpaCy. Authored a research paper detailing findings; presented at ICITS 2025.</li>
+    </ul>
+  </div>
+  <div class="entry">
+    <div class="line"><h3>Spingere</h3><span class="date">06/2022 – 08/2022, 06/2023 – 07/2023</span></div>
+    <p class="role">Research Intern</p>
+    <ul>
+      <li>Conducted research, planning and prototyping of an NLP solution to automate COSMIC software functional size analysis.</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2>Awards &amp; Achievements</h2>
+  <div class="awards">
+    <div><h3>ITAM Hackathon</h3><p>Winner, 2023</p></div>
+    <div><h3>ISAC Hackathon</h3><p>Winner, 2025 · Finalist, 2024</p></div>
+    <div><h3>INEGI Datatón</h3><p>Winner, 2025 · Finalist, 2024</p></div>
+  </div>
+  <div class="award-line"><h3>ITAM Engineering Academic Excellence Recognition</h3> · 2023, 2024, 2025</div>
+</section>
+
+<section>
+  <h2>Relevant Projects</h2>
+  <div class="entry">
+    <h3>Tellus — Geospatial ATM Expansion Planning</h3>
+    <p>Built a geospatial platform that ranks ATM sites for three major banks using local demand, competitor coverage, transaction potential, and learned location representations.</p>
+  </div>
+  <div class="entry">
+    <h3>Retail Informality Prioritization Model — INEGI Datatón 2025</h3>
+    <p>Won INEGI Datatón 2025 with an analysis that pinpointed the products, regions, and business segments where policy intervention could have the greatest effect on commercial informality.</p>
+    <ul>
+      <li>Built a prioritization model from wage, social-security, education, and Economic Census data to diagnose barriers to formalization and match them with targeted policy actions.</li>
+    </ul>
+  </div>
+  <div class="entry">
+    <h3>SEMOVI — Public Transport Route Digitization</h3>
+    <p>Built a pipeline for Mexico City’s mobility authority, SEMOVI, that converts written public-transport route records into digital map data.</p>
+    <ul>
+      <li>Processed official scanned documents, extracted route descriptions, and reconstructed the corresponding geospatial paths with minimal manual input.</li>
+    </ul>
+  </div>
+  <div class="entry">
+    <h3>Sustainable Auto Parts Matching</h3>
+    <p>Worked with InvierteSustentable and JetzApp on a catalog-matching system that helps buyers find compatible, lower-impact alternatives to automotive parts.</p>
+    <ul>
+      <li>Prototyped LLM-based agents that adapt Python preprocessing functions to inconsistent catalog schemas and match equivalent parts across suppliers.</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2>Publications &amp; Seminars</h2>
+  <div class="entry">
+    <h3>Comparative Analysis of Information Extraction Techniques in the Mexican Legal System</h3>
+    <p>F. Valdés, R. H. Gomar and D. A. Méndez</p>
+    <ul>
+      <li>Published in Proceedings by Springer in Lecture Notes in Networks and Systems 2025 and presented at the 8th International Conference on Information Technology &amp; Systems, held at Politécnico Nacional</li>
+    </ul>
+  </div>
+  <div class="entry">
+    <h3>Universo de Leyes: Aplicando el Procesamiento del Lenguaje Natural para vincular textos jurídicos con un enfoque integral</h3>
+    <ul>
+      <li>Seminario de Ingeniería de Software y Sus Implicaciones, Nov 2024, Facultad de Ciencias, UNAM</li>
+      <li>Seminario Recursivo, Mar 2024, División Académica de Ciencias de la Computación, ITAM</li>
+    </ul>
+  </div>
+  <div class="entry">
+    <h3>Y si pudiéramos entender el contexto a través de los datos? | Player2Vec</h3>
+    <ul>
+      <li>Hudl Statsbomb, ITAM Sports Analytics Conference 2025</li>
+    </ul>
+  </div>
+</section>
+</body>
+</html>
