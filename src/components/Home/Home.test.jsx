@@ -269,7 +269,7 @@ it('links the publication and each seminar to its project in both directions',()
  const dialog=screen.getByRole('dialog');
  expect(homeProjects.filter(project=>[8,15].includes(project.id))).toHaveLength(1);
  expect(within(dialog).getByRole('heading',{name:'Auto-parts catalogue extraction and matching'})).not.toBeNull();
- expect(within(dialog).getByText(/correctly formatted 4 of 10 brand catalogues/)).not.toBeNull();
+ expect(within(dialog).getByText(/formatted 4 of 10 brand catalogues/)).not.toBeNull();
  view.unmount();
  mount('/projects/30');
  expect(within(screen.getByRole('dialog')).getByRole('link',{name:'Visit project'}).getAttribute('href')).toBe('https://informal-dataton-2025.vercel.app/');
@@ -285,7 +285,7 @@ it('links the publication and each seminar to its project in both directions',()
  view.unmount();
  mount('/projects/31');
  const teaching=screen.getByRole('dialog');
- expect(within(teaching).getByText(/MIT IAP courses 6.S189/)).not.toBeNull();
+ expect(within(teaching).getByText(/MIT IAP 6.S189 and 6.S187/)).not.toBeNull();
  expect(within(teaching).queryByText(/My invited talks/)).toBeNull();
  expect(within(teaching).queryByRole('heading',{name:'Presentations'})).toBeNull();
  });
@@ -320,7 +320,7 @@ describe('MAKERS additions',()=>{
     it('presents platform engineering and event organization, with working links between project details',()=>{
         const view=mount('/projects/33');
         const platform=screen.getByRole('dialog');
-        expect(within(platform).getByText(/kill a mosquito with a bazooka/)).not.toBeNull();
+        expect(within(platform).getByText(/Deliberately oversized/)).not.toBeNull();
         expect(within(platform).getByText(/pnpm and Turborepo monorepo/)).not.toBeNull();
         expect(within(platform).getByRole('link',{name:'MAKERS public site'}).getAttribute('href')).toBe('https://makers.itam.mx/');
         fireEvent.click(within(platform).getByRole('button',{name:'Mapa ITAM and the academic atlas'}));
@@ -328,8 +328,8 @@ describe('MAKERS additions',()=>{
         view.unmount();
         mount('/projects/35');
         const event=screen.getByRole('dialog');
-        expect(within(event).getByText('Organizing collaboration and web development')).not.toBeNull();
-        expect(within(event).getByText(/I collaborated on organizing Espacios Latentes/)).not.toBeNull();
+        expect(within(event).getByText('Co-organizer and web development')).not.toBeNull();
+        expect(within(event).getByText(/Co-organized through MAKERS/)).not.toBeNull();
         expect(within(event).getByRole('link',{name:'Visit project'}).getAttribute('href')).toBe('https://espacioslatentes.org/es/');
     });
 
