@@ -3,6 +3,7 @@ export const profile = {
   name: 'Harry Gomar',
   fullName: 'Rafael Harry Gomar Dawson',
   email: 'harrygomardawson@gmail.com',
+  github: 'https://github.com/HarryGomar',
   role: 'Computer Engineering student at ITAM',
   highlights: ['Springer publication, ICITS 2025', 'INEGI Datatón winner, 2025', 'Past teaching, MIT IAP and MIT Sloan'],
   writingTopics: ['Representation learning', 'Data science', 'Building software'],
