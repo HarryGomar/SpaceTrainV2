@@ -12,6 +12,7 @@ const images = [
 ];
 const CvLink = () => <a className="home-link home-cv" href="/home/harry-gomar-cv.pdf" download="Rafael Harry Gomar Dawson - CV.pdf">CV <span>PDF</span></a>;
 const EmailLink = () => <a className="home-link home-email" href={`mailto:${profile.email}`}>{profile.email}</a>;
+const GitHubLink = () => <a className="home-link" href={profile.github} target="_blank" rel="noopener noreferrer">GitHub</a>;
 
 const Row=({label,className='',children,...rest})=> <section className={'home-row '+className} {...rest}><h2 className="home-row-label">{label}</h2><div className="home-row-body">{children}</div></section>;
 
@@ -81,7 +82,7 @@ export default function Home() {
         <a className="home-skip" href="#home-content">Skip to content</a>
         <main className="homepage" id="home-content">
             <header className="home-header">
-                <div><h1>{profile.name}</h1><p className="home-role">{profile.role}</p><div className="home-contact"><EmailLink/><CvLink/><a className="home-link" href="#writing">Writing</a></div></div>
+                <div><h1>{profile.name}</h1><p className="home-role">{profile.role}</p><div className="home-contact"><EmailLink/><CvLink/><GitHubLink/><a className="home-link" href="#writing">Writing</a></div></div>
                 <div className="home-entry"><Link className="home-link" to="/experience"><svg className="home-experience-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="5.5"/><ellipse cx="12" cy="12" rx="11" ry="3.8" transform="rotate(-32 12 12)"/><circle cx="19.4" cy="4.7" r="1.5" className="home-experience-star"/></svg><span>Explore the interactive experience</span></Link><p>Space Train · 3D portfolio</p></div>
             </header>
             <Row label="Now" className="home-current"><div className="home-current-grid">{profile.experience.slice(0,3).map(item=><article key={item.organization}>
@@ -126,7 +127,7 @@ export default function Home() {
                 </section>
             </div>
             <div className="home-images"><div className="home-images-grid">{images.map((image,index)=><figure key={image.src}><button aria-label={`Enlarge ${image.title}`} onClick={()=>setExtraDialog({type:'image',index})}><img src={image.src} alt={image.alt} width={index===0?1959:1320} height={index===0?1125:1160} loading="lazy"/></button></figure>)}</div></div>
-            <footer className="home-footer"><span>{profile.fullName}</span><div><CvLink/><EmailLink/></div></footer>
+            <footer className="home-footer"><span>{profile.fullName}</span><div><CvLink/><GitHubLink/><EmailLink/></div></footer>
         </main>
         <dialog ref={dialogRef} className="home-dialog" aria-labelledby="home-dialog-title" onCancel={event=>{event.preventDefault();closeDialog();}} onClick={event=>{
             if(event.target!==event.currentTarget)return;
