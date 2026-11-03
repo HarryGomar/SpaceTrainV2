@@ -39,11 +39,12 @@ describe('Live academic homepage',()=>{
         expect(screen.getByRole('link',{name:'Explore the interactive experience'}).getAttribute('href')).toBe('/experience');
         expect(container.querySelector('.home-header a[download]').getAttribute('href')).toBe('/home/harry-gomar-cv.pdf');
     });
-    it('limits current work to the ongoing research and MAKERS roles',()=>{
+    it('limits current work to the ongoing research, Mantis and MAKERS roles',()=>{
         const {container}=mount();
         const now=container.querySelector('.home-current');
-        expect(within(now).getAllByRole('heading',{level:3}).map(heading=>heading.textContent)).toEqual(['Kellis Lab · MIT CSAIL','MAKERS · ITAM']);
-        expect(within(now).getByText('Collaborating Researcher, Mantis')).not.toBeNull();
+        expect(within(now).getAllByRole('heading',{level:3}).map(heading=>heading.textContent)).toEqual(['Kellis Lab · MIT CSAIL','Mantis','MAKERS · ITAM']);
+        expect(within(now).getByText('Founding Team')).not.toBeNull();
+        expect(within(now).getByText('Collaborating Researcher')).not.toBeNull();
         expect(within(now).queryByText('Instructor and lecturer')).toBeNull();
     });
     it('supports deep links and closes with Escape without hiding the archive',()=>{

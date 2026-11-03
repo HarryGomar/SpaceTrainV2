@@ -84,10 +84,10 @@ export default function Home() {
                 <div><h1>{profile.name}</h1><p className="home-role">{profile.role}</p><div className="home-contact"><EmailLink/><CvLink/><a className="home-link" href="#writing">Writing</a></div></div>
                 <div className="home-entry"><Link className="home-link" to="/experience"><svg className="home-experience-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="5.5"/><ellipse cx="12" cy="12" rx="11" ry="3.8" transform="rotate(-32 12 12)"/><circle cx="19.4" cy="4.7" r="1.5" className="home-experience-star"/></svg><span>Explore the interactive experience</span></Link><p>Space Train · 3D portfolio</p></div>
             </header>
-            <Row label="Now" className="home-current"><div className="home-current-grid">{profile.experience.slice(0,2).map(item=><article key={item.organization}>
+            <Row label="Now" className="home-current"><div className="home-current-grid">{profile.experience.slice(0,3).map(item=><article key={item.organization}>
                 <div className="home-current-heading"><h3>{item.organization.startsWith('MAKERS')?<button className="home-current-select" aria-pressed={pinned?.id==='makers'} onClick={()=>{pin({kind:'affiliation',id:'makers'});document.querySelector('.home-map')?.scrollIntoView({block:'center'});}}>{item.organization}</button>:item.organization}</h3><span>{item.dates.replace(' to present','–present')}</span></div>
                 <p>{item.role}</p>
-                <div className="home-context-links">{item.organization.startsWith('MAKERS')?<><a className="home-link" href="https://makers.itam.mx/" target="_blank" rel="noopener noreferrer">makers.itam.mx</a><a className="home-link" href="https://makers.itam.mx/proyectos" target="_blank" rel="noopener noreferrer">Computer Science projects</a></>:<a className="home-link" href="https://mantis.csail.mit.edu/" target="_blank" rel="noopener noreferrer">https://mantis.csail.mit.edu/</a>}</div>
+                <div className="home-context-links">{item.organization.startsWith('MAKERS')?<><a className="home-link" href="https://makers.itam.mx/" target="_blank" rel="noopener noreferrer">makers.itam.mx</a><a className="home-link" href="https://makers.itam.mx/proyectos" target="_blank" rel="noopener noreferrer">Computer Science projects</a></>:item.organization==='Mantis'&&<a className="home-link" href="https://mantis.csail.mit.edu/" target="_blank" rel="noopener noreferrer">https://mantis.csail.mit.edu/</a>}</div>
             </article>)}</div></Row>
             <div className="home-workspace">
             <aside className="home-research-sidebar"><h2>Research</h2><div className="home-themes" role="region" aria-label="Research themes">{research.map(topic=><article key={topic.id} className={selection?.kind==='topic'&&selection.id===topic.id?'is-active':''} {...highlightProps({kind:'topic',id:topic.id})}>
@@ -114,7 +114,7 @@ export default function Home() {
                         <article><h3><button className="home-talk-title" aria-describedby={'home-talk-subject-'+index} onClick={()=>setExtraDialog({type:'talks',recordId:'seminar-'+index})}>{talk.series}</button></h3><p className="home-seminar-subject" id={'home-talk-subject-'+index}>{talk.shortTitle||talk.title}</p><p className="home-muted">{talk.institution}</p></article>
                     </li>)}</ul>
                 </Row>
-                <Row label="Past experience" className="home-history"><ul>{profile.experience.slice(2).map(item=><li key={item.organization}>
+                <Row label="Past experience" className="home-history"><ul>{profile.experience.slice(3).map(item=><li key={item.organization}>
                     <div className="home-history-heading"><h3>{item.organization}</h3><span className="home-muted">{item.dates}</span></div>
                     <p>{item.role}</p><p className="home-muted">{item.description}</p>
                 </li>)}</ul></Row>
@@ -125,7 +125,7 @@ export default function Home() {
                     <div id="project-archive" className="home-archive-groups" hidden={!archiveOpen}>{topics.map(topic=><section key={topic.id}><h3>{topic.name}</h3><ul>{homeProjects.filter(project=>project.topics[0]===topic.id).map(project=><li key={project.id}>{projectLink(project)}</li>)}</ul></section>)}</div>
                 </section>
             </div>
-            <Row label="Visual studies" className="home-images" aria-label="Visual studies"><div className="home-images-grid">{images.map((image,index)=><figure key={image.src}><button aria-label={`Enlarge ${image.title}`} onClick={()=>setExtraDialog({type:'image',index})}><img src={image.src} alt={image.alt} width={index===0?1959:1320} height={index===0?1125:1160} loading="lazy"/></button><figcaption>{index===1?<button className="home-link" onClick={()=>openProject(7)}>{image.title}</button>:image.title}</figcaption></figure>)}</div></Row>
+            <div className="home-images"><div className="home-images-grid">{images.map((image,index)=><figure key={image.src}><button aria-label={`Enlarge ${image.title}`} onClick={()=>setExtraDialog({type:'image',index})}><img src={image.src} alt={image.alt} width={index===0?1959:1320} height={index===0?1125:1160} loading="lazy"/></button></figure>)}</div></div>
             <footer className="home-footer"><span>{profile.fullName}</span><div><CvLink/><EmailLink/></div></footer>
         </main>
         <dialog ref={dialogRef} className="home-dialog" aria-labelledby="home-dialog-title" onCancel={event=>{event.preventDefault();closeDialog();}} onClick={event=>{
