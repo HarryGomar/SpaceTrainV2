@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {planStimulusPanels,FIRST_PANEL_SIZES} from '../../public/art-atlas/stimulus-planner.mjs';
 import {planAdaptivePanels} from '../../public/art-atlas/adaptive-selection.mjs';
+import {buildJourneyRounds} from '../../public/art-atlas/journey-bank.mjs';
 const actual=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/artworks.json',import.meta.url),'utf8'));
 const reviewedNotes=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/curation-notes.json',import.meta.url),'utf8'));
 const featureKeys=['abstraction','energy','complexity','humanity','narrative','atmosphere','color'];
@@ -106,4 +107,40 @@ test('Missing protected identities fail closed, while an insufficient catalogue 
 
 test('The planner does not mutate works, history, curation notes or preserved source snapshots',()=>{
   const works=synthetic(),first=planStimulusPanels({works,seed:'pure'}),h=responsesFor(first,works),input={works,...h,batchIndex:1,seed:'pure',reservationPlan:first.reservations,curationNotes:{annotations:[{workId:works[0].id,importanceTier:'canonical',sourceUrls:['https://institution.example/0']}] }},before=structuredClone(input),p=planStimulusPanels(input);assert.deepEqual(input,before);if(p.panels[0].plannerDiagnostic)p.panels[0].plannerDiagnostic.residualConfounds.push('changed');assert.deepEqual(input,before);
+});
+
+test('Actual all-skipped and sparse first50 histories avoid the prior final images without changing the other17 panels',()=>{
+  const first=buildJourneyRounds(actual,{}, {seed:'editorial-release-audit-0'}),before=structuredClone(first),lastIds=first[49].works.map(work=>work.id),ordinary=first.filter(round=>round.evidence.construct==='preference'&&round.evidence.panelNumber);
+  for(const [completed,badId] of [[0,'green-tara'],[8,'ethiopian-apostles']]){
+    const answers=Object.fromEntries(first.map(round=>[round.id,{workIds:round.works.map(work=>work.id),skipped:true}]));
+    for(const round of ordinary.slice(0,completed))answers[round.id]={workIds:round.works.map(work=>work.id),criterion:'preference',positions:Object.fromEntries(round.works.map(work=>[work.id,Math.round(work.features.energy*100)])),confirmed:true};
+    const input={works:actual,rounds:first,answers,batchIndex:1,seed:'editorial-release-audit-1',curationNotes:reviewedNotes},plan=planStimulusPanels(input),audit=plan.audit.boundarySpacing;
+    assert.equal(audit.sourceRoundId,'journey-050');assert.ok(audit.originalWorkIds.includes(badId),'The unguarded proposal reproduces the observed boundary repeat');assert.equal(audit.status,'applied');assert.equal(audit.fallback,false);assert.deepEqual(audit.remainingOverlapIds,[]);assert.ok(plan.panels[0].workIds.every(id=>!lastIds.includes(id)));
+    // Swap two independent appraisals. This preserves every cumulative image
+    // count and every ordinary source, but ends on a different specific set.
+    const alternate=[...first];[alternate[47],alternate[49]]=[alternate[49],alternate[47]];
+    const control=planStimulusPanels({...input,rounds:alternate});assert.equal(control.audit.boundarySpacing.status,'clear');
+    assert.deepEqual(plan.panels.slice(1),control.panels.slice(1));assert.equal(plan.coverage.firstRatingWorkIds.length,control.coverage.firstRatingWorkIds.length);
+    assert.deepEqual(plan.reservations,control.reservations);assert.ok(plan.panels.every(panel=>panel.workIds.every(id=>!reviewedNotes.reservePools.batch3.includes(id))));assert.ok(Object.values(plan.coverage.plannedUses).every(count=>count<=2));
+  }
+  assert.deepEqual(first,before);
+});
+
+test('The boundary guard includes separate anchors and skips, while a museum offered tray and text-only references do not reset it',()=>{
+  const works=synthetic(24),adaptivePlan={panels:[{workIds:works.slice(0,2).map(work=>work.id),construct:'preference',role:'exploration'}]},options={works,batchIndex:1,panelCount:1,panelSizes:[2],adaptivePlan,seed:'boundary-anchor',curationNotes:{reservePools:{batch2:[],batch3:[]}}},baseline=planStimulusPanels(options),anchorId=baseline.panels[0].workIds[0],anchor=works.find(work=>work.id===anchorId),candidate=works.find(work=>!baseline.panels[0].workIds.includes(work.id));
+  const neighbour={id:'last-specific',kind:'contrast',contrastKind:'neighbour',works:[candidate],anchorWorks:[anchor],evidence:{}},museum={id:'offered-tray',kind:'exercise',exerciseKind:'curate',works},reference={id:'text-reference',kind:'statements',works:[anchor],evidence:{stimulusVisibility:'not-shown'}},answers={'last-specific':{skipped:true,workIds:[candidate.id]}};
+  const plan=planStimulusPanels({...options,rounds:[neighbour,museum,reference],answers});
+  assert.equal(plan.audit.boundarySpacing.sourceRoundId,neighbour.id);assert.deepEqual(new Set(plan.audit.boundarySpacing.avoidWorkIds),new Set([candidate.id,anchorId]));assert.ok(plan.panels[0].workIds.every(id=>![candidate.id,anchorId].includes(id)));assert.equal(plan.audit.boundarySpacing.fallback,false);
+});
+
+test('A protected first comparison retains exact identities and records its boundary exception',()=>{
+  const works=synthetic(12),workIds=works.slice(0,2).map(work=>work.id),protectedPanel={workIds,construct:'preference',role:'repeat',exactRepeat:true,repeatOf:'ordinary-source',sourceRoundId:'ordinary-source',promptSnapshot:{title:'Which do you prefer?',hint:'Equal positions are fine.'}},source={id:'ordinary-source',kind:'spectrum',criterion:'preference',title:'Which do you prefer?',hint:'Equal positions are fine.',works:works.slice(0,2),evidence:{construct:'preference',family:'individual-choice',batchIndex:0}},last={id:'last-specific',kind:'context',works:[works[0]]},adaptivePlan={panels:[protectedPanel]},before=structuredClone(adaptivePlan);
+  const plan=planStimulusPanels({works,rounds:[source,last],answers:{'last-specific':{skipped:true}},batchIndex:1,panelCount:1,panelSizes:[2],adaptivePlan});
+  assert.deepEqual(plan.panels[0],protectedPanel);assert.deepEqual(adaptivePlan,before);assert.equal(plan.audit.boundarySpacing.status,'protected-exception');assert.equal(plan.audit.boundarySpacing.fallback,true);assert.deepEqual(plan.audit.boundarySpacing.remainingOverlapIds,[works[0].id]);assert.match(plan.audit.boundarySpacing.fallbackReason,/protected adaptive/);
+});
+
+test('An insufficient unavoided catalogue records boundary fallback instead of altering other constraints',()=>{
+  const works=synthetic(4),last={id:'all-four-shown',kind:'context',works},adaptivePlan={panels:[{workIds:works.slice(0,2).map(work=>work.id),construct:'preference',role:'exploration'}]};
+  const plan=planStimulusPanels({works,rounds:[last],answers:{[last.id]:{skipped:true}},batchIndex:1,panelCount:1,panelSizes:[2],adaptivePlan,curationNotes:{reservePools:{batch2:[],batch3:[]}}});
+  assert.equal(plan.complete,true);assert.equal(plan.audit.boundarySpacing.status,'fallback');assert.equal(plan.audit.boundarySpacing.fallback,true);assert.equal(plan.audit.boundarySpacing.remainingOverlapIds.length,2);assert.ok(plan.audit.boundarySpacing.fallbackReason);assert.ok(plan.audit.warnings.some(row=>row.panel===1));assert.equal(new Set(plan.panels[0].workIds).size,2);assert.ok(Object.values(plan.coverage.plannedUses).every(count=>count<=2));
 });

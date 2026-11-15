@@ -18,4 +18,6 @@ npm run build
 
 Release checks cover the bare-path redirect, all four entry pages, JSON/module content types, all 354 artwork URLs, the start-to-profile-to-next-block flow, gallery search and artwork enlargement, maps, mobile layout and the existing homepage. Deployment uses the existing `harrygomars-projects/space-train` project.
 
-The repository includes the complete 498-check app suite plus three route and packaging checks under `tests/art-atlas/` and `tests/art-atlas.test.mjs`. The protocol notes describe [looking appraisals](art-atlas-looking-appraisals.md) and [linked contrast rounds](art-atlas-contrast-rounds.md). The input scales and curatorial descriptors remain provisional, rather than validated psychological measures.
+The repository includes the complete app suite plus three route and packaging checks under `tests/art-atlas/` and `tests/art-atlas.test.mjs`. The protocol notes describe [looking appraisals](art-atlas-looking-appraisals.md) and [linked contrast rounds](art-atlas-contrast-rounds.md). The input scales and curatorial descriptors remain provisional, rather than validated psychological measures.
+
+The first new exploration comparison avoids paintings from the preceding shown question, including a skipped question. The planner retains the other 17 comparisons and records protected or insufficient-catalogue exceptions. Previously saved comparisons keep their original identities.
