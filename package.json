@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:art-atlas": "node scripts/serve-art-atlas.mjs",
     "build": "vite build",
     "test": "vitest run",
     "test:art-atlas": "node --test tests/art-atlas.test.mjs tests/art-atlas/*.test.mjs"

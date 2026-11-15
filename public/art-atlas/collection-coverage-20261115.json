@@ -1,0 +1,181 @@
+{
+  "revision": "collection-coverage-20261115-v1",
+  "catalogueSize": 156,
+  "addedCount": 57,
+  "firstComparisonWorks": 72,
+  "reservedFirstRatings": {
+    "batch2": 42,
+    "batch3": 42,
+    "batch4": 0
+  },
+  "descriptorRevision": "visible-action-setting-review-v1",
+  "marginalTails": {
+    "abstraction": {
+      "low": 75,
+      "middle": 47,
+      "high": 34
+    },
+    "energy": {
+      "low": 55,
+      "middle": 72,
+      "high": 29
+    },
+    "complexity": {
+      "low": 12,
+      "middle": 76,
+      "high": 68
+    },
+    "humanity": {
+      "low": 68,
+      "middle": 26,
+      "high": 62
+    },
+    "narrative": {
+      "low": 107,
+      "middle": 35,
+      "high": 14
+    },
+    "atmosphere": {
+      "low": 63,
+      "middle": 38,
+      "high": 55
+    },
+    "color": {
+      "low": 30,
+      "middle": 86,
+      "high": 40
+    }
+  },
+  "first50MarginalTails": {
+    "abstraction": {
+      "low": 39,
+      "middle": 21,
+      "high": 12
+    },
+    "energy": {
+      "low": 29,
+      "middle": 23,
+      "high": 20
+    },
+    "complexity": {
+      "low": 6,
+      "middle": 31,
+      "high": 35
+    },
+    "humanity": {
+      "low": 27,
+      "middle": 11,
+      "high": 34
+    },
+    "narrative": {
+      "low": 47,
+      "middle": 14,
+      "high": 11
+    },
+    "atmosphere": {
+      "low": 26,
+      "middle": 17,
+      "high": 29
+    },
+    "color": {
+      "low": 13,
+      "middle": 35,
+      "high": 24
+    }
+  },
+  "abstractionDensityCross": {
+    "sparseRepresentational": 3,
+    "denseRepresentational": 34,
+    "sparseAbstract": 8,
+    "denseAbstract": 12
+  },
+  "mexicanPractice": 29,
+  "movements": [
+    "Abstract Expressionism",
+    "Abstract art",
+    "American Regionalism",
+    "American nineteenth-century painting",
+    "American religious art",
+    "Ashcan School / American Realism",
+    "Baroque",
+    "Bauhaus / European modernism",
+    "Bengal Ragamala painting",
+    "Bengal School painting",
+    "Brazilian Realism",
+    "Brazilian nineteenth-century painting",
+    "Chaekgado / Joseon painting",
+    "Color field painting",
+    "Cubism",
+    "Danish modernism",
+    "De Stijl",
+    "De Stijl / Neo-Plasticism",
+    "Deccani painting",
+    "Der Blaue Reiter / Expressionism",
+    "Die Brücke / Expressionism",
+    "Dutch seventeenth-century painting",
+    "Early Netherlandish painting",
+    "Edo-period ink painting",
+    "Edo-period painting",
+    "Edo-period painting / ukiyo-e tradition",
+    "Ethiopian Orthodox painting",
+    "Expressionism",
+    "Fauvism / modern painting",
+    "Flemish Baroque",
+    "French modern painting / Realism",
+    "French nineteenth-century painting",
+    "Geometric abstraction",
+    "Geometric abstraction / Bauhaus",
+    "History painting",
+    "Hudson River School / American landscape painting",
+    "Impressionism",
+    "Italian Baroque",
+    "Italian Renaissance",
+    "Italian modernism",
+    "Joseon landscape painting",
+    "Joseon painting",
+    "Korean ink painting",
+    "Meiji-period painting",
+    "Metaphysical painting",
+    "Mexican academic landscape painting",
+    "Mexican landscape painting",
+    "Mexican modernism",
+    "Mexican modernismo",
+    "Mexican muralism",
+    "Mexican popular printmaking",
+    "Ming bird-and-flower painting",
+    "Ming landscape painting",
+    "Mughal court painting",
+    "Naïve art / Post-Impressionism",
+    "Neo-Impressionism",
+    "Neoclassicism",
+    "Nepalese Buddhist mandala painting",
+    "Northern Renaissance",
+    "Northern Song landscape painting",
+    "Orphism",
+    "Pahari painting",
+    "Post-Impressionism",
+    "Pre-Raphaelite",
+    "Pre-Raphaelite-associated painting",
+    "Qing literati painting / Yangzhou tradition",
+    "Realism",
+    "Rinpa painting",
+    "Roman Egyptian funerary portrait",
+    "Romanticism",
+    "Self-taught modern painting",
+    "Spanish still life",
+    "Suprematism",
+    "Surrealism",
+    "Symbolism",
+    "Symbolism / early Expressionism",
+    "Sōsaku-hanga",
+    "Teotihuacán mural painting",
+    "Tibetan Buddhist painting",
+    "Ukiyo-e",
+    "Uruguayan modernism",
+    "Venetian veduta",
+    "Vienna Secession",
+    "Washington Color School",
+    "Wu School / Ming literati painting"
+  ],
+  "scope": "Thresholds describe this provisional annotated catalogue, not a population or equal-sized aesthetic categories."
+}

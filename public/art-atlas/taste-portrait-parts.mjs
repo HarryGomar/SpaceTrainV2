@@ -1,5 +1,6 @@
 import {AXES,validAnswer} from './engine.mjs';
 import {contextPurpose} from './profile-comparisons.mjs';
+import {isSymbolismRound,validSymbolismAnswer} from './symbolism-rounds.mjs';
 const unique=items=>[...new Set(items)];
 const short=work=>work.shortTitle||work.title;
 const named={abstraction:['recognisable subjects','more abstract work'],energy:['quieter compositions','busier compositions'],complexity:['simpler compositions','more detail'],humanity:['less figure-focused work','human figures'],narrative:['scenes with less action','scenes with more action'],atmosphere:['less emphasis on setting','more emphasis on setting'],color:['restrained colour','stronger colour']};
@@ -37,12 +38,13 @@ export function renderProfileEvidence({item,works,rounds,answers,image,esc}){
     let recorded=false;try{recorded=round&&answer&&!/frozen/i.test(entry.label||'')&&['spectrum','grid'].includes(round.kind)&&validAnswer(round,answer);}catch{}
     const detail=artIds.reduce((text,id)=>{const escaped=id.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');return text.replace(new RegExp('(^|[^\\p{L}\\p{N}_-])'+escaped+'(?![\\p{L}\\p{N}_-])','gu'),(_,prefix)=>prefix+short(byId.get(id)));},entry.detail||'');
     const roleLabel=item.module==='patterns'?(role==='exception'?'Against this pattern':'Supports this pattern'):item.module==='exceptions'?(role==='exception'?'The broader pattern':'The exception'):role==='exception'?'A different result':'Source comparison';
+    const note=item.module==='symbolism'&&round&&isSymbolismRound(round)&&validSymbolismAnswer(round,answer)?round.contextNote:null;
     return `<div class="tp-evidence-row" data-evidence-role="${role}"><p class="profile-evidence-role">${roleLabel}</p><span>${esc(sourceLabel)}</span>${recorded?'':`<p>${esc(detail)}</p>`}<div class="tp-evidence-artworks">${artIds.map(id=>{
       const work=byId.get(id);let values=[];
       if(recorded&&round.kind==='spectrum'&&Number.isFinite(answer.positions?.[id]))values=[{label:round.evidence?.family==='looking-appraisal'?round.title:round.criterion==='interest'?'Curiosity':'Preference',value:answer.positions[id],tone:tone(round),...(round.evidence?.family==='looking-appraisal'&&round.scale?{scale:round.scale}:{})}];
       if(recorded&&round.kind==='grid'&&Array.isArray(answer.points?.[id])){const axes=round.axisDefinition||AXES[round.axis],colours=round.axis==='achievement'?['preference','meaning']:round.axis==='reading'?['curiosity','meaning']:round.axis==='returnResponse'?['response','preference']:[tone(round),tone(round)];if(axes)values=[{label:axes.xName,value:answer.points[id][0],tone:colours[0]},{label:axes.yName,value:answer.points[id][1],tone:colours[1]}];}
       return `<figure><button class="tp-art" type="button" data-action="deep-art" data-work="${esc(id)}" aria-label="View ${esc(short(work))}">${image(work)}</button><figcaption>${esc(short(work))}</figcaption>${values.map(value=>`<div class="profile-evidence-value" data-tone="${value.tone}"><span>${esc(value.label)}</span><strong>${value.value}<small> / 100</small></strong></div>${value.scale?`<p class="tp-limit">${esc(value.scale.left)} → ${esc(value.scale.right)}</p>`:''}`).join('')}</figure>`;
-    }).join('')}</div></div>`;
+    }).join('')}</div>${note?`<div class="tp-source-note"><h4>The note you read</h4><p>${esc(note.text)}</p></div>`:''}</div>`;
   }
   return `<details class="tp-evidence"${item.module==='patterns'?' data-evidence-title="Choices for and against this pattern"':''}><summary aria-haspopup="dialog">View ${counter.length?'choices & exceptions':'the choices'} <span aria-hidden="true">↗</span></summary><div class="tp-evidence-body">${[['Supporting choices',support,'support'],['Exceptions',counter,'exception']].filter(([,entries])=>entries.length).map(([label,entries,role])=>`<div class="tp-evidence-group"><h4>${label}</h4>${entries.map(entry=>row(entry,role)).join('')}</div>`).join('')}${(item.alternatives||item.limits||[]).map(text=>`<p class="tp-limit">${esc(text)}</p>`).join('')}${Array.isArray(item.sourceUrls)?item.sourceUrls.filter(url=>/^https?:\/\//.test(url)).map(url=>`<p><a href="${esc(url)}" target="_blank" rel="noopener noreferrer">Source ↗</a></p>`).join(''):''}</div></details>`;
 }

@@ -1,0 +1,45 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {buildSymbolismRound} from '../../public/art-atlas/symbolism-rounds.mjs';
+import {analyzeSymbolism,buildSymbolismReadings} from '../../public/art-atlas/symbolism-readings.mjs';
+const works=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/artworks.json',import.meta.url),'utf8'));
+const reveal=(id,contentId='ambassadors-skull')=>buildSymbolismRound({id,works,contentId});
+const answer=(round,before=25,after=75,extra={})=>({workIds:round.works.map(work=>work.id),workId:round.works[0].id,before,after,storySeen:true,...extra});
+function preference(id='before',{construct='preference',family='individual-choice',reverse=false}={}){const pair=['holbein-ambassadors','green-tara'].map(id=>works.find(work=>work.id===id));return {id,kind:'spectrum',criterion:'preference',title:'Which do you prefer?',hint:'Arrange the paintings.',scale:{left:'Less preferred',right:'More preferred'},works:reverse?pair.reverse():pair,evidence:{construct,family,role:'discovery'}};}
+const prefAnswer=(round,positions={'holbein-ambassadors':20,'green-tara':90})=>({workIds:round.works.map(work=>work.id),criterion:'preference',positions,confirmed:true});
+
+test('A single reveal reports actual 1–5 steps while comparison values retain their recorded numeric domain',()=>{
+  const round=reveal('story'),answers={story:answer(round)},analysis=analyzeSymbolism({works,rounds:[round],answers}),finding=analysis.observations[0];assert.equal(analysis.summary.distinctWorkCount,1);assert.equal(analysis.responses[0].changeSteps,2);assert.match(finding.text,/2 \/ 5 before.*4 \/ 5 after/);assert.deepEqual(finding.comparisons[0].measures.map(measure=>measure.values),[[25],[75]]);assert.deepEqual(finding.support[0].sourceUrls,round.contextNote.sourceUrls);assert.equal(finding.module,'symbolism');assert.doesNotMatch(finding.text,/50%|percent|personality|openness/);
+});
+test('Distinct paintings can produce opposite changes without a consistency penalty; returns do not inflate counts',()=>{
+  const a=reveal('a'),b=reveal('b','tara-protection'),again=reveal('again'),rounds=[a,b,again],answers={a:answer(a,25,75),b:answer(b,75,25),again:answer(again,75,100)},analysis=analyzeSymbolism({works,rounds,answers});assert.equal(analysis.summary.responseCount,3);assert.equal(analysis.summary.distinctWorkCount,2);assert.equal(analysis.summary.returnCount,1);assert.equal(analysis.summary.increased,1);assert.equal(analysis.summary.decreased,1);assert.equal(analysis.summary.unchanged,0);assert.equal(analysis.returns[0].roundId,'again');assert.equal(analysis.returns[0].firstForWork,false);const finding=analysis.observations.find(item=>item.id==='symbolism-across-works');assert.match(finding.title,/different directions/);assert.deepEqual(finding.support.map(item=>item.roundId),['a','b']);assert.doesNotMatch(finding.text,/inconsistent|unstable|contradictory personality/);
+});
+test('A repeated work with a different change remains a return rather than creating a mixed-work claim',()=>{
+  const a=reveal('a'),b=reveal('b'),analysis=analyzeSymbolism({works,rounds:[a,b],answers:{a:answer(a,0,100),b:answer(b,100,0)}});assert.equal(analysis.summary.distinctWorkCount,1);assert.equal(analysis.summary.decreased,0);assert.equal(analysis.returns[0].direction,'decreased');assert.ok(!analysis.observations.some(item=>item.id==='symbolism-across-works'));
+});
+test('Earlier lower preference and increased later appeal are linked without inventing a new pairwise rank',()=>{
+  const pref=preference(),story=reveal('story'),analysis=analyzeSymbolism({works,rounds:[pref,story],answers:{before:prefAnswer(pref),story:answer(story,0,75)}}),finding=analysis.observations.find(item=>item.id==='symbolism-earlier-choice');assert.ok(finding);assert.match(finding.title,/lower choice gained/);assert.match(finding.text,/below Green Tara/);assert.match(finding.text,/other painting was not rated again/);assert.deepEqual(finding.support.map(item=>item.roundId),['before','story']);assert.equal(finding.comparisons[0].notes['green-tara'][1].text,'Not rated after the note');assert.ok(finding.alternatives.some(text=>text.includes('not subtracted')));assert.doesNotMatch(finding.text,/reversed|now prefer|caused/);
+});
+test('Looking appraisals, partial, later, near-tied and wrong-criterion sources cannot supply the earlier preference link',()=>{
+  const story=reveal('story');for(const pref of [preference('before',{construct:'perceived-visual-density',family:'looking-appraisal'}),{...preference(),criterion:'interest'},preference()]){
+    const source=prefAnswer(pref),answers={before:source,story:answer(story)};if(pref.evidence.construct==='preference'&&pref.criterion==='preference')source.positions={'holbein-ambassadors':50,'green-tara':60};assert.ok(!buildSymbolismReadings({works,rounds:[pref,story],answers}).some(item=>item.id==='symbolism-earlier-choice'));
+  }
+  const pref=preference(),source=prefAnswer(pref);delete source.positions['green-tara'];assert.ok(!buildSymbolismReadings({works,rounds:[pref,story],answers:{before:source,story:answer(story)}}).some(item=>item.id==='symbolism-earlier-choice'));assert.ok(!buildSymbolismReadings({works,rounds:[story,pref],answers:{before:prefAnswer(pref),story:answer(story)}}).some(item=>item.id==='symbolism-earlier-choice'));
+});
+test('The latest valid earlier pair is used, rather than selecting an old response that produces a more interesting story',()=>{
+  const early=preference('early'),latest=preference('latest',{reverse:true}),story=reveal('story'),answers={early:prefAnswer(early),latest:prefAnswer(latest,{'holbein-ambassadors':95,'green-tara':5}),story:answer(story)};assert.ok(!buildSymbolismReadings({works,rounds:[early,latest,story],answers}).some(item=>item.id==='symbolism-earlier-choice'));
+});
+test('A prospective rarely claim is connected only through exact bidirectional source links and qualified as one exception',()=>{
+  const story=reveal('story'),claim={id:'claim',kind:'statements',title:'Take a position',hint:'',works:story.works,statements:[{id:'contextEffect',text:'Learning the story behind a painting rarely changes how much I like it.'}],evidence:{construct:'self-description',role:'check',statementTest:'contextEffect',contextRoundId:'story',checkId:'context-test'}};Object.assign(story.evidence,{claimRoundId:'claim',checkId:'context-test'});const answers={claim:{workIds:claim.works.map(work=>work.id),claims:{contextEffect:4}},story:answer(story)};let finding=buildSymbolismReadings({works,rounds:[claim,story],answers}).find(item=>item.id==='symbolism-context-claim');assert.ok(finding);assert.match(finding.text,/Rarely.*allows exceptions/);assert.deepEqual(finding.support.map(item=>item.roundId),['claim','story']);const unrelated=structuredClone(claim);unrelated.evidence.checkId='other';assert.ok(!buildSymbolismReadings({works,rounds:[unrelated,story],answers}).some(item=>item.id==='symbolism-context-claim'));
+});
+test('Reported reinterpretation with the same appeal is distinct from a guessed change in understanding',()=>{
+  const story=reveal('story'),answers={story:answer(story,50,50,{changedWhat:'interpretation-changed',detailKnown:'known'})},analysis=analyzeSymbolism({works,rounds:[story],answers});assert.ok(analysis.observations.some(item=>item.id==='symbolism-interpretation-without-appeal'));assert.equal(analysis.summary.knownDetailCount,1);delete answers.story.changedWhat;assert.ok(!buildSymbolismReadings({works,rounds:[story],answers}).some(item=>item.id==='symbolism-interpretation-without-appeal'));
+});
+test('Unknown identities, duplicate question IDs, partial disclosures, skipped answers and old curiosity contexts fail closed',()=>{
+  const story=reveal('story'),old={...story};delete old.symbolismProtocol;old.evidence={construct:'context-curiosity',family:'context-change'};delete old.contextNote;
+  for(const input of [{works:works.filter(work=>work.id!==story.works[0].id),rounds:[story],answers:{story:answer(story)}},{works,rounds:[story,story],answers:{story:answer(story)}},{works,rounds:[story],answers:{story:answer(story,25,75,{storySeen:false})}},{works,rounds:[story],answers:{story:answer(story,25,75,{skipped:true})}},{works,rounds:[old],answers:{story:{workId:story.works[0].id,change:'more'}}}]){assert.deepEqual(buildSymbolismReadings(input),[]);assert.equal(analyzeSymbolism(input).summary.responseCount,0);}
+});
+test('Frozen work-ID-only snapshots are analyzable without replacing the pinned interpretive note with work.note',()=>{
+  const story=reveal('story'),{works:offered,...snapshot}=story;snapshot.workIds=offered.map(work=>work.id);const analysis=analyzeSymbolism({works,rounds:[snapshot],answers:{story:answer(story)}});assert.equal(analysis.summary.responseCount,1);assert.equal(analysis.responses[0].noteTitle,story.contextNote.title);assert.equal(analysis.responses[0].noteText,story.contextNote.text);assert.equal(analysis.responses[0].contentRevision,story.contextNote.revision);assert.deepEqual(analysis.observations[0].sourceUrls,story.contextNote.sourceUrls);
+});

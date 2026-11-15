@@ -16,7 +16,7 @@ const fresh=()=>buildJourneyRounds(works,{}, {seed});
 
 test('The variety policy preserves all18 curated main panels and the fixed50-round schedule',()=>{
   const rounds=fresh(),main=rounds.filter(round=>ordinary(round)&&Number.isInteger(round.evidence.panelNumber));
-  assert.equal(rounds.length,50);assert.equal(main.length,18);assert.equal(new Set(main.flatMap(ids)).size,64);
+  assert.equal(rounds.length,50);assert.equal(main.length,18);assert.equal(new Set(main.flatMap(ids)).size,72);
   for(const p of notes.proposedFirst18Panels)same(ids(main.find(round=>round.evidence.panelNumber===p.panel)),p.workIds);
   assert.equal(rounds[30].kind,'statements');assert.equal(rounds[34].kind,'context');assert.equal(rounds[34].evidence.claimRoundId,rounds[30].id);
   assert.deepEqual(rounds.flatMap((round,i)=>round.kind==='contrast'?[[i+1,round.contrastKind]]:[]),[[15,'chronology'],[19,'neighbour'],[27,'keep-leave'],[42,'same-subject']]);
@@ -94,7 +94,7 @@ test('A small eligible catalogue reports spacing fallback and counts prior speci
 test('Protected adaptive panel sets and frozen repeat prompts survive the independent grid/match policy',()=>{
   const first=fresh(),answers=Object.fromEntries(first.filter(ordinary).map(round=>[round.id,{workIds:ids(round),criterion:'preference',positions:Object.fromEntries(round.works.map(work=>[work.id,Math.round(work.features.energy*100)])),confirmed:true}]));
   const selection=createJourneyStimulusPlan({works,rounds:first,answers,batchIndex:1,seed:'variety-protected',reservationPlan:notes.reservePools}),before=structuredClone(selection);
-  assert.equal(selection.complete,true);assert.equal(selection.coverage.firstRatingWorkIds.length,18);same(selection.coverage.firstRatingWorkIds,notes.reservePools.batch2);
+  assert.equal(selection.complete,true);assert.equal(selection.coverage.firstRatingWorkIds.length,42);same(selection.coverage.firstRatingWorkIds,notes.reservePools.batch2);
   const second=buildJourneyRounds(works,answers,{offset:50,batchIndex:1,seed:'variety-protected',history:first,panels:selection,reservationPlan:notes.reservePools});
   for(const [index,panel] of selection.panels.entries()){
     const bound=second.find(round=>ordinary(round)&&round.evidence.panelNumber===index+1);same(ids(bound),panel.workIds);
@@ -107,7 +107,7 @@ test('Same-seed first50 variety improves the audited peak while keeping delibera
   const rounds=fresh(),counts=new Map(),adjacent=[];
   for(const round of rounds)if(specific(round))for(const id of allIds(round))counts.set(id,(counts.get(id)||0)+1);
   for(let i=1;i<rounds.length;i++)if(specific(rounds[i-1])&&specific(rounds[i])){const overlap=allIds(rounds[i-1]).filter(id=>allIds(rounds[i]).includes(id));if(overlap.length)adjacent.push([rounds[i-1].id,rounds[i].id,overlap]);}
-  assert.equal([...counts.values()].reduce((a,b)=>a+b,0),227);assert.ok(counts.size>=81);assert.ok(Math.max(...counts.values())<=6);
+  assert.equal([...counts.values()].reduce((a,b)=>a+b,0),230);assert.ok(counts.size>=90);assert.ok(Math.max(...counts.values())<=6);
   // KeepA is selected for its six genuine opening pair links. Its fixed reviewed
   // set also contains Mondrian, a collateral immediate return from panel12.
   assert.deepEqual(adjacent,[['journey-026','journey-027',['mondrian-composition']]]);assert.equal(rounds[26].evidence.baselineLinkPlan.linkedPairCount,6);

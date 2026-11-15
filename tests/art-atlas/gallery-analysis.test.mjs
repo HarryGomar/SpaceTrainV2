@@ -97,7 +97,8 @@ test('Automatic wall positioning never becomes evidence of a deliberate change i
 test('An earlier favourite can support an omission only after that exact work was presented',()=>{
   const r=buildRounds(actual)[0],ids=r.works.map(w=>w.id),offered=actual.map(w=>w.id),others=offered.filter(id=>id!==ids[0]);
   const pref={workIds:ids,criterion:'preference',confirmed:true,positions:Object.fromEntries(ids.map((id,i)=>[id,[100,70,40,0][i]]))};
-  const record={version:2,kind:'curate',protocol:'open-gallery-v1',id:'actual',createdAt:1,offeredIds:offered,presentedIds:[...offered],placements:Object.fromEntries(others.slice(0,8).map((id,i)=>[id,{wallId:i<4?'wall-0':'wall-1',t:(i%4+1)/5}])),roomNames:{},baselineAnswers:{preferenceRank:pref},confirmed:true,finishedAt:2};
+  const hung=[...ids.slice(1),...others.filter(id=>!ids.includes(id))].slice(0,8);
+  const record={version:2,kind:'curate',protocol:'open-gallery-v1',id:'actual',createdAt:1,offeredIds:offered,presentedIds:[...offered],placements:Object.fromEntries(hung.map((id,i)=>[id,{wallId:i<4?'wall-0':'wall-1',t:(i%4+1)/5}])),roomNames:{},baselineAnswers:{preferenceRank:pref},confirmed:true,finishedAt:2};
   const first=analyzeGallery(actual,record,walls).find(f=>f.id.endsWith('-omission'));assert.ok(first);assert.ok(first.evidence.includes(ids[0]));
   record.presentedIds=record.presentedIds.filter(id=>id!==ids[0]);assert.equal(analyzeGallery(actual,record,walls).some(f=>f.id.endsWith('-omission')),false);
 });

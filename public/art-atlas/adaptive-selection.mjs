@@ -1,5 +1,6 @@
 import {recognitionTier,recognitionWeight} from './curation-priority.mjs';
 import { validAnswer } from './engine.mjs';
+import {isReviewedVisualDescriptor,FEATURE_SEMANTIC_VERSION} from './visual-descriptor-semantics.mjs';
 
 const FAMILIES = new Set(['individual-choice', 'feature-check', 'unconditional-preference', 'adaptive-preference']);
 const FEATURES = ['abstraction', 'energy', 'complexity', 'humanity', 'narrative', 'atmosphere', 'color'];
@@ -15,7 +16,8 @@ const pairKey = (a, b) => JSON.stringify([a, b].sort());
 const setKey = ids => JSON.stringify([...ids].sort());
 const pairs = ids => ids.flatMap((a, i) => ids.slice(i + 1).map(b => [a, b]));
 const mean = values => values.length ? values.reduce((s, v) => s + v, 0) / values.length : 0;
-const finiteFeature = (work, key) => Number.isFinite(work?.features?.[key]) && work.features[key] >= 0 && work.features[key] <= 1;
+const finiteFeature = isReviewedVisualDescriptor;
+const literalFeature = key => key==='narrative'||key==='atmosphere';
 function hash(value) { let n = 2166136261; for (const c of String(value)) n = Math.imul(n ^ c.charCodeAt(0), 16777619); return n >>> 0; }
 const boundedInt = (value, fallback, min, max) => Number.isFinite(value) ? Math.max(min, Math.min(max, Math.trunc(value))) : fallback;
 
@@ -60,6 +62,7 @@ function directionalHypothesis(records, byId) {
   if (distinct.length < 3 || artists.length < 4) return null;
   const cues = FEATURES.flatMap(key => {
     const groups = distinct.flatMap(record => {
+      if(literalFeature(key)&&record.workIds.some(id=>!finiteFeature(byId.get(id),key)))return [];
       const observations = pairs(record.workIds).flatMap(([a, b]) => {
         const wa = byId.get(a), wb = byId.get(b), gap = record.answer.positions[a] - record.answer.positions[b];
         if (!finiteFeature(wa, key) || !finiteFeature(wb, key) || Math.abs(gap) < 10) return [];
@@ -67,10 +70,11 @@ function directionalHypothesis(records, byId) {
       });
       return observations.length ? [{ value: mean(observations), record }] : [];
     });
+    const featureArtistCount=literalFeature(key)?unique(groups.flatMap(({record})=>record.workIds).map(id=>byId.get(id)).filter(w=>w.artistKnown!==false&&w.artist&&!/unknown|unidentified|anonymous/i.test(w.artist)).map(w=>w.artist.trim().toLowerCase())).length:artists.length;
     const score = mean(groups.map(g => g.value)), direction = Math.sign(score);
     const supporting = groups.filter(g => Math.sign(g.value) === direction && Math.abs(g.value) >= .025);
-    if (groups.length < 3 || Math.abs(score) < .035 || supporting.length < 2) return [];
-    return [{ feature: key, direction, score, supportingRoundIds: supporting.map(g => g.record.round.id), trainingRoundIds: groups.map(g => g.record.round.id), trainingEvidence: groups.map(({record}) => ({ roundId: record.round.id, workIds: [...record.workIds], criterion: 'preference', confirmed: true, positions: structuredClone(record.answer.positions), featureValues: Object.fromEntries(record.workIds.filter(id => finiteFeature(byId.get(id), key)).map(id => [id, byId.get(id).features[key]])) })), featureBasis: 'Supplied catalogue descriptors at planning time; only known values are included.', sourceSetCount: groups.length, artistCount: artists.length }];
+    if (groups.length < 3 || featureArtistCount < 4 || Math.abs(score) < .035 || supporting.length < 2) return [];
+    return [{ feature: key, direction, score, ...(literalFeature(key)?{featureSemanticVersion:FEATURE_SEMANTIC_VERSION}:{}), supportingRoundIds: supporting.map(g => g.record.round.id), trainingRoundIds: groups.map(g => g.record.round.id), trainingEvidence: groups.map(({record}) => ({ roundId: record.round.id, workIds: [...record.workIds], criterion: 'preference', confirmed: true, positions: structuredClone(record.answer.positions), featureValues: Object.fromEntries(record.workIds.filter(id => finiteFeature(byId.get(id), key)).map(id => [id, byId.get(id).features[key]])), ...(literalFeature(key)?{featureSemanticVersions:Object.fromEntries(record.workIds.map(id=>[id,byId.get(id).featureSemanticVersion]))}:{}) })), featureBasis: 'Supplied catalogue descriptors at planning time; only known values are included.', sourceSetCount: groups.length, artistCount: featureArtistCount }];
   });
   const cue = cues.sort((a, b) => Math.abs(b.score) - Math.abs(a.score) || a.feature.localeCompare(b.feature))[0];
   return cue ? { ...cue, method: 'Heuristic average of signed, within-set feature contrasts. One contribution per distinct artwork set.', limits: ['The feature was selected after observing earlier choices. Correlated properties, artists and subjects remain alternative explanations.', 'The numerical score is an internal selection weight, not confidence or probability.'] } : null;
@@ -204,7 +208,7 @@ export function planAdaptivePanels({ works, rounds = [], answers = {}, batchInde
     }).sort((a, b) => b.score - a.score || setKey(a.workIds).localeCompare(setKey(b.workIds)));
     const selected = scored[0], supported = cue && selected.contrast >= .25;
     const predicted = supported ? [...selected.workIds].sort((a, b) => cue.direction * (byId.get(b).features[cue.feature] - byId.get(a).features[cue.feature]) || a.localeCompare(b))[0] : null;
-    return { workIds: selected.workIds, role: supported ? 'challenge' : 'exploration', subtype: 'new-comparison', construct: 'preference', comparisonNovel: true, holdoutUnit: 'new-comparison', artworksMayBeFamiliar: true, provisionalHypothesis: supported ? { ...structuredClone(cue), testFeatureValues: Object.fromEntries(selected.workIds.map(id => [id, byId.get(id).features[cue.feature]])) } : null, provisionalPrediction: predicted, evidenceRoundIds: supported ? [...cue.trainingRoundIds] : [], selectionReason: supported ? `A previously unshown pair probes the earlier directional pattern for ${cue.feature}. Other visual properties and subjects still differ.` : 'A previously unshown pairing expands coverage. Earlier evidence did not support a feature-direction prediction.' };
+    return { workIds: selected.workIds, role: supported ? 'challenge' : 'exploration', subtype: 'new-comparison', construct: 'preference', comparisonNovel: true, holdoutUnit: 'new-comparison', artworksMayBeFamiliar: true, provisionalHypothesis: supported ? { ...structuredClone(cue), testFeatureValues: Object.fromEntries(selected.workIds.map(id => [id, byId.get(id).features[cue.feature]])), ...(literalFeature(cue.feature)?{testFeatureSemanticVersions:Object.fromEntries(selected.workIds.map(id=>[id,byId.get(id).featureSemanticVersion]))}:{}) } : null, provisionalPrediction: predicted, evidenceRoundIds: supported ? [...cue.trainingRoundIds] : [], selectionReason: supported ? `A previously unshown pair probes the earlier directional pattern for ${cue.feature}. Other visual properties and subjects still differ.` : 'A previously unshown pairing expands coverage. Earlier evidence did not support a feature-direction prediction.' };
   }
   for (let index = 0; index < count && pool.length >= 2; index++) {
     const requestedRole = slots.get(index) || 'exploration';

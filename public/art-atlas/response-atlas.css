@@ -24,3 +24,6 @@
 .atlas-art-dialog>img{display:block;width:100%;height:min(70dvh,850px);object-fit:contain}
 .atlas-art-dialog>a{display:block;width:max-content;font-size:11px;margin:16px auto 0;padding:5px 0;color:#8e6b43}
 @media(max-width:800px){.atlas-zoom{right:8px;bottom:8px}.atlas-zoom button{min-height:40px;min-width:36px}.atlas-art-dialog{padding:18px}.atlas-art-dialog>img{height:67dvh}.atlas-art-dialog h2{font-size:20px}}
+
+.atlas-position-link{opacity:0;pointer-events:none}.atlas-point:hover .atlas-position-link,.atlas-point.selected .atlas-position-link,.atlas-point:focus .atlas-position-link{opacity:.65}.atlas-swap{border:0;background:none;padding:3px 9px;font-size:20px;line-height:1;color:#827a6e;cursor:pointer}.atlas-swap:focus-visible{outline:1px solid currentColor;outline-offset:3px}
+.atlas-art-dialog[open]{height:94dvh;display:flex;flex-direction:column;overflow:hidden}.atlas-art-dialog>header,.atlas-art-dialog>a{flex-shrink:0}.atlas-art-dialog>img{height:auto;flex:1;min-height:0}

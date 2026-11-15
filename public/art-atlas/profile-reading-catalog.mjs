@@ -41,7 +41,7 @@ export const PROFILE_READING_LENSES=Object.freeze([
   },
   {
     "id": "different-reactions",
-    "title": "Different responses",
+    "title": "Preference & feeling",
     "description": "Personal appeal, admiration and the wish to return.",
     "readingIds": [
       "admiration-and-appeal",
@@ -54,11 +54,11 @@ export const PROFILE_READING_LENSES=Object.freeze([
   },
   {
     "id": "meaning-and-context",
-    "title": "Meaning & stories",
+    "title": "Symbols & meaning",
     "description": "Scenes, interpretations and the response to context.",
     "readingIds": [
-      "scene-and-interpretation",
       "story-rating-change",
+      "scene-and-interpretation",
       "claim-and-story-comparison",
       "meaning-without-preference",
       "openness-and-preference"
@@ -237,20 +237,20 @@ export const PROFILE_READING_CATALOG=Object.freeze([
     limits:["Scene clarity and possible meanings are personal reports, not tests of correct interpretation.","The relationship does not establish that symbolism caused a preference or measure intelligence or tolerance for ambiguity.","Repeated maps of the same works do not add distinct-set support; preference and appraisal order can affect the comparison."]
   },
   {
-    id:"story-rating-change",lensId:"meaning-and-context",title:"Before & after context",status:"implemented",availability:"current",
-    description:"The direction and size of a preference change after a sourced interpretive note.",
-    example:example("The Ambassadors moved from 50 before the note to 75 after the account of its stretched skull. Another note could leave the response unchanged.",["holbein-ambassadors"]),
+    id:"story-rating-change",lensId:"meaning-and-context",title:"Symbolism & appeal",status:"implemented",availability:"current",
+    description:"How appeal changes after a sourced note about the symbols in a painting.",
+    example:example("Hope moved from 2 to 4 out of 5 after its remaining string was explained. The Ambassadors stayed at 3 out of 5 after the note about its skull.",["add-watts-hope","holbein-ambassadors"]),
     requiredSignals:["A context round with contextMode preference-before-after-v1.","Valid before and after preference values from 0, 25, 50, 75 and 100.","The same workId, a recorded storySeen flag and exact work binding."],
-    sources:[portrait("contextRatings",{}),portrait("observations",{"id":"taste-context-rating"})],
-    implementationNote:"contextRatings retains every validated paired rating. The displayed observation selects one change or unchanged comparison.",
+    sources:[portrait("symbolism.responses",{}),portrait("observations",{"module":"symbolism"}),portrait("contextRatings",{})],
+    implementationNote:"Typed symbolism questions preserve the note, its sources, the five response choices and both answers. Cross-work counts use the first completed response for each painting. Earlier generic context questions retain their own contextRatings records.",
     limits:["Reading, repeated viewing and elapsed time occur together. A 25-point input change is one response-scale step, not an effect size or a causal estimate."]
   },
   {
     id:"claim-and-story-comparison",lensId:"meaning-and-context",title:"Expectations & context",status:"implemented",availability:"current",
     description:"A broad statement about stories is placed beside a specific later before/after response.",
-    example:example("The viewer agreed that stories rarely change their preferences. The Birth of Venus then moved from 50 to 75 after a museum note. That is one local exception, not a verdict on the broader claim.",["study-botticelli-birth-venus"]),
+    example:example("The viewer agreed that stories rarely change their preferences. The Birth of Venus then moved from 3 to 4 out of 5 after a museum note. That is one local exception, not a verdict on the broader claim.",["study-botticelli-birth-venus"]),
     requiredSignals:["The exact contextEffect statement answered before the note.","Reciprocal claimRoundId/contextRoundId links and a shared checkId.","Agreement of at least 3 on the 0–4 scale and a nonzero validated before/after change."],
-    sources:[portrait("observations",{"id":"taste-context-rating","variant":"linked claim with agreement >= 3 and a nonzero change"}),portrait("contextRatings",{"claimRoundId":"non-null"})],
+    sources:[portrait("observations",{"id":"symbolism-context-claim"}),portrait("observations",{"id":"taste-context-rating","variant":"linked claim with agreement >= 3 and a nonzero change"})],
     implementationNote:"This is a claim-linked variant of the same context-rating observation, not an additional independent result.",
     limits:["Rarely allows exceptions. One changed rating does not falsify the broad claim or measure honesty, consistency or self-awareness."]
   },

@@ -24,11 +24,11 @@ function fixture(){
   return{history,answers,blocks,plans};
 }
 
-test('The real first150 plans deliberately provide genuine ordinary pair baselines without changing64/18/17 ratings',()=>{
+test('The real first150 plans deliberately provide genuine ordinary pair baselines without changing72/42/42 ratings',()=>{
   const {history,answers,blocks,plans}=fixture();
-  assert.deepEqual(plans.map(plan=>plan.coverage.firstRatingWorkIds.length),[64,18,17]);
+  assert.deepEqual(plans.map(plan=>plan.coverage.firstRatingWorkIds.length),[72,42,42]);
   for(const panel of notes.proposedFirst18Panels){const round=blocks[0].find(round=>ordinary(round)&&round.evidence.panelNumber===panel.panel);assert.deepEqual([...ids(round)].sort(),[...panel.workIds].sort());}
-  const expected=[['journey-019','neighbour-great-wave','journey-005'],['journey-027','keep-six-landmarks-a','journey-001'],['journey-042','subject-adults-children','journey-007'],['journey-092','subject-mountains','journey-049'],['journey-142','subject-portraits','journey-099']];
+  const expected=[['journey-019','neighbour-great-wave','journey-005'],['journey-027','keep-six-landmarks-a','journey-001'],['journey-042','subject-adults-children','journey-007'],['journey-092','subject-mountains','journey-049'],['journey-142','subject-waves','journey-099']];
   for(const [roundId,contentId,sourceId] of expected){
     const round=history.find(row=>row.id===roundId),source=history.find(row=>row.id===sourceId),link=round.evidence.baselineLinkPlan;
     assert.equal(round.contentId,contentId);assert.equal(ordinary(source),true);assert.equal(validAnswer(source,answers[source.id]),true);
@@ -44,8 +44,8 @@ test('The real first150 plans deliberately provide genuine ordinary pair baselin
   const unlinked=blocks[2][18];assert.equal(unlinked.evidence.baselineFallback,true);assert.equal(unlinked.evidence.baselineLinkPlan.linkedPairCount,0);assert.match(unlinked.evidence.baselineFallbackReason,/standalone categorical/);
 });
 
-test('Openness34 uses an already preferred panel with no duplicate two-axis reading map',()=>{
-  const rounds=buildJourneyRounds(works,{}, {seed:'appraisal-linkage'}),appraisal=rounds[33],source=rounds[13];
+test('Openness uses an already preferred panel with no duplicate two-axis reading map',()=>{
+  const rounds=buildJourneyRounds(works,{}, {seed:'appraisal-linkage'}),appraisal=rounds.find(round=>round.evidence.construct==='interpretive-openness'),source=rounds[13];
   assert.equal(appraisal.evidence.construct,'interpretive-openness');assert.equal(appraisal.evidence.panelNumber,8);assert.equal(source.evidence.construct,'preference');
   assert.deepEqual([...ids(appraisal)].sort(),[...ids(source)].sort());assert.ok(appraisal.evidence.priorMeasureRoundIds.includes(source.id));
   const readingMaps=rounds.filter(round=>round.kind==='grid'&&round.axis==='reading');
@@ -55,11 +55,11 @@ test('Openness34 uses an already preferred panel with no duplicate two-axis read
 
 test('Captured old34 and49 remain exact even when the new unshown schedule would choose other sources',()=>{
   const rounds=buildJourneyRounds(works,{}, {seed:'frozen-linkage'}),panel12=rounds.find(round=>ordinary(round)&&round.evidence.panelNumber===12),panel17=rounds.find(round=>ordinary(round)&&round.evidence.panelNumber===17),panel18=rounds.find(round=>ordinary(round)&&round.evidence.panelNumber===18);
-  const old34={...structuredClone(rounds[33]),works:structuredClone(panel12.works),title:'The openness wording already shown.',evidence:{...rounds[33].evidence,panelNumber:12,journeyRevision:'art-profile-50-v6'}};
+  const old34={...structuredClone(rounds.find(round=>round.evidence.construct==='interpretive-openness')),id:'journey-034',works:structuredClone(panel12.works),title:'The openness wording already shown.',evidence:{...rounds[33].evidence,panelNumber:12,journeyRevision:'art-profile-50-v6'}};
   const old49={...structuredClone(rounds[48]),works:[structuredClone(panel17.works[0]),structuredClone(panel18.works[0])],hint:'The bridge instruction already shown.',evidence:{...rounds[48].evidence,journeyRevision:'art-profile-50-v6'}};
   delete old49.evidence.subjectBaselinePreparation;delete old49.evidence.preparesContrastContentId;
   const history=[old34,old49],before=structuredClone(history),rebuilt=buildJourneyRounds(works,{}, {seed:'frozen-linkage',history});
-  assert.deepEqual(rebuilt[33],old34);assert.deepEqual(rebuilt[48],old49);assert.deepEqual(history,before);assert.equal(JOURNEY_REVISION,'art-profile-50-v7');
+  assert.deepEqual(rebuilt[33],old34);assert.deepEqual(rebuilt[48],old49);assert.deepEqual(history,before);assert.equal(JOURNEY_REVISION,'art-profile-50-v8');
 });
 
 test('Prepared049 and099 snapshots remain exact when later planning has more completed source data',()=>{
@@ -68,7 +68,7 @@ test('Prepared049 and099 snapshots remain exact when later planning has more com
   const second=buildJourneyRounds(works,answers,{offset:50,batchIndex:1,seed:'different-refresh-seed',history:retained,panels:plans[1],reservationPlan:plans[1].reservations});
   assert.deepEqual(second[48],saved99);assert.deepEqual(retained,before);
   const first=buildJourneyRounds(works,answers,{seed:'another-refresh-seed',history:[saved49]});assert.deepEqual(first[48],saved49);
-  assert.equal(saved49.evidence.preparesContrastContentId,'subject-mountains');assert.equal(saved99.evidence.preparesContrastContentId,'subject-portraits');
+  assert.equal(saved49.evidence.preparesContrastContentId,'subject-mountains');assert.equal(saved99.evidence.preparesContrastContentId,'subject-waves');
   assert.deepEqual(history[48],saved49);assert.deepEqual(history[98],saved99);
 });
 

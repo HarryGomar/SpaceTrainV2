@@ -1,0 +1,369 @@
+{
+  "revision": "collection-additions-20261115",
+  "counts": {
+    "additions": 57,
+    "mexicanPractice": 25,
+    "mexicanPracticeArtists": 12,
+    "artists": 34,
+    "originalStudy": 99,
+    "openingChecked": 255,
+    "identitiesCheckedAgainst": 354,
+    "combinedStudy": 156
+  },
+  "manualFeatureTails": {
+    "original": {
+      "abstraction": {
+        "lowAtMost025": 62,
+        "highAtLeast075": 5
+      },
+      "energy": {
+        "lowAtMost025": 33,
+        "highAtLeast075": 21
+      },
+      "complexity": {
+        "lowAtMost025": 4,
+        "highAtLeast075": 51
+      },
+      "humanity": {
+        "lowAtMost025": 30,
+        "highAtLeast075": 51
+      },
+      "narrative": {
+        "lowAtMost025": 61,
+        "highAtLeast075": 12
+      },
+      "atmosphere": {
+        "lowAtMost025": 27,
+        "highAtLeast075": 44
+      },
+      "color": {
+        "lowAtMost025": 18,
+        "highAtLeast075": 31
+      }
+    },
+    "additions": {
+      "abstraction": {
+        "lowAtMost025": 13,
+        "highAtLeast075": 29
+      },
+      "energy": {
+        "lowAtMost025": 22,
+        "highAtLeast075": 8
+      },
+      "complexity": {
+        "lowAtMost025": 8,
+        "highAtLeast075": 17
+      },
+      "humanity": {
+        "lowAtMost025": 38,
+        "highAtLeast075": 11
+      },
+      "narrative": {
+        "lowAtMost025": 46,
+        "highAtLeast075": 2
+      },
+      "atmosphere": {
+        "lowAtMost025": 36,
+        "highAtLeast075": 11
+      },
+      "color": {
+        "lowAtMost025": 12,
+        "highAtLeast075": 9
+      }
+    },
+    "combined": {
+      "abstraction": {
+        "lowAtMost025": 75,
+        "highAtLeast075": 34
+      },
+      "energy": {
+        "lowAtMost025": 55,
+        "highAtLeast075": 29
+      },
+      "complexity": {
+        "lowAtMost025": 12,
+        "highAtLeast075": 68
+      },
+      "humanity": {
+        "lowAtMost025": 68,
+        "highAtLeast075": 62
+      },
+      "narrative": {
+        "lowAtMost025": 107,
+        "highAtLeast075": 14
+      },
+      "atmosphere": {
+        "lowAtMost025": 63,
+        "highAtLeast075": 55
+      },
+      "color": {
+        "lowAtMost025": 30,
+        "highAtLeast075": 40
+      }
+    }
+  },
+  "crossedCoverage": {
+    "abstractAndSparse": 6,
+    "abstractAndDense": 10,
+    "representationalAndSparse": 5
+  },
+  "datesUnknown": [
+    "add-tamayo-woman-watermelon"
+  ],
+  "totalHostedBytes": 32120845,
+  "largeReproductionPixels": {
+    "add-varo-harmony": [
+      1200,
+      967
+    ],
+    "add-varo-sympathy": [
+      1062,
+      1200
+    ],
+    "add-varo-icon": [
+      740,
+      1200
+    ],
+    "add-varo-weaving-space-time": [
+      982,
+      1200
+    ],
+    "add-gerzso-water-mansion": [
+      1200,
+      972
+    ],
+    "add-gerzso-yellow-green-blue": [
+      1200,
+      805
+    ],
+    "add-gerzso-landscape-red-ii": [
+      831,
+      1200
+    ],
+    "add-izquierdo-sorrowful-friday": [
+      956,
+      1200
+    ],
+    "add-izquierdo-idyll": [
+      965,
+      1200
+    ],
+    "add-izquierdo-living-still-life": [
+      1200,
+      963
+    ],
+    "add-tamayo-still-life-foot": [
+      1026,
+      1200
+    ],
+    "add-tamayo-woman-watermelon": [
+      937,
+      1200
+    ],
+    "add-atl-popocatepetl": [
+      1200,
+      955
+    ],
+    "add-atl-climatic-eruption": [
+      1200,
+      822
+    ],
+    "add-rivera-zapatista-landscape": [
+      1015,
+      1200
+    ],
+    "add-rivera-portrait-frida": [
+      858,
+      1200
+    ],
+    "add-rivera-flower-vendor": [
+      1200,
+      815
+    ],
+    "add-orozco-buffoons": [
+      1200,
+      953
+    ],
+    "add-siqueiros-madre-nina": [
+      875,
+      1200
+    ],
+    "add-carrington-dagobert": [
+      1200,
+      1034
+    ],
+    "add-merida-time-space": [
+      793,
+      1200
+    ],
+    "add-merida-untitled-1950": [
+      753,
+      1200
+    ],
+    "add-paalen-golden-fleece": [
+      728,
+      1200
+    ],
+    "add-kahlo-girl-death-mask": [
+      847,
+      1200
+    ],
+    "add-kahlo-borderline": [
+      1200,
+      1045
+    ],
+    "add-mondrian-composition-1930": [
+      1198,
+      1200
+    ],
+    "add-mondrian-composition-ten": [
+      1200,
+      953
+    ],
+    "add-mondrian-composition-colour-a": [
+      1082,
+      1200
+    ],
+    "add-mondrian-tableau-one": [
+      802,
+      1200
+    ],
+    "add-kandinsky-composition-seven": [
+      1200,
+      797
+    ],
+    "add-kandinsky-impression-concert": [
+      1200,
+      935
+    ],
+    "add-kandinsky-rowing": [
+      1200,
+      1088
+    ],
+    "add-kandinsky-circle-square": [
+      1200,
+      871
+    ],
+    "add-kupka-cathedral": [
+      995,
+      1200
+    ],
+    "add-af-klint-dove-two": [
+      907,
+      1200
+    ],
+    "add-af-klint-untitled-1933": [
+      868,
+      1200
+    ],
+    "add-klee-wald-bau": [
+      1131,
+      1200
+    ],
+    "add-klee-flowering-tree": [
+      1200,
+      1189
+    ],
+    "add-klee-rose-garden": [
+      1047,
+      1200
+    ],
+    "add-albers-light-grey-wall": [
+      1200,
+      829
+    ],
+    "add-malevich-football-player": [
+      819,
+      1200
+    ],
+    "add-delaunay-air-iron-water": [
+      1200,
+      763
+    ],
+    "add-rothko-orange-yellow": [
+      936,
+      1200
+    ],
+    "add-pollock-convergence": [
+      1200,
+      732
+    ],
+    "add-newman-prometheus-bound": [
+      400,
+      1056
+    ],
+    "add-krasner-icarus": [
+      2560,
+      1707
+    ],
+    "add-thomas-etude-blue": [
+      797,
+      1200
+    ],
+    "add-herrera-cobalt-white": [
+      1972,
+      2800
+    ],
+    "add-magritte-fanatiques": [
+      794,
+      960
+    ],
+    "add-dali-transparent-simulacrum": [
+      2500,
+      1950
+    ],
+    "add-ernst-divinite": [
+      863,
+      1200
+    ],
+    "add-miro-composition-1933": [
+      1200,
+      980
+    ],
+    "add-miro-harlequin-carnival": [
+      1200,
+      864
+    ],
+    "add-de-chirico-engineer": [
+      948,
+      1200
+    ],
+    "add-hammershoi-room-wife": [
+      1200,
+      1051
+    ],
+    "add-morandi-still-life-1948": [
+      1200,
+      990
+    ],
+    "add-watts-hope": [
+      951,
+      1200
+    ]
+  },
+  "duplicates": [],
+  "validationErrors": [],
+  "excluded": {
+    "add-carrington-crow-soup": "The supplied402×306 reproduction is too small for this comparison collection.",
+    "add-orozco-prometheus": "The institution photograph includes substantial architecture outside the fresco; not an isolated painting stimulus.",
+    "add-albers-still-remembered": "Cached image token expired; the replacement Mart source expressly excludes publication without separate permission.",
+    "add-albers-sonorous": "Institution image token returned403; no verified replacement reproduction acquired in this pass.",
+    "add-rothko-number-five": "Institution image token returned403; no verified replacement reproduction acquired in this pass.",
+    "add-magritte-presence-mind": "Institution image token returned403; no verified replacement reproduction acquired in this pass.",
+    "add-ernst-forest": "Institution image token returned403; no verified replacement reproduction acquired in this pass.",
+    "add-hammershoi-easel-bredgade": "Cached image token expired; the Getty article image is cropped, so it is not substituted for the complete painting.",
+    "add-morandi-still-life-1935": "Institution image token returned403; no verified replacement reproduction acquired in this pass."
+  },
+  "unfulfilledNamedCandidates": [
+    "add-varo-juggler",
+    "add-varo-creation-of-the-birds",
+    "add-varo-bankers-in-action"
+  ],
+  "limits": [
+    "Editorial feature values are provisional and not validated measurements.",
+    "Most available institutional reproductions contain1200px on the long side; larger primary images retained where acquired.",
+    "Country groups artist practice/tradition and does not universally assert nationality or place of execution.",
+    "Source copyright and reuse statements are preserved; this is not an open-license image pack.",
+    "No claim is made that a work is currently displayed."
+  ]
+}

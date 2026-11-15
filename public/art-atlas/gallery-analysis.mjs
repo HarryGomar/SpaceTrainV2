@@ -1,3 +1,4 @@
+import {isReviewedVisualDescriptor} from './visual-descriptor-semantics.mjs';
 import { buildRounds, validAnswer } from './engine.mjs';
 
 const PROTOCOL='open-gallery-v1';
@@ -22,7 +23,7 @@ function dateMidpoint(w) {
   const range=w?.analysis?.yearRange;
   return Array.isArray(range)&&range.length===2&&range.every(finite)&&range[1]>=range[0]&&range[1]-range[0]<=80?(range[0]+range[1])/2:null;
 }
-const featureDistance=key=>(a,b)=>finite(a?.features?.[key])&&finite(b?.features?.[key])?Math.min(1,Math.abs(a.features[key]-b.features[key])):null;
+const featureDistance=key=>(a,b)=>isReviewedVisualDescriptor(a,key)&&isReviewedVisualDescriptor(b,key)?Math.min(1,Math.abs(a.features[key]-b.features[key])):null;
 export const GROUPING_CRITERIA=[
   {key:'palette',label:'sampled colour palettes',title:'Colour palettes help describe your gallery groups.',distance:paletteDistance,limit:'Colour comes from sampled digital reproductions after a small edge crop. Frames, lighting, image colour and the amount of each colour can affect this descriptor. It is not a measurement of the original painting under museum lighting.'},
   {key:'date',label:'recorded dates',title:'Nearby dates recur within galleries.',distance:(a,b)=>{const x=dateMidpoint(a),y=dateMidpoint(b);return x===null||y===null?null:Math.min(1,Math.abs(x-y)/200);},limit:'Date comparison uses the middle of the recorded ranges and a two-century distance scale. Open-ended dates, missing dates and ranges wider than 80 years are excluded. Approximate dates remain approximate; this does not establish a shared movement.'},

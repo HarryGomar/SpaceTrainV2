@@ -1,3 +1,4 @@
+import {availableSymbolismContent,buildSymbolismRound} from './symbolism-rounds.mjs';
 import {recognitionTier,preferredTier,museumLibraryOrder} from './curation-priority.mjs';
 import {AXES} from './engine.mjs';
 import {buildStudyRounds} from './question-bank.mjs';
@@ -9,7 +10,7 @@ import {buildContrastRound} from './contrast-rounds.mjs';
 import {selectArrangementStimuli} from './arrangement-stimuli.mjs';
 
 export const JOURNEY_PROTOCOL='art-profile-50-v1';
-export const JOURNEY_REVISION='art-profile-50-v7';
+export const JOURNEY_REVISION='art-profile-50-v8';
 export const JOURNEY_VARIETY_POLICY='specific-question-variety-v1';
 export const JOURNEY_LENGTH=50;
 const FEATURES=['abstraction','energy','complexity','humanity','narrative','atmosphere','color'];
@@ -39,8 +40,8 @@ const SCHEDULE=[
   P(1),G('familiarity','a'),G('shortlist','c'),V(1,'achievement'),P(5),P(2),P(3),X('sorting'),G('shortlist','a'),P(4),
   G('familiarity','b'),P(6),P(7),P(8),V(5,'reading'),P(9),X('artist'),X('movement'),V(8,'returnResponse'),P(10),
   V(6,'achievement'),X('difficult-edit'),G('shortlist','b'),P(11),A(9,'density'),P(12),A(10,'surprise'),P(13),V(9,'reading'),P(14),
-  X('statement'),V(11,'achievement'),P(15),A(8,'openness'),X('context'),X('curate'),P(16),V(14,'returnResponse'),P(17),V(12,'reading'),
-  P(18),G('shortlist','d'),A(6,'figures'),V(15,'returnResponse'),V(3,'achievement'),X('sorting'),G('shortlist','e'),A(16,'surprise'),X('bridge-preference'),A(14,'surface')
+  X('statement'),A(8,'openness'),P(15),V(11,'achievement'),X('context'),X('curate'),P(16),V(14,'returnResponse'),P(17),X('symbolism'),
+  P(18),G('shortlist','d'),A(6,'figures'),V(15,'returnResponse'),A(16,'surprise'),X('sorting'),G('shortlist','e'),X('symbolism'),X('bridge-preference'),A(14,'surface')
 ];
 const CONTRAST_SLOTS=new Map([[14,'chronology'],[18,'neighbour'],[26,'keep-leave'],[41,'same-subject']]);
 const INITIAL_FAMILIARITY_IDS=['study-vermeer-pearl','study-rembrandt-night-watch','friedrich-wanderer','study-munch-scream','study-wood-american-gothic','study-raphael-school-athens','study-botticelli-birth-venus','millais-ophelia','study-posada-catrina','velazquez-las-meninas','study-bruegel-hunters-snow','hokusai-mount-fuji'];
@@ -158,7 +159,14 @@ export function buildJourneyRounds(works,answers={},options={}){
   }
   const noteCandidates=['holbein-ambassadors','matejko-stanczyk','bosch-garden-delights','redon-violette','tanner-waters'].map(id=>pool.find(work=>work.id===id)).filter(Boolean);
   const priorNotes=new Set([...history.values()].filter(round=>round.kind==='context').flatMap(round=>ids(round.works)));
-  const noteWork=noteCandidates.find(work=>!priorNotes.has(work.id))||noteCandidates[batchIndex%noteCandidates.length];
+  const symbolismRounds=new Map(),plannedReveals=[...history.values()],availableNotes=availableSymbolismContent(pool);
+  for(const [slot,preferredId] of [[34,'add-watts-hope'],[39,'holbein-ambassadors'],[47,'green-tara']]){
+    const used=new Set(plannedReveals.filter(item=>item.kind==='context').flatMap(item=>ids(item.works)));
+    const fresh=availableNotes.filter(note=>!used.has(note.workId)),content=(batchIndex===0?fresh.find(note=>note.workId===preferredId):null)||fresh[0];
+    const built=buildSymbolismRound({id:at(slot),works:pool,rounds:plannedReveals,...(content?{contentId:content.id}:{allowRevisit:true})});
+    if(built){symbolismRounds.set(slot,built);plannedReveals.push(built);}
+  }
+  const noteWork=symbolismRounds.get(34)?.works[0]||noteCandidates.find(work=>!priorNotes.has(work.id))||noteCandidates[batchIndex%noteCandidates.length];
   if(!noteWork)throw Error('The journey needs a sourced painting with an interpretive note.');
   const explicit=Array.isArray(options.panels)?options.panels:options.panels?.panels,automatic=explicit?null:createJourneyStimulusPlan({works:pool,rounds:[...history.values()],answers,batchIndex,seed:selectionSeed,reservationPlan:options.reservationPlan}),supplied=explicit||(automatic?.complete?automatic.panels:null);
   if(supplied&&(!Array.isArray(supplied)||supplied.length!==18))throw Error('An adaptive journey needs eighteen artwork panels.');
@@ -172,7 +180,7 @@ export function buildJourneyRounds(works,answers={},options={}){
     if(!sourceIndex||Number(sourceIndex[1])<=offset)registerSpecificQuestion(round,sourceIndex?Number(sourceIndex[1])-1:null);
     if(sourceIndex&&Number(sourceIndex[1])<=offset&&round.kind!=='statements')round.works.forEach(work=>lastSeen.set(work.id,Math.max(lastSeen.get(work.id)??-Infinity,Number(sourceIndex[1])-1)));
     const legacyPanel=/^panel-(\d+)$/.exec(round.evidence?.setId||''),number=round.evidence?.panelNumber||(legacyPanel?Number(legacyPanel[1]):null),sourceBatch=round.evidence?.batchIndex??Math.floor((Number(sourceIndex?.[1]||1)-1)/JOURNEY_LENGTH);
-    if((['art-profile-50-v2','art-profile-50-v3','art-profile-50-v4','art-profile-50-v5','art-profile-50-v6',JOURNEY_REVISION].includes(round.evidence?.journeyRevision)||legacyPanel)&&sourceBatch===batchIndex&&Number.isInteger(number)&&number>=1&&number<=18&&round.works.every(work=>pool.some(item=>item.id===work.id))&&!panels.has(number)){
+    if((['art-profile-50-v2','art-profile-50-v3','art-profile-50-v4','art-profile-50-v5','art-profile-50-v6','art-profile-50-v7',JOURNEY_REVISION].includes(round.evidence?.journeyRevision)||legacyPanel)&&sourceBatch===batchIndex&&Number.isInteger(number)&&number>=1&&number<=18&&round.works.every(work=>pool.some(item=>item.id===work.id))&&!panels.has(number)){
       panels.set(number,round.works.map(work=>pool.find(item=>item.id===work.id)));
       if(round.evidence?.setId)panelSetIds.set(number,round.evidence.setId);
       round.works.forEach(work=>panelUses.set(work.id,(panelUses.get(work.id)||0)+1));
@@ -191,7 +199,7 @@ export function buildJourneyRounds(works,answers={},options={}){
     if(CONTRAST_SLOTS.has(localIndex))return [];
     const spec=SCHEDULE[localIndex];
     if(spec.panel&&panels.has(spec.panel))return ids(panels.get(spec.panel));
-    if(spec.task==='context')return [noteWork.id];
+    if(spec.task==='context'||spec.task==='symbolism')return [symbolismRounds.get(localIndex)?.works[0]?.id||noteWork.id];
     if(spec.task==='choice-grid'){const group='batch-'+batchIndex+'-grid-'+spec.group;if(gridPanels.has(group))return ids(gridPanels.get(group));if(batchIndex===0&&spec.group==='a'&&INITIAL_FAMILIARITY_IDS.every(id=>pool.some(work=>work.id===id)))return [...INITIAL_FAMILIARITY_IDS];}
     if(['sorting','difficult-edit'].includes(spec.task)){const source=spec.task==='sorting'&&localIndex===45?(history.get(at(7))||sequence[7]):null;if(source)return specificQuestionIds(source);const plan=selectArrangementStimuli({works:pool,batchIndex,kind:spec.task});if(plan.status==='ready')return [...plan.workIds];}
     return [];
@@ -281,10 +289,14 @@ export function buildJourneyRounds(works,answers={},options={}){
       const avoid=avoidFor(index),audit={independentNeighbourRoundIds:avoid.roundIds},chosen=selectWorks(eligible,4,{uses:recognitionUses,lastSeen,index:globalIndex,seed:selectionSeed,mode:'match',distinctField:field,plannedUses:plannedSpecificUses,plannedLastSeen:plannedSpecificLastSeen,avoidIds:avoid.ids,audit});
       round={kind:'match',field,title:field==='artist'?'Match the paintings to the artists.':'Match the paintings to a style or tradition.',hint:'Move each painting to a label. Use Not sure when you do not know.',works:chosen,options:[...chosen].reverse().map((work,i)=>({id:field+'-'+i,label:work[field]}))};
       evidence={construct:field==='artist'?'recognition-artist':'recognition-movement',family:'cued-recognition',role:'check',varietyPolicy:JOURNEY_VARIETY_POLICY,varietySelection:audit,limits:[...template.evidence.limits]};
-    }else if(spec.task==='context'){
+    }else if(spec.task==='context'||spec.task==='symbolism'){
       template=templateFor(item=>item.kind==='context');
       round={kind:'context',contextMode:'preference-before-after-v1',title:'Look, then read.',hint:'Rate how much you like the painting before reading its story, then rate it again.',works:[noteWork]};
       evidence={construct:'context-liking-change',family:'context-change',role:'check',checkId:'journey-context-effect-'+batchIndex,claimRoundId:at(30),storyPreviouslyShown:priorNotes.has(noteWork.id),priorMeasureRoundIds:sequence.filter(item=>item.kind!=='statements'&&item.works.some(work=>work.id===noteWork.id)&&['preference','curiosity'].includes(item.evidence.construct)).map(item=>item.id),limits:['Both ratings concern the same reproduction. Reading, repeated viewing, elapsed time and the earlier claim occur together. A changed rating does not isolate the story as a cause.','This is a five-point change in reported liking for one painting, not an estimate of how context changes all preferences.',...(priorNotes.has(noteWork.id)?['This interpretive note has already appeared in this history. It is a revisit, not a new-information comparison.']:[])]};
+      const symbolic=symbolismRounds.get(index);
+      if(symbolic){template=null;round={...symbolic};evidence={...symbolic.evidence,newInstrument:true,instrumentRevision:symbolic.symbolismProtocol,storyPreviouslyShown:priorNotes.has(symbolic.works[0].id),...(index===34?{checkId:'journey-context-effect-'+batchIndex,claimRoundId:at(30)}:{}),priorMeasureRoundIds:sequence.filter(item=>item.kind==='spectrum'&&item.criterion==='preference'&&item.works.some(work=>work.id===symbolic.works[0].id)).map(item=>item.id)};}
+      else if(index!==34){delete evidence.claimRoundId;delete evidence.checkId;}
+
     }else{
       const kind=spec.task;
       const arrangementPlan=kind==='sorting'&&index===45?sequence[7].evidence?.arrangementSelection:['sorting','difficult-edit'].includes(kind)?selectArrangementStimuli({works:pool,batchIndex,kind}):null;

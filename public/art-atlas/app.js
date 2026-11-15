@@ -1,4 +1,5 @@
 import { createInteractions } from './interactions.mjs';
+import {artworkImageAttributes} from './artwork-image.mjs';
 import { createCurationLab } from './curation.mjs';
 import { createDeepStudy } from './deep-study.mjs';
 import { analyzeScenarios } from './scenarios.mjs';
@@ -13,7 +14,7 @@ let works = [], state = freshState(), round = null, draft = {}, imagesReady = fa
 let collection = { version: 1, saved: {}, sessions: [] }, collectionFilter = 'saved', viewingSession = null, statementIndex=null,statementSession=null;
 const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
 const workById = id => works.find(w => w.id === id);
-const image = (w, extra = '') => `<img src="./${esc(w.image)}" data-artwork="${esc(w.id)}" alt="${esc(w.alt)}" ${extra} decoding="async">`;
+const image = (w, extra = '', options={}) => `<img ${artworkImageAttributes(w,options)} data-artwork="${esc(w.id)}" alt="${esc(w.alt)}" ${extra}>`;
 const inputs = createInteractions({ app, getRound: () => round, getDraft: () => draft, ready: () => state.stage==='question'&&imagesReady, image, esc, workById, saveDraft: () => saveDraft(), sync: () => syncRoundImages() });
 const imageZoom = w => `<button type="button" class="text-button" data-action="zoom" data-work="${esc(w.id)}">Look closer ↗</button>`;
 const workIds = r => r.works.map(w => w.id);
@@ -178,7 +179,7 @@ function toggleKeep(id, purpose) {
 }
 function showArtwork(id, reveal = false) {
   const w = workById(id); if (!w) return;
-  document.getElementById('art-dialog-content').innerHTML = `${image(w)}${reveal ? `<h2>${esc(w.title)}</h2><p>${esc(w.artist)} · ${esc(w.date)}${reveal === 'artist' ? '' : ' · ' + esc(w.movement)}</p>${reveal === 'artist' ? '' : `<p>${esc(w.note)}</p>${keepButtons(w)}`}<p><a href="${esc(w.sourceUrl)}" target="_blank" rel="noopener noreferrer">${esc(w.museum)} ↗</a> · ${w.rightsUrl ? '<a href="' + esc(w.rightsUrl) + '" target="_blank" rel="noopener noreferrer">' + esc(w.rights) + ' ↗</a>' : esc(w.rights)}</p>` : `<p>Shown in full. The artist and context will be revealed later.</p><p>${esc(w.museum)} · ${esc(w.rights)}</p>`}`;
+  document.getElementById('art-dialog-content').innerHTML = `${image(w,"",{large:true})}${reveal ? `<h2>${esc(w.title)}</h2><p>${esc(w.artist)} · ${esc(w.date)}${reveal === 'artist' ? '' : ' · ' + esc(w.movement)}</p>${reveal === 'artist' ? '' : `<p>${esc(w.note)}</p>${keepButtons(w)}`}<p><a href="${esc(w.sourceUrl)}" target="_blank" rel="noopener noreferrer">${esc(w.museum)} ↗</a> · ${w.rightsUrl ? '<a href="' + esc(w.rightsUrl) + '" target="_blank" rel="noopener noreferrer">' + esc(w.rights) + ' ↗</a>' : esc(w.rights)}</p>` : `<p>Shown in full. The artist and context will be revealed later.</p><p>${esc(w.museum)} · ${esc(w.rights)}</p>`}`;
   document.getElementById('art-dialog').showModal();
 }
 function downloadFile(filename, text, type) {
@@ -236,7 +237,7 @@ document.getElementById('clear-study').addEventListener('click',()=>{deep.clear(
 try {
   const openingRequest=fetch('./opening-artworks.json').then(response=>response.ok?response.json():[]).catch(()=>[]);
   const response = await fetch('./artworks.json'); if (!response.ok) throw new Error('The collection did not load.'); works = await response.json();
-  if (!Array.isArray(works) || works.length < 12 || new Set(works.map(w => w.id)).size !== works.length || works.some(w => !w.image || !w.title || !w.artist || !w.features || !w.sourceUrl || !['CC0','Public domain'].includes(w.rights) || w.rights === 'Public domain' && !w.rightsUrl)) throw new Error('The artwork collection is incomplete.');
+  if (!Array.isArray(works) || works.length < 12 || new Set(works.map(w => w.id)).size !== works.length || works.some(w => !w.image || !w.title || !w.artist || !w.features || !w.sourceUrl || typeof w.rights !== 'string' || !w.rights.trim() || w.rights !== 'CC0' && !/^https:\/\//.test(w.rightsUrl||''))) throw new Error('The artwork collection is incomplete.');
   openingWorks=await openingRequest; if(!Array.isArray(openingWorks))openingWorks=[];
   restore(); lab.restore(); deep.restore(); render(); for (const w of works.filter(w => w.coreQuiz !== false)) { const preload = new Image(); preload.src = './' + w.image; }
 } catch (error) { app.innerHTML = `<section class="error-state"><h1>The collection could not open.</h1><p>${esc(error.message)} Reload to try again.</p><button class="primary-button" type="button" id="retry-load">Try again</button></section>`; document.getElementById('retry-load').addEventListener('click',() => location.reload()); }

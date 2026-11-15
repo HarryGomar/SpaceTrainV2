@@ -1,0 +1,836 @@
+{
+  "featureOrder": [
+    "abstraction",
+    "energy",
+    "complexity",
+    "humanity",
+    "narrative",
+    "atmosphere",
+    "color"
+  ],
+  "basis": "Manual provisional editorial annotations after visual inspection of the actual local reproduction. Visual energy is compositional activity; complexity is visible density; humanity is depicted human salience; narrative is depicted action; atmosphere is emphasis on depicted setting; color is colour intensity. These are not psychometric measurements or reported emotions.",
+  "excluded": {
+    "add-carrington-crow-soup": "The supplied402×306 reproduction is too small for this comparison collection.",
+    "add-orozco-prometheus": "The institution photograph includes substantial architecture outside the fresco; not an isolated painting stimulus.",
+    "add-albers-still-remembered": "Cached image token expired; the replacement Mart source expressly excludes publication without separate permission.",
+    "add-albers-sonorous": "Institution image token returned403; no verified replacement reproduction acquired in this pass.",
+    "add-rothko-number-five": "Institution image token returned403; no verified replacement reproduction acquired in this pass.",
+    "add-magritte-presence-mind": "Institution image token returned403; no verified replacement reproduction acquired in this pass.",
+    "add-ernst-forest": "Institution image token returned403; no verified replacement reproduction acquired in this pass.",
+    "add-hammershoi-easel-bredgade": "Cached image token expired; the Getty article image is cropped, so it is not substituted for the complete painting.",
+    "add-morandi-still-life-1935": "Institution image token returned403; no verified replacement reproduction acquired in this pass."
+  },
+  "works": {
+    "add-varo-harmony": {
+      "values": [
+        0.25,
+        0.35,
+        0.85,
+        0.65,
+        0.55,
+        0.9,
+        0.35
+      ],
+      "tier": "established",
+      "alt": "An elongated seated figure works at a musical stave in a room where walls open around other figures.",
+      "note": "A carefully built interior combines a desk, music, floating forms and figures emerging from the walls."
+    },
+    "add-varo-sympathy": {
+      "values": [
+        0.25,
+        0.6,
+        0.65,
+        0.85,
+        0.75,
+        0.7,
+        0.5
+      ],
+      "tier": "established",
+      "alt": "A seated person touches an orange cat on a red table as fine radiating lines cross the room.",
+      "note": "The connection between the hand, cat and room is drawn with a web of fine intersecting lines."
+    },
+    "add-varo-icon": {
+      "values": [
+        0.4,
+        0.3,
+        0.6,
+        0.2,
+        0.15,
+        0.45,
+        0.35
+      ],
+      "tier": "discovery",
+      "alt": "A pointed gold-edged panel shows a central doorway among moons, stars, hands and a plant-like form.",
+      "note": "This is the open state of one hinged work; its closed state is not counted as a second artwork."
+    },
+    "add-varo-weaving-space-time": {
+      "values": [
+        0.4,
+        0.5,
+        0.7,
+        0.65,
+        0.5,
+        0.8,
+        0.45
+      ],
+      "tier": "established",
+      "alt": "Two long-robed figures meet in a lit chamber surrounded by overlapping strands and dark weaving.",
+      "note": "A bright room and its figures appear enclosed within a much darker network of fine lines."
+    },
+    "add-gerzso-water-mansion": {
+      "values": [
+        0.98,
+        0.15,
+        0.35,
+        0,
+        0,
+        0.05,
+        0.2
+      ],
+      "tier": "established",
+      "alt": "Layered olive-green planes overlap horizontally, with dark narrow gaps and several angular notches.",
+      "note": "Muted flat surfaces and small recesses supply structure without depicting a literal setting."
+    },
+    "add-gerzso-yellow-green-blue": {
+      "values": [
+        1,
+        0.2,
+        0.35,
+        0,
+        0,
+        0,
+        0.65
+      ],
+      "tier": "established",
+      "alt": "A broad pale-blue rectangle overlaps yellow, green, red and smaller blue planes bounded by dark lines.",
+      "note": "Large geometric colour fields dominate this painting, with smaller blocks clustered near the edges."
+    },
+    "add-gerzso-landscape-red-ii": {
+      "values": [
+        1,
+        0.2,
+        0.3,
+        0,
+        0,
+        0,
+        0.6
+      ],
+      "tier": "discovery",
+      "alt": "Dark red vertical planes hover above a large pale-blue angular field with a small yellow square.",
+      "note": "The institution identifies this object as a print on paper. The title does not make it a depicted landscape."
+    },
+    "add-izquierdo-sorrowful-friday": {
+      "values": [
+        0.2,
+        0.2,
+        0.8,
+        0.75,
+        0.1,
+        0.25,
+        0.75
+      ],
+      "tier": "established",
+      "alt": "A solemn framed female face rises above fruit, flowers, candles, vessels and bright draped fabric.",
+      "note": "A frontal face is surrounded by a dense arrangement of devotional and domestic objects."
+    },
+    "add-izquierdo-idyll": {
+      "values": [
+        0.3,
+        0.35,
+        0.65,
+        0.35,
+        0.35,
+        0.9,
+        0.55
+      ],
+      "tier": "established",
+      "alt": "A small pale figure and a curved red object occupy a narrow landscape between tall bare trees.",
+      "note": "The tree-lined space places a small figure inside a much larger and visibly constructed landscape."
+    },
+    "add-izquierdo-living-still-life": {
+      "values": [
+        0.2,
+        0.15,
+        0.55,
+        0,
+        0.05,
+        0.65,
+        0.65
+      ],
+      "tier": "established",
+      "alt": "Fruit, cups and a dark bottle sit on a table opening onto reddish walls and a hilly landscape.",
+      "note": "A still-life foreground shares the painting with an outdoor setting beyond the table."
+    },
+    "add-tamayo-still-life-foot": {
+      "values": [
+        0.4,
+        0.15,
+        0.35,
+        0,
+        0.05,
+        0.1,
+        0.25
+      ],
+      "tier": "established",
+      "alt": "A large boot, playing cards, scissors and a small dark framed form sit against brown and grey planes.",
+      "note": "A few familiar objects are isolated and simplified; there is no depicted human figure."
+    },
+    "add-tamayo-woman-watermelon": {
+      "values": [
+        0.55,
+        0.35,
+        0.55,
+        0.9,
+        0.2,
+        0.1,
+        0.65
+      ],
+      "tier": "established",
+      "alt": "A dark seated female figure holds a bright pink slice of watermelon in a textured pink field.",
+      "note": "The figure and fruit are large, while the surrounding space offers few setting details."
+    },
+    "add-atl-popocatepetl": {
+      "values": [
+        0.1,
+        0.3,
+        0.65,
+        0,
+        0,
+        1,
+        0.6
+      ],
+      "tier": "established",
+      "alt": "Snowy volcanoes rise above dark trees and dry mountain slopes beneath a bright blue sky.",
+      "note": "The volcano and surrounding terrain carry the composition without any prominent human figure."
+    },
+    "add-atl-climatic-eruption": {
+      "values": [
+        0.2,
+        0.85,
+        0.75,
+        0,
+        0.15,
+        1,
+        0.6
+      ],
+      "tier": "established",
+      "alt": "Red lava and a high orange eruption illuminate a dark volcanic cone beneath blue and grey clouds.",
+      "note": "An active eruption offers a high-activity landscape comparison with the stiller volcano view."
+    },
+    "add-rivera-zapatista-landscape": {
+      "values": [
+        0.8,
+        0.45,
+        0.7,
+        0,
+        0.1,
+        0.4,
+        0.4
+      ],
+      "tier": "landmark",
+      "alt": "Overlapping angular forms suggest a sombrero, rifle and woven cloth against pale mountain-like planes.",
+      "note": "Rivera painted this Cubist work in Paris in 1915; it is not a Mexican outdoor scene recorded from life.",
+      "title": "Zapatista Landscape (The Guerrilla)"
+    },
+    "add-rivera-portrait-frida": {
+      "values": [
+        0.2,
+        0.1,
+        0.3,
+        1,
+        0,
+        0,
+        0.45
+      ],
+      "tier": "established",
+      "alt": "A frontal close portrait of Frida Kahlo fills a narrow field with yellow earrings and a dark shawl.",
+      "note": "A large face and few surrounding objects provide a figurative comparison with little depicted setting."
+    },
+    "add-rivera-flower-vendor": {
+      "values": [
+        0.35,
+        0.2,
+        0.5,
+        0.85,
+        0.4,
+        0.35,
+        0.7
+      ],
+      "tier": "established",
+      "alt": "A standing flower seller in pale green carries large orange blossoms; a smaller figure sits to the right.",
+      "note": "The source records charcoal and gouache on paper; large flowers and the standing figure dominate."
+    },
+    "add-orozco-buffoons": {
+      "values": [
+        0.5,
+        0.85,
+        0.7,
+        0.95,
+        0.55,
+        0.05,
+        0.05
+      ],
+      "tier": "established",
+      "alt": "A crowded group of gesturing, hat-wearing figures is built from loose black lines on a light ground.",
+      "note": "This nearly monochrome composition emphasizes grouped figures and vigorous marks rather than a setting."
+    },
+    "add-siqueiros-madre-nina": {
+      "values": [
+        0.35,
+        0.35,
+        0.6,
+        1,
+        0.3,
+        0.05,
+        0.05
+      ],
+      "tier": "established",
+      "alt": "A standing woman carries a child high on her back, both rendered in dense dark and pale marks.",
+      "note": "The source identifies artist and date but does not specify the medium; it remains unknown here."
+    },
+    "add-carrington-dagobert": {
+      "values": [
+        0.35,
+        0.6,
+        0.95,
+        0.7,
+        0.75,
+        0.95,
+        0.55
+      ],
+      "tier": "established",
+      "alt": "Many small robed figures, animals, fires and strange vessels occupy connected chambers and landscapes.",
+      "note": "The painting contains several simultaneous scenes instead of one isolated focal action."
+    },
+    "add-merida-time-space": {
+      "values": [
+        0.98,
+        0.45,
+        0.55,
+        0,
+        0,
+        0,
+        0.65
+      ],
+      "tier": "established",
+      "alt": "A tall arrangement of cream, red, black and yellow triangles, rectangles and divided circles interlocks.",
+      "note": "The source records lacquer on wood; geometric motifs form the whole image rather than an outdoor scene."
+    },
+    "add-merida-untitled-1950": {
+      "values": [
+        0.95,
+        0.5,
+        0.6,
+        0.1,
+        0,
+        0,
+        0.1
+      ],
+      "tier": "discovery",
+      "alt": "Repeated black and cream angular forms suggest a vertical dance on an irregular tan paper sheet.",
+      "note": "Ink and gouache are applied to amate paper; repeated forms are visually legible without assigning them a narrative."
+    },
+    "add-paalen-golden-fleece": {
+      "values": [
+        0.4,
+        0.15,
+        0.4,
+        0.35,
+        0.05,
+        0.35,
+        0.55
+      ],
+      "tier": "established",
+      "alt": "A large moth-like form rests above a pale head and patterned dark pedestal against a blue sky.",
+      "note": "Recognizable fragments are combined into a single impossible upright form."
+    },
+    "add-kahlo-girl-death-mask": {
+      "values": [
+        0.2,
+        0.15,
+        0.35,
+        0.9,
+        0.1,
+        0.45,
+        0.6
+      ],
+      "tier": "established",
+      "alt": "A small child in pink wears a skull mask and holds a flower beside a second mask on the ground.",
+      "note": "A single masked child is clearly separated from a sparse grassy ground and cloudy sky."
+    },
+    "add-kahlo-borderline": {
+      "values": [
+        0.25,
+        0.5,
+        0.9,
+        0.75,
+        0.3,
+        0.95,
+        0.5
+      ],
+      "tier": "landmark",
+      "alt": "Frida Kahlo in a pink dress stands between ancient Mexican forms and US factories, pipes and machines.",
+      "note": "The painted environment is divided between distinct groups of architecture, plants and industrial objects."
+    },
+    "add-mondrian-composition-1930": {
+      "values": [
+        1,
+        0.15,
+        0.2,
+        0,
+        0,
+        0,
+        0.85
+      ],
+      "tier": "landmark",
+      "alt": "A large red square and smaller white, blue and yellow rectangles are separated by thick black lines.",
+      "note": "This 1930 work is a different object from the 1927 Mondrian already in the collection."
+    },
+    "add-mondrian-composition-ten": {
+      "values": [
+        1,
+        0.4,
+        0.85,
+        0,
+        0,
+        0,
+        0
+      ],
+      "tier": "established",
+      "alt": "A dense oval field of small black horizontal and vertical strokes floats on a pale background.",
+      "note": "Its many short marks provide a dense monochrome alternative to Mondrian's broad colour blocks."
+    },
+    "add-mondrian-composition-colour-a": {
+      "values": [
+        1,
+        0.25,
+        0.5,
+        0,
+        0,
+        0,
+        0.6
+      ],
+      "tier": "established",
+      "alt": "Separated red, blue, ochre and black rectangles sit across a large white field.",
+      "note": "Small disconnected colour blocks leave much of the surface open."
+    },
+    "add-mondrian-tableau-one": {
+      "values": [
+        0.9,
+        0.4,
+        0.8,
+        0,
+        0,
+        0.1,
+        0.25
+      ],
+      "tier": "established",
+      "alt": "Many small grey, ochre and pale rectangles interlock within thin dark angular outlines.",
+      "note": "A crowded network of subdued planes supplies a comparison with the artist's later sparse geometry."
+    },
+    "add-kandinsky-composition-seven": {
+      "values": [
+        0.95,
+        0.95,
+        1,
+        0,
+        0.05,
+        0.1,
+        0.8
+      ],
+      "tier": "landmark",
+      "alt": "Sweeping curves, diagonals and irregular colour patches crowd almost the entire horizontal surface.",
+      "note": "A dense field of varied marks supplies activity without a clearly depicted scene or human figure."
+    },
+    "add-kandinsky-impression-concert": {
+      "values": [
+        0.8,
+        0.65,
+        0.45,
+        0.1,
+        0.1,
+        0.1,
+        0.85
+      ],
+      "tier": "established",
+      "alt": "A large black mass sits in a vivid yellow field with loose blue, red and pale forms nearby.",
+      "note": "The black shape and yellow field dominate; the title's concert reference is contextual information, not a visible preference score."
+    },
+    "add-kandinsky-rowing": {
+      "values": [
+        0.85,
+        0.8,
+        0.65,
+        0.1,
+        0.15,
+        0.15,
+        0.6
+      ],
+      "tier": "established",
+      "alt": "Thick black diagonals and curved lines cross loose yellow, blue, green and violet washes.",
+      "note": "The flowing marks and diagonals make a less densely packed counterpart to CompositionVII."
+    },
+    "add-kandinsky-circle-square": {
+      "values": [
+        1,
+        0.45,
+        0.65,
+        0,
+        0,
+        0,
+        0.45
+      ],
+      "tier": "established",
+      "alt": "Black patterned circles, triangles and curved forms occupy a muted pink horizontal field.",
+      "note": "The work uses bounded patterned forms rather than the loose overlapping marks of the earlier Kandinskys."
+    },
+    "add-kupka-cathedral": {
+      "values": [
+        0.95,
+        0.5,
+        0.8,
+        0,
+        0,
+        0.15,
+        0.7
+      ],
+      "tier": "established",
+      "alt": "Tall blue and black angular bands meet lower red and pale planes in a dense faceted arrangement.",
+      "note": "The architectural title can be explored as context; visible facets and colour are annotated separately."
+    },
+    "add-af-klint-dove-two": {
+      "values": [
+        1,
+        0.2,
+        0.3,
+        0,
+        0,
+        0,
+        0.55
+      ],
+      "tier": "established",
+      "alt": "Large pink, violet and pale circular shapes overlap within a tall field divided into red and dark areas.",
+      "note": "A few broad intersecting curves provide a sparse abstract comparison with more densely marked work."
+    },
+    "add-af-klint-untitled-1933": {
+      "values": [
+        0.4,
+        0.45,
+        0.5,
+        0.95,
+        0.05,
+        0.05,
+        0.25
+      ],
+      "tier": "discovery",
+      "alt": "A pale female head in profile appears against pink, red and grey rays and flowing marks.",
+      "note": "This source image is figurative despite its artist's association with abstraction; human presence is annotated accordingly."
+    },
+    "add-klee-wald-bau": {
+      "values": [
+        0.85,
+        0.55,
+        0.9,
+        0,
+        0,
+        0.2,
+        0.6
+      ],
+      "tier": "established",
+      "alt": "A dense patchwork of green, turquoise and orange angular shapes includes fine tree-like dark lines.",
+      "note": "Geometric patches and finer organic marks share a tightly filled surface."
+    },
+    "add-klee-flowering-tree": {
+      "values": [
+        0.95,
+        0.15,
+        0.5,
+        0,
+        0,
+        0,
+        0.4
+      ],
+      "tier": "established",
+      "alt": "Small coloured squares form a loose central cluster against a grid of larger dark green and brown squares.",
+      "note": "Colour changes within repeated small units provide a stiller geometric comparison."
+    },
+    "add-klee-rose-garden": {
+      "values": [
+        0.75,
+        0.4,
+        0.85,
+        0,
+        0,
+        0.35,
+        0.6
+      ],
+      "tier": "established",
+      "alt": "Red and purple geometric planes, small circular flowers and blocky buildings fill a compact space.",
+      "note": "The garden is stylized into repeated circles and interlocking planes with some recognizable building forms."
+    },
+    "add-albers-light-grey-wall": {
+      "values": [
+        1,
+        0.05,
+        0.2,
+        0,
+        0,
+        0,
+        0
+      ],
+      "tier": "established",
+      "alt": "Nested black, grey and white horizontal rectangles form a symmetrical open doorway-like pattern.",
+      "note": "Large repeated rectangular boundaries create structure with almost no hue variation."
+    },
+    "add-malevich-football-player": {
+      "values": [
+        1,
+        0.35,
+        0.25,
+        0,
+        0,
+        0,
+        0.7
+      ],
+      "tier": "landmark",
+      "alt": "A large tilted purple quadrilateral and smaller red, yellow, blue and black shapes sit on a white canvas.",
+      "note": "The title names a football player, but the composition does not visibly depict a human body.",
+      "caveats": [
+        "Institution reproduction includes the canvas edge, slight perspective and a narrow neutral surround."
+      ]
+    },
+    "add-delaunay-air-iron-water": {
+      "values": [
+        0.85,
+        0.7,
+        0.9,
+        0,
+        0.05,
+        0.2,
+        0.75
+      ],
+      "tier": "established",
+      "alt": "Overlapping bright circular forms and curved bands surround an angular tower-like central structure.",
+      "note": "Curved colour forms and a central architectural suggestion share a densely occupied surface."
+    },
+    "add-ernst-divinite": {
+      "values": [
+        0.5,
+        0.4,
+        0.8,
+        0.55,
+        0.15,
+        0.5,
+        0.35
+      ],
+      "tier": "established",
+      "alt": "A towering red-brown textured figure with a beaked head rises amid smaller dark rocky forms.",
+      "note": "A figure-like form emerges from textured marks; a precise identity or story is not assumed from appearance."
+    },
+    "add-rothko-orange-yellow": {
+      "values": [
+        1,
+        0.05,
+        0.1,
+        0,
+        0,
+        0,
+        0.95
+      ],
+      "tier": "landmark",
+      "alt": "A soft-edged yellow rectangle floats above a broad orange field within a warmer orange border.",
+      "note": "Two large colour areas occupy almost the whole surface without depicting objects or a setting."
+    },
+    "add-pollock-convergence": {
+      "values": [
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0.6
+      ],
+      "tier": "landmark",
+      "alt": "A dense web of black, white, yellow, red and blue drips and sweeping lines fills a wide surface.",
+      "note": "The image supplies dense visual activity without a depicted narrative or prominent human figure.",
+      "caveats": [
+        "Institution reproduction includes a thin visible frame."
+      ]
+    },
+    "add-thomas-etude-blue": {
+      "values": [
+        0.95,
+        0.8,
+        0.8,
+        0,
+        0,
+        0,
+        0.55
+      ],
+      "tier": "established",
+      "alt": "Thick blue and dark strokes interweave over a pale field with a few small warm-coloured marks.",
+      "note": "Broad overlapping painted marks provide another energetic abstraction with a more restricted palette."
+    },
+    "add-magritte-fanatiques": {
+      "values": [
+        0.2,
+        0.55,
+        0.45,
+        0,
+        0.3,
+        0.95,
+        0.4
+      ],
+      "tier": "established",
+      "alt": "A dark bird flies over a bright orange fire burning in a rocky landscape beneath a heavy grey sky.",
+      "note": "A clearly rendered landscape contains an unusual arrangement of bird and fire; ambiguity is not coded as abstractness."
+    },
+    "add-miro-composition-1933": {
+      "values": [
+        0.95,
+        0.65,
+        0.5,
+        0,
+        0,
+        0,
+        0.7
+      ],
+      "tier": "established",
+      "alt": "Large black, white and red curved forms float across blue, green and brown fields.",
+      "note": "A few broad, separated forms supply a less crowded comparison with Miró's Carnival of Harlequin.",
+      "caveats": [
+        "Institution reproduction includes a thin visible frame."
+      ]
+    },
+    "add-miro-harlequin-carnival": {
+      "values": [
+        0.7,
+        0.85,
+        1,
+        0.4,
+        0.6,
+        0.45,
+        0.6
+      ],
+      "tier": "landmark",
+      "alt": "Numerous small hybrid figures, instruments, curved lines and coloured shapes fill a pale pink interior.",
+      "note": "The image contains many simultaneous figure-like activities; the room remains partly visible behind them."
+    },
+    "add-de-chirico-engineer": {
+      "values": [
+        0.45,
+        0.35,
+        0.7,
+        0,
+        0,
+        0.8,
+        0.75
+      ],
+      "tier": "established",
+      "alt": "Boards, frames and a patterned upright object overlap within a sharply angled yellow and green interior.",
+      "note": "Recognizable constructed objects are juxtaposed in an enclosed, fractured space without a human figure."
+    },
+    "add-hammershoi-room-wife": {
+      "values": [
+        0.1,
+        0.05,
+        0.25,
+        0.3,
+        0.05,
+        1,
+        0.1
+      ],
+      "tier": "established",
+      "alt": "A small seated woman in dark clothing faces away in a pale grey room lit through a tall curtained window.",
+      "note": "A human figure remains small while walls, doors and window light occupy most of the composition."
+    },
+    "add-morandi-still-life-1948": {
+      "values": [
+        0.3,
+        0.05,
+        0.25,
+        0,
+        0,
+        0.05,
+        0.15
+      ],
+      "tier": "established",
+      "alt": "A small cluster of grey, brown and cream bottles, jars and vases stands on a plain pale ground.",
+      "note": "A few repeated everyday objects provide a sparse representational comparison with the geometric abstractions."
+    },
+    "add-watts-hope": {
+      "values": [
+        0.15,
+        0.1,
+        0.3,
+        0.95,
+        0.2,
+        0.25,
+        0.3
+      ],
+      "tier": "landmark",
+      "alt": "A blindfolded seated woman bends over a lyre while resting on a large globe against a muted blue field.",
+      "note": "This is Tate's 1886 version, attributed to George Frederic Watts and assistants, not the earlier version."
+    },
+    "add-krasner-icarus": {
+      "values": [
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0.85
+      ],
+      "tier": "established",
+      "alt": "Orange, pink, dark red and cream looping marks and irregular shapes overlap densely across a wide surface.",
+      "note": "The complete reproduction retains the painting's densely worked surface; no figure or story is assumed from its title."
+    },
+    "add-dali-transparent-simulacrum": {
+      "values": [
+        0.25,
+        0.1,
+        0.4,
+        0.15,
+        0.1,
+        1,
+        0.3
+      ],
+      "tier": "established",
+      "alt": "A pale cloth-like form floats before an empty yellow plain, distant rocks and a dark cliff with a face at its edge.",
+      "note": "Smoothly rendered objects can also be read as landscape forms; the image does not prescribe one interpretation."
+    },
+    "add-herrera-cobalt-white": {
+      "values": [
+        1,
+        0.05,
+        0.1,
+        0,
+        0,
+        0,
+        0.8
+      ],
+      "tier": "established",
+      "alt": "Two tall cobalt-blue planes are divided by a tapering white wedge with narrow white strips at the edges.",
+      "note": "A very small number of sharply bounded forms gives a vivid but sparse abstract comparison."
+    },
+    "add-newman-prometheus-bound": {
+      "values": [
+        1,
+        0.05,
+        0.1,
+        0,
+        0,
+        0,
+        0.05
+      ],
+      "tier": "established",
+      "alt": "A tall near-black painted field has subtle dark tonal variations and a narrow rough white band along the bottom.",
+      "note": "A nearly monochrome surface supplies a low-density abstract comparison. The primary reproduction is limited to 400×1056 pixels.",
+      "caveats": [
+        "Primary institution source is400×1056 pixels; no artificial enlargement was applied."
+      ]
+    }
+  }
+}

@@ -1,0 +1,1345 @@
+{
+  "revision": "visible-action-setting-review-v1",
+  "reviewedAt": "2026-11-15T15:53:31.692Z",
+  "scope": "Manual editorial review of the actual original99 small reproductions. Only narrative and atmosphere keys reviewed; no catalogue or saved record edits.",
+  "axes": {
+    "narrative": {
+      "label": "Depicted action",
+      "definition": "Visible activity of figures or animals and clearly depicted physical events such as breaking waves or fire. Not a story inferred from the title, symbolism, emotional tension, or energetic brushwork alone.",
+      "anchors": {
+        "0": "No visible action; abstraction, still life, a static portrait or an inactive body.",
+        "0.3": "Quiet visible activity or restrained gestures.",
+        "0.5": "Clear bodily movement, handling or a substantial physical event.",
+        "0.9": "Prominent mid-action conflict, vigorous movement or collective activity."
+      }
+    },
+    "atmosphere": {
+      "label": "Emphasis on setting",
+      "definition": "How strongly a represented place and its surroundings occupy and organise the composition. Not emotional mood, lighting drama alone, decorative pattern or an unspecified plain background.",
+      "anchors": {
+        "0": "No represented place or a plain ground.",
+        "0.25": "Sparse furniture, ground or other limited environmental cues.",
+        "0.5": "A substantial but shared or partial interior/landscape.",
+        "0.9": "The surrounding landscape, architecture or spatial environment dominates."
+      }
+    }
+  },
+  "method": {
+    "kind": "Manual provisional editorial annotation",
+    "imageSet": "Original small work.image files, not replacement high-resolution photographs.",
+    "contactSheets": [
+      "qa-output/study-media/descriptor-sheet-01.jpg",
+      "qa-output/study-media/descriptor-sheet-02.jpg",
+      "qa-output/study-media/descriptor-sheet-03.jpg",
+      "qa-output/study-media/descriptor-sheet-04.jpg",
+      "qa-output/study-media/descriptor-sheet-05.jpg",
+      "qa-output/study-media/descriptor-sheet-06.jpg",
+      "qa-output/study-media/descriptor-sheet-07.jpg",
+      "qa-output/study-media/descriptor-sheet-08.jpg",
+      "qa-output/study-media/descriptor-sheet-09.jpg",
+      "qa-output/study-media/descriptor-sheet-10.jpg",
+      "qa-output/study-media/descriptor-sheet-11.jpg"
+    ],
+    "all99Inspected": true,
+    "resolution": "0.05 increments are editorial ordering aids, not measured precision.",
+    "uncertainty": "Borderline still-life architecture, schematic icon grounds and stylised natural motion admit different readings. These scores are not experimental ground truth.",
+    "distribution": "No balancing, percentile fitting, or adjustment to force a preferred coordinate distribution."
+  },
+  "frozenRecordPolicy": "Apply only to the current new catalogue. Previously captured work/features remain source-frozen; do not rewrite historical answers, saved annotations or captured question snapshots.",
+  "entries": {
+    "monet-water-lilies": {
+      "narrative": 0,
+      "atmosphere": 1,
+      "reason": "Water, lilies and reflections fill the picture; no distinct action is depicted.",
+      "oldValues": {
+        "narrative": 0.1,
+        "atmosphere": 0.95
+      },
+      "image": "assets/art/monet-water-lilies.jpg",
+      "sourceUrl": "https://clevelandart.org/art/1960.81",
+      "reviewedImageSha256": "4c20ffad9fe2dadf335e825bce3d0983d9b65193fb23097dce659d4505fd8c2b",
+      "reviewStatus": "changed"
+    },
+    "morisot-reading": {
+      "narrative": 0.25,
+      "atmosphere": 0.75,
+      "reason": "A seated reader performs a quiet activity within an extensive grassy outdoor setting.",
+      "oldValues": {
+        "narrative": 0.65,
+        "atmosphere": 0.7
+      },
+      "image": "assets/art/morisot-reading.jpg",
+      "sourceUrl": "https://clevelandart.org/art/1950.89",
+      "reviewedImageSha256": "e44e765ffa5354edebe3d8518494bd4780f0fc69c0bf360faca7be2bc4a6acd5",
+      "reviewStatus": "changed"
+    },
+    "cassatt-omnibus": {
+      "narrative": 0.15,
+      "atmosphere": 0.5,
+      "reason": "Seated adults hold children with little bodily movement; the bench and windows establish a vehicle interior.",
+      "oldValues": {
+        "narrative": 0.8,
+        "atmosphere": 0.45
+      },
+      "image": "assets/art/cassatt-omnibus.jpg",
+      "sourceUrl": "https://clevelandart.org/art/1941.71",
+      "reviewedImageSha256": "d06a154db82c5754b416190a8d2c919987277dd763c1978e5793b0fbcd7960c3",
+      "reviewStatus": "changed"
+    },
+    "mondrian-composition": {
+      "narrative": 0,
+      "atmosphere": 0,
+      "reason": "Geometric colour fields contain neither depicted action nor a represented place.",
+      "oldValues": {
+        "narrative": 0,
+        "atmosphere": 0.1
+      },
+      "image": "assets/art/mondrian-composition.jpg",
+      "sourceUrl": "https://clevelandart.org/art/1967.215",
+      "reviewedImageSha256": "79f82c7e28afc064bd19199dd6883d90d3bb42af26cd61517b6cd28e27dbe58e",
+      "reviewStatus": "changed"
+    },
+    "klee-tightrope": {
+      "narrative": 0.6,
+      "atmosphere": 0.15,
+      "reason": "A schematic performer balances on a rope; lines suggest apparatus rather than a developed surrounding place.",
+      "oldValues": {
+        "narrative": 0.55,
+        "atmosphere": 0.3
+      },
+      "image": "assets/art/klee-tightrope.jpg",
+      "sourceUrl": "https://clevelandart.org/art/1961.154",
+      "reviewedImageSha256": "62339d92ff73f4495a38ce196bef709bc782ef6f577747347787219730bedd65",
+      "reviewStatus": "changed"
+    },
+    "hokusai-mount-fuji": {
+      "narrative": 0,
+      "atmosphere": 0.95,
+      "reason": "Mountain, sky and wooded slopes dominate; there is no visible acting figure or distinct event.",
+      "oldValues": {
+        "narrative": 0.1,
+        "atmosphere": 0.8
+      },
+      "image": "assets/art/hokusai-mount-fuji.jpg",
+      "sourceUrl": "https://clevelandart.org/art/1930.189",
+      "reviewedImageSha256": "b0f546cc1972fb8e7ef84d21eb7d30805de189297a22a248b1ecaf11c5b5468d",
+      "reviewStatus": "changed"
+    },
+    "hiroshige-sudden-shower": {
+      "narrative": 0.55,
+      "atmosphere": 0.85,
+      "reason": "People cross the bridge beneath visible rain; river, bridge and distant bank form a substantial setting.",
+      "oldValues": {
+        "narrative": 0.65,
+        "atmosphere": 0.85
+      },
+      "image": "assets/art/hiroshige-sudden-shower.jpg",
+      "sourceUrl": "https://clevelandart.org/art/1921.318",
+      "reviewedImageSha256": "cade35ac7118eb78787b5b639d82f6087c1658ab1bfbfbd3af0654799ba38018",
+      "reviewStatus": "changed"
+    },
+    "rousseau-tiger-buffalo": {
+      "narrative": 0.95,
+      "atmosphere": 0.75,
+      "reason": "Animals grapple at the centre of a densely depicted jungle.",
+      "oldValues": {
+        "narrative": 0.8,
+        "atmosphere": 0.65
+      },
+      "image": "assets/art/rousseau-tiger-buffalo.jpg",
+      "sourceUrl": "https://clevelandart.org/art/1949.186",
+      "reviewedImageSha256": "49cd400d1e05f65756e3652b47f395c1c76bdaeeecc371dc768102b3d364922a",
+      "reviewStatus": "changed"
+    },
+    "redon-violette": {
+      "narrative": 0,
+      "atmosphere": 0.15,
+      "reason": "The sitter is still; surrounding flowers form a decorative field rather than a coherent room or landscape.",
+      "oldValues": {
+        "narrative": 0.45,
+        "atmosphere": 1
+      },
+      "image": "assets/art/redon-violette.jpg",
+      "sourceUrl": "https://clevelandart.org/art/1926.1976",
+      "reviewedImageSha256": "7e2b68c6e300184b24215ca1fb7cb646c87948cf4f257cdd19231e350c4c8e82",
+      "reviewStatus": "changed"
+    },
+    "shen-clouds": {
+      "narrative": 0.05,
+      "atmosphere": 1,
+      "reason": "Buildings, trees, slopes and mist dominate; any small figures contribute little observable action.",
+      "oldValues": {
+        "narrative": 0.2,
+        "atmosphere": 1
+      },
+      "image": "assets/art/shen-clouds.jpg",
+      "sourceUrl": "https://clevelandart.org/art/1964.371.9",
+      "reviewedImageSha256": "31bd9398f79d44b1ad9c5add785aa692f8055a4a949aa4cfb9c9229655ef1393",
+      "reviewStatus": "changed"
+    },
+    "onchi-mother-child": {
+      "narrative": 0.15,
+      "atmosphere": 0,
+      "reason": "The enclosing figures form a quiet embrace without a represented surrounding place.",
+      "oldValues": {
+        "narrative": 0.65,
+        "atmosphere": 0.7
+      },
+      "image": "assets/art/onchi-mother-child.jpg",
+      "sourceUrl": "https://clevelandart.org/art/1959.240",
+      "reviewedImageSha256": "c9056f9444393304f03b9c7df7ac0a5399555bf697d7fc2b692f96d92a4ef4a1",
+      "reviewStatus": "changed"
+    },
+    "bonheur-horses": {
+      "narrative": 0.8,
+      "atmosphere": 0.55,
+      "reason": "Prancing horses and riders move across an outdoor ground with buildings and sky behind them.",
+      "oldValues": {
+        "narrative": 0.6,
+        "atmosphere": 0.45
+      },
+      "image": "assets/art/bonheur-horses.jpg",
+      "sourceUrl": "https://clevelandart.org/art/2008.410",
+      "reviewedImageSha256": "87d34275b0e61af5537f367359f3e9046f23380cb768f74b0e9228c383c3c55e",
+      "reviewStatus": "changed"
+    },
+    "cezanne-mountain": {
+      "narrative": 0,
+      "atmosphere": 0.95,
+      "reason": "Mountain, trees and terrain occupy the scene; active paint marks are not literal depicted action.",
+      "oldValues": {
+        "narrative": 0.15,
+        "atmosphere": 0.6
+      },
+      "image": "assets/art/cezanne-mountain.jpg",
+      "sourceUrl": "https://clevelandart.org/art/1958.21",
+      "reviewedImageSha256": "b8508d3dafd5c7e5abbf7acd8223654326918d5b6941f560d575d9c762d0fda0",
+      "reviewStatus": "changed"
+    },
+    "tanner-waters": {
+      "narrative": 0.55,
+      "atmosphere": 0.65,
+      "reason": "Figures lean and stand around a boat amid visibly moving water; the maritime surroundings remain substantial.",
+      "oldValues": {
+        "narrative": 0.75,
+        "atmosphere": 0.9
+      },
+      "image": "assets/art/tanner-waters.jpg",
+      "sourceUrl": "https://clevelandart.org/art/2007.286",
+      "reviewedImageSha256": "1f721c89f14e18066e839260c1a4da9b4613a39d1a5cd6bd9ece1d98619bcab7",
+      "reviewStatus": "changed"
+    },
+    "monet-spring-flowers": {
+      "narrative": 0,
+      "atmosphere": 0.1,
+      "reason": "Arranged flowers and vessels are static objects against a dark ground, with little wider environment.",
+      "oldValues": {
+        "narrative": 0.05,
+        "atmosphere": 0.5
+      },
+      "image": "assets/art/monet-spring-flowers.jpg",
+      "sourceUrl": "https://clevelandart.org/art/1953.155",
+      "reviewedImageSha256": "fb9731f06fc21ac92e932b66e5369c7651cce4e80da5fe65bda2fccd455e20d7",
+      "reviewStatus": "changed"
+    },
+    "klee-carnival": {
+      "narrative": 0,
+      "atmosphere": 0,
+      "reason": "Abstract shapes and figure-like motifs do not establish a literal action or a coherent physical setting.",
+      "oldValues": {
+        "narrative": 0.5,
+        "atmosphere": 0.4
+      },
+      "image": "assets/art/klee-carnival.jpg",
+      "sourceUrl": "https://clevelandart.org/art/1969.46",
+      "reviewedImageSha256": "a21ac018b2e5e43fc0f2c866f777d2bcb235e852bb77caddeaa7d540190963d6",
+      "reviewStatus": "changed"
+    },
+    "velasco-valley-mexico": {
+      "narrative": 0.05,
+      "atmosphere": 1,
+      "reason": "The valley, water, distant peaks and sky dominate; small foreground details supply little visible action.",
+      "oldValues": {
+        "narrative": 0.25,
+        "atmosphere": 0.95
+      },
+      "image": "assets/art/velasco-valley-mexico.jpg",
+      "sourceUrl": "https://www.munal.gob.mx/munal/exposicion-velasco.html",
+      "reviewedImageSha256": "a309aae69806aa1dfb6fb00e2df38946638a11fef6e7d08a2146127f24e1e534",
+      "reviewStatus": "changed"
+    },
+    "herran-la-ofrenda": {
+      "narrative": 0.55,
+      "atmosphere": 0.6,
+      "reason": "Standing and seated figures handle the boat and its load; water and shore remain visible around them.",
+      "oldValues": {
+        "narrative": 1,
+        "atmosphere": 0.7
+      },
+      "image": "assets/art/herran-la-ofrenda.jpg",
+      "sourceUrl": "https://www.munal.gob.mx/munal/acervo.html",
+      "reviewedImageSha256": "f4abba5a9ce7681934ae4e8533f440967abdd8f623e25fc9ee2b27f78d2f842a",
+      "reviewStatus": "changed"
+    },
+    "almeida-junior-saudade": {
+      "narrative": 0.2,
+      "atmosphere": 0.45,
+      "reason": "A standing woman holds a letter quietly; window, floor and furniture provide a limited but recognisable interior.",
+      "oldValues": {
+        "narrative": 0.75,
+        "atmosphere": 0.75
+      },
+      "image": "assets/art/almeida-junior-saudade.jpg",
+      "sourceUrl": "https://pinacoteca.org.br/programacao/exposicoes/caipiras-das-derrubadas-a-saudade/",
+      "reviewedImageSha256": "4f10cc2513c3b32adab6dc2a285ad3459b059e57e20419f0fda2b1f644522c6b",
+      "reviewStatus": "changed"
+    },
+    "figari-candombe-moon": {
+      "narrative": 0.75,
+      "atmosphere": 0.6,
+      "reason": "Dancers and musicians visibly perform in a courtyard defined by surrounding walls and buildings.",
+      "oldValues": {
+        "narrative": 0.9,
+        "atmosphere": 0.7
+      },
+      "image": "assets/art/figari-candombe-moon.jpg",
+      "sourceUrl": "https://artsandculture.google.com/asset/candombe-o-candombe-bajo-la-luna/VgEVQPchqYWZfQ?hl=es-419",
+      "reviewedImageSha256": "fc173d806e4755dd4d4b44aa7bad64c1a6c9726b6983442cd73574f2dde2d1eb",
+      "reviewStatus": "changed"
+    },
+    "teotihuacan-mural": {
+      "narrative": 0.3,
+      "atmosphere": 0.05,
+      "reason": "Repeated stylised figures gesture across a flat patterned field; little spatial environment is represented.",
+      "oldValues": {
+        "narrative": 0.7,
+        "atmosphere": 0.3
+      },
+      "image": "assets/art/teotihuacan-mural.jpg",
+      "sourceUrl": "https://clevelandart.org/art/1963.252",
+      "reviewedImageSha256": "39ed90d1b2c67c79d51e2ce691a2fa67cc1cfa0a334b4060278549a33904527f",
+      "reviewStatus": "changed"
+    },
+    "ethiopian-apostles": {
+      "narrative": 0.1,
+      "atmosphere": 0.05,
+      "reason": "Frontal standing figures hold objects and make restrained gestures against largely flat icon grounds.",
+      "oldValues": {
+        "narrative": 0.8,
+        "atmosphere": 0.5
+      },
+      "image": "assets/art/ethiopian-apostles.jpg",
+      "sourceUrl": "https://clevelandart.org/art/2023.4",
+      "reviewedImageSha256": "5e176b4739eb5c1ed5dcec33633bd5a959ddd1a9d9222b9c87e8cffda39a5c59",
+      "reviewStatus": "changed"
+    },
+    "bengal-todi-ragini": {
+      "narrative": 0.4,
+      "atmosphere": 0.8,
+      "reason": "The woman handles an instrument beside moving deer within an extensive garden and wooded landscape.",
+      "oldValues": {
+        "narrative": 0.65,
+        "atmosphere": 0.7
+      },
+      "image": "assets/art/bengal-todi-ragini.jpg",
+      "sourceUrl": "https://clevelandart.org/art/2013.340",
+      "reviewedImageSha256": "6e73df9d2c9b661942b79ef3beb6c920a4683960951506624510fe999ea66dbe",
+      "reviewStatus": "changed"
+    },
+    "chitarman-tiered-court": {
+      "narrative": 0.35,
+      "atmosphere": 0.85,
+      "reason": "Small groups gesture and attend to one another while elaborate layered architecture occupies much of the image.",
+      "oldValues": {
+        "narrative": 1,
+        "atmosphere": 0.5
+      },
+      "image": "assets/art/chitarman-tiered-court.jpg",
+      "sourceUrl": "https://clevelandart.org/art/1973.237",
+      "reviewedImageSha256": "1e91d72a476907f97771158888a6106b234d31699fab6438f23be15f6481382e",
+      "reviewStatus": "changed"
+    },
+    "joseon-seven-jeweled-mountain": {
+      "narrative": 0,
+      "atmosphere": 1,
+      "reason": "Mountain formations and the broad landscape are the subject; no substantial action is visible.",
+      "oldValues": {
+        "narrative": 0.15,
+        "atmosphere": 0.9
+      },
+      "image": "assets/art/joseon-seven-jeweled-mountain.jpg",
+      "sourceUrl": "https://clevelandart.org/art/1989.6",
+      "reviewedImageSha256": "4d2fd857b8abadc06305d7af780807b3a288cc1d45f33d401784b42bce67f19e",
+      "reviewStatus": "changed"
+    },
+    "hua-yan-children-garden": {
+      "narrative": 0.55,
+      "atmosphere": 0.7,
+      "reason": "Several small children play around rocks and plants in a clearly depicted garden.",
+      "oldValues": {
+        "narrative": 0.65,
+        "atmosphere": 0.75
+      },
+      "image": "assets/art/hua-yan-children-garden.jpg",
+      "sourceUrl": "https://clevelandart.org/art/1982.68.9",
+      "reviewedImageSha256": "c73d1bf4b1328c22f4748ec9e4c14e1b9dc7b06dab9a427d2740e7d4228a3c1f",
+      "reviewStatus": "changed"
+    },
+    "nepal-chakrasamvara-mandala": {
+      "narrative": 0.05,
+      "atmosphere": 0.05,
+      "reason": "Symmetrically arranged deities and ritual poses form a diagram, not an unfolding event in a spatial environment.",
+      "oldValues": {
+        "narrative": 0.3,
+        "atmosphere": 0.45
+      },
+      "image": "assets/art/nepal-chakrasamvara-mandala.jpg",
+      "sourceUrl": "https://clevelandart.org/art/1960.211",
+      "reviewedImageSha256": "6e6e31be5cff443648dbfa8ca54da57000ca91f633d54dcbd7e989d14de9be84",
+      "reviewStatus": "changed"
+    },
+    "royal-lovers-rain": {
+      "narrative": 0.35,
+      "atmosphere": 0.85,
+      "reason": "Figures gesture on balconies and below; the pavilion, landscape and storm clouds strongly establish the surroundings.",
+      "oldValues": {
+        "narrative": 0.65,
+        "atmosphere": 0.85
+      },
+      "image": "assets/collection-royal-lovers-rain.jpg",
+      "sourceUrl": "https://clevelandart.org/art/1973.104",
+      "reviewedImageSha256": "bcc18227d35663bcd39f5dc7671b60ec69e84ca2be77a2ed5b157ed60ab2ef76",
+      "reviewStatus": "changed"
+    },
+    "lovelorn-heroine": {
+      "narrative": 0.2,
+      "atmosphere": 0.65,
+      "reason": "Standing and seated women make quiet gestures within a garden and architectural enclosure.",
+      "oldValues": {
+        "narrative": 0.7,
+        "atmosphere": 0.6
+      },
+      "image": "assets/collection-lovelorn-heroine.jpg",
+      "sourceUrl": "https://clevelandart.org/art/1971.86",
+      "reviewedImageSha256": "65bfb12d97d586078c05e6a8eee0479c1f8aeed8d65e43de4c9a4bc372b1bfbf",
+      "reviewStatus": "changed"
+    },
+    "african-lyre-player": {
+      "narrative": 0.4,
+      "atmosphere": 0.15,
+      "reason": "The figure handles a stringed instrument in an active pose; sparse flowers on a plain ground provide little setting.",
+      "oldValues": {
+        "narrative": 0.6,
+        "atmosphere": 0.3
+      },
+      "image": "assets/collection-african-lyre-player.jpg",
+      "sourceUrl": "https://clevelandart.org/art/2013.289.a",
+      "reviewedImageSha256": "91359d85d22f3bfda463765a8d5b109593f2671c3a39a243b3a24961aa25954d",
+      "reviewStatus": "changed"
+    },
+    "japanese-waves": {
+      "narrative": 0.25,
+      "atmosphere": 0.4,
+      "reason": "Curling wave forms suggest water movement, but the fan-shaped fragment provides only a limited surrounding place.",
+      "oldValues": {
+        "narrative": 0.15,
+        "atmosphere": 0.95
+      },
+      "image": "assets/collection-japanese-waves.jpg",
+      "sourceUrl": "https://clevelandart.org/art/1999.90",
+      "reviewedImageSha256": "bf1fd2f638e9913a8b74fa75008368fa09600d4d9a1b8fdaa5cbb42611ef4e80",
+      "reviewStatus": "changed"
+    },
+    "farmer-autumn": {
+      "narrative": 0.2,
+      "atmosphere": 0.95,
+      "reason": "A small walking figure is subordinate to an extensive mountainous and wooded landscape.",
+      "oldValues": {
+        "narrative": 0.6,
+        "atmosphere": 0.95
+      },
+      "image": "assets/collection-farmer-autumn.jpg",
+      "sourceUrl": "https://clevelandart.org/art/1970.77",
+      "reviewedImageSha256": "8756ce5a9ea41bc56bf2e4241ab1c2d6780b18f618c8aa134f9892bf2d9207b8",
+      "reviewStatus": "changed"
+    },
+    "calligraphy-party": {
+      "narrative": 0.65,
+      "atmosphere": 0.5,
+      "reason": "Numerous figures handle materials and gesture around a crowded gathering; floor and screens provide partial interior context.",
+      "oldValues": {
+        "narrative": 0.85,
+        "atmosphere": 0.55
+      },
+      "image": "assets/collection-calligraphy-party.jpg",
+      "sourceUrl": "https://clevelandart.org/art/1983.88",
+      "reviewedImageSha256": "553e0f670cbe0078f084d8d88986a8b34db49c7da0ccafa297ac07c95ed72fca",
+      "reviewStatus": "changed"
+    },
+    "cottages-misty-grove": {
+      "narrative": 0.05,
+      "atmosphere": 1,
+      "reason": "Cottages, trees, shore and mist dominate a largely still landscape.",
+      "oldValues": {
+        "narrative": 0.2,
+        "atmosphere": 1
+      },
+      "image": "assets/collection-cottages-misty-grove.jpg",
+      "sourceUrl": "https://clevelandart.org/art/1963.588",
+      "reviewedImageSha256": "dcfe8617696ae9fce80b388c10a8ec586b4e218f27ec48255d257a9d01fbba94",
+      "reviewStatus": "changed"
+    },
+    "birds-spring-willow": {
+      "narrative": 0.45,
+      "atmosphere": 0.8,
+      "reason": "Some birds fly while others perch within a broad depiction of trees, flowers and outdoor ground.",
+      "oldValues": {
+        "narrative": 0.4,
+        "atmosphere": 0.85
+      },
+      "image": "assets/collection-birds-spring-willow.jpg",
+      "sourceUrl": "https://clevelandart.org/art/1974.31",
+      "reviewedImageSha256": "006790f64c7ff2f6a77341e175fadb94287285ac9e382dae25e07ea025083460",
+      "reviewStatus": "changed"
+    },
+    "clouds-waves-wu-gorge": {
+      "narrative": 0.2,
+      "atmosphere": 1,
+      "reason": "Swirling water supplies modest visible natural movement within a scene dominated by gorge, trees and clouds.",
+      "oldValues": {
+        "narrative": 0.1,
+        "atmosphere": 1
+      },
+      "image": "assets/collection-clouds-waves-wu-gorge.jpg",
+      "sourceUrl": "https://clevelandart.org/art/1968.213",
+      "reviewedImageSha256": "2e163b1efa749f5f01de807fc1bafbd2c5303e38484f886dde1d3509561a0244",
+      "reviewStatus": "changed"
+    },
+    "tiger-family": {
+      "narrative": 0.35,
+      "atmosphere": 0.6,
+      "reason": "Tigers turn and interact with cubs without a full attack; rocks and a tree provide substantial outdoor context.",
+      "oldValues": {
+        "narrative": 0.65,
+        "atmosphere": 0.7
+      },
+      "image": "assets/collection-tiger-family.jpg",
+      "sourceUrl": "https://clevelandart.org/art/1997.148",
+      "reviewedImageSha256": "c94971d43b4b59297684ad571a12ea4ba26593c008d98d9a7d9a771d6d217602",
+      "reviewStatus": "changed"
+    },
+    "bamboos-wind": {
+      "narrative": 0,
+      "atmosphere": 0.15,
+      "reason": "Isolated bamboo stems on mostly blank grounds do not establish a clear event or a developed surrounding place.",
+      "oldValues": {
+        "narrative": 0,
+        "atmosphere": 0.65
+      },
+      "image": "assets/collection-bamboos-wind.jpg",
+      "sourceUrl": "https://clevelandart.org/art/2022.91",
+      "reviewedImageSha256": "e31f27d14d0552983dd0f0d48c46179f0444d59f676b7676da23a1d0704a1ae9",
+      "reviewStatus": "changed"
+    },
+    "green-tara": {
+      "narrative": 0.1,
+      "atmosphere": 0.4,
+      "reason": "The central seated deity is still; throne, canopy and architectural ornament provide partial setting.",
+      "oldValues": {
+        "narrative": 0.55,
+        "atmosphere": 0.45
+      },
+      "image": "assets/collection-green-tara.jpg",
+      "sourceUrl": "https://clevelandart.org/art/1970.156",
+      "reviewedImageSha256": "b8ad1640600e0aef17abf67c1a12250266cd96df416a64335f9d511c5fa894a1",
+      "reviewStatus": "changed"
+    },
+    "egypt-young-girl": {
+      "narrative": 0,
+      "atmosphere": 0,
+      "reason": "A static frontal portrait appears against an unelaborated background.",
+      "oldValues": {
+        "narrative": 0.15,
+        "atmosphere": 0.1
+      },
+      "image": "assets/collection-egypt-young-girl.jpg",
+      "sourceUrl": "https://clevelandart.org/art/1971.137",
+      "reviewedImageSha256": "b9b23f8cbc1703a2552f2b3b2e1163d1fa45537af9000fd5b313e5b98c6d7898",
+      "reviewStatus": "changed"
+    },
+    "egypt-man-portrait": {
+      "narrative": 0,
+      "atmosphere": 0,
+      "reason": "A static head appears against a plain, fragmentary ground without a depicted environment.",
+      "oldValues": {
+        "narrative": 0.1,
+        "atmosphere": 0.1
+      },
+      "image": "assets/collection-egypt-man-portrait.jpg",
+      "sourceUrl": "https://clevelandart.org/art/1971.135",
+      "reviewedImageSha256": "0c23d1d84b1406c9d40a5a97cb8b58d889a1a60f426ce12528ef9b00c7731e00",
+      "reviewStatus": "changed"
+    },
+    "still-life-sweets": {
+      "narrative": 0,
+      "atmosphere": 0.15,
+      "reason": "Food, vessels and boxes rest on a tabletop; the wider room is absent.",
+      "oldValues": {
+        "narrative": 0.05,
+        "atmosphere": 0.2
+      },
+      "image": "assets/collection-still-life-sweets.jpg",
+      "sourceUrl": "https://clevelandart.org/art/1980.6",
+      "reviewedImageSha256": "e3ad435f7c1b87ec0ca7a5767fcae05a0a66f2e1ca292217c90b92920753df4d",
+      "reviewStatus": "changed"
+    },
+    "piazza-san-marco": {
+      "narrative": 0.25,
+      "atmosphere": 0.95,
+      "reason": "Small pedestrians move through a square whose architecture and open ground dominate the composition.",
+      "oldValues": {
+        "narrative": 0.65,
+        "atmosphere": 0.95
+      },
+      "image": "assets/collection-piazza-san-marco.jpg",
+      "sourceUrl": "https://clevelandart.org/art/1962.169",
+      "reviewedImageSha256": "2f2a02f5ab82ffee49b9bee0e69843d3746eddd230e0c37c58986a93dfc7e7b7",
+      "reviewStatus": "changed"
+    },
+    "turner-burning-parliament": {
+      "narrative": 0.65,
+      "atmosphere": 0.95,
+      "reason": "Visible fire, smoke and boats establish an active physical event within an extensive riverside setting.",
+      "oldValues": {
+        "narrative": 0.85,
+        "atmosphere": 1
+      },
+      "image": "assets/collection-turner-burning-parliament.jpg",
+      "sourceUrl": "https://clevelandart.org/art/1942.647",
+      "reviewedImageSha256": "b6c4edc0e515208c1e353863544647da76478212bcc1eaf1831acb5280728f00",
+      "reviewStatus": "changed"
+    },
+    "blanchard-still-life": {
+      "narrative": 0,
+      "atmosphere": 0.1,
+      "reason": "Geometrically treated objects are arranged without an acting figure or a developed surrounding place.",
+      "oldValues": {
+        "narrative": 0.05,
+        "atmosphere": 0.15
+      },
+      "image": "assets/collection-blanchard-still-life.jpg",
+      "sourceUrl": "https://clevelandart.org/art/2026.37",
+      "reviewedImageSha256": "6068ee295ad619357929200f1a586a45089d1f3c2097d190d09222fb08ebaa01",
+      "reviewStatus": "changed"
+    },
+    "van-gogh-plane-trees": {
+      "narrative": 0.25,
+      "atmosphere": 0.9,
+      "reason": "Small walking figures appear within an avenue dominated by trees, buildings and the path.",
+      "oldValues": {
+        "narrative": 0.35,
+        "atmosphere": 0.9
+      },
+      "image": "assets/collection-van-gogh-plane-trees.jpg",
+      "sourceUrl": "https://clevelandart.org/art/1947.209",
+      "reviewedImageSha256": "3a9337e095805241fb86be7c6eb9235d69a062d541719f5a74143995e0214042",
+      "reviewStatus": "changed"
+    },
+    "gauguin-call": {
+      "narrative": 0.2,
+      "atmosphere": 0.75,
+      "reason": "Figures mostly stand or sit, with a restrained arm gesture; trees and coloured outdoor ground occupy substantial space.",
+      "oldValues": {
+        "narrative": 0.55,
+        "atmosphere": 0.85
+      },
+      "image": "assets/collection-gauguin-call.jpg",
+      "sourceUrl": "https://clevelandart.org/art/1943.392",
+      "reviewedImageSha256": "3848b74e46adbd5a43b819cb1a6cb63ed2fbae7b20f8d021a9c763131b37fda5",
+      "reviewStatus": "changed"
+    },
+    "matejko-stanczyk": {
+      "narrative": 0.05,
+      "atmosphere": 0.65,
+      "reason": "The seated central figure remains still; table, curtains, furnishings and the adjoining room establish an interior.",
+      "oldValues": {
+        "narrative": 0.6,
+        "atmosphere": 0.75
+      },
+      "image": "assets/collection-matejko-stanczyk.jpg",
+      "sourceUrl": "https://cyfrowe.mnw.pl/pl/zbiory/962339",
+      "reviewedImageSha256": "4632ce3b0016db122aaa60502c6979c069bbacf9a8d91999f841d41dcbc1ac24",
+      "reviewStatus": "changed"
+    },
+    "friedrich-wanderer": {
+      "narrative": 0.05,
+      "atmosphere": 0.95,
+      "reason": "A standing figure looks outward without active movement; rocks, mountains and mist dominate.",
+      "oldValues": {
+        "narrative": 0.35,
+        "atmosphere": 1
+      },
+      "image": "assets/collection-friedrich-wanderer.jpg",
+      "sourceUrl": "https://www.hamburger-kunsthalle.de/en/nineteenth-century",
+      "reviewedImageSha256": "8a2fde852d5d5d5ef7b0b6b408cc63eb940f83b1199c605e9133aa0ff29cd494",
+      "reviewStatus": "changed"
+    },
+    "goya-saturn": {
+      "narrative": 0.95,
+      "atmosphere": 0.05,
+      "reason": "The central figure visibly bites and grips another body against an almost empty dark ground.",
+      "oldValues": {
+        "narrative": 1,
+        "atmosphere": 0.55
+      },
+      "image": "assets/collection-goya-saturn.jpg",
+      "sourceUrl": "https://www.museodelprado.es/en/the-collection/art-work/saturn/18110a75-b0e7-430c-bc73-2a4d55893bd6",
+      "reviewedImageSha256": "ab1ab49d163b1063eb2bf0aca267594e316712ca18c9a5ebdf83098215b86086",
+      "reviewStatus": "changed"
+    },
+    "velazquez-las-meninas": {
+      "narrative": 0.4,
+      "atmosphere": 0.8,
+      "reason": "Several figures paint, bend or gesture within a prominently depicted room and deep doorway.",
+      "oldValues": {
+        "narrative": 0.75,
+        "atmosphere": 0.75
+      },
+      "image": "assets/collection-velazquez-las-meninas.jpg",
+      "sourceUrl": "https://www.museodelprado.es/en/the-collection/art-work/las-meninas/9fdc7800-9ade-48b0-ab8b-edee94ea877f",
+      "reviewedImageSha256": "4cdd81d247468366ce62d6ba0912489ee3eec38b8ccd775b3e17479079fdb168",
+      "reviewStatus": "changed"
+    },
+    "holbein-ambassadors": {
+      "narrative": 0.05,
+      "atmosphere": 0.35,
+      "reason": "Two men hold static poses beside displayed objects; curtain, floor and furniture provide shallow spatial context.",
+      "oldValues": {
+        "narrative": 0.65,
+        "atmosphere": 0.4
+      },
+      "image": "assets/collection-holbein-ambassadors.jpg",
+      "sourceUrl": "https://www.nationalgallery.org.uk/paintings/hans-holbein-the-younger-the-ambassadors",
+      "reviewedImageSha256": "cb0315fa08bfd95b8b6eed875480d96fab2488af26ac82db4f65145e4b424459",
+      "reviewStatus": "changed"
+    },
+    "brueghel-sight": {
+      "narrative": 0.35,
+      "atmosphere": 0.95,
+      "reason": "Figures handle and examine objects within an extensive gallery filled with pictures, sculpture and architectural space.",
+      "oldValues": {
+        "narrative": 0.85,
+        "atmosphere": 0.7
+      },
+      "image": "assets/collection-brueghel-sight.jpg",
+      "sourceUrl": "https://www.museodelprado.es/en/the-collection/art-work/the-sense-of-sight/494fd4d5-16d2-4857-811b-e0b2a0eb7fc7",
+      "reviewedImageSha256": "9d9821476e42b10c35d9b03142914bb562dfcfd70a9ac5d63d9f1f6bb10126d5",
+      "reviewStatus": "changed"
+    },
+    "bosch-garden-delights": {
+      "narrative": 0.8,
+      "atmosphere": 0.95,
+      "reason": "Numerous figures and creatures visibly interact across large, elaborately developed environments.",
+      "oldValues": {
+        "narrative": 1,
+        "atmosphere": 1
+      },
+      "image": "assets/collection-bosch-garden-delights.jpg",
+      "sourceUrl": "https://www.museodelprado.es/en/the-collection/art-work/the-garden-of-earthly-delights-triptych/02388242-6d6a-4e9e-a992-e1311eab3609",
+      "reviewedImageSha256": "3924574619f80a40b8be1b967c1a0cc5462e180ffbe47dabd1ba46ea11782503",
+      "reviewStatus": "changed"
+    },
+    "millais-ophelia": {
+      "narrative": 0.1,
+      "atmosphere": 0.9,
+      "reason": "The floating figure is largely inactive; water, bank and dense vegetation occupy much of the scene.",
+      "oldValues": {
+        "narrative": 0.8,
+        "atmosphere": 1
+      },
+      "image": "assets/collection-millais-ophelia.jpg",
+      "sourceUrl": "https://www.tate.org.uk/art/artworks/millais-ophelia-n01506",
+      "reviewedImageSha256": "63b741111485f5f93e04a8b13ad8a25d9049768def6f58fbb37137ec813474f5",
+      "reviewStatus": "changed"
+    },
+    "van-gogh-night-cafe": {
+      "narrative": 0.1,
+      "atmosphere": 0.9,
+      "reason": "Most people sit or stand quietly; the room, floor, lights and furniture dominate.",
+      "oldValues": {
+        "narrative": 0.5,
+        "atmosphere": 0.85
+      },
+      "image": "assets/collection-van-gogh-night-cafe.jpg",
+      "sourceUrl": "https://artgallery.yale.edu/collections/objects/12507",
+      "reviewedImageSha256": "413cfc210a0fa2be8bf457f8ce6b8751ff4102199449ee3b353fcdc89d477785",
+      "reviewStatus": "changed"
+    },
+    "van-gogh-starry-night": {
+      "narrative": 0,
+      "atmosphere": 0.95,
+      "reason": "Sky, town and terrain dominate; swirling brushwork alone is not a literal depicted action.",
+      "oldValues": {
+        "narrative": 0.25,
+        "atmosphere": 1
+      },
+      "image": "assets/collection-van-gogh-starry-night.jpg",
+      "sourceUrl": "https://www.moma.org/collection/works/79802",
+      "reviewedImageSha256": "c8c60124c2d1b9a43dd435130b26438f3f79c5b286524bdfdcb24966748dbf13",
+      "reviewStatus": "changed"
+    },
+    "klimt-kiss": {
+      "narrative": 0.25,
+      "atmosphere": 0.2,
+      "reason": "The figures embrace and kiss in a restrained pose; gold ground and a small floral base give little spatial setting.",
+      "oldValues": {
+        "narrative": 0.55,
+        "atmosphere": 0.5
+      },
+      "image": "assets/collection-klimt-kiss.jpg",
+      "sourceUrl": "https://sammlung.belvedere.at/objects/6678/der-kuss-liebespaar",
+      "reviewedImageSha256": "2b52b0917eed41f950ebdb694dbecac24b7fb36c11065d14a3c48bf6350e43d7",
+      "reviewStatus": "changed"
+    },
+    "friedrich-moonrise": {
+      "narrative": 0.1,
+      "atmosphere": 0.95,
+      "reason": "Seated figures look toward distant boats; coast, water and sky dominate the image.",
+      "oldValues": {
+        "narrative": 0.35,
+        "atmosphere": 1
+      },
+      "image": "assets/collection-friedrich-moonrise.jpg",
+      "sourceUrl": "https://cdfriedrich.de/en/chronicle/mondaufgang-am-meer-2/",
+      "reviewedImageSha256": "61cd6e5c6520c6c531678bdc11eb0d1efe10b559ce27537b54433b55618fbc4c",
+      "reviewStatus": "changed"
+    },
+    "study-hokusai-great-wave": {
+      "narrative": 0.75,
+      "atmosphere": 0.9,
+      "reason": "A breaking wave and small boats make physical activity explicit within a broad sea and mountain view.",
+      "oldValues": {
+        "narrative": 0.65,
+        "atmosphere": 0.9
+      },
+      "image": "assets/study-hokusai-great-wave.jpg",
+      "sourceUrl": "https://www.metmuseum.org/art/collection/search/45434",
+      "reviewedImageSha256": "6797908772d0872d1742eb70cf5e27ee632db558b1d4a1392af1889dcdda1cd3",
+      "reviewStatus": "changed"
+    },
+    "study-leonardo-mona-lisa": {
+      "narrative": 0.05,
+      "atmosphere": 0.5,
+      "reason": "The sitter is posed and still; a substantial distant landscape remains visible behind her.",
+      "oldValues": {
+        "narrative": 0.35,
+        "atmosphere": 0.9
+      },
+      "image": "assets/study-leonardo-mona-lisa.jpg",
+      "sourceUrl": "https://collections.louvre.fr/ark:/53355/cl010062370",
+      "reviewedImageSha256": "3c91811816eaacfd1d1d9313a1712b69bab00df6a7df7305281256e742c4acda",
+      "reviewStatus": "changed"
+    },
+    "study-vermeer-pearl": {
+      "narrative": 0.05,
+      "atmosphere": 0,
+      "reason": "The head is turned in a restrained portrait pose against a plain dark background.",
+      "oldValues": {
+        "narrative": 0.3,
+        "atmosphere": 0.85
+      },
+      "image": "assets/study-vermeer-pearl.jpg",
+      "sourceUrl": "https://www.mauritshuis.nl/en/our-collection/artworks/670-girl-with-a-pearl-earring",
+      "reviewedImageSha256": "ef5cc11cb793589e18647a26dad1b6872dda95cf7217f037ad2bd7427dd6800e",
+      "reviewStatus": "changed"
+    },
+    "study-vermeer-milkmaid": {
+      "narrative": 0.4,
+      "atmosphere": 0.6,
+      "reason": "The woman visibly pours liquid; window, wall, floor and household objects establish a domestic interior.",
+      "oldValues": {
+        "narrative": 0.65,
+        "atmosphere": 0.7
+      },
+      "image": "assets/study-vermeer-milkmaid.jpg",
+      "sourceUrl": "https://www.rijksmuseum.nl/en/story/milkmaid-vermeer",
+      "reviewedImageSha256": "478d0ca5bcc5074f5163f7a3d3aa5c8bbd1661c7cbd31dab2d560594a5e3ba45",
+      "reviewStatus": "changed"
+    },
+    "study-rembrandt-night-watch": {
+      "narrative": 0.65,
+      "atmosphere": 0.55,
+      "reason": "Several figures step, gesture or handle equipment; architectural surroundings are visible but subordinate to the group.",
+      "oldValues": {
+        "narrative": 0.95,
+        "atmosphere": 0.8
+      },
+      "image": "assets/study-rembrandt-night-watch.jpg",
+      "sourceUrl": "https://www.rijksmuseum.nl/en/collection/object/The-Night-Watch-Militia-Company-of-District-II-under-the-Command-of-Captain-Frans-Banninck-Cocq--3137deb45cd7765f9a76084a16c99544",
+      "reviewedImageSha256": "2135b4ccda3081be8c7693bcb0d10929003aec295b5241ddfb26a0b145d814ba",
+      "reviewStatus": "changed"
+    },
+    "study-botticelli-birth-venus": {
+      "narrative": 0.5,
+      "atmosphere": 0.6,
+      "reason": "Winged figures blow and an attendant reaches with a robe; sea, shore and trees establish the scene.",
+      "oldValues": {
+        "narrative": 0.95,
+        "atmosphere": 0.85
+      },
+      "image": "assets/study-botticelli-birth-venus.jpg",
+      "sourceUrl": "https://www.uffizi.it/en/artworks/birth-of-venus",
+      "reviewedImageSha256": "8b9899ee81a81228211359b27c25ad8181c23741f4174aeee6442e03538b922a",
+      "reviewStatus": "changed"
+    },
+    "study-raphael-school-athens": {
+      "narrative": 0.4,
+      "atmosphere": 0.9,
+      "reason": "Groups walk, gesture, read and write within a dominant architectural interior.",
+      "oldValues": {
+        "narrative": 1,
+        "atmosphere": 0.55
+      },
+      "image": "assets/study-raphael-school-athens.jpg",
+      "sourceUrl": "https://www.museivaticani.va/content/museivaticani/en/collezioni/musei/stanze-di-raffaello/stanza-della-segnatura/scuola-di-atene.html",
+      "reviewedImageSha256": "6f48d02ada787828c82800b482da20f5abbd6f853e392ca7dab3de626373a8f4",
+      "reviewStatus": "changed"
+    },
+    "study-waterhouse-shalott": {
+      "narrative": 0.25,
+      "atmosphere": 0.85,
+      "reason": "A seated woman extends her arms within the boat; water, reeds and wooded banks form a substantial setting.",
+      "oldValues": {
+        "narrative": 0.95,
+        "atmosphere": 1
+      },
+      "image": "assets/study-waterhouse-shalott.jpg",
+      "sourceUrl": "https://www.tate.org.uk/art/artworks/waterhouse-the-lady-of-shalott-n01543",
+      "reviewedImageSha256": "3919d81b251d00bd0eaf25fb4f1ca262ef2f25e6ef88e86a92f2e4f77b9a0c1c",
+      "reviewStatus": "changed"
+    },
+    "study-gericault-raft": {
+      "narrative": 0.8,
+      "atmosphere": 0.65,
+      "reason": "Several figures climb and wave while others lie inactive; raft, sea and sky establish a substantial surrounding scene.",
+      "oldValues": {
+        "narrative": 1,
+        "atmosphere": 0.95
+      },
+      "image": "assets/study-gericault-raft.jpg",
+      "sourceUrl": "https://collections.louvre.fr/en/ark:/53355/cl010059199",
+      "reviewedImageSha256": "930942b20a1b182df8d5464700341000ddd947229f58de2fba07445784b66c35",
+      "reviewStatus": "changed"
+    },
+    "study-david-marat": {
+      "narrative": 0,
+      "atmosphere": 0.2,
+      "reason": "The body is inactive; bath, box and cloth are sparse foreground props against a largely plain wall.",
+      "oldValues": {
+        "narrative": 1,
+        "atmosphere": 0.95
+      },
+      "image": "assets/study-david-marat.jpg",
+      "sourceUrl": "https://fine-arts-museum.be/fr/la-collection/jacques-louis-david-marat-assassine",
+      "reviewedImageSha256": "0853f6112231f3c4d9cb8d4955a48096ee29bc7d6b32c72bb4d285fd85a3014c",
+      "reviewStatus": "changed"
+    },
+    "study-delacroix-liberty": {
+      "narrative": 0.95,
+      "atmosphere": 0.65,
+      "reason": "Armed figures visibly surge forward over bodies and rubble; smoke and distant buildings provide battlefield context.",
+      "oldValues": {
+        "narrative": 1,
+        "atmosphere": 0.85
+      },
+      "image": "assets/study-delacroix-liberty.jpg",
+      "sourceUrl": "https://collections.louvre.fr/ark:/53355/cl010065872",
+      "reviewedImageSha256": "22687c4953717247fe39425435b371a355d355e1da131446f2adfa1b6a6c3314",
+      "reviewStatus": "changed"
+    },
+    "study-van-gogh-sunflowers": {
+      "narrative": 0,
+      "atmosphere": 0.1,
+      "reason": "Flowers in a vase rest against a simple wall and tabletop without a wider spatial environment.",
+      "oldValues": {
+        "narrative": 0.1,
+        "atmosphere": 0.6
+      },
+      "image": "assets/study-van-gogh-sunflowers.jpg",
+      "sourceUrl": "https://www.nationalgallery.org.uk/paintings/vincent-van-gogh-sunflowers",
+      "reviewedImageSha256": "a524b98a20721a53aaf90d4a0c3e94c94ec61789b52ada044071ce3341971f00",
+      "reviewStatus": "changed"
+    },
+    "study-van-gogh-self-portrait": {
+      "narrative": 0.05,
+      "atmosphere": 0,
+      "reason": "The figure holds a portrait pose; the painted backdrop does not describe a surrounding place.",
+      "oldValues": {
+        "narrative": 0.35,
+        "atmosphere": 0.75
+      },
+      "image": "assets/study-van-gogh-self-portrait.jpg",
+      "sourceUrl": "https://www.nga.gov/artworks/106382-self-portrait",
+      "reviewedImageSha256": "041895a1b37ea30faad4f9c1ffe033ded56ed852051f7283c435d80ad0aeb929",
+      "reviewStatus": "changed"
+    },
+    "study-monet-japanese-footbridge": {
+      "narrative": 0,
+      "atmosphere": 1,
+      "reason": "Bridge, pond and garden fill the picture without an identifiable acting figure or distinct event.",
+      "oldValues": {
+        "narrative": 0.1,
+        "atmosphere": 1
+      },
+      "image": "assets/study-monet-japanese-footbridge.jpg",
+      "sourceUrl": "https://www.nga.gov/artworks/74796-japanese-footbridge",
+      "reviewedImageSha256": "99e9c3a85a7c00aae07e81039ebe358f7543d50608a26fded88d877daafd0846",
+      "reviewStatus": "changed"
+    },
+    "study-monet-rouen-sunlight": {
+      "narrative": 0,
+      "atmosphere": 0.9,
+      "reason": "Architecture fills the view; changes in painted light do not constitute a depicted action.",
+      "oldValues": {
+        "narrative": 0.1,
+        "atmosphere": 0.9
+      },
+      "image": "assets/study-monet-rouen-sunlight.jpg",
+      "sourceUrl": "https://www.nga.gov/artworks/46654-rouen-cathedral-west-facade-sunlight",
+      "reviewedImageSha256": "5a239dd32748f38fb1713157e9eed58a07877be0219e41ac55eee48460a42670",
+      "reviewStatus": "changed"
+    },
+    "study-munch-scream": {
+      "narrative": 0.35,
+      "atmosphere": 0.75,
+      "reason": "The foreground figure raises hands beside the face while distant people walk; bridge, water and hills remain prominent.",
+      "oldValues": {
+        "narrative": 0.8,
+        "atmosphere": 1
+      },
+      "image": "assets/study-munch-scream.jpg",
+      "sourceUrl": "https://www.nasjonalmuseet.no/en/collection/object/NG.M.00939",
+      "reviewedImageSha256": "784ce17971a212c3fbec67676e339c0bb8c688e5f146d712b269b7449ea87d06",
+      "reviewStatus": "changed"
+    },
+    "study-kandinsky-composition-eight": {
+      "narrative": 0,
+      "atmosphere": 0,
+      "reason": "Energetic abstract marks and shapes contain neither a literal acting subject nor a physical setting.",
+      "oldValues": {
+        "narrative": 0.05,
+        "atmosphere": 0.45
+      },
+      "image": "assets/study-kandinsky-composition-eight.jpg",
+      "sourceUrl": "https://www.guggenheim.org/artwork/1924",
+      "reviewedImageSha256": "e0229d7538f18f8ccf7b83918bb6a3b5ec686d7c85d0a9d26bb634d394945cfd",
+      "reviewStatus": "changed"
+    },
+    "study-seurat-grande-jatte": {
+      "narrative": 0.2,
+      "atmosphere": 0.85,
+      "reason": "Most figures sit or stand, with some quiet walking and boating; park and riverside space are substantial.",
+      "oldValues": {
+        "narrative": 0.8,
+        "atmosphere": 0.7
+      },
+      "image": "assets/study-seurat-grande-jatte.jpg",
+      "sourceUrl": "https://www.artic.edu/artworks/27992/a-sunday-on-la-grande-jatte-1884",
+      "reviewedImageSha256": "3683a9b1fdaa22696f27ed6bc9bf224a1f6411bbc131e51f9a0d1476540c1762",
+      "reviewStatus": "changed"
+    },
+    "study-guo-xi-early-spring": {
+      "narrative": 0.1,
+      "atmosphere": 1,
+      "reason": "Tiny figures contribute little action to a composition dominated by mountains, trees and mist.",
+      "oldValues": {
+        "narrative": 0.25,
+        "atmosphere": 1
+      },
+      "image": "assets/study-guo-xi-early-spring.jpg",
+      "sourceUrl": "https://digitalarchive.npm.gov.tw/Collection/Detail?dep=P&id=47",
+      "reviewedImageSha256": "11370e5dd0f2b9e4457639adcb7e019e4f9efa2765e3ca1bb9dbb5b4f628dee9",
+      "reviewStatus": "changed"
+    },
+    "study-fan-kuan-travelers": {
+      "narrative": 0.2,
+      "atmosphere": 1,
+      "reason": "A small travelling group moves beneath mountains that overwhelmingly dominate the scene.",
+      "oldValues": {
+        "narrative": 0.35,
+        "atmosphere": 1
+      },
+      "image": "assets/study-fan-kuan-travelers.jpg",
+      "sourceUrl": "https://digitalarchive.npm.gov.tw/Collection/Detail/1195?dep=P",
+      "reviewedImageSha256": "311a404d2eca86d58fabc504a286eeedd13ec2e854cd48d0debd8f51700c125c",
+      "reviewStatus": "changed"
+    },
+    "study-posada-catrina": {
+      "narrative": 0,
+      "atmosphere": 0,
+      "reason": "The skeletal head is a static graphic image on a plain paper ground, not an ongoing action or place.",
+      "oldValues": {
+        "narrative": 0.75,
+        "atmosphere": 0.55
+      },
+      "image": "assets/study-posada-catrina.jpg",
+      "sourceUrl": "https://www.gob.mx/cultura/prensa/las-historias-falsas-que-se-leen-de-la-catrina-de-jose-guadalupe-posada-en-relatos-e-historias-de-mexico",
+      "reviewedImageSha256": "0e24d765e32bc7eeb4a848356212f2c69094a2e287bf7c0f171385d361bed879",
+      "reviewStatus": "changed"
+    },
+    "study-belmiro-arrufos": {
+      "narrative": 0.2,
+      "atmosphere": 0.75,
+      "reason": "The figures make restrained gestures or lean against furniture; the detailed furnished room is prominent.",
+      "oldValues": {
+        "narrative": 0.95,
+        "atmosphere": 0.75
+      },
+      "image": "assets/study-belmiro-arrufos.jpg",
+      "sourceUrl": "https://www.gov.br/museus/pt-br/museus-ibram/mnba/assuntos/colecoes/brasileiras/pintura-brasileira/1.png/view",
+      "reviewedImageSha256": "47d0ca5bc4e95e5e94ac553c11b04f8adbae07b5d9c07b3ae0f2980a184e6684",
+      "reviewStatus": "changed"
+    },
+    "study-abanindranath-bharat-mata": {
+      "narrative": 0.05,
+      "atmosphere": 0.05,
+      "reason": "The standing emblematic figure holds objects in a fixed pose against a mostly flat ground.",
+      "oldValues": {
+        "narrative": 0.75,
+        "atmosphere": 0.9
+      },
+      "image": "assets/study-abanindranath-bharat-mata.jpg",
+      "sourceUrl": "https://artsandculture.google.com/asset/%E2%80%98bharatmata%E2%80%99-abanindranath-tagore/oAEeunKSH5SPag",
+      "reviewedImageSha256": "a5f7f9a088742f2793175a351208df0224e151741d6acbac689724d2280ce3c6",
+      "reviewStatus": "changed"
+    },
+    "study-wood-american-gothic": {
+      "narrative": 0.05,
+      "atmosphere": 0.5,
+      "reason": "The pair pose while holding a tool; the recognisable house facade supplies substantial background setting.",
+      "oldValues": {
+        "narrative": 0.75,
+        "atmosphere": 0.55
+      },
+      "image": "assets/study-wood-american-gothic.jpg",
+      "sourceUrl": "https://www.artic.edu/artworks/129884/american-gothic",
+      "reviewedImageSha256": "fb2aebcd741f6043d0c3486aa112dba079f0c74bd04fe2811a23aef653b23800",
+      "reviewStatus": "changed"
+    },
+    "study-matisse-dance": {
+      "narrative": 0.85,
+      "atmosphere": 0.35,
+      "reason": "Linked bodies visibly lean and step in a circle; simplified ground and sky provide sparse landscape context.",
+      "oldValues": {
+        "narrative": 0.7,
+        "atmosphere": 0.65
+      },
+      "image": "assets/study-matisse-dance.jpg",
+      "sourceUrl": "https://www.hermitagemuseum.org/explore/buildings/rooms/room_1890",
+      "reviewedImageSha256": "530397d5ce409b5420a0e7715222e57f7497fb8839eff7f2d3bce911a36fa0d9",
+      "reviewStatus": "changed"
+    },
+    "study-manet-luncheon-grass": {
+      "narrative": 0.3,
+      "atmosphere": 0.8,
+      "reason": "Foreground figures sit and gesture while a background figure bends; trees, water and the clearing are substantial.",
+      "oldValues": {
+        "narrative": 0.85,
+        "atmosphere": 0.7
+      },
+      "image": "assets/study-manet-luncheon-grass.jpg",
+      "sourceUrl": "https://www.musee-orsay.fr/fr/oeuvres/le-dejeuner-sur-lherbe-904",
+      "reviewedImageSha256": "33da469d74627e15bbafc1f629f61c693489195d9729d83e98fbed51a60d11e6",
+      "reviewStatus": "changed"
+    },
+    "study-bruegel-hunters-snow": {
+      "narrative": 0.65,
+      "atmosphere": 0.95,
+      "reason": "Hunters and dogs walk while smaller figures perform activities below; the snowy valley dominates.",
+      "oldValues": {
+        "narrative": 0.95,
+        "atmosphere": 0.95
+      },
+      "image": "assets/study-bruegel-hunters-snow.jpg",
+      "sourceUrl": "https://zeitendernatur.khm.at/en/chapter-ii-the-seasons-a-la-bruegel/",
+      "reviewedImageSha256": "9f9127ac23265e93ab176f875bcdabd92bba598b2b236d81c70956df19cf3cc1",
+      "reviewStatus": "changed"
+    },
+    "study-rousseau-sleeping-gypsy": {
+      "narrative": 0.15,
+      "atmosphere": 0.75,
+      "reason": "The human sleeps while the lion leans nearby; moon, desert ground and distant hills provide substantial setting.",
+      "oldValues": {
+        "narrative": 0.85,
+        "atmosphere": 1
+      },
+      "image": "assets/study-rousseau-sleeping-gypsy.jpg",
+      "sourceUrl": "https://www.moma.org/collection/works/80172",
+      "reviewedImageSha256": "a64b8c79218008cd0ba09aa9acc6228679bfb17bd1aa76c2d1f4e8a8dfaa80d7",
+      "reviewStatus": "changed"
+    },
+    "study-marc-blue-horse": {
+      "narrative": 0.1,
+      "atmosphere": 0.55,
+      "reason": "The horse stands with a lowered head; stylised hills and ground provide a recognisable but simplified landscape.",
+      "oldValues": {
+        "narrative": 0.15,
+        "atmosphere": 0.75
+      },
+      "image": "assets/study-marc-blue-horse.jpg",
+      "sourceUrl": "https://www.lenbachhaus.de/digital/sammlung-online/detail/blaues-pferd-i-30019621",
+      "reviewedImageSha256": "272a3b2a51257df8020e1b5f46b26990a31c369d14d6b5bee76dfd197870767b",
+      "reviewStatus": "changed"
+    },
+    "study-malevich-black-square": {
+      "narrative": 0,
+      "atmosphere": 0,
+      "reason": "A geometric square on a light ground depicts no action or spatial environment.",
+      "oldValues": {
+        "narrative": 0,
+        "atmosphere": 0.3
+      },
+      "image": "assets/study-malevich-black-square.jpg",
+      "sourceUrl": "https://my.tretyakov.ru/app/masterpiece/8403",
+      "reviewedImageSha256": "05f7322c9d1d744839efab04991c4ac2bf2dbb509c0ff3de50119757cfe79e27",
+      "reviewStatus": "changed"
+    },
+    "study-cassatt-child-bath": {
+      "narrative": 0.4,
+      "atmosphere": 0.5,
+      "reason": "The adult visibly washes the child; floor, furniture and household objects give a partial domestic setting.",
+      "oldValues": {
+        "narrative": 0.8,
+        "atmosphere": 0.7
+      },
+      "image": "assets/study-cassatt-child-bath.jpg",
+      "sourceUrl": "https://www.artic.edu/artworks/111442/the-child-s-bath",
+      "reviewedImageSha256": "e6c1cea10e39851a5119ef229464fc12811b3a154fa009f353378bba2a45ce05",
+      "reviewStatus": "changed"
+    },
+    "study-morisot-cradle": {
+      "narrative": 0.1,
+      "atmosphere": 0.25,
+      "reason": "The mother watches a resting child; cradle, curtain and sparse interior cues provide limited setting.",
+      "oldValues": {
+        "narrative": 0.7,
+        "atmosphere": 0.9
+      },
+      "image": "assets/study-morisot-cradle.jpg",
+      "sourceUrl": "https://www.musee-orsay.fr/en/artworks/le-berceau-1132",
+      "reviewedImageSha256": "1637e904af0009aaa157ec2c9e51fdb86c63abd91f11c0018559c3663824b4d7",
+      "reviewStatus": "changed"
+    },
+    "study-gentileschi-judith": {
+      "narrative": 1,
+      "atmosphere": 0.2,
+      "reason": "The figures visibly restrain and attack with a sword; bed and cloth give only sparse setting against darkness.",
+      "oldValues": {
+        "narrative": 1,
+        "atmosphere": 0.85
+      },
+      "image": "assets/study-gentileschi-judith.jpg",
+      "sourceUrl": "https://www.uffizi.it/en/artworks/judith-beheading-holofernes",
+      "reviewedImageSha256": "36321d4ca7b49be986c928dfd2c3b8be04cb01bde3740cd897a18f217b46d467",
+      "reviewStatus": "changed"
+    },
+    "study-tanner-banjo-lesson": {
+      "narrative": 0.4,
+      "atmosphere": 0.75,
+      "reason": "Hands actively guide and handle the instrument while room, floor and furnishings remain prominent.",
+      "oldValues": {
+        "narrative": 0.9,
+        "atmosphere": 0.8
+      },
+      "image": "assets/study-tanner-banjo-lesson.jpg",
+      "sourceUrl": "https://home.hamptonu.edu/msm/wp-content/uploads/sites/22/2022/05/Art-Bridges-Hampton-University-Museum-InfoFinal.pdf",
+      "reviewedImageSha256": "b9de63f8c79f0cef1d826ea6a5fd4eebc5558e82f86e1b8f71ad87e2f5e873cc",
+      "reviewStatus": "changed"
+    },
+    "opening-cma-141639": {
+      "narrative": 0,
+      "atmosphere": 1,
+      "reason": "The dramatic sky is not itself an acting subject; lake, trees, mountains and sky fill the scene.",
+      "oldValues": {
+        "narrative": 0.1,
+        "atmosphere": 1
+      },
+      "image": "assets/opening-cma-141639.jpg",
+      "sourceUrl": "https://clevelandart.org/art/1965.233",
+      "reviewedImageSha256": "07161ed412b9cc000370ca24a18d200171f480f46eb83d52919f391978de6114",
+      "reviewStatus": "changed"
+    },
+    "opening-cma-92937": {
+      "narrative": 1,
+      "atmosphere": 0.55,
+      "reason": "Boxers visibly exchange a blow in a ring surrounded by spectators.",
+      "oldValues": {
+        "narrative": 1,
+        "atmosphere": 0.7
+      },
+      "image": "assets/opening-cma-92937.jpg",
+      "sourceUrl": "https://clevelandart.org/art/1922.1133",
+      "reviewedImageSha256": "1184dde55a9c69ccb545cc6887a0286fd73c15d7c80d178a183017b22073fb23",
+      "reviewStatus": "changed"
+    },
+    "opening-cma-142792": {
+      "narrative": 0.95,
+      "atmosphere": 0.45,
+      "reason": "Two bodies grapple at the centre of a ring with a simplified audience and surrounding space.",
+      "oldValues": {
+        "narrative": 0.9,
+        "atmosphere": 0.55
+      },
+      "image": "assets/opening-cma-142792.jpg",
+      "sourceUrl": "https://clevelandart.org/art/1966.49",
+      "reviewedImageSha256": "6926d891bfed2d82e144d7f205a6280b8402dfcb020d0834dc5381018ed85ccf",
+      "reviewStatus": "changed"
+    },
+    "opening-cma-160300": {
+      "narrative": 0.7,
+      "atmosphere": 0.35,
+      "reason": "A figure works on another person's arm while others attend or sit; furniture gives limited interior context.",
+      "oldValues": {
+        "narrative": 1,
+        "atmosphere": 0.65
+      },
+      "image": "assets/opening-cma-160300.jpg",
+      "sourceUrl": "https://clevelandart.org/art/1998.178",
+      "reviewedImageSha256": "e9fe5baa5590c726fcf4409a80a7038c3c4979ec0cb3b720b51bab9d94a4a5b8",
+      "reviewStatus": "changed"
+    },
+    "opening-cma-140476": {
+      "narrative": 0.05,
+      "atmosphere": 0.75,
+      "reason": "Tree, flowers, stream and ground form an outdoor scene with little distinct physical action.",
+      "oldValues": {
+        "narrative": 0.1,
+        "atmosphere": 0.65
+      },
+      "image": "assets/opening-cma-140476.jpg",
+      "sourceUrl": "https://clevelandart.org/art/1964.386",
+      "reviewedImageSha256": "9ebf2d854a3ec194d16315f3749074f42a1b994c6f4745bf3e045eb62d34df84",
+      "reviewStatus": "changed"
+    },
+    "opening-cma-169545": {
+      "narrative": 0,
+      "atmosphere": 0.4,
+      "reason": "Books and objects occupy a spatially organised cabinet; no acting figures or wider room are shown.",
+      "oldValues": {
+        "narrative": 0.3,
+        "atmosphere": 0.45
+      },
+      "image": "assets/opening-cma-169545.jpg",
+      "sourceUrl": "https://clevelandart.org/art/2011.37",
+      "reviewedImageSha256": "f8f1b5d27f72a5adabe37773e283dd8d28831e3aff57ed3e563b5a799eb6c619",
+      "reviewStatus": "changed"
+    }
+  },
+  "summary": {
+    "reviewed": 99,
+    "changed": 99,
+    "unchanged": 0,
+    "narrativeChanges": 94,
+    "atmosphereChanges": 83
+  }
+}

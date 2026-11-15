@@ -6,7 +6,7 @@ export function taskSignal(round={}){
   if(round.kind==='choice-grid')return round.selectionMode==='familiarity'?{key:'familiarity',label:'Familiarity',icon:'eye',terms:['seen','recognise']}:{key:'preference',label:'First choices',icon:'grid',terms:['keep','choose']};
   if(round.kind==='exercise')return {key:'curation',label:'Curation',icon:'curation',terms:['group','rooms','remove','arrange']};
   if(round.kind==='match')return {key:'familiarity',label:round.field==='artist'?'Artist match':'Style match',icon:'eye',terms:['artists','style','tradition','match']};
-  if(round.kind==='context')return {key:'meaning',label:'Before & after',icon:'story',terms:['like','story','read']};
+  if(round.kind==='context')return round.symbolismProtocol?{key:'meaning',label:'Symbolism',icon:'meaning',terms:['appeal','symbols','meaning']}:{key:'meaning',label:'Before & after',icon:'story',terms:['like','story','read']};
   if(round.kind==='statements')return {key:'connection',label:'Your view',icon:'quote',terms:['agree','disagree']};
   if(round.evidence?.family==='looking-appraisal')return {key:round.evidence.construct==='attention-to-making'?'making':'description',label:round.evidence.construct==='attention-to-making'?'Making':'Visual judgment',icon:'making',terms:['made','figures','detail','open','take in','unexpected','density','crowded']};
   if(round.kind==='grid'){

@@ -1,3 +1,6 @@
+import {isReviewedVisualDescriptor,FEATURE_SEMANTIC_VERSION} from './visual-descriptor-semantics.mjs';
+import {isSymbolismRound} from './symbolism-rounds.mjs';
+import {analyzeSymbolism} from './symbolism-readings.mjs';
 import {buildRefinedReadings} from './reading-patterns-v2.mjs';
 import {buildLookingAppraisals} from './looking-appraisals.mjs';
 import {buildContrastReadings} from './contrast-readings.mjs';
@@ -12,7 +15,7 @@ const plain=value=>!!value&&typeof value==='object'&&!Array.isArray(value);
 const unique=values=>[...new Set(values)];
 const mean=values=>values.length?values.reduce((sum,value)=>sum+value,0)/values.length:null;
 const short=work=>work.shortTitle||work.title;
-const knownFeature=(work,key)=>Number.isFinite(work?.features?.[key])&&work.features[key]>=0&&work.features[key]<=1?work.features[key]:null;
+const knownFeature=(work,key)=>isReviewedVisualDescriptor(work,key)?work.features[key]:null;
 const normalized=value=>typeof value==='string'?value.normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toLowerCase():'';
 const usableLabel=value=>typeof value==='string'&&value.trim()&&!/unidentified|unknown|unspecified|anonymous|workshop|circle of/i.test(value);
 const ids=round=>round.works.map(work=>work.id);
@@ -37,7 +40,7 @@ function entriesFor(works,rounds,answers){
     if(!original||roundCounts.get(original.id)!==1||original.unavailable||!Array.isArray(original.works)||!original.works.length)return [];
     const workIds=original.works.map(work=>work?.id);if(new Set(workIds).size!==workIds.length||workIds.some(id=>!byId.has(id)))return [];
     const round={...original,works:workIds.map(id=>byId.get(id))},answer=answers[round.id];
-    let valid=false;try{valid=round.kind==='context'&&round.contextMode==='preference-before-after-v1'?!!answer&&!answer.skipped&&workIds.length===1&&Array.isArray(answer.workIds)&&answer.workIds.join('|')===workIds.join('|')&&answer.workId===workIds[0]&&answer.storySeen===true&&[answer.before,answer.after].every(value=>[0,25,50,75,100].includes(value)):round.kind==='exercise'?!!answer&&!answer.skipped&&Array.isArray(answer.workIds)&&answer.workIds.join('|')===workIds.join('|')&&answer.record?.kind===round.exerciseKind&&Array.isArray(answer.record.offeredIds)&&answer.record.offeredIds.length===workIds.length&&answer.record.offeredIds.every(id=>workIds.includes(id))&&validScenario(answer.record,round.works):validAnswer(round,answer);}catch{valid=false;}
+    let valid=false;try{valid=round.kind==='exercise'?!!answer&&!answer.skipped&&Array.isArray(answer.workIds)&&answer.workIds.join('|')===workIds.join('|')&&answer.record?.kind===round.exerciseKind&&Array.isArray(answer.record.offeredIds)&&answer.record.offeredIds.length===workIds.length&&answer.record.offeredIds.every(id=>workIds.includes(id))&&validScenario(answer.record,round.works):validAnswer(round,answer);}catch{valid=false;}
     if(!valid)return [];
     // Reject array-like response dictionaries before downstream indexing. The
     // shared validator supplies the instrument's exact identity and range checks.
@@ -87,7 +90,7 @@ function meaningReading(discovery,entries){
   if(!contrasts.length)return null;const pair=contrasts[0],meaningPhrase=pair.meaningGap>=20?'suggested more meaning':'prompted greater interest in interpretation';
   return finding('meaning','meaning','Meaning and preference can part ways.',`You preferred ${short(pair.a)}. ${short(pair.b)} ${meaningPhrase}${pair.meaningGap>=20&&pair.interpretationGap>=20?' and prompted greater interest in interpretation':''}.`,contrasts.slice(0,2).flatMap(pair=>[pairEvidence(pair),ev(pair.meaning,pair.meaning.round.works.filter(work=>[pair.a.id,pair.b.id].includes(work.id)).map(work=>`${short(work)}: suggested meaning ${pair.meaning.answer.points[work.id][0]}, interest in interpretation ${pair.meaning.answer.points[work.id][1]}`).join('; ')+'.',[pair.a.id,pair.b.id])]),{priority:11,comparisons:[{workIds:[pair.a.id,pair.b.id],preferenceRoundId:pair.entry.round.id,meaningRoundId:pair.meaning.round.id,measures:[{key:'preference',label:'Preference',values:[pair.entry.answer.positions[pair.a.id],pair.entry.answer.positions[pair.b.id]]},{key:'meaning',label:'Suggested meaning',values:[pair.meaning.answer.points[pair.a.id][0],pair.meaning.answer.points[pair.b.id][0]]},{key:'interpretation',label:'Wish to interpret',values:[pair.meaning.answer.points[pair.a.id][1],pair.meaning.answer.points[pair.b.id][1]]}]}],alternatives:['Suggested meaning and interest in interpretation are your reported responses to these exact paintings. Neither tests the correctness of an interpretation.','The meaning map is a different instrument from the understanding/connection map. Its coordinates are not substituted for one another.','This connects a clear local preference with a separately reported appraisal. It does not show that symbolism caused a preference or establish tolerance for ambiguity.']});
 }
-function contextRatings(entries){return entries.filter(entry=>entry.round.kind==='context'&&entry.round.contextMode==='preference-before-after-v1'&&entry.answer.storySeen===true&&[entry.answer.before,entry.answer.after].every(value=>[0,25,50,75,100].includes(value))).map(entry=>{
+function contextRatings(entries){return entries.filter(entry=>entry.round.kind==='context'&&!isSymbolismRound(entry.round)&&entry.round.contextMode==='preference-before-after-v1'&&entry.answer.storySeen===true&&[entry.answer.before,entry.answer.after].every(value=>[0,25,50,75,100].includes(value))).map(entry=>{
   const reference=entry.round.evidence?.claimRoundId,claim=entries.find(other=>other.round.id===reference&&other.index<entry.index&&other.round.kind==='statements'&&other.round.evidence?.statementTest==='contextEffect'&&other.round.evidence.contextRoundId===entry.round.id&&other.round.evidence.checkId&&other.round.evidence.checkId===entry.round.evidence.checkId&&other.round.statements?.some(statement=>statement.id==='contextEffect'&&statement.text==='Learning the story behind a painting rarely changes how much I like it.'));
   return {entry,claim,work:entry.round.works[0],before:entry.answer.before,after:entry.answer.after,change:entry.answer.after-entry.answer.before};
 });}
@@ -140,6 +143,8 @@ function prospectiveComparisons(works,rounds,answers,entries){
   return entries.flatMap(check=>{
     const metadata=check.round.evidence,selection=metadata?.adaptiveSelection,hypothesis=selection?.provisionalHypothesis,pair=ids(check.round);
     if(pair.length!==2||!unconditionalDefinition(check.round)||metadata.repeatOf||metadata.role!=='probe'||metadata.family!=='individual-choice'||metadata.adaptivePanelRole!=='challenge'||metadata.selectionMethod!=='adaptive-panel-plan'||!plain(selection)||selection.comparisonNovel!==true||selection.holdoutUnit!=='new-comparison'||selection.artworksMayBeFamiliar!==true||!plain(hypothesis)||!FEATURES.includes(hypothesis.feature)||![1,-1].includes(hypothesis.direction)||!pair.includes(selection.provisionalPrediction))return [];
+    const literal=['narrative','atmosphere'].includes(hypothesis.feature);
+    if(literal&&(hypothesis.featureSemanticVersion!==FEATURE_SEMANTIC_VERSION||!plain(hypothesis.testFeatureSemanticVersions)||!sameIds(Object.keys(hypothesis.testFeatureSemanticVersions),pair)||pair.some(id=>hypothesis.testFeatureSemanticVersions[id]!==FEATURE_SEMANTIC_VERSION||!isReviewedVisualDescriptor(byId.get(id),hypothesis.feature))))return [];
     if(!plain(hypothesis.testFeatureValues)||!sameIds(Object.keys(hypothesis.testFeatureValues),pair)||pair.some(id=>!frozenFeature(hypothesis.testFeatureValues[id]))||Math.abs(hypothesis.testFeatureValues[pair[0]]-hypothesis.testFeatureValues[pair[1]])<.25)return [];
     const predicted=selection.provisionalPrediction,other=pair.find(id=>id!==predicted);
     if((hypothesis.testFeatureValues[predicted]-hypothesis.testFeatureValues[other])*hypothesis.direction<=0)return [];
@@ -153,6 +158,7 @@ function prospectiveComparisons(works,rounds,answers,entries){
       if(index<0||index>=check.index||definitionCounts.get(snapshot.roundId)!==1||!unconditionalDefinition(actual)||!Array.isArray(actual.works)||actual.works.length<2||actual.works.length>8)return [];
       if(Number.isInteger(metadata.batchIndex)&&Number.isInteger(actual.evidence?.batchIndex)&&actual.evidence.batchIndex>=metadata.batchIndex)return [];
       const workIds=actual.works.map(work=>work?.id);if(workIds.some(id=>!byId.has(id))||!sameIds(snapshot.workIds,workIds)||snapshot.workIds.join('|')!==workIds.join('|')||!plain(snapshot.positions)||!plain(snapshot.featureValues)||!sameIds(Object.keys(snapshot.featureValues),workIds)||workIds.some(id=>!frozenFeature(snapshot.featureValues[id])))return [];
+      if(literal&&(!plain(snapshot.featureSemanticVersions)||!sameIds(Object.keys(snapshot.featureSemanticVersions),workIds)||workIds.some(id=>snapshot.featureSemanticVersions[id]!==FEATURE_SEMANTIC_VERSION||!isReviewedVisualDescriptor(byId.get(id),hypothesis.feature))))return [];
       const definition={...actual,works:workIds.map(id=>byId.get(id))};let valid=false;try{valid=validAnswer(definition,snapshot);}catch{return [];}if(!valid)return [];
       const signature=JSON.stringify([...workIds].sort());if(signatures.has(signature))return [];signatures.add(signature);
       for(const id of workIds){const work=byId.get(id);if(work.artistKnown!==false&&usableLabel(work.artist))artists.add(normalized(work.artist));}
@@ -210,7 +216,7 @@ function discoveryRoutes(works,discovery,seeds,patterns,allPreference=discovery)
 /** All calculations are local descriptions. No population model is implied. */
 export function buildTastePortrait({works=[],rounds=[],answers={},records=[],saved={}}={}){
   works=Array.isArray(works)?works:[];rounds=Array.isArray(rounds)?rounds:[];answers=plain(answers)?answers:{};records=Array.isArray(records)?records:[];saved=plain(saved)?saved:{};
-  const valid=entriesFor(works,rounds,answers),preferences=valid.filter(explicitPreference),discovery=distinctSets(valid.filter(discoveryEntry)),patterns=associations(discovery,preferences),curiosity=curiosityReading(discovery,valid),meaning=meaningReading(discovery,valid),ratings=contextRatings(valid),ratingReading=contextRatingReading(ratings),repeats=repeatComparisons(preferences),contexts=contextComparisons(discovery,valid),seeds=preferredSeeds(discovery),lookingAppraisals=buildLookingAppraisals({works,rounds,answers}),observations=[...patterns.map(pattern=>pattern.finding),...buildRefinedReadings({works,rounds,answers}),...buildContrastReadings({works,rounds,answers}),...lookingAppraisals.observations];
+  const valid=entriesFor(works,rounds,answers),preferences=valid.filter(explicitPreference),discovery=distinctSets(valid.filter(discoveryEntry)),patterns=associations(discovery,preferences),curiosity=curiosityReading(discovery,valid),meaning=meaningReading(discovery,valid),ratings=contextRatings(valid),ratingReading=contextRatingReading(ratings),repeats=repeatComparisons(preferences),contexts=contextComparisons(discovery,valid),seeds=preferredSeeds(discovery),lookingAppraisals=buildLookingAppraisals({works,rounds,answers}),symbolism=analyzeSymbolism({works,rounds,answers}),observations=[...patterns.map(pattern=>pattern.finding),...buildRefinedReadings({works,rounds,answers}),...buildContrastReadings({works,rounds,answers}),...lookingAppraisals.observations,...symbolism.observations];
   if(curiosity)observations.push(curiosity);
   if(meaning)observations.push(meaning);
   if(ratingReading)observations.push(ratingReading);
@@ -237,12 +243,13 @@ export function buildTastePortrait({works=[],rounds=[],answers={},records=[],sav
     version:TASTE_PORTRAIT_VERSION,
     observations:observations.sort((a,b)=>b.priority-a.priority),
     heroWorks:seeds.slice(0,5).map(seed=>({workId:seed.work.id,support:seed.support,counter:seed.counter})),
-    coverage:{validRounds:valid.length,preferenceTasks:preferences.length,distinctPreferenceSets:discovery.length,uniquePreferenceWorks:seenPreference.size,uniquePreferredWorks:seeds.length,repeatedSets:repeats.length,contextualTasks:contexts.length,curatorialRecords:validRecords.length,curiosityTasks:valid.filter(entry=>entry.round.kind==='spectrum'&&entry.round.criterion==='interest').length,meaningTasks:valid.filter(entry=>entry.round.kind==='grid'&&entry.round.axis==='meaning').length,contextRatingTasks:ratings.length,recognitionTasks:valid.filter(entry=>entry.round.kind==='match').length,lookingAppraisalTasks:lookingAppraisals.coverage.validResponses,catalogueWorks:works.length,scope},
+    coverage:{validRounds:valid.length,preferenceTasks:preferences.length,distinctPreferenceSets:discovery.length,uniquePreferenceWorks:seenPreference.size,uniquePreferredWorks:seeds.length,repeatedSets:repeats.length,contextualTasks:contexts.length,curatorialRecords:validRecords.length,curiosityTasks:valid.filter(entry=>entry.round.kind==='spectrum'&&entry.round.criterion==='interest').length,meaningTasks:valid.filter(entry=>entry.round.kind==='grid'&&entry.round.axis==='meaning').length,contextRatingTasks:ratings.length,symbolismTasks:symbolism.summary.responseCount,recognitionTasks:valid.filter(entry=>entry.round.kind==='match').length,lookingAppraisalTasks:lookingAppraisals.coverage.validResponses,catalogueWorks:works.length,scope},
     discovery:recommendations,
     consistency:{comparisons:repeats,repeatedSets:repeats.length,...counts,clearGap:TASTE_THRESHOLDS.clearPreferenceGap,contextualDifferences:contexts,limits:['Counts refer to the exact repeated sets, not an independent sample of pairs or a personality measure.']},
     contextRatings:ratings.map(rating=>({roundId:rating.entry.round.id,workId:rating.work.id,before:rating.before,after:rating.after,change:rating.change,claimRoundId:rating.claim?.round.id||null})),
     prospectiveChecks,
     lookingAppraisals,
+    symbolism,
     collection:{lookIds,studyIds,overlapIds:lookIds.filter(id=>studyIds.includes(id)),unratedSavedIds:unique([...lookIds,...studyIds]).filter(id=>!seenPreference.has(id)),limits:['Collection saves record intentions for looking and study. They are not added as unconditional preference answers.']},
     curatorialObservations,nextSteps:nextSteps.slice(0,4),unavailable,
     method:'A local descriptive portrait of validated answers and sourced catalogue links. Thresholds are provisional design rules; no population model, personality type, causal explanation or calibrated preference probability is claimed.'

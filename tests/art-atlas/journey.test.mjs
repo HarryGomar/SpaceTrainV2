@@ -21,7 +21,7 @@ test('One 50-round sequence includes comparisons, maps, statements, matching, no
   assert.deepEqual(rounds.flatMap((r,i)=>r.kind==='exercise'?[[i+1,r.exerciseKind]]:[]),[[8,'sorting'],[22,'difficult-edit'],[36,'curate'],[46,'sorting']]);
   assert.deepEqual(new Set(rounds.map(r=>r.kind)),new Set(['spectrum','grid','choice-grid','contrast','statements','match','context','exercise']));
   assert.equal(rounds.filter(r=>r.kind==='choice-grid').length,5);
-  assert.equal(rounds.filter(r=>r.kind==='grid').length,8);
+  assert.equal(rounds.filter(r=>r.kind==='grid').length,6);
   assert.deepEqual(rounds.flatMap((r,i)=>r.kind==='contrast'?[[i+1,r.contrastKind]]:[]),[[15,'chronology'],[19,'neighbour'],[27,'keep-leave'],[42,'same-subject']]);
   assert.deepEqual(rounds.filter(r=>r.kind==='match').map(r=>r.field),['artist','movement']);
   assert.ok(rounds.every(r=>restoreStudyRound(snapshotStudyRound(r),works)));
@@ -147,8 +147,8 @@ test('The expanded collection appears across small preference panels without ove
   const rounds=buildJourneyRounds(works),preference=preferencePanels(rounds);
   const appearances=new Map();
   for(const round of preference){assert.ok(round.works.length>=3&&round.works.length<=4);for(const id of workIds(round))appearances.set(id,(appearances.get(id)||0)+1);}
-  assert.equal(appearances.size,64);
-  assert.deepEqual([...preference].sort((a,b)=>a.evidence.panelNumber-b.evidence.panelNumber).map(round=>round.works.length),FIRST_PANEL_SIZES);
+  assert.equal(appearances.size,72);
+  assert.deepEqual([...preference].sort((a,b)=>a.evidence.panelNumber-b.evidence.panelNumber).map(round=>round.works.length),Array(18).fill(4));
   if(works.length>=54)assert.ok([...appearances.values()].every(count=>count===1));
   assert.ok(rounds.slice(0,3).every((round,index,early)=>early.slice(0,index).every(other=>!workIds(round).some(id=>workIds(other).includes(id)))));
   assert.deepEqual(new Set(workIds(rounds[3])),new Set(workIds(rounds[0])),'The first map deliberately revisits the first preference set under a different question');
@@ -168,11 +168,11 @@ test('Concrete appraisals and the one prospective claim retain distinct meanings
   const note=rounds[34];
   assert.equal(note.contextMode,'preference-before-after-v1');
   assert.equal(note.evidence.construct,'context-liking-change');
-  assert.equal(note.evidence.family,'context-change');
+  assert.equal(note.evidence.family,'symbolism-reveal');
   assert.equal(note.evidence.claimRoundId,claims[0].id);
   assert.equal(claims[0].evidence.contextRoundId,note.id);
   assert.equal(claims[0].evidence.checkId,note.evidence.checkId);
-  assert.equal(note.works[0].id,works.some(w=>w.id==='holbein-ambassadors')?'holbein-ambassadors':'redon-violette');
+  assert.equal(note.works[0].id,works.some(w=>w.id==='add-watts-hope')?'add-watts-hope':works.some(w=>w.id==='holbein-ambassadors')?'holbein-ambassadors':'redon-violette');
   assert.ok(!rounds.some(r=>/first stop|final stop|return visit|afternoon|easy to understand|feeling calm|ones I want to understand/i.test(r.title+' '+r.hint+' '+(r.statements||[]).map(s=>s.text).join(' '))));
 });
 
@@ -198,9 +198,9 @@ test('Every new map names its own construct and revisits its exact preference pa
   }
 });
 
-test('The curated64 plan binds reviewed briefs and reserves without manufacturing metadata for a saved different set',()=>{
+test('The curated72 plan binds reviewed briefs and reserves without manufacturing metadata for a saved different set',()=>{
   const selection=createJourneyStimulusPlan({works}),rounds=buildJourneyRounds(works),panels=preferencePanels(rounds).sort((a,b)=>a.evidence.panelNumber-b.evidence.panelNumber),bound=bindJourneyStimulusPlan(selection,rounds);
-  assert.equal(bound.bindingStatus,'exact-curated-plan');assert.equal(bound.boundMainWorkCount,64);assert.deepEqual(bound.reservations.batch2,selection.reservations.batch2);assert.equal(bound.reservations.batch2.length,18);assert.equal(bound.reservations.batch3.length,17);
+  assert.equal(bound.bindingStatus,'exact-curated-plan');assert.equal(bound.boundMainWorkCount,72);assert.deepEqual(bound.reservations.batch2,selection.reservations.batch2);assert.equal(bound.reservations.batch2.length,42);assert.equal(bound.reservations.batch3.length,42);
   assert.equal(new Set([...bound.boundMainWorkIds,...bound.reservations.batch2,...bound.reservations.batch3]).size,works.length);
   for(const [index,panel] of panels.entries()){
     const proposed=selection.panels[index];assert.deepEqual(new Set(workIds(panel)),new Set(proposed.workIds));assert.deepEqual(panel.evidence.plannerDiagnostic,proposed.plannerDiagnostic);assert.deepEqual(panel.evidence.editorialBrief,proposed.editorialBrief);assert.equal(panel.evidence.stimulusPlannerRevision,selection.revision);
@@ -245,8 +245,8 @@ test('Source backlinks identify real instruments without importing unrelated pre
     for(const key of ['heldOut','provisionalPrediction','trainingRoundIds','comparisonNovel','contrastKey'])assert.equal(round.evidence[key],undefined);
   }
   for(const round of banked){assert.ok(source.has(round.bankRoundId));assert.equal(source.get(round.bankRoundId).kind,round.kind);assert.equal(round.evidence.sourceBankRoundId,round.bankRoundId);assert.equal(round.evidence.sourceBinding,'journey-selected-works');}
-  assert.equal(newInstruments.length,17);assert.equal(banked.length,29);
-  for(const round of newInstruments){assert.ok(['grid','choice-grid','contrast'].includes(round.kind));assert.equal(round.evidence.newInstrument,true);assert.ok(round.evidence.instrumentRevision);assert.equal(round.evidence.sourceBankRoundId,undefined);assert.equal(round.evidence.sourceBinding,undefined);assert.ok(round.evidence.sourceUrls.length);for(const url of round.evidence.sourceUrls)assert.equal(new URL(url).protocol,'https:');assert.ok(round.evidence.limits.length);}
+  assert.equal(newInstruments.length,18);assert.equal(banked.length,28);
+  for(const round of newInstruments){assert.ok(['grid','choice-grid','contrast','context'].includes(round.kind));assert.equal(round.evidence.newInstrument,true);assert.ok(round.evidence.instrumentRevision);assert.equal(round.evidence.sourceBankRoundId,undefined);assert.equal(round.evidence.sourceBinding,undefined);assert.ok(round.evidence.sourceUrls.length);for(const url of round.evidence.sourceUrls)assert.equal(new URL(url).protocol,'https:');assert.ok(round.evidence.limits.length);}
 });
 
 test('Missing descriptors remain missing and do not prevent a sourced work being shown',()=>{

@@ -23,13 +23,14 @@ function session(pool = works, direction = 1, reverseInterest = true) {
   return answers;
 }
 const synthetic = works.map((w, i) => ({ ...w, id: 'work-' + i, artist: 'Artist ' + i, movement: 'Style ' + i, features: Object.fromEntries(FEATURES.map(k => [k, k === 'energy' ? i / 15 : .5])) }));
-test('The expanded catalogue keeps the original sixteen and verifies local images and open rights', () => {
+test('The expanded catalogue keeps the original sixteen and verifies local images and records actual rights', () => {
   assert.equal(works.filter(w=>w.coreQuiz!==false).length,16); assert.ok(works.length>=27); assert.equal(new Set(works.map(w => w.id)).size,works.length);
   assert.ok(works.filter(w=>w.country==='Mexico').length>=3);
   for (const w of works) {
-    assert.ok(['CC0','Public domain'].includes(w.rights));
+    assert.ok(typeof w.rights==='string'&&w.rights.trim());
     if(w.rights==='CC0') assert.match(w.sourceUrl, /^https:\/\/(www\.)?(?:clevelandart\.org\/art\/|metmuseum\.org\/art\/collection\/search\/|nga\.gov\/artworks\/)/);
-    else assert.match(w.rightsUrl,/^https:\/\/commons\.wikimedia\.org\/wiki\//);
+    else if(w.rights==='Public domain')assert.match(w.rightsUrl,/^https:\/\/commons\.wikimedia\.org\/wiki\//);
+    else{assert.match(w.rightsUrl,/^https:\/\//);assert.ok(w.creditLine);assert.equal(w.provenance.reuseStatus,'permission-not-established');}
     const bytes = fs.readFileSync(new URL('../../public/art-atlas/' + w.image, import.meta.url));
     assert.equal(bytes[0], 0xff); assert.equal(bytes[1], 0xd8); assert.ok(bytes.length > 1000);
   }

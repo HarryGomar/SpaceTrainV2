@@ -1,0 +1,7 @@
+.git
+.vercel
+node_modules
+dist/
+qa-output/
+artifacts/
+docs/art-atlas-additions-20261115/excluded-assets/

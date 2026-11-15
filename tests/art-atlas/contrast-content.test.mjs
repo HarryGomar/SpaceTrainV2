@@ -174,16 +174,22 @@ test('Unknown, changed or overlapping date intervals require review rather than 
   const none=select('chronology',{works:noDates});assert.equal(none.status,'unavailable');assert.deepEqual(none.workIds,[]);
 });
 
-test('Reviewed same-subject preferences respect the first64 and later cumulative rating allocations',()=>{
+test('Reviewed same-subject preferences respect each cumulative rating allocation',()=>{
   const currentFirst=new Set(notes.proposedFirst18Panels.flatMap(panel=>panel.workIds));
-  const rounds=[];
-  for(let i=0;i<4;i++){const selected=select('same-subject',{rounds,batchIndex:0});assert.equal(selected.status,'ready');assert.ok(selected.workIds.every(id=>currentFirst.has(id)));rounds.push(snapshot(selected,i));}
-  const waiting=select('same-subject',{rounds,batchIndex:0});assert.equal(waiting.status,'unavailable');
-  assert.ok(waiting.rejected.some(row=>/reserved/.test(row.reason)));
-  const flowers=select('same-subject',{rounds,batchIndex:1});assert.equal(flowers.status,'ready');assert.equal(flowers.contentId,'subject-flowers');
-  assert.equal(flowers.subject.reviewed,true);assert.equal(flowers.subject.samePersonOrPlace,false);
-  rounds.push(snapshot(flowers,4));
-  const objects=select('same-subject',{rounds,batchIndex:1});assert.equal(objects.status,'ready');assert.equal(objects.contentId,'subject-object-still-lifes');
+  const rounds=[],seen=new Set(),available=new Set(currentFirst),annotations=new Map(notes.annotations.map(row=>[row.workId,row]));
+  for(let batchIndex=0;batchIndex<3;batchIndex++){
+    if(batchIndex)for(const id of notes.reservePools['batch'+(batchIndex+1)]||[])available.add(id);
+    const expected=CONTRAST_CONTENT_BANK.filter(row=>row.kind==='same-subject'&&!seen.has(row.contentId)&&row.workIds.every(id=>available.has(id)&&(annotations.get(id)?.reserveUntilBatch??0)<=batchIndex));
+    for(let i=0;i<expected.length;i++){
+      const selected=select('same-subject',{rounds,batchIndex});assert.equal(selected.status,'ready');
+      assert.ok(expected.some(row=>row.contentId===selected.contentId));assert.ok(selected.workIds.every(id=>available.has(id)));
+      assert.equal(selected.subject.reviewed,true);assert.equal(selected.subject.samePersonOrPlace,false);
+      assert.ok(!seen.has(selected.contentId));seen.add(selected.contentId);rounds.push(snapshot(selected,rounds.length));
+    }
+    const waiting=select('same-subject',{rounds,batchIndex});assert.equal(waiting.status,'unavailable');
+    if(batchIndex===0)assert.ok(waiting.rejected.some(row=>/reserved/.test(row.reason)));
+  }
+  assert.equal(seen.size,6);
 });
 
 test('Existing content identities stay stable and all six keep/leave sets use different landmark works',()=>{
