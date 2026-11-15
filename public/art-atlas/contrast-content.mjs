@@ -136,13 +136,16 @@ function workIdsFor(round) {
 function anchorIdsFor(round) {
   return unique([...(Array.isArray(round?.anchorWorks) ? round.anchorWorks.map(work => work?.id) : []), ...(Array.isArray(round?.anchorIds) ? round.anchorIds : []), round?.anchorId].filter(text));
 }
-function ordinaryPreference(round, answer, offered) {
-  if (round.kind !== 'spectrum' || round.criterion !== 'preference' || round.evidence?.construct !== 'preference' || round.evidence?.unconditional === false || round.brief || round.evidence?.brief || anchorIdsFor(round).length || answer?.confirmed !== true || answer.criterion !== 'preference') return false;
+function ordinaryDefinition(round, offered) {
+  if (round.kind !== 'spectrum' || round.criterion !== 'preference' || round.evidence?.construct !== 'preference' || round.evidence?.unconditional === false || round.brief || round.evidence?.brief || anchorIdsFor(round).length || offered.length < 2 || new Set(offered).size !== offered.length) return false;
   if (!['individual-choice','feature-check','unconditional-preference','adaptive-preference'].includes(round.evidence?.family)) return false;
-  return Array.isArray(answer.workIds) && answer.workIds.length === offered.length && answer.workIds.every((id, i) => id === offered[i]) && plain(answer.positions) && Object.keys(answer.positions).length === offered.length && offered.every(id => Number.isFinite(answer.positions[id]) && answer.positions[id] >= 0 && answer.positions[id] <= 100);
+  return true;
+}
+function ordinaryPreference(round, answer, offered) {
+  return ordinaryDefinition(round,offered) && answer?.confirmed === true && !answer.skipped && answer.criterion === 'preference' && Array.isArray(answer.workIds) && answer.workIds.length === offered.length && answer.workIds.every((id, i) => id === offered[i]) && plain(answer.positions) && Object.keys(answer.positions).length === offered.length && offered.every(id => Number.isInteger(answer.positions[id]) && answer.positions[id] >= 0 && answer.positions[id] <= 100);
 }
 function historyFor(rounds, answers, byId) {
-  const counts = new Map(), plannedLastSeen = new Map(), plannedCounts = new Map(), lastSeen = new Map(), lastPossible = new Map(), exposureCounts = new Map(), ordinaryRated = new Set(), usedSets = new Set(), usedContent = new Set(), unknownRoundIds = [];
+  const counts = new Map(), plannedLastSeen = new Map(), plannedCounts = new Map(), lastSeen = new Map(), lastPossible = new Map(), exposureCounts = new Map(), ordinaryRated = new Set(), ordinarySources = [], usedSets = new Set(), usedContrastSets = new Set(), usedContent = new Set(), unknownRoundIds = [];
   rounds.forEach(round => { if (text(round?.id)) counts.set(round.id, (counts.get(round.id) || 0) + 1); });
   rounds.forEach((round, index) => {
     if (!plain(round) || round.unavailable || text(round.id) && counts.get(round.id) > 1) return;
@@ -152,6 +155,7 @@ function historyFor(rounds, answers, byId) {
     if (text(contentId)) usedContent.add(contentId);
     // Future/planned definitions prevent duplicated bookings, but do not prove exposure.
     usedSets.add(signature(all));
+    if (round.kind === 'contrast') usedContrastSets.add(round.contrastKind + '|' + signature(all));
     if (round.evidence?.stimulusVisibility === 'not-shown') return;
     // Specific question definitions provide a planning signal before answers exist.
     // An exercise's offered museum tray is not a plan to present every image in it.
@@ -159,6 +163,8 @@ function historyFor(rounds, answers, byId) {
       for (const id of all) { plannedLastSeen.set(id,index); plannedCounts.set(id,(plannedCounts.get(id) || 0) + 1); }
     }
     const answer = text(round.id) ? answers[round.id] : undefined;
+    const completed = ordinaryPreference(round,answer,offered);
+    if (ordinaryDefinition(round,offered) && offered.every(id => byId.has(id)) && (completed || answer === undefined)) ordinarySources.push({roundId:round.id,workIds:[...offered],index,statusAtSelection:completed?'completed':'planned'});
     let presented = [], unknown = [];
     const allowed = new Set(all);
     const clean = ids => unique(ids.filter(id => allowed.has(id)));
@@ -176,9 +182,37 @@ function historyFor(rounds, answers, byId) {
     for (const id of presented) { lastSeen.set(id, index); exposureCounts.set(id, (exposureCounts.get(id) || 0) + 1); }
     for (const id of unknown) lastPossible.set(id, index);
     if (unknown.length) unknownRoundIds.push(round.id || contentId || 'history-' + index);
-    if (ordinaryPreference(round, answer, offered)) offered.forEach(id => ordinaryRated.add(id));
+    if (completed) offered.forEach(id => ordinaryRated.add(id));
   });
-  return {plannedLastSeen,plannedCounts,lastSeen,lastPossible,exposureCounts,ordinaryRated,usedSets,usedContent,unknownRoundIds};
+  return {plannedLastSeen,plannedCounts,lastSeen,lastPossible,exposureCounts,ordinaryRated,ordinarySources,usedSets,usedContrastSets,usedContent,unknownRoundIds};
+}
+
+function baselineLinksFor(entry,history) {
+  const pairs=entry.workIds.flatMap((a,i)=>entry.workIds.slice(i+1).map(b=>[a,b]));
+  const links=pairs.flatMap(pair=>{
+    const sources=history.ordinarySources.filter(source=>pair.every(id=>source.workIds.includes(id)));
+    const source=sources.filter(source=>source.statusAtSelection==='completed').at(-1)||sources.at(-1);
+    return source?[{workIds:pair,sourceRoundId:source.roundId,sourceIndex:source.index,statusAtSelection:source.statusAtSelection}]:[];
+  });
+  return {candidatePairCount:pairs.length,completedPairCount:links.filter(link=>link.statusAtSelection==='completed').length,plannedPairCount:links.filter(link=>link.statusAtSelection==='planned').length,linkedPairCount:links.length,sourceRoundIds:unique(links.map(link=>link.sourceRoundId)),pairs:links,scope:'Exact pairs in earlier ordinary preference questions. Planned sources are opportunities, not answers. The reading still requires a complete actual earlier response and uses its latest eligible pair order.',numericRankingsInferred:false};
+}
+
+/** Prepare a new ordinary bridge inside the existing rating pool, without using categorical choices as ranks. */
+export function selectSubjectBaselinePair({works=[],rounds=[],answers={},seed='subject-baseline',batchIndex=0,notes={}}={}) {
+  const byId=catalogueFor(Array.isArray(works)?works:[]),safeRounds=Array.isArray(rounds)?rounds:[],history=historyFor(safeRounds,plain(answers)?answers:{},byId),batch=Number.isInteger(batchIndex)&&batchIndex>=0?batchIndex:0;
+  const candidates=[];
+  for(const entry of CONTRAST_CONTENT_BANK.filter(entry=>entry.kind==='same-subject')){
+    if(entry.workIds.some(id=>!byId.has(id))||history.usedContent.has(entry.contentId)||history.usedContrastSets.has('same-subject|'+signature(entry.workIds))||!sameSubjectReleased(entry,notes,batch))continue;
+    const individualSources=entry.workIds.map(id=>history.ordinarySources.filter(source=>source.workIds.includes(id)).filter(source=>source.statusAtSelection==='completed').at(-1)||history.ordinarySources.filter(source=>source.workIds.includes(id)).at(-1));
+    if(individualSources.some(source=>!source))continue;
+    const existing=baselineLinksFor(entry,history);if(existing.linkedPairCount)continue;
+    const completedWorks=individualSources.filter(source=>source.statusAtSelection==='completed').length;
+    candidates.push({entry,individualSources,cost:[-completedWorks,Math.abs(entry.preferredBatch-batch),Math.max(...entry.workIds.map(id=>history.plannedLastSeen.get(id)??-1)),hash(seed+'|'+entry.contentId)]});
+  }
+  candidates.sort((a,b)=>{for(let i=0;i<a.cost.length;i++)if(a.cost[i]!==b.cost[i])return a.cost[i]-b.cost[i];return a.entry.contentId.localeCompare(b.entry.contentId);});
+  if(!candidates.length)return{status:'unavailable',workIds:[],reason:'No unused reviewed subject pair needs preparation within the preceding ordinary rating pool.'};
+  const chosen=candidates[0];
+  return{status:'ready',workIds:[...chosen.entry.workIds],preparesContrastContentId:chosen.entry.contentId,sourceUrls:chosen.entry.workIds.map(id=>byId.get(id).sourceUrl),ordinaryPoolSourceRoundIds:unique(chosen.individualSources.map(source=>source.roundId)),statusAtSelection:chosen.individualSources.every(source=>source.statusAtSelection==='completed')?'completed-individual-ratings':'planned-individual-ratings',scope:'A proposed ordinary pair source for a later reviewed subject comparison. Uses only works already in preceding ordinary questions; actual completed answers remain necessary. No categorical rank or strength is inferred.'};
 }
 function sameSubjectReleased(entry, notes, batchIndex) {
   const annotations = new Map((Array.isArray(notes?.annotations) ? notes.annotations : []).filter(row => text(row?.workId)).map(row => [row.workId, row]));
@@ -205,7 +239,7 @@ const PROMPTS = freeze({
   'keep-leave': {title:'Keep one. Leave one.',prompt:'Which would you keep, and which would you leave out?',hint:'Choose two different paintings. The other four can stay undecided.',construct:'relative-preference-extremes'},
   neighbour: {title:'Choose a neighbour.',prompt:'Which has the strongest connection to this painting for you?',hint:'Choose one, then tell us what connects them. There is no single correct connection.',construct:'perceived-relatedness'},
   chronology: {title:'Put them in time.',prompt:'Put these works in order of when they were made.',hint:'Start with the earliest. Use Not sure if you do not know.',construct:'art-history-chronology'},
-  'same-subject': {title:'One subject. Two treatments.',prompt:'Which do you prefer?',hint:'Choose one, or choose No preference.',construct:'subject-conditioned-preference'}
+  'same-subject': {title:'One subject. Two treatments.',prompt:'Which do you prefer?',hint:'Choose the painting you prefer, or choose No preference.',construct:'subject-conditioned-preference'}
 });
 
 /** Pass preceding round definitions in chronological order; answers or visibility events establish actual exposure. */
@@ -219,8 +253,9 @@ export function selectContrastContent({works=[],rounds=[],answers={},seed='contr
   const candidates = [];
   for (const entry of CONTRAST_CONTENT_BANK.filter(entry => entry.kind === kind)) {
     const allIds = unique([...entry.workIds,...(entry.anchorId ? [entry.anchorId] : [])]);
+    const linkedKind=['keep-leave','neighbour','same-subject'].includes(kind),baselineLinks=baselineLinksFor(entry,history),visualSetWasOffered=history.usedSets.has(signature(allIds));
     let reason = allIds.some(id => !byId.has(id)) ? 'Missing, duplicate or ineligible source-linked work.' : null;
-    if (!reason && (history.usedContent.has(entry.contentId) || history.usedSets.has(signature(allIds)))) reason = 'This content or exact artwork set is already in the supplied history.';
+    if (!reason && (history.usedContent.has(entry.contentId) || history.usedContrastSets.has(kind+'|'+signature(allIds)) || visualSetWasOffered&&!(linkedKind&&baselineLinks.linkedPairCount))) reason = 'This content or exact artwork set is already in the supplied history, without a new eligible cross-source comparison.';
     if (!reason && kind === 'same-subject' && !sameSubjectReleased(entry,safeNotes,batch)) reason = 'A genuine preference item is reserved for a later rating allocation.';
     const dates = !reason && kind === 'chronology' ? dateEvidenceFor(entry,byId) : null;
     if (!reason && kind === 'chronology' && !dates) reason = 'Source-checked closed date ranges are missing, changed or overlapping; review before use.';
@@ -233,7 +268,8 @@ export function selectContrastContent({works=[],rounds=[],answers={},seed='contr
     const mostRecent = Math.max(-1,...allIds.map(id => history.lastSeen.get(id) ?? -1));
     const totalExposure = allIds.reduce((sum,id) => sum + (history.exposureCounts.get(id) || 0),0);
     const possibleRecent = allIds.filter(id => (history.lastPossible.get(id) ?? -1) >= recentFloor).length;
-    candidates.push({entry,allIds,dates,plannedRecentCount,recentCount,cost:[plannedRecentCount,mostRecentPlanned,recentCount,mostRecent,totalExposure,plannedCount,possibleRecent,Math.abs(entry.preferredBatch-batch),hash(seed+'|'+batch+'|'+entry.contentId)]});
+    const baselineCost=linkedKind?[baselineLinks.completedPairCount?0:baselineLinks.plannedPairCount?1:2,-baselineLinks.completedPairCount,-baselineLinks.linkedPairCount]:[];
+    candidates.push({entry,allIds,dates,baselineLinks,visualSetWasOffered,plannedRecentCount,recentCount,cost:[...baselineCost,plannedRecentCount,mostRecentPlanned,recentCount,mostRecent,totalExposure,plannedCount,possibleRecent,Math.abs(entry.preferredBatch-batch),hash(seed+'|'+batch+'|'+entry.contentId)]});
   }
   candidates.sort((a,b) => {for(let i=0;i<a.cost.length;i++)if(a.cost[i]!==b.cost[i])return a.cost[i]-b.cost[i];return a.entry.contentId.localeCompare(b.entry.contentId);});
   if (!candidates.length) return unavailable('No unused eligible source-checked set is available for this format.',rejected);
@@ -241,6 +277,12 @@ export function selectContrastContent({works=[],rounds=[],answers={},seed='contr
   let workIds = ordered(entry.workIds,seed+'|'+batch+'|'+entry.contentId+'|display');
   if (chosen.dates && signature(workIds) === signature(chosen.dates.canonicalOrder) && workIds.every((id,i) => id === chosen.dates.canonicalOrder[i])) workIds = [...workIds.slice(1),workIds[0]];
   const result = {status:'ready',kind:'contrast',contrastKind:kind,contentId:entry.contentId,revision:CONTRAST_CONTENT_REVISION,workIds,...clone(PROMPTS[kind]),curationNotes:clone(entry.curationNotes),residualConfounds:clone(entry.residualConfounds || ['Subject, maker, format, date, reproduction and prior knowledge can vary.']),sourceUrls:unique([...allIds.map(id => byId.get(id).sourceUrl),...Object.values(chosen.dates?.dateEvidence || {}).map(record => record.sourceUrl)]),sourceStatus:'Reviewed editorial content from the current source-linked study collection.',exposureAudit:{scope:'Supplied session history only; outside exposure is unmeasured.',knownPresentedIds:allIds.filter(id => history.lastSeen.has(id)),noRecordedPresentationIds:allIds.filter(id => !history.lastSeen.has(id) && !history.lastPossible.has(id)),unknownExposureIds:allIds.filter(id => history.lastPossible.has(id)),previousOrdinaryPreferenceIds:allIds.filter(id => history.ordinaryRated.has(id)),plannedQuestionLastIndex:Object.fromEntries(allIds.map(id => [id,history.plannedLastSeen.get(id) ?? null])),plannedQuestionPresentationCounts:Object.fromEntries(allIds.map(id => [id,history.plannedCounts.get(id) || 0])),recentPlannedQuestionOverlap:chosen.plannedRecentCount,plannedSpacingScope:'Specific non-exercise question definitions, including separate anchors. This is planned spacing, not evidence of actual viewing. Museum/exercise offered trays do not update it.',lastKnownPresentationIndex:Object.fromEntries(allIds.map(id => [id,history.lastSeen.get(id) ?? null])),knownPresentationCounts:Object.fromEntries(allIds.map(id => [id,history.exposureCounts.get(id) || 0])),recentKnownOverlap:chosen.recentCount,unknownExposureRoundIds:unique(history.unknownRoundIds),exactSetPreviouslyPlannedOrPresented:false,selectionBasis:'Unused reviewed sets first; then fewer recent planned specific-question presentations, older last planned question, recorded actual recency/exposure, planned question count, possible recent exposure, phase fit and seeded tie-break.',unseenClaim:false},selectionAudit:{eligibleSetCount:candidates.length,rejected,preferredBatch:entry.preferredBatch,actualBatch:batch},limits:['This is editorial stimulus selection, not optimal information gain.','Different tasks over shared pictures remain dependent evidence.','Previous ordinary preference ratings, image exposure, recognition and liking are separate records.','No content set identifies a personality or establishes why a feature caused a preference.']};
+  result.baselineLinks=clone(chosen.baselineLinks);
+  result.selectionAudit.baselineFallback=['keep-leave','neighbour','same-subject'].includes(kind)&&!chosen.baselineLinks.linkedPairCount;
+  result.selectionAudit.baselineFallbackReason=result.selectionAudit.baselineFallback?'No eligible earlier ordinary pair is available in an unused reviewed set; this remains a standalone categorical observation.':null;
+  result.exposureAudit.exactSetPreviouslyPlannedOrPresented=chosen.visualSetWasOffered;
+  result.exposureAudit.selectionBasis='Completed ordinary pair links first, planned ordinary opportunities second, then existing spacing/exposure costs and seeded curation. Chronology has no preference-link priority.';
+  if(chosen.visualSetWasOffered)result.exposureAudit.crossSourceRevisit='The exact images appeared in an earlier ordinary comparison. This is an intentional comparison under a different instruction, not a novel artwork set.';
   if (entry.anchorId) { result.anchorId = entry.anchorId; result.relationshipOptions = clone(RELATIONSHIP_OPTIONS); result.noCorrectNeighbour = true; }
   if (entry.subject) result.subject = clone(entry.subject);
   if (chosen.dates) Object.assign(result,clone(chosen.dates),{hideDatesUntilFeedback:true,dateUncertainty:'Museum dates can be approximate. Stored intervals are catalogue ranges, not certainty estimates.'});

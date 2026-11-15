@@ -48,7 +48,7 @@ export function buildContrastRound({works, content, id, batchIndex = 0} = {}) {
   const round = {
     id, kind:'contrast', format:'contrast', contrastKind:content.contrastKind,
     contentId:content.contentId, title:content.contrastKind==='same-subject'&&content.subject?.label?content.subject.label:content.title || content.prompt, prompt:content.prompt || content.title,
-    hint:content.hint || '', works:content.workIds.map(workId => clone(byId.get(workId))),
+    hint:content.contrastKind==='same-subject'?'Choose the painting you prefer, or choose No clear preference.':content.hint || '', works:content.workIds.map(workId => clone(byId.get(workId))),
     anchorWorks:content.anchorId ? [clone(byId.get(content.anchorId))] : [],
     sourceUrls:clone(content.sourceUrls || []), curationNotes:clone(content.curationNotes || []),
     residualConfounds:clone(content.residualConfounds || []),

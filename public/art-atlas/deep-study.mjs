@@ -351,7 +351,7 @@ export function createDeepStudy({app,getWorks,image,esc,keepButtons,navigate,sho
   function focus() {requestAnimationFrame(()=>{const h=app.querySelector('#question-title')||app.querySelector('h1');h?.setAttribute('tabindex','-1');h?.focus({preventScroll:true});window.scrollTo({top:0,behavior:'instant'});});}
   function home() {
     const rounds=actualRounds(),completed=rounds.filter(resolved).length,answered=answerCount(),skipped=rounds.filter(r=>data.answers[r.id]?.skipped).length,unavailable=rounds.filter(r=>r.unavailable).length;
-    return renderStudyTitle({lengths:STUDY_LENGTHS,target:data.target,completed,answered,skipped,unavailable,worksCount:sessionWorks().length,sessionInfo:sessionInfoMarkup(),storage,started:!!data.startedAt,finished:!!data.startedAt&&completed===data.target});
+    return renderStudyTitle({lengths:STUDY_LENGTHS,target:data.target,completed,answered,skipped,unavailable,worksCount:sessionWorks().length,sessionInfo:sessionInfoMarkup(),storage,profileAvailable:answered>0,started:!!data.startedAt,finished:!!data.startedAt&&completed===data.target});
   }
   function sessionInfoMarkup() {
     const manifest=data.manifest,archives=data.archives.filter(s=>plainObject(s)&&s.manifest?.id);

@@ -4,7 +4,7 @@ import {buildStudyRounds} from './question-bank.mjs';
 import {SORTING_WORKS} from './sorting-table.mjs';
 import {planStimulusPanels} from './stimulus-planner.mjs';
 import CURATION_NOTES from './curation-notes.json' with {type:'json'};
-import {selectContrastContent} from './contrast-content.mjs';
+import {selectContrastContent,selectSubjectBaselinePair} from './contrast-content.mjs';
 import {buildContrastRound} from './contrast-rounds.mjs';
 import {selectArrangementStimuli} from './arrangement-stimuli.mjs';
 
@@ -39,7 +39,7 @@ const SCHEDULE=[
   P(1),G('familiarity','a'),G('shortlist','c'),V(1,'achievement'),P(5),P(2),P(3),X('sorting'),G('shortlist','a'),P(4),
   G('familiarity','b'),P(6),P(7),P(8),V(5,'reading'),P(9),X('artist'),X('movement'),V(8,'returnResponse'),P(10),
   V(6,'achievement'),X('difficult-edit'),G('shortlist','b'),P(11),A(9,'density'),P(12),A(10,'surprise'),P(13),V(9,'reading'),P(14),
-  X('statement'),V(11,'achievement'),P(15),A(12,'openness'),X('context'),X('curate'),P(16),V(14,'returnResponse'),P(17),V(12,'reading'),
+  X('statement'),V(11,'achievement'),P(15),A(8,'openness'),X('context'),X('curate'),P(16),V(14,'returnResponse'),P(17),V(12,'reading'),
   P(18),G('shortlist','d'),A(6,'figures'),V(15,'returnResponse'),V(3,'achievement'),X('sorting'),G('shortlist','e'),A(16,'surprise'),X('bridge-preference'),A(14,'surface')
 ];
 const CONTRAST_SLOTS=new Map([[14,'chronology'],[18,'neighbour'],[26,'keep-leave'],[41,'same-subject']]);
@@ -224,7 +224,7 @@ export function buildJourneyRounds(works,answers={},options={}){
       round={kind:'spectrum',criterion:'preference',title:source.title,hint:source.hint,works:[...source.works].reverse(),...(source.scale?{scale:structuredClone(source.scale)}:{})};
       evidence={construct:'preference',family:'individual-choice',role:'repeat',setId:'journey-batch-'+(batchIndex+1)+'-late-exact-return',repeatOf:source.id,sourceRoundId:source.id,sourceSetId:source.evidence.setId||null,dependencyGroup:source.evidence.dependencyGroup||source.evidence.setId||source.id,exactRepeat:true,lateExactReturn:true,presentationOrder:'reversed-from-source',priorMeasureRoundIds:[source.id],sourcePrompt:{title:source.title,hint:source.hint,criterion:source.criterion,...(source.scale?{scale:structuredClone(source.scale)}:{})},delay:{minimumRounds:8,interveningRoundCount:globalIndex-lastExposure-1,sourceRoundIndex:offset+sourceIndex,lastArtworkExposureIndex:lastExposure,sourceBatchIndex:batchIndex,targetBatchIndex:batchIndex,basis:'intervening-planned-exposures'},selectionMethod:'delayed-exact-return',limits:['This repeats the same prompt, scale and complete quartet after at least eight intervening planned rounds since any offered exposure.','The delay is based on conservative planned exposure, not measured looking time. Comparison requires two valid completed responses. Memory, familiarity and context can contribute.',...LIMITS]};
     }else if(contrastRound){
-      round=contrastRound;evidence={...contrastRound.evidence,newInstrument:true,instrumentRevision:contrastRound.contrastKind+'-v1',selectionMethod:'curated-contrast-content',limits:[...contrastContent.limits,...contrastRound.residualConfounds,...LIMITS]};
+      round=contrastRound;evidence={...contrastRound.evidence,newInstrument:true,instrumentRevision:contrastRound.contrastKind+'-v1',selectionMethod:'curated-contrast-content',baselineLinkPlan:structuredClone(contrastContent.baselineLinks),baselineFallback:contrastContent.selectionAudit.baselineFallback,baselineFallbackReason:contrastContent.selectionAudit.baselineFallbackReason,limits:[...contrastContent.limits,...contrastRound.residualConfounds,...LIMITS]};
     }else if(['preference','curiosity','response','connection'].includes(spec.task)){
       template=templateFor(item=>item.evidence.construct===spec.task&&item.evidence.role==='discovery');
       if(spec.task==='preference')round={kind:'spectrum',criterion:'preference',title:'Which do you prefer?',hint:'Place the paintings by preference. Equal positions are fine.',scale:{left:'Less preferred',right:'More preferred'},works:art};
@@ -257,9 +257,10 @@ export function buildJourneyRounds(works,answers={},options={}){
       evidence={construct:spec.mode==='familiarity'?'reported-prior-familiarity':'unranked-subset-selection',family:'selection-grid',role:'check',gridGroup:group,setId:group,newInstrument:true,instrumentRevision:spec.mode==='shortlist'?'keep-selection-grid-v2':'familiarity-grid-v1',varietyPolicy:JOURNEY_VARIETY_POLICY,varietySelection:{...structuredClone(gridSelectionAudits.get(group)),reusedCachedIdentity:reusedGrid},...(familiarId?{familiarityRoundId:familiarId}:{}),...(index===46?{lateReturnFallback:{minimumRounds:8,reason:'No nonopening ordinary quartet met the conservative exposure gap.'}}:{}),sourceUrls:['https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2021.694927/full'],limits:['A familiar painting is self-reported recognition, not expertise.','You may select any number. Unselected paintings are not dislikes or equal ranks.','Unchecked paintings were not marked familiar; this does not prove they have never been seen.',...LIMITS]};
     }else if(spec.task==='bridge-preference'){
       template=templateFor(item=>item.kind==='spectrum'&&item.evidence.construct==='preference');
-      const a=panels.get(17)||pool.slice(0,4),b=panels.get(18)||pool.slice(4,8),chosen=[a[0],b.find(work=>work.id!==a[0].id)||pool.find(work=>work.id!==a[0].id)];
+      const preparation=selectSubjectBaselinePair({works:pool,rounds:[...[...history.values()].filter(source=>!/^journey-\d+$/.test(source.id)||Number(source.id.slice(8))<=offset),...sequence],answers,seed:selectionSeed+'-subject-baseline',batchIndex,notes:CURATION_NOTES});
+      const a=panels.get(17)||pool.slice(0,4),b=panels.get(18)||pool.slice(4,8),chosen=preparation.status==='ready'?preparation.workIds.map(workId=>pool.find(work=>work.id===workId)):[a[0],b.find(work=>work.id!==a[0].id)||pool.find(work=>work.id!==a[0].id)];
       round={kind:'spectrum',criterion:'preference',title:'Which do you prefer?',hint:'Place both paintings by preference. Equal positions are fine.',scale:{left:'Less preferred',right:'More preferred'},works:chosen};
-      evidence={construct:'preference',family:'individual-choice',role:'probe',bridgeComparison:true,limits:['This links works from separate earlier panels. It is not another discovery set or a registered prediction test.',...LIMITS]};
+      evidence={construct:'preference',family:'individual-choice',role:'probe',bridgeComparison:true,subjectBaselinePreparation:structuredClone(preparation),...(preparation.status==='ready'?{preparesContrastContentId:preparation.preparesContrastContentId}:{}),limits:['This links works from separate earlier ordinary questions. It is not another discovery set or a registered prediction test.','A prepared source is only a future comparison opportunity until an actual complete answer is recorded. No later choice or numeric rank is assumed.',...LIMITS]};
     }else if(spec.task==='meaning'){
       template=templateFor(item=>item.kind==='grid'&&item.axis==='connection');
       round={kind:'grid',axis:'meaning',title:'Meaning and interpretation.',hint:'Place each painting by how much meaning it seems to suggest and how much you want to explore that meaning.',works:[...art].reverse()};

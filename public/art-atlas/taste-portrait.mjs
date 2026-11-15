@@ -1,4 +1,5 @@
 import {buildRefinedReadings} from './reading-patterns-v2.mjs';
+import {buildLookingAppraisals} from './looking-appraisals.mjs';
 import {buildContrastReadings} from './contrast-readings.mjs';
 import {contextPurpose} from './profile-comparisons.mjs';
 import {validAnswer,FEATURES,AXES} from './engine.mjs';
@@ -209,7 +210,7 @@ function discoveryRoutes(works,discovery,seeds,patterns,allPreference=discovery)
 /** All calculations are local descriptions. No population model is implied. */
 export function buildTastePortrait({works=[],rounds=[],answers={},records=[],saved={}}={}){
   works=Array.isArray(works)?works:[];rounds=Array.isArray(rounds)?rounds:[];answers=plain(answers)?answers:{};records=Array.isArray(records)?records:[];saved=plain(saved)?saved:{};
-  const valid=entriesFor(works,rounds,answers),preferences=valid.filter(explicitPreference),discovery=distinctSets(valid.filter(discoveryEntry)),patterns=associations(discovery,preferences),curiosity=curiosityReading(discovery,valid),meaning=meaningReading(discovery,valid),ratings=contextRatings(valid),ratingReading=contextRatingReading(ratings),repeats=repeatComparisons(preferences),contexts=contextComparisons(discovery,valid),seeds=preferredSeeds(discovery),observations=[...patterns.map(pattern=>pattern.finding),...buildRefinedReadings({works,rounds,answers}),...buildContrastReadings({works,rounds,answers})];
+  const valid=entriesFor(works,rounds,answers),preferences=valid.filter(explicitPreference),discovery=distinctSets(valid.filter(discoveryEntry)),patterns=associations(discovery,preferences),curiosity=curiosityReading(discovery,valid),meaning=meaningReading(discovery,valid),ratings=contextRatings(valid),ratingReading=contextRatingReading(ratings),repeats=repeatComparisons(preferences),contexts=contextComparisons(discovery,valid),seeds=preferredSeeds(discovery),lookingAppraisals=buildLookingAppraisals({works,rounds,answers}),observations=[...patterns.map(pattern=>pattern.finding),...buildRefinedReadings({works,rounds,answers}),...buildContrastReadings({works,rounds,answers}),...lookingAppraisals.observations];
   if(curiosity)observations.push(curiosity);
   if(meaning)observations.push(meaning);
   if(ratingReading)observations.push(ratingReading);
@@ -236,11 +237,12 @@ export function buildTastePortrait({works=[],rounds=[],answers={},records=[],sav
     version:TASTE_PORTRAIT_VERSION,
     observations:observations.sort((a,b)=>b.priority-a.priority),
     heroWorks:seeds.slice(0,5).map(seed=>({workId:seed.work.id,support:seed.support,counter:seed.counter})),
-    coverage:{validRounds:valid.length,preferenceTasks:preferences.length,distinctPreferenceSets:discovery.length,uniquePreferenceWorks:seenPreference.size,uniquePreferredWorks:seeds.length,repeatedSets:repeats.length,contextualTasks:contexts.length,curatorialRecords:validRecords.length,curiosityTasks:valid.filter(entry=>entry.round.kind==='spectrum'&&entry.round.criterion==='interest').length,meaningTasks:valid.filter(entry=>entry.round.kind==='grid'&&entry.round.axis==='meaning').length,contextRatingTasks:ratings.length,recognitionTasks:valid.filter(entry=>entry.round.kind==='match').length,catalogueWorks:works.length,scope},
+    coverage:{validRounds:valid.length,preferenceTasks:preferences.length,distinctPreferenceSets:discovery.length,uniquePreferenceWorks:seenPreference.size,uniquePreferredWorks:seeds.length,repeatedSets:repeats.length,contextualTasks:contexts.length,curatorialRecords:validRecords.length,curiosityTasks:valid.filter(entry=>entry.round.kind==='spectrum'&&entry.round.criterion==='interest').length,meaningTasks:valid.filter(entry=>entry.round.kind==='grid'&&entry.round.axis==='meaning').length,contextRatingTasks:ratings.length,recognitionTasks:valid.filter(entry=>entry.round.kind==='match').length,lookingAppraisalTasks:lookingAppraisals.coverage.validResponses,catalogueWorks:works.length,scope},
     discovery:recommendations,
     consistency:{comparisons:repeats,repeatedSets:repeats.length,...counts,clearGap:TASTE_THRESHOLDS.clearPreferenceGap,contextualDifferences:contexts,limits:['Counts refer to the exact repeated sets, not an independent sample of pairs or a personality measure.']},
     contextRatings:ratings.map(rating=>({roundId:rating.entry.round.id,workId:rating.work.id,before:rating.before,after:rating.after,change:rating.change,claimRoundId:rating.claim?.round.id||null})),
     prospectiveChecks,
+    lookingAppraisals,
     collection:{lookIds,studyIds,overlapIds:lookIds.filter(id=>studyIds.includes(id)),unratedSavedIds:unique([...lookIds,...studyIds]).filter(id=>!seenPreference.has(id)),limits:['Collection saves record intentions for looking and study. They are not added as unconditional preference answers.']},
     curatorialObservations,nextSteps:nextSteps.slice(0,4),unavailable,
     method:'A local descriptive portrait of validated answers and sourced catalogue links. Thresholds are provisional design rules; no population model, personality type, causal explanation or calibrated preference probability is claimed.'

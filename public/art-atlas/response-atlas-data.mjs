@@ -1,4 +1,5 @@
 import {AXES, validAnswer} from './engine.mjs';
+import {buildLookingAppraisals} from './looking-appraisals.mjs';
 
 export const RESPONSE_ATLAS_VERSION = 1;
 export const ATLAS_CLEAR_GAP = 15;
@@ -205,10 +206,11 @@ export function buildResponseAtlas({works = [], rounds = [], answers = {}, recor
   works = Array.isArray(works) ? works : []; rounds = Array.isArray(rounds) ? rounds : []; answers = plain(answers) ? answers : {};
   const counts = new Map(); for (const work of works) if (plain(work) && named(work.id)) counts.set(work.id, (counts.get(work.id) || 0) + 1);
   const validWorks = works.filter(work => plain(work) && named(work.id) && counts.get(work.id) === 1), {entries, excluded} = validEntries(validWorks, rounds, answers);
-  const maps = personalMaps(entries), graph = preferenceGraph(entries, validWorks), panels = matchedPanels(entries), choices = choiceObservations(entries);
-  return {version: RESPONSE_ATLAS_VERSION, dimensions: collectionDimensions(validWorks), maps, graph, matchedPanels: panels, choices,
+  const gridMaps = personalMaps(entries), graph = preferenceGraph(entries, validWorks), panels = matchedPanels(entries), choices = choiceObservations(entries),lookingAppraisals=buildLookingAppraisals({works:validWorks,rounds,answers}),maps=[...gridMaps,...lookingAppraisals.panels];
+  return {version: RESPONSE_ATLAS_VERSION, dimensions: collectionDimensions(validWorks), maps, graph, matchedPanels: panels, choices,lookingAppraisals,appraisalPanels:lookingAppraisals.panels,
     coverage: {catalogueWorks: validWorks.length, excludedCatalogueEntries: works.length - validWorks.length, roundsSeen: rounds.length, validGridRounds: entries.filter(entry => entry.round.kind === 'grid').length,
-      gridPoints: maps.reduce((sum, map) => sum + map.points.length, 0), validPreferenceRounds: graph.sourceRoundIds.length, validCuriosityRounds: entries.filter(entry => curiosity(entry.round)).length,
+      gridPoints: gridMaps.reduce((sum, map) => sum + map.points.length, 0), validPreferenceRounds: graph.sourceRoundIds.length, validCuriosityRounds: entries.filter(entry => curiosity(entry.round)).length,
+      validAppraisalRounds:lookingAppraisals.coverage.validResponses,matchedAppraisalPanels:lookingAppraisals.panels.length,appraisalPoints:lookingAppraisals.responses.reduce((sum,response)=>sum+response.points.length,0),unmatchedAppraisalRoundIds:lookingAppraisals.coverage.unmatchedRoundIds,
       validChoiceGrids: choices.length, matchedPanels: panels.length, clearPreferenceObservations: graph.edges.length, tiedComparisons: graph.comparisons.filter(item => item.relation === 'tie').length,
       nearTiedComparisons: graph.comparisons.filter(item => item.relation === 'near-tie').length, excludedRounds: excluded, arrangementRecordsSupplied: Array.isArray(records) ? records.length : 0, arrangementRecordsUsed: 0},
     limits: ['Collection dimensions describe artwork metadata. Personal maps describe reported responses. They are separate coordinate systems.', 'The caller must supply the saved catalogue and frozen question definitions for the history being displayed.', 'Arrangement records are outside this response atlas. Room and sorting evidence belongs to its original geometry and instrument.']};
