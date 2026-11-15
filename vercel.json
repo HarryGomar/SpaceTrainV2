@@ -17,8 +17,19 @@
   ],
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/art-atlas/",
+      "destination": "/art-atlas/index.html"
+    },
+    {
+      "source": "/:path((?!art-atlas/).*)",
       "destination": "/index.html"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/art-atlas",
+      "destination": "/art-atlas/",
+      "permanent": true
     }
   ]
 }

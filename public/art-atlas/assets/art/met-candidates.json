@@ -1,0 +1,2027 @@
+[
+  {
+    "objectID": 352408,
+    "isHighlight": false,
+    "accessionNumber": "25.70.29",
+    "accessionYear": "1925",
+    "isPublicDomain": false,
+    "primaryImage": "",
+    "primaryImageSmall": "",
+    "additionalImages": [],
+    "constituents": [
+      {
+        "constituentID": 162019,
+        "role": "Artist",
+        "name": "Made and written by Vasily Kandinsky",
+        "constituentULAN_URL": "http://vocab.getty.edu/page/ulan/500021093",
+        "constituentWikidata_URL": "https://www.wikidata.org/wiki/Q61064",
+        "gender": ""
+      },
+      {
+        "constituentID": 100178,
+        "role": "Printer",
+        "name": "Poeschel &amp; Trepte",
+        "constituentULAN_URL": "",
+        "constituentWikidata_URL": "",
+        "gender": ""
+      },
+      {
+        "constituentID": 89449,
+        "role": "Printer",
+        "name": "Colored woodcuts printed by Friedrich Bruckmann, A.-G.",
+        "constituentULAN_URL": "",
+        "constituentWikidata_URL": "",
+        "gender": ""
+      },
+      {
+        "constituentID": 83583,
+        "role": "Publisher",
+        "name": "R. Piper &amp; Co.",
+        "constituentULAN_URL": "",
+        "constituentWikidata_URL": "",
+        "gender": ""
+      }
+    ],
+    "department": "Drawings and Prints",
+    "objectName": "Book",
+    "title": "Klänge",
+    "culture": "",
+    "period": "",
+    "dynasty": "",
+    "reign": "",
+    "portfolio": "",
+    "artistRole": "Artist",
+    "artistPrefix": "Made and written by",
+    "artistDisplayName": "Vasily Kandinsky",
+    "artistDisplayBio": "French (born Russia), Moscow 1866–1944 Neuilly-sur-Seine",
+    "artistSuffix": "",
+    "artistAlphaSort": "Kandinsky, Vasily",
+    "artistNationality": "French, born Russia",
+    "artistBeginDate": "1866",
+    "artistEndDate": "1944",
+    "artistGender": "",
+    "artistWikidata_URL": "https://www.wikidata.org/wiki/Q61064",
+    "artistULAN_URL": "http://vocab.getty.edu/page/ulan/500021093",
+    "objectDate": "1912",
+    "objectBeginDate": 1912,
+    "objectEndDate": 1912,
+    "medium": "Book: illustrated with woodcuts and color woodcuts",
+    "dimensions": "Overall: 11 1/4 x 11 1/4 x 5/8 in. (28.5 x 28.5 x 1.6 cm)",
+    "measurements": [
+      {
+        "elementName": "Overall",
+        "elementDescription": null,
+        "elementMeasurements": {
+          "Depth": 1.6,
+          "Height": 28.5,
+          "Width": 28.5
+        }
+      }
+    ],
+    "creditLine": "Harris Brisbane Dick Fund, 1925",
+    "geographyType": "Published in",
+    "city": "Munich",
+    "state": "",
+    "county": "",
+    "country": "Germany",
+    "region": "",
+    "subregion": "",
+    "locale": "",
+    "locus": "",
+    "excavation": "",
+    "river": "",
+    "classification": "Books",
+    "rightsAndReproduction": "",
+    "linkResource": "",
+    "metadataDate": "2025-03-06T04:54:30Z",
+    "repository": "Metropolitan Museum of Art, New York, NY",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/352408",
+    "tags": [
+      {
+        "term": "Abstraction",
+        "AAT_URL": "http://vocab.getty.edu/page/aat/300056508",
+        "Wikidata_URL": "https://www.wikidata.org/wiki/Q162150"
+      }
+    ],
+    "objectWikidata_URL": "",
+    "isTimelineWork": false,
+    "GalleryNumber": ""
+  },
+  {
+    "objectID": 352409,
+    "isHighlight": false,
+    "accessionNumber": "66.602.4",
+    "accessionYear": "1966",
+    "isPublicDomain": false,
+    "primaryImage": "",
+    "primaryImageSmall": "",
+    "additionalImages": [],
+    "constituents": [
+      {
+        "constituentID": 162019,
+        "role": "Artist",
+        "name": "Made and written by Vasily Kandinsky",
+        "constituentULAN_URL": "http://vocab.getty.edu/page/ulan/500021093",
+        "constituentWikidata_URL": "https://www.wikidata.org/wiki/Q61064",
+        "gender": ""
+      },
+      {
+        "constituentID": 100179,
+        "role": "Dedicatee",
+        "name": "Dedicated to the memory of Elisabeth Tichejeff",
+        "constituentULAN_URL": "",
+        "constituentWikidata_URL": "",
+        "gender": ""
+      },
+      {
+        "constituentID": 83583,
+        "role": "Publisher",
+        "name": "Published by R. Piper &amp; Co.",
+        "constituentULAN_URL": "",
+        "constituentWikidata_URL": "",
+        "gender": ""
+      },
+      {
+        "constituentID": 161857,
+        "role": "Artist",
+        "name": "After Albrecht Dürer",
+        "constituentULAN_URL": "http://vocab.getty.edu/page/ulan/500115493",
+        "constituentWikidata_URL": "https://www.wikidata.org/wiki/Q5580",
+        "gender": ""
+      },
+      {
+        "constituentID": 162291,
+        "role": "Artist",
+        "name": "After Raphael (Raffaello Sanzio or Santi)",
+        "constituentULAN_URL": "http://vocab.getty.edu/page/ulan/500023578",
+        "constituentWikidata_URL": "https://www.wikidata.org/wiki/Q5597",
+        "gender": ""
+      },
+      {
+        "constituentID": 161761,
+        "role": "Artist",
+        "name": "After Paul Cézanne",
+        "constituentULAN_URL": "http://vocab.getty.edu/page/ulan/500004793",
+        "constituentWikidata_URL": "https://www.wikidata.org/wiki/Q35548",
+        "gender": ""
+      },
+      {
+        "constituentID": 100180,
+        "role": "Artist",
+        "name": "After Heinrich Duenwege",
+        "constituentULAN_URL": "",
+        "constituentWikidata_URL": "",
+        "gender": ""
+      },
+      {
+        "constituentID": 100181,
+        "role": "Artist",
+        "name": "After Victor Duenwege",
+        "constituentULAN_URL": "",
+        "constituentWikidata_URL": "",
+        "gender": ""
+      }
+    ],
+    "department": "Drawings and Prints",
+    "objectName": "Book",
+    "title": "Über das Geistige in der Kunst",
+    "culture": "",
+    "period": "",
+    "dynasty": "",
+    "reign": "",
+    "portfolio": "",
+    "artistRole": "Artist",
+    "artistPrefix": "Made and written by",
+    "artistDisplayName": "Vasily Kandinsky",
+    "artistDisplayBio": "French (born Russia), Moscow 1866–1944 Neuilly-sur-Seine",
+    "artistSuffix": "",
+    "artistAlphaSort": "Kandinsky, Vasily",
+    "artistNationality": "French, born Russia",
+    "artistBeginDate": "1866",
+    "artistEndDate": "1944",
+    "artistGender": "",
+    "artistWikidata_URL": "https://www.wikidata.org/wiki/Q61064",
+    "artistULAN_URL": "http://vocab.getty.edu/page/ulan/500021093",
+    "objectDate": "1912",
+    "objectBeginDate": 1912,
+    "objectEndDate": 1912,
+    "medium": "Woodcut, photogravure",
+    "dimensions": "Overall: 9 7/16 x 7 11/16 x 11/16 in. (24 x 19.5 x 1.8 cm)",
+    "measurements": [
+      {
+        "elementName": "Overall",
+        "elementDescription": null,
+        "elementMeasurements": {
+          "Depth": 1.8,
+          "Height": 24,
+          "Width": 19.5
+        }
+      }
+    ],
+    "creditLine": "Rogers Fund, 1966",
+    "geographyType": "Published in",
+    "city": "Munich",
+    "state": "",
+    "county": "",
+    "country": "",
+    "region": "",
+    "subregion": "",
+    "locale": "",
+    "locus": "",
+    "excavation": "",
+    "river": "",
+    "classification": "Books",
+    "rightsAndReproduction": "",
+    "linkResource": "",
+    "metadataDate": "2025-03-06T04:54:30Z",
+    "repository": "Metropolitan Museum of Art, New York, NY",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/352409",
+    "tags": null,
+    "objectWikidata_URL": "",
+    "isTimelineWork": false,
+    "GalleryNumber": ""
+  },
+  {
+    "objectID": 359991,
+    "isHighlight": false,
+    "accessionNumber": "31.10.21",
+    "accessionYear": "1931",
+    "isPublicDomain": false,
+    "primaryImage": "",
+    "primaryImageSmall": "",
+    "additionalImages": [],
+    "constituents": [
+      {
+        "constituentID": 162019,
+        "role": "Artist",
+        "name": "Vasily Kandinsky",
+        "constituentULAN_URL": "http://vocab.getty.edu/page/ulan/500021093",
+        "constituentWikidata_URL": "https://www.wikidata.org/wiki/Q61064",
+        "gender": ""
+      }
+    ],
+    "department": "Drawings and Prints",
+    "objectName": "Print",
+    "title": "Kleine Welten I (Small Worlds I)",
+    "culture": "",
+    "period": "",
+    "dynasty": "",
+    "reign": "",
+    "portfolio": "Kleine Welten",
+    "artistRole": "Artist",
+    "artistPrefix": "",
+    "artistDisplayName": "Vasily Kandinsky",
+    "artistDisplayBio": "French (born Russia), Moscow 1866–1944 Neuilly-sur-Seine",
+    "artistSuffix": "",
+    "artistAlphaSort": "Kandinsky, Vasily",
+    "artistNationality": "French, born Russia",
+    "artistBeginDate": "1866",
+    "artistEndDate": "1944",
+    "artistGender": "",
+    "artistWikidata_URL": "https://www.wikidata.org/wiki/Q61064",
+    "artistULAN_URL": "http://vocab.getty.edu/page/ulan/500021093",
+    "objectDate": "1922",
+    "objectBeginDate": 1922,
+    "objectEndDate": 1922,
+    "medium": "Lithograph printed in blue, red, yellow and black",
+    "dimensions": "Plate: 9 3/4 × 8 9/16 in. (24.8 × 21.8 cm)\r\nSheet: 14 1/16 in. × 11 in. (35.7 × 28 cm)",
+    "measurements": [
+      {
+        "elementName": "Plate",
+        "elementDescription": null,
+        "elementMeasurements": {
+          "Height": 24.8,
+          "Width": 21.8
+        }
+      },
+      {
+        "elementName": "Sheet",
+        "elementDescription": null,
+        "elementMeasurements": {
+          "Height": 35.7,
+          "Width": 28
+        }
+      }
+    ],
+    "creditLine": "Harris Brisbane Dick Fund, 1931",
+    "geographyType": "",
+    "city": "",
+    "state": "",
+    "county": "",
+    "country": "",
+    "region": "",
+    "subregion": "",
+    "locale": "",
+    "locus": "",
+    "excavation": "",
+    "river": "",
+    "classification": "Prints",
+    "rightsAndReproduction": "",
+    "linkResource": "",
+    "metadataDate": "2025-03-06T04:54:30Z",
+    "repository": "Metropolitan Museum of Art, New York, NY",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/359991",
+    "tags": [
+      {
+        "term": "Abstraction",
+        "AAT_URL": "http://vocab.getty.edu/page/aat/300056508",
+        "Wikidata_URL": "https://www.wikidata.org/wiki/Q162150"
+      }
+    ],
+    "objectWikidata_URL": "",
+    "isTimelineWork": false,
+    "GalleryNumber": ""
+  },
+  {
+    "objectID": 360146,
+    "isHighlight": false,
+    "accessionNumber": "31.10.17",
+    "accessionYear": "1931",
+    "isPublicDomain": false,
+    "primaryImage": "",
+    "primaryImageSmall": "",
+    "additionalImages": [],
+    "constituents": [
+      {
+        "constituentID": 162019,
+        "role": "Artist",
+        "name": "Vasily Kandinsky",
+        "constituentULAN_URL": "http://vocab.getty.edu/page/ulan/500021093",
+        "constituentWikidata_URL": "https://www.wikidata.org/wiki/Q61064",
+        "gender": ""
+      }
+    ],
+    "department": "Drawings and Prints",
+    "objectName": "Print",
+    "title": "Kleine Welten III (Small Worlds III)",
+    "culture": "",
+    "period": "",
+    "dynasty": "",
+    "reign": "",
+    "portfolio": "Kleine Welten",
+    "artistRole": "Artist",
+    "artistPrefix": "",
+    "artistDisplayName": "Vasily Kandinsky",
+    "artistDisplayBio": "French (born Russia), Moscow 1866–1944 Neuilly-sur-Seine",
+    "artistSuffix": "",
+    "artistAlphaSort": "Kandinsky, Vasily",
+    "artistNationality": "French, born Russia",
+    "artistBeginDate": "1866",
+    "artistEndDate": "1944",
+    "artistGender": "",
+    "artistWikidata_URL": "https://www.wikidata.org/wiki/Q61064",
+    "artistULAN_URL": "http://vocab.getty.edu/page/ulan/500021093",
+    "objectDate": "1922",
+    "objectBeginDate": 1922,
+    "objectEndDate": 1922,
+    "medium": "Lithograph in red, blue, yellow, and black",
+    "dimensions": "Plate: 10 15/16 × 9 1/16 in. (27.8 × 23 cm)\r\nSheet: 14 1/16 in. × 11 in. (35.7 × 28 cm)",
+    "measurements": [
+      {
+        "elementName": "Sheet",
+        "elementDescription": null,
+        "elementMeasurements": {
+          "Height": 35.7,
+          "Width": 28
+        }
+      },
+      {
+        "elementName": "Plate",
+        "elementDescription": null,
+        "elementMeasurements": {
+          "Height": 27.8,
+          "Width": 23
+        }
+      }
+    ],
+    "creditLine": "Harris Brisbane Dick Fund, 1931",
+    "geographyType": "",
+    "city": "",
+    "state": "",
+    "county": "",
+    "country": "",
+    "region": "",
+    "subregion": "",
+    "locale": "",
+    "locus": "",
+    "excavation": "",
+    "river": "",
+    "classification": "Prints",
+    "rightsAndReproduction": "",
+    "linkResource": "",
+    "metadataDate": "2025-03-06T04:54:30Z",
+    "repository": "Metropolitan Museum of Art, New York, NY",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/360146",
+    "tags": [
+      {
+        "term": "Abstraction",
+        "AAT_URL": "http://vocab.getty.edu/page/aat/300056508",
+        "Wikidata_URL": "https://www.wikidata.org/wiki/Q162150"
+      }
+    ],
+    "objectWikidata_URL": "",
+    "isTimelineWork": false,
+    "GalleryNumber": ""
+  },
+  {
+    "objectID": 360148,
+    "isHighlight": false,
+    "accessionNumber": "31.10.18",
+    "accessionYear": "1931",
+    "isPublicDomain": false,
+    "primaryImage": "",
+    "primaryImageSmall": "",
+    "additionalImages": [],
+    "constituents": [
+      {
+        "constituentID": 162019,
+        "role": "Artist",
+        "name": "Vasily Kandinsky",
+        "constituentULAN_URL": "http://vocab.getty.edu/page/ulan/500021093",
+        "constituentWikidata_URL": "https://www.wikidata.org/wiki/Q61064",
+        "gender": ""
+      }
+    ],
+    "department": "Drawings and Prints",
+    "objectName": "Print",
+    "title": "Kleine Welten VII (Small Worlds VII)",
+    "culture": "",
+    "period": "",
+    "dynasty": "",
+    "reign": "",
+    "portfolio": "Kleine Welten",
+    "artistRole": "Artist",
+    "artistPrefix": "",
+    "artistDisplayName": "Vasily Kandinsky",
+    "artistDisplayBio": "French (born Russia), Moscow 1866–1944 Neuilly-sur-Seine",
+    "artistSuffix": "",
+    "artistAlphaSort": "Kandinsky, Vasily",
+    "artistNationality": "French, born Russia",
+    "artistBeginDate": "1866",
+    "artistEndDate": "1944",
+    "artistGender": "",
+    "artistWikidata_URL": "https://www.wikidata.org/wiki/Q61064",
+    "artistULAN_URL": "http://vocab.getty.edu/page/ulan/500021093",
+    "objectDate": "1922",
+    "objectBeginDate": 1922,
+    "objectEndDate": 1922,
+    "medium": "Woodcut",
+    "dimensions": "Plate: 10 11/16 × 9 3/16 in. (27.1 × 23.3 cm)\r\nSheet: 14 3/16 × 11 1/4 in. (36 × 28.5 cm)",
+    "measurements": [
+      {
+        "elementName": "Sheet",
+        "elementDescription": null,
+        "elementMeasurements": {
+          "Height": 36,
+          "Width": 28.5
+        }
+      },
+      {
+        "elementName": "Plate",
+        "elementDescription": null,
+        "elementMeasurements": {
+          "Height": 27.1,
+          "Width": 23.3
+        }
+      }
+    ],
+    "creditLine": "Harris Brisbane Dick Fund, 1931",
+    "geographyType": "",
+    "city": "",
+    "state": "",
+    "county": "",
+    "country": "",
+    "region": "",
+    "subregion": "",
+    "locale": "",
+    "locus": "",
+    "excavation": "",
+    "river": "",
+    "classification": "Prints",
+    "rightsAndReproduction": "",
+    "linkResource": "",
+    "metadataDate": "2025-03-06T04:54:30Z",
+    "repository": "Metropolitan Museum of Art, New York, NY",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/360148",
+    "tags": [
+      {
+        "term": "Abstraction",
+        "AAT_URL": "http://vocab.getty.edu/page/aat/300056508",
+        "Wikidata_URL": "https://www.wikidata.org/wiki/Q162150"
+      }
+    ],
+    "objectWikidata_URL": "",
+    "isTimelineWork": false,
+    "GalleryNumber": ""
+  },
+  {
+    "objectID": 369076,
+    "isHighlight": false,
+    "accessionNumber": "31.10.14",
+    "accessionYear": "1931",
+    "isPublicDomain": false,
+    "primaryImage": "",
+    "primaryImageSmall": "",
+    "additionalImages": [],
+    "constituents": [
+      {
+        "constituentID": 162019,
+        "role": "Artist",
+        "name": "Vasily Kandinsky",
+        "constituentULAN_URL": "http://vocab.getty.edu/page/ulan/500021093",
+        "constituentWikidata_URL": "https://www.wikidata.org/wiki/Q61064",
+        "gender": ""
+      }
+    ],
+    "department": "Drawings and Prints",
+    "objectName": "Print",
+    "title": "Kleine Welten VI (Small Worlds VI)",
+    "culture": "",
+    "period": "",
+    "dynasty": "",
+    "reign": "",
+    "portfolio": "Kleine Welten",
+    "artistRole": "Artist",
+    "artistPrefix": "",
+    "artistDisplayName": "Vasily Kandinsky",
+    "artistDisplayBio": "French (born Russia), Moscow 1866–1944 Neuilly-sur-Seine",
+    "artistSuffix": "",
+    "artistAlphaSort": "Kandinsky, Vasily",
+    "artistNationality": "French, born Russia",
+    "artistBeginDate": "1866",
+    "artistEndDate": "1944",
+    "artistGender": "",
+    "artistWikidata_URL": "https://www.wikidata.org/wiki/Q61064",
+    "artistULAN_URL": "http://vocab.getty.edu/page/ulan/500021093",
+    "objectDate": "1922",
+    "objectBeginDate": 1922,
+    "objectEndDate": 1922,
+    "medium": "Woodcut",
+    "dimensions": "Plate: 10 11/16 × 9 3/16 in. (27.2 × 23.3 cm)\r\nSheet: 14 3/16 × 13 3/8 in. (36 × 34 cm)",
+    "measurements": [
+      {
+        "elementName": "Plate",
+        "elementDescription": null,
+        "elementMeasurements": {
+          "Height": 27.2,
+          "Width": 23.3
+        }
+      },
+      {
+        "elementName": "Sheet",
+        "elementDescription": null,
+        "elementMeasurements": {
+          "Height": 36,
+          "Width": 34
+        }
+      }
+    ],
+    "creditLine": "Harris Brisbane Dick Fund, 1931",
+    "geographyType": "",
+    "city": "",
+    "state": "",
+    "county": "",
+    "country": "",
+    "region": "",
+    "subregion": "",
+    "locale": "",
+    "locus": "",
+    "excavation": "",
+    "river": "",
+    "classification": "Prints",
+    "rightsAndReproduction": "",
+    "linkResource": "",
+    "metadataDate": "2025-03-06T04:54:30Z",
+    "repository": "Metropolitan Museum of Art, New York, NY",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/369076",
+    "tags": [
+      {
+        "term": "Abstraction",
+        "AAT_URL": "http://vocab.getty.edu/page/aat/300056508",
+        "Wikidata_URL": "https://www.wikidata.org/wiki/Q162150"
+      }
+    ],
+    "objectWikidata_URL": "",
+    "isTimelineWork": false,
+    "GalleryNumber": ""
+  },
+  {
+    "objectID": 369079,
+    "isHighlight": false,
+    "accessionNumber": "31.10.19",
+    "accessionYear": "1931",
+    "isPublicDomain": false,
+    "primaryImage": "",
+    "primaryImageSmall": "",
+    "additionalImages": [],
+    "constituents": [
+      {
+        "constituentID": 162019,
+        "role": "Artist",
+        "name": "Vasily Kandinsky",
+        "constituentULAN_URL": "http://vocab.getty.edu/page/ulan/500021093",
+        "constituentWikidata_URL": "https://www.wikidata.org/wiki/Q61064",
+        "gender": ""
+      }
+    ],
+    "department": "Drawings and Prints",
+    "objectName": "Print",
+    "title": "Kleine Welten II (Small Worlds II)",
+    "culture": "",
+    "period": "",
+    "dynasty": "",
+    "reign": "",
+    "portfolio": "Kleine Welten",
+    "artistRole": "Artist",
+    "artistPrefix": "",
+    "artistDisplayName": "Vasily Kandinsky",
+    "artistDisplayBio": "French (born Russia), Moscow 1866–1944 Neuilly-sur-Seine",
+    "artistSuffix": "",
+    "artistAlphaSort": "Kandinsky, Vasily",
+    "artistNationality": "French, born Russia",
+    "artistBeginDate": "1866",
+    "artistEndDate": "1944",
+    "artistGender": "",
+    "artistWikidata_URL": "https://www.wikidata.org/wiki/Q61064",
+    "artistULAN_URL": "http://vocab.getty.edu/page/ulan/500021093",
+    "objectDate": "1922",
+    "objectBeginDate": 1922,
+    "objectEndDate": 1922,
+    "medium": "Lithograph printed in black, red, blue, yellow",
+    "dimensions": "Plate: 10 × 8 5/16 in. (25.4 × 21.1 cm)\r\nSheet: 14 × 11 in. (35.5 × 28 cm)",
+    "measurements": [
+      {
+        "elementName": "Sheet",
+        "elementDescription": null,
+        "elementMeasurements": {
+          "Height": 35.5,
+          "Width": 28
+        }
+      },
+      {
+        "elementName": "Plate",
+        "elementDescription": null,
+        "elementMeasurements": {
+          "Height": 25.4,
+          "Width": 21.1
+        }
+      }
+    ],
+    "creditLine": "Harris Brisbane Dick Fund, 1931",
+    "geographyType": "",
+    "city": "",
+    "state": "",
+    "county": "",
+    "country": "",
+    "region": "",
+    "subregion": "",
+    "locale": "",
+    "locus": "",
+    "excavation": "",
+    "river": "",
+    "classification": "Prints",
+    "rightsAndReproduction": "",
+    "linkResource": "",
+    "metadataDate": "2025-03-06T04:54:30Z",
+    "repository": "Metropolitan Museum of Art, New York, NY",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/369079",
+    "tags": [
+      {
+        "term": "Abstraction",
+        "AAT_URL": "http://vocab.getty.edu/page/aat/300056508",
+        "Wikidata_URL": "https://www.wikidata.org/wiki/Q162150"
+      }
+    ],
+    "objectWikidata_URL": "",
+    "isTimelineWork": false,
+    "GalleryNumber": ""
+  },
+  {
+    "objectID": 369081,
+    "isHighlight": false,
+    "accessionNumber": "31.10.12",
+    "accessionYear": "1931",
+    "isPublicDomain": false,
+    "primaryImage": "",
+    "primaryImageSmall": "",
+    "additionalImages": [],
+    "constituents": [
+      {
+        "constituentID": 162019,
+        "role": "Artist",
+        "name": "Vasily Kandinsky",
+        "constituentULAN_URL": "http://vocab.getty.edu/page/ulan/500021093",
+        "constituentWikidata_URL": "https://www.wikidata.org/wiki/Q61064",
+        "gender": ""
+      }
+    ],
+    "department": "Drawings and Prints",
+    "objectName": "Print",
+    "title": "Kleine Welten XII (Small Worlds XII)",
+    "culture": "",
+    "period": "",
+    "dynasty": "",
+    "reign": "",
+    "portfolio": "Kleine Welten",
+    "artistRole": "Artist",
+    "artistPrefix": "",
+    "artistDisplayName": "Vasily Kandinsky",
+    "artistDisplayBio": "French (born Russia), Moscow 1866–1944 Neuilly-sur-Seine",
+    "artistSuffix": "",
+    "artistAlphaSort": "Kandinsky, Vasily",
+    "artistNationality": "French, born Russia",
+    "artistBeginDate": "1866",
+    "artistEndDate": "1944",
+    "artistGender": "",
+    "artistWikidata_URL": "https://www.wikidata.org/wiki/Q61064",
+    "artistULAN_URL": "http://vocab.getty.edu/page/ulan/500021093",
+    "objectDate": "1922",
+    "objectBeginDate": 1922,
+    "objectEndDate": 1922,
+    "medium": "Drypoint",
+    "dimensions": "Plate: 9 5/16 × 7 3/4 in. (23.7 × 19.7 cm)\r\nSheet: 11 13/16 × 10 9/16 in. (30 × 26.8 cm)",
+    "measurements": [
+      {
+        "elementName": "Sheet",
+        "elementDescription": null,
+        "elementMeasurements": {
+          "Height": 30,
+          "Width": 26.7
+        }
+      },
+      {
+        "elementName": "Plate",
+        "elementDescription": null,
+        "elementMeasurements": {
+          "Height": 23.7,
+          "Width": 19.7
+        }
+      }
+    ],
+    "creditLine": "Harris Brisbane Dick Fund, 1931",
+    "geographyType": "",
+    "city": "",
+    "state": "",
+    "county": "",
+    "country": "",
+    "region": "",
+    "subregion": "",
+    "locale": "",
+    "locus": "",
+    "excavation": "",
+    "river": "",
+    "classification": "Prints",
+    "rightsAndReproduction": "",
+    "linkResource": "",
+    "metadataDate": "2025-03-06T04:54:30Z",
+    "repository": "Metropolitan Museum of Art, New York, NY",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/369081",
+    "tags": null,
+    "objectWikidata_URL": "",
+    "isTimelineWork": false,
+    "GalleryNumber": ""
+  },
+  {
+    "objectID": 369084,
+    "isHighlight": false,
+    "accessionNumber": "31.10.10",
+    "accessionYear": "1931",
+    "isPublicDomain": false,
+    "primaryImage": "",
+    "primaryImageSmall": "",
+    "additionalImages": [],
+    "constituents": [
+      {
+        "constituentID": 162019,
+        "role": "Artist",
+        "name": "Vasily Kandinsky",
+        "constituentULAN_URL": "http://vocab.getty.edu/page/ulan/500021093",
+        "constituentWikidata_URL": "https://www.wikidata.org/wiki/Q61064",
+        "gender": ""
+      }
+    ],
+    "department": "Drawings and Prints",
+    "objectName": "Print",
+    "title": "Kleine Welten XI (Small Worlds XI)",
+    "culture": "",
+    "period": "",
+    "dynasty": "",
+    "reign": "",
+    "portfolio": "Kleine Welten",
+    "artistRole": "Artist",
+    "artistPrefix": "",
+    "artistDisplayName": "Vasily Kandinsky",
+    "artistDisplayBio": "French (born Russia), Moscow 1866–1944 Neuilly-sur-Seine",
+    "artistSuffix": "",
+    "artistAlphaSort": "Kandinsky, Vasily",
+    "artistNationality": "French, born Russia",
+    "artistBeginDate": "1866",
+    "artistEndDate": "1944",
+    "artistGender": "",
+    "artistWikidata_URL": "https://www.wikidata.org/wiki/Q61064",
+    "artistULAN_URL": "http://vocab.getty.edu/page/ulan/500021093",
+    "objectDate": "1922",
+    "objectBeginDate": 1922,
+    "objectEndDate": 1922,
+    "medium": "Drypoint",
+    "dimensions": "Plate: 9 5/16 × 7 7/8 in. (23.7 × 20 cm)\r\nSheet: 10 1/2 × 11 13/16 in. (26.7 × 30 cm)",
+    "measurements": [
+      {
+        "elementName": "Plate",
+        "elementDescription": null,
+        "elementMeasurements": {
+          "Height": 23.7,
+          "Width": 20
+        }
+      },
+      {
+        "elementName": "Sheet",
+        "elementDescription": null,
+        "elementMeasurements": {
+          "Height": 26.7,
+          "Width": 30
+        }
+      }
+    ],
+    "creditLine": "Harris Brisbane Dick Fund, 1931",
+    "geographyType": "",
+    "city": "",
+    "state": "",
+    "county": "",
+    "country": "",
+    "region": "",
+    "subregion": "",
+    "locale": "",
+    "locus": "",
+    "excavation": "",
+    "river": "",
+    "classification": "Prints",
+    "rightsAndReproduction": "",
+    "linkResource": "",
+    "metadataDate": "2025-03-06T04:54:30Z",
+    "repository": "Metropolitan Museum of Art, New York, NY",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/369084",
+    "tags": [
+      {
+        "term": "Abstraction",
+        "AAT_URL": "http://vocab.getty.edu/page/aat/300056508",
+        "Wikidata_URL": "https://www.wikidata.org/wiki/Q162150"
+      }
+    ],
+    "objectWikidata_URL": "",
+    "isTimelineWork": false,
+    "GalleryNumber": ""
+  },
+  {
+    "objectID": 369086,
+    "isHighlight": false,
+    "accessionNumber": "31.10.13",
+    "accessionYear": "1931",
+    "isPublicDomain": false,
+    "primaryImage": "",
+    "primaryImageSmall": "",
+    "additionalImages": [],
+    "constituents": [
+      {
+        "constituentID": 162019,
+        "role": "Artist",
+        "name": "Vasily Kandinsky",
+        "constituentULAN_URL": "http://vocab.getty.edu/page/ulan/500021093",
+        "constituentWikidata_URL": "https://www.wikidata.org/wiki/Q61064",
+        "gender": ""
+      }
+    ],
+    "department": "Drawings and Prints",
+    "objectName": "Print",
+    "title": "Kleine Welten X (Small Worlds X)",
+    "culture": "",
+    "period": "",
+    "dynasty": "",
+    "reign": "",
+    "portfolio": "Kleine Welten",
+    "artistRole": "Artist",
+    "artistPrefix": "",
+    "artistDisplayName": "Vasily Kandinsky",
+    "artistDisplayBio": "French (born Russia), Moscow 1866–1944 Neuilly-sur-Seine",
+    "artistSuffix": "",
+    "artistAlphaSort": "Kandinsky, Vasily",
+    "artistNationality": "French, born Russia",
+    "artistBeginDate": "1866",
+    "artistEndDate": "1944",
+    "artistGender": "",
+    "artistWikidata_URL": "https://www.wikidata.org/wiki/Q61064",
+    "artistULAN_URL": "http://vocab.getty.edu/page/ulan/500021093",
+    "objectDate": "1922",
+    "objectBeginDate": 1922,
+    "objectEndDate": 1922,
+    "medium": "Drypoint",
+    "dimensions": "Plate: 9 7/16 × 7 7/8 in. (24 × 20 cm)\r\nSheet: 11 7/8 × 10 7/16 in. (30.2 × 26.5 cm)",
+    "measurements": [
+      {
+        "elementName": "Sheet",
+        "elementDescription": null,
+        "elementMeasurements": {
+          "Height": 30.2,
+          "Width": 26.5
+        }
+      },
+      {
+        "elementName": "Plate",
+        "elementDescription": null,
+        "elementMeasurements": {
+          "Height": 24,
+          "Width": 20
+        }
+      }
+    ],
+    "creditLine": "Harris Brisbane Dick Fund, 1931",
+    "geographyType": "",
+    "city": "",
+    "state": "",
+    "county": "",
+    "country": "",
+    "region": "",
+    "subregion": "",
+    "locale": "",
+    "locus": "",
+    "excavation": "",
+    "river": "",
+    "classification": "Prints",
+    "rightsAndReproduction": "",
+    "linkResource": "",
+    "metadataDate": "2025-03-06T04:54:30Z",
+    "repository": "Metropolitan Museum of Art, New York, NY",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/369086",
+    "tags": null,
+    "objectWikidata_URL": "",
+    "isTimelineWork": false,
+    "GalleryNumber": ""
+  },
+  {
+    "objectID": 369088,
+    "isHighlight": false,
+    "accessionNumber": "31.10.11",
+    "accessionYear": "1931",
+    "isPublicDomain": false,
+    "primaryImage": "",
+    "primaryImageSmall": "",
+    "additionalImages": [],
+    "constituents": [
+      {
+        "constituentID": 162019,
+        "role": "Artist",
+        "name": "Vasily Kandinsky",
+        "constituentULAN_URL": "http://vocab.getty.edu/page/ulan/500021093",
+        "constituentWikidata_URL": "https://www.wikidata.org/wiki/Q61064",
+        "gender": ""
+      }
+    ],
+    "department": "Drawings and Prints",
+    "objectName": "Print",
+    "title": "Kleine Welten IX (Small Worlds IX)",
+    "culture": "",
+    "period": "",
+    "dynasty": "",
+    "reign": "",
+    "portfolio": "Kleine Welten",
+    "artistRole": "Artist",
+    "artistPrefix": "",
+    "artistDisplayName": "Vasily Kandinsky",
+    "artistDisplayBio": "French (born Russia), Moscow 1866–1944 Neuilly-sur-Seine",
+    "artistSuffix": "",
+    "artistAlphaSort": "Kandinsky, Vasily",
+    "artistNationality": "French, born Russia",
+    "artistBeginDate": "1866",
+    "artistEndDate": "1944",
+    "artistGender": "",
+    "artistWikidata_URL": "https://www.wikidata.org/wiki/Q61064",
+    "artistULAN_URL": "http://vocab.getty.edu/page/ulan/500021093",
+    "objectDate": "1922",
+    "objectBeginDate": 1922,
+    "objectEndDate": 1922,
+    "medium": "Drypoint",
+    "dimensions": "Plate: 9 5/16 × 7 7/8 in. (23.7 × 20 cm)\r\nSheet: 11 7/8 × 10 9/16 in. (30.2 × 26.8 cm)",
+    "measurements": [
+      {
+        "elementName": "Sheet",
+        "elementDescription": null,
+        "elementMeasurements": {
+          "Height": 30.2,
+          "Width": 26.8
+        }
+      },
+      {
+        "elementName": "Plate",
+        "elementDescription": null,
+        "elementMeasurements": {
+          "Height": 23.7,
+          "Width": 20
+        }
+      }
+    ],
+    "creditLine": "Harris Brisbane Dick Fund, 1931",
+    "geographyType": "",
+    "city": "",
+    "state": "",
+    "county": "",
+    "country": "",
+    "region": "",
+    "subregion": "",
+    "locale": "",
+    "locus": "",
+    "excavation": "",
+    "river": "",
+    "classification": "Prints",
+    "rightsAndReproduction": "",
+    "linkResource": "",
+    "metadataDate": "2025-03-06T04:54:30Z",
+    "repository": "Metropolitan Museum of Art, New York, NY",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/369088",
+    "tags": [
+      {
+        "term": "Abstraction",
+        "AAT_URL": "http://vocab.getty.edu/page/aat/300056508",
+        "Wikidata_URL": "https://www.wikidata.org/wiki/Q162150"
+      }
+    ],
+    "objectWikidata_URL": "",
+    "isTimelineWork": false,
+    "GalleryNumber": ""
+  },
+  {
+    "objectID": 369090,
+    "isHighlight": false,
+    "accessionNumber": "31.10.15",
+    "accessionYear": "1931",
+    "isPublicDomain": false,
+    "primaryImage": "",
+    "primaryImageSmall": "",
+    "additionalImages": [],
+    "constituents": [
+      {
+        "constituentID": 162019,
+        "role": "Artist",
+        "name": "Vasily Kandinsky",
+        "constituentULAN_URL": "http://vocab.getty.edu/page/ulan/500021093",
+        "constituentWikidata_URL": "https://www.wikidata.org/wiki/Q61064",
+        "gender": ""
+      }
+    ],
+    "department": "Drawings and Prints",
+    "objectName": "Print",
+    "title": "Kleine Welten VIII (Small Worlds VIII)",
+    "culture": "",
+    "period": "",
+    "dynasty": "",
+    "reign": "",
+    "portfolio": "Kleine Welten",
+    "artistRole": "Artist",
+    "artistPrefix": "",
+    "artistDisplayName": "Vasily Kandinsky",
+    "artistDisplayBio": "French (born Russia), Moscow 1866–1944 Neuilly-sur-Seine",
+    "artistSuffix": "",
+    "artistAlphaSort": "Kandinsky, Vasily",
+    "artistNationality": "French, born Russia",
+    "artistBeginDate": "1866",
+    "artistEndDate": "1944",
+    "artistGender": "",
+    "artistWikidata_URL": "https://www.wikidata.org/wiki/Q61064",
+    "artistULAN_URL": "http://vocab.getty.edu/page/ulan/500021093",
+    "objectDate": "1922",
+    "objectBeginDate": 1922,
+    "objectEndDate": 1922,
+    "medium": "Woodcut",
+    "dimensions": "Plate: 10 3/4 × 9 3/16 in. (27.3 × 23.3 cm)\r\nSheet: 14 × 12 in. (35.6 × 30.5 cm)",
+    "measurements": [
+      {
+        "elementName": "Sheet",
+        "elementDescription": null,
+        "elementMeasurements": {
+          "Height": 35.6,
+          "Width": 30.5
+        }
+      },
+      {
+        "elementName": "Plate",
+        "elementDescription": null,
+        "elementMeasurements": {
+          "Height": 27.3,
+          "Width": 23.3
+        }
+      }
+    ],
+    "creditLine": "Harris Brisbane Dick Fund, 1931",
+    "geographyType": "",
+    "city": "",
+    "state": "",
+    "county": "",
+    "country": "",
+    "region": "",
+    "subregion": "",
+    "locale": "",
+    "locus": "",
+    "excavation": "",
+    "river": "",
+    "classification": "Prints",
+    "rightsAndReproduction": "",
+    "linkResource": "",
+    "metadataDate": "2025-03-06T04:54:30Z",
+    "repository": "Metropolitan Museum of Art, New York, NY",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/369090",
+    "tags": [
+      {
+        "term": "Abstraction",
+        "AAT_URL": "http://vocab.getty.edu/page/aat/300056508",
+        "Wikidata_URL": "https://www.wikidata.org/wiki/Q162150"
+      }
+    ],
+    "objectWikidata_URL": "",
+    "isTimelineWork": false,
+    "GalleryNumber": ""
+  },
+  {
+    "objectID": 369093,
+    "isHighlight": false,
+    "accessionNumber": "31.10.20",
+    "accessionYear": "1931",
+    "isPublicDomain": false,
+    "primaryImage": "",
+    "primaryImageSmall": "",
+    "additionalImages": [],
+    "constituents": [
+      {
+        "constituentID": 162019,
+        "role": "Artist",
+        "name": "Vasily Kandinsky",
+        "constituentULAN_URL": "http://vocab.getty.edu/page/ulan/500021093",
+        "constituentWikidata_URL": "https://www.wikidata.org/wiki/Q61064",
+        "gender": ""
+      }
+    ],
+    "department": "Drawings and Prints",
+    "objectName": "Print",
+    "title": "Kleine Welten IV (Small Worlds IV)",
+    "culture": "",
+    "period": "",
+    "dynasty": "",
+    "reign": "",
+    "portfolio": "Kleine Welten",
+    "artistRole": "Artist",
+    "artistPrefix": "",
+    "artistDisplayName": "Vasily Kandinsky",
+    "artistDisplayBio": "French (born Russia), Moscow 1866–1944 Neuilly-sur-Seine",
+    "artistSuffix": "",
+    "artistAlphaSort": "Kandinsky, Vasily",
+    "artistNationality": "French, born Russia",
+    "artistBeginDate": "1866",
+    "artistEndDate": "1944",
+    "artistGender": "",
+    "artistWikidata_URL": "https://www.wikidata.org/wiki/Q61064",
+    "artistULAN_URL": "http://vocab.getty.edu/page/ulan/500021093",
+    "objectDate": "1922",
+    "objectBeginDate": 1922,
+    "objectEndDate": 1922,
+    "medium": "Lithograph printed in green and orange",
+    "dimensions": "Plate: 10 1/2 × 10 1/16 in. (26.7 × 25.6 cm)\r\nSheet: 13 3/8 × 11 7/16 in. (34 × 29 cm)",
+    "measurements": [
+      {
+        "elementName": "Sheet",
+        "elementDescription": null,
+        "elementMeasurements": {
+          "Height": 34,
+          "Width": 29
+        }
+      },
+      {
+        "elementName": "Plate",
+        "elementDescription": null,
+        "elementMeasurements": {
+          "Height": 26.7,
+          "Width": 25.6
+        }
+      }
+    ],
+    "creditLine": "Harris Brisbane Dick Fund, 1931",
+    "geographyType": "",
+    "city": "",
+    "state": "",
+    "county": "",
+    "country": "",
+    "region": "",
+    "subregion": "",
+    "locale": "",
+    "locus": "",
+    "excavation": "",
+    "river": "",
+    "classification": "Prints",
+    "rightsAndReproduction": "",
+    "linkResource": "",
+    "metadataDate": "2025-07-01T04:50:09.917Z",
+    "repository": "Metropolitan Museum of Art, New York, NY",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/369093",
+    "tags": null,
+    "objectWikidata_URL": "",
+    "isTimelineWork": false,
+    "GalleryNumber": ""
+  },
+  {
+    "objectID": 369096,
+    "isHighlight": false,
+    "accessionNumber": "31.10.16",
+    "accessionYear": "1931",
+    "isPublicDomain": false,
+    "primaryImage": "",
+    "primaryImageSmall": "",
+    "additionalImages": [],
+    "constituents": [
+      {
+        "constituentID": 162019,
+        "role": "Artist",
+        "name": "Vasily Kandinsky",
+        "constituentULAN_URL": "http://vocab.getty.edu/page/ulan/500021093",
+        "constituentWikidata_URL": "https://www.wikidata.org/wiki/Q61064",
+        "gender": ""
+      }
+    ],
+    "department": "Drawings and Prints",
+    "objectName": "Print",
+    "title": "Kleine Welten V (Small Worlds V)",
+    "culture": "",
+    "period": "",
+    "dynasty": "",
+    "reign": "",
+    "portfolio": "Kleine Welten",
+    "artistRole": "Artist",
+    "artistPrefix": "",
+    "artistDisplayName": "Vasily Kandinsky",
+    "artistDisplayBio": "French (born Russia), Moscow 1866–1944 Neuilly-sur-Seine",
+    "artistSuffix": "",
+    "artistAlphaSort": "Kandinsky, Vasily",
+    "artistNationality": "French, born Russia",
+    "artistBeginDate": "1866",
+    "artistEndDate": "1944",
+    "artistGender": "",
+    "artistWikidata_URL": "https://www.wikidata.org/wiki/Q61064",
+    "artistULAN_URL": "http://vocab.getty.edu/page/ulan/500021093",
+    "objectDate": "1922",
+    "objectBeginDate": 1922,
+    "objectEndDate": 1922,
+    "medium": "Woodcut printed in red, blue, yellow, and black",
+    "dimensions": "Plate: 10 13/16 × 9 1/4 in. (27.5 × 23.5 cm)\r\nSheet: 14 in. × 10 15/16 in. (35.5 × 27.8 cm)",
+    "measurements": [
+      {
+        "elementName": "Sheet",
+        "elementDescription": null,
+        "elementMeasurements": {
+          "Height": 35.5,
+          "Width": 27.8
+        }
+      },
+      {
+        "elementName": "Plate",
+        "elementDescription": null,
+        "elementMeasurements": {
+          "Height": 27.5,
+          "Width": 23.5
+        }
+      }
+    ],
+    "creditLine": "Harris Brisbane Dick Fund, 1931",
+    "geographyType": "",
+    "city": "",
+    "state": "",
+    "county": "",
+    "country": "",
+    "region": "",
+    "subregion": "",
+    "locale": "",
+    "locus": "",
+    "excavation": "",
+    "river": "",
+    "classification": "Prints",
+    "rightsAndReproduction": "",
+    "linkResource": "",
+    "metadataDate": "2025-03-06T04:54:30Z",
+    "repository": "Metropolitan Museum of Art, New York, NY",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/369096",
+    "tags": [
+      {
+        "term": "Abstraction",
+        "AAT_URL": "http://vocab.getty.edu/page/aat/300056508",
+        "Wikidata_URL": "https://www.wikidata.org/wiki/Q162150"
+      }
+    ],
+    "objectWikidata_URL": "",
+    "isTimelineWork": false,
+    "GalleryNumber": ""
+  },
+  {
+    "objectID": 369103,
+    "isHighlight": false,
+    "accessionNumber": "1991.1066.1",
+    "accessionYear": "1991",
+    "isPublicDomain": false,
+    "primaryImage": "",
+    "primaryImageSmall": "",
+    "additionalImages": [],
+    "constituents": [
+      {
+        "constituentID": 162019,
+        "role": "Artist",
+        "name": "Vasily Kandinsky",
+        "constituentULAN_URL": "http://vocab.getty.edu/page/ulan/500021093",
+        "constituentWikidata_URL": "https://www.wikidata.org/wiki/Q61064",
+        "gender": ""
+      }
+    ],
+    "department": "Drawings and Prints",
+    "objectName": "Print",
+    "title": "Violett",
+    "culture": "",
+    "period": "",
+    "dynasty": "",
+    "reign": "",
+    "portfolio": "",
+    "artistRole": "Artist",
+    "artistPrefix": "",
+    "artistDisplayName": "Vasily Kandinsky",
+    "artistDisplayBio": "French (born Russia), Moscow 1866–1944 Neuilly-sur-Seine",
+    "artistSuffix": "",
+    "artistAlphaSort": "Kandinsky, Vasily",
+    "artistNationality": "French, born Russia",
+    "artistBeginDate": "1866",
+    "artistEndDate": "1944",
+    "artistGender": "",
+    "artistWikidata_URL": "https://www.wikidata.org/wiki/Q61064",
+    "artistULAN_URL": "http://vocab.getty.edu/page/ulan/500021093",
+    "objectDate": "1923",
+    "objectBeginDate": 1923,
+    "objectEndDate": 1923,
+    "medium": "Lithograph in red, yellow, blue and black",
+    "dimensions": "11 7/16 x 7/12 inches (29.1 x 19.1 cm)",
+    "measurements": null,
+    "creditLine": "Bequest of Blance Risa Sussman, 1991",
+    "geographyType": "",
+    "city": "",
+    "state": "",
+    "county": "",
+    "country": "",
+    "region": "",
+    "subregion": "",
+    "locale": "",
+    "locus": "",
+    "excavation": "",
+    "river": "",
+    "classification": "Prints",
+    "rightsAndReproduction": "",
+    "linkResource": "",
+    "metadataDate": "2025-09-03T04:50:00.593Z",
+    "repository": "Metropolitan Museum of Art, New York, NY",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/369103",
+    "tags": [
+      {
+        "term": "Abstraction",
+        "AAT_URL": "http://vocab.getty.edu/page/aat/300056508",
+        "Wikidata_URL": "https://www.wikidata.org/wiki/Q162150"
+      }
+    ],
+    "objectWikidata_URL": "",
+    "isTimelineWork": false,
+    "GalleryNumber": ""
+  },
+  {
+    "objectID": 369104,
+    "isHighlight": false,
+    "accessionNumber": "1984.1203.192(8)",
+    "accessionYear": "1984",
+    "isPublicDomain": false,
+    "primaryImage": "",
+    "primaryImageSmall": "",
+    "additionalImages": [],
+    "constituents": [
+      {
+        "constituentID": 162019,
+        "role": "Artist",
+        "name": "Vasily Kandinsky",
+        "constituentULAN_URL": "http://vocab.getty.edu/page/ulan/500021093",
+        "constituentWikidata_URL": "https://www.wikidata.org/wiki/Q61064",
+        "gender": ""
+      }
+    ],
+    "department": "Drawings and Prints",
+    "objectName": "Print",
+    "title": "Lithographie fur die Vierte Bauhausmappe",
+    "culture": "",
+    "period": "",
+    "dynasty": "",
+    "reign": "",
+    "portfolio": "",
+    "artistRole": "Artist",
+    "artistPrefix": "",
+    "artistDisplayName": "Vasily Kandinsky",
+    "artistDisplayBio": "French (born Russia), Moscow 1866–1944 Neuilly-sur-Seine",
+    "artistSuffix": "",
+    "artistAlphaSort": "Kandinsky, Vasily",
+    "artistNationality": "French, born Russia",
+    "artistBeginDate": "1866",
+    "artistEndDate": "1944",
+    "artistGender": "",
+    "artistWikidata_URL": "https://www.wikidata.org/wiki/Q61064",
+    "artistULAN_URL": "http://vocab.getty.edu/page/ulan/500021093",
+    "objectDate": "1922",
+    "objectBeginDate": 1922,
+    "objectEndDate": 1922,
+    "medium": "Lithograph in yellow, red, blue, black",
+    "dimensions": "Sheet: 14 5/16 x 13 1/2 in. (36.3 x 34.3 cm)",
+    "measurements": [
+      {
+        "elementName": "Sheet",
+        "elementDescription": null,
+        "elementMeasurements": {
+          "Height": 36.3,
+          "Width": 34.3
+        }
+      }
+    ],
+    "creditLine": "Bequest of Scofield Thayer, 1982",
+    "geographyType": "",
+    "city": "",
+    "state": "",
+    "county": "",
+    "country": "",
+    "region": "",
+    "subregion": "",
+    "locale": "",
+    "locus": "",
+    "excavation": "",
+    "river": "",
+    "classification": "Prints",
+    "rightsAndReproduction": "",
+    "linkResource": "",
+    "metadataDate": "2025-03-06T04:54:30Z",
+    "repository": "Metropolitan Museum of Art, New York, NY",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/369104",
+    "tags": [
+      {
+        "term": "Abstraction",
+        "AAT_URL": "http://vocab.getty.edu/page/aat/300056508",
+        "Wikidata_URL": "https://www.wikidata.org/wiki/Q162150"
+      }
+    ],
+    "objectWikidata_URL": "",
+    "isTimelineWork": false,
+    "GalleryNumber": ""
+  },
+  {
+    "objectID": 480895,
+    "isHighlight": false,
+    "accessionNumber": "1970.99",
+    "accessionYear": "1970",
+    "isPublicDomain": false,
+    "primaryImage": "",
+    "primaryImageSmall": "",
+    "additionalImages": [],
+    "constituents": [
+      {
+        "constituentID": 162019,
+        "role": "Artist",
+        "name": "Vasily Kandinsky",
+        "constituentULAN_URL": "http://vocab.getty.edu/page/ulan/500021093",
+        "constituentWikidata_URL": "https://www.wikidata.org/wiki/Q61064",
+        "gender": ""
+      }
+    ],
+    "department": "Modern and Contemporary Art",
+    "objectName": "Drawing",
+    "title": "Free Curve to the Point - Accompanying Sound of Geometric Curves",
+    "culture": "",
+    "period": "",
+    "dynasty": "",
+    "reign": "",
+    "portfolio": "",
+    "artistRole": "Artist",
+    "artistPrefix": "",
+    "artistDisplayName": "Vasily Kandinsky",
+    "artistDisplayBio": "French (born Russia), Moscow 1866–1944 Neuilly-sur-Seine",
+    "artistSuffix": "",
+    "artistAlphaSort": "Kandinsky, Vasily",
+    "artistNationality": "French, born Russia",
+    "artistBeginDate": "1866",
+    "artistEndDate": "1944",
+    "artistGender": "",
+    "artistWikidata_URL": "https://www.wikidata.org/wiki/Q61064",
+    "artistULAN_URL": "http://vocab.getty.edu/page/ulan/500021093",
+    "objectDate": "1925",
+    "objectBeginDate": 1925,
+    "objectEndDate": 1925,
+    "medium": "Ink on paper, mounted on board",
+    "dimensions": "18 1/4 × 15 1/16 in. (46.3 × 38.3 cm)\r\nOther (Paper): 15 3/16 × 12 in. (38.5 × 30.5 cm)",
+    "measurements": [
+      {
+        "elementName": "Other",
+        "elementDescription": "Paper",
+        "elementMeasurements": {
+          "Height": 38.5,
+          "Width": 30.5
+        }
+      },
+      {
+        "elementName": "Overall",
+        "elementDescription": null,
+        "elementMeasurements": {
+          "Height": 46.3,
+          "Width": 38.3
+        }
+      },
+      {
+        "elementName": "Framed",
+        "elementDescription": null,
+        "elementMeasurements": {
+          "Depth": 3.8100076,
+          "Height": 58.420116,
+          "Width": 43.180088
+        }
+      }
+    ],
+    "creditLine": "Rogers Fund, 1970",
+    "geographyType": "",
+    "city": "",
+    "state": "",
+    "county": "",
+    "country": "",
+    "region": "",
+    "subregion": "",
+    "locale": "",
+    "locus": "",
+    "excavation": "",
+    "river": "",
+    "classification": "Drawings",
+    "rightsAndReproduction": "",
+    "linkResource": "",
+    "metadataDate": "2025-01-31T04:54:36.6Z",
+    "repository": "Metropolitan Museum of Art, New York, NY",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/480895",
+    "tags": [
+      {
+        "term": "Abstraction",
+        "AAT_URL": "http://vocab.getty.edu/page/aat/300056508",
+        "Wikidata_URL": "https://www.wikidata.org/wiki/Q162150"
+      }
+    ],
+    "objectWikidata_URL": "",
+    "isTimelineWork": false,
+    "GalleryNumber": ""
+  },
+  {
+    "objectID": 485829,
+    "isHighlight": false,
+    "accessionNumber": "1991.402.9",
+    "accessionYear": "1991",
+    "isPublicDomain": false,
+    "primaryImage": "",
+    "primaryImageSmall": "",
+    "additionalImages": [],
+    "constituents": [
+      {
+        "constituentID": 162019,
+        "role": "Artist",
+        "name": "Vasily Kandinsky",
+        "constituentULAN_URL": "http://vocab.getty.edu/page/ulan/500021093",
+        "constituentWikidata_URL": "https://www.wikidata.org/wiki/Q61064",
+        "gender": ""
+      }
+    ],
+    "department": "Modern and Contemporary Art",
+    "objectName": "Drawing",
+    "title": "Four Parts",
+    "culture": "",
+    "period": "",
+    "dynasty": "",
+    "reign": "",
+    "portfolio": "",
+    "artistRole": "Artist",
+    "artistPrefix": "",
+    "artistDisplayName": "Vasily Kandinsky",
+    "artistDisplayBio": "French (born Russia), Moscow 1866–1944 Neuilly-sur-Seine",
+    "artistSuffix": "",
+    "artistAlphaSort": "Kandinsky, Vasily",
+    "artistNationality": "French, born Russia",
+    "artistBeginDate": "1866",
+    "artistEndDate": "1944",
+    "artistGender": "",
+    "artistWikidata_URL": "https://www.wikidata.org/wiki/Q61064",
+    "artistULAN_URL": "http://vocab.getty.edu/page/ulan/500021093",
+    "objectDate": "1932",
+    "objectBeginDate": 1932,
+    "objectEndDate": 1932,
+    "medium": "Gouache on paper, mounted on masonite",
+    "dimensions": "15 3/8 in. × 12 in. (39.1 × 30.5 cm)",
+    "measurements": [
+      {
+        "elementName": "Overall",
+        "elementDescription": null,
+        "elementMeasurements": {
+          "Height": 39.1,
+          "Width": 30.5
+        }
+      },
+      {
+        "elementName": "Framed",
+        "elementDescription": "MMA standard frame",
+        "elementMeasurements": {
+          "Depth": 3.8100076,
+          "Face Width": 1.5,
+          "Height": 58.420116,
+          "Width": 43.180088
+        }
+      }
+    ],
+    "creditLine": "Gift of William Benenson, 1991",
+    "geographyType": "",
+    "city": "",
+    "state": "",
+    "county": "",
+    "country": "",
+    "region": "",
+    "subregion": "",
+    "locale": "",
+    "locus": "",
+    "excavation": "",
+    "river": "",
+    "classification": "Drawings",
+    "rightsAndReproduction": "",
+    "linkResource": "",
+    "metadataDate": "2026-05-02T04:57:14.103Z",
+    "repository": "Metropolitan Museum of Art, New York, NY",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/485829",
+    "tags": [
+      {
+        "term": "Abstraction",
+        "AAT_URL": "http://vocab.getty.edu/page/aat/300056508",
+        "Wikidata_URL": "https://www.wikidata.org/wiki/Q162150"
+      }
+    ],
+    "objectWikidata_URL": "https://www.wikidata.org/wiki/Q19917728",
+    "isTimelineWork": false,
+    "GalleryNumber": ""
+  },
+  {
+    "objectID": 488319,
+    "isHighlight": true,
+    "accessionNumber": "49.70.1",
+    "accessionYear": "1949",
+    "isPublicDomain": false,
+    "primaryImage": "",
+    "primaryImageSmall": "",
+    "additionalImages": [],
+    "constituents": [
+      {
+        "constituentID": 162019,
+        "role": "Artist",
+        "name": "Vasily Kandinsky",
+        "constituentULAN_URL": "http://vocab.getty.edu/page/ulan/500021093",
+        "constituentWikidata_URL": "https://www.wikidata.org/wiki/Q61064",
+        "gender": ""
+      }
+    ],
+    "department": "Modern and Contemporary Art",
+    "objectName": "Painting",
+    "title": "Improvisation 27 (Garden of Love II)",
+    "culture": "",
+    "period": "",
+    "dynasty": "",
+    "reign": "",
+    "portfolio": "",
+    "artistRole": "Artist",
+    "artistPrefix": "",
+    "artistDisplayName": "Vasily Kandinsky",
+    "artistDisplayBio": "French (born Russia), Moscow 1866–1944 Neuilly-sur-Seine",
+    "artistSuffix": "",
+    "artistAlphaSort": "Kandinsky, Vasily",
+    "artistNationality": "French, born Russia",
+    "artistBeginDate": "1866",
+    "artistEndDate": "1944",
+    "artistGender": "",
+    "artistWikidata_URL": "https://www.wikidata.org/wiki/Q61064",
+    "artistULAN_URL": "http://vocab.getty.edu/page/ulan/500021093",
+    "objectDate": "1912",
+    "objectBeginDate": 1912,
+    "objectEndDate": 1912,
+    "medium": "Oil on canvas",
+    "dimensions": "47 3/8 × 55 1/4 in. (120.3 × 140.3 cm)",
+    "measurements": [
+      {
+        "elementName": "Framed",
+        "elementDescription": "F.49.70.1  Gold wood w/ gold wood insert w/ AR plexi",
+        "elementMeasurements": {
+          "Depth": 5.08001,
+          "Height": 127.00025,
+          "Width": 147.6378
+        }
+      },
+      {
+        "elementName": "Overall",
+        "elementDescription": null,
+        "elementMeasurements": {
+          "Height": 120.3,
+          "Width": 140.3
+        }
+      }
+    ],
+    "creditLine": "Alfred Stieglitz Collection, 1949",
+    "geographyType": "",
+    "city": "",
+    "state": "",
+    "county": "",
+    "country": "",
+    "region": "",
+    "subregion": "",
+    "locale": "",
+    "locus": "",
+    "excavation": "",
+    "river": "",
+    "classification": "Paintings",
+    "rightsAndReproduction": "",
+    "linkResource": "",
+    "metadataDate": "2026-07-09T04:50:07.86Z",
+    "repository": "Metropolitan Museum of Art, New York, NY",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/488319",
+    "tags": null,
+    "objectWikidata_URL": "https://www.wikidata.org/wiki/Q19919146",
+    "isTimelineWork": true,
+    "GalleryNumber": "965"
+  },
+  {
+    "objectID": 489985,
+    "isHighlight": false,
+    "accessionNumber": "1999.363.30",
+    "accessionYear": "1999",
+    "isPublicDomain": false,
+    "primaryImage": "",
+    "primaryImageSmall": "",
+    "additionalImages": [],
+    "constituents": [
+      {
+        "constituentID": 162019,
+        "role": "Artist",
+        "name": "Vasily Kandinsky",
+        "constituentULAN_URL": "http://vocab.getty.edu/page/ulan/500021093",
+        "constituentWikidata_URL": "https://www.wikidata.org/wiki/Q61064",
+        "gender": ""
+      }
+    ],
+    "department": "Modern and Contemporary Art",
+    "objectName": "Drawing",
+    "title": "Rain Landscape",
+    "culture": "",
+    "period": "",
+    "dynasty": "",
+    "reign": "",
+    "portfolio": "",
+    "artistRole": "Artist",
+    "artistPrefix": "",
+    "artistDisplayName": "Vasily Kandinsky",
+    "artistDisplayBio": "French (born Russia), Moscow 1866–1944 Neuilly-sur-Seine",
+    "artistSuffix": "",
+    "artistAlphaSort": "Kandinsky, Vasily",
+    "artistNationality": "French, born Russia",
+    "artistBeginDate": "1866",
+    "artistEndDate": "1944",
+    "artistGender": "",
+    "artistWikidata_URL": "https://www.wikidata.org/wiki/Q61064",
+    "artistULAN_URL": "http://vocab.getty.edu/page/ulan/500021093",
+    "objectDate": "1911",
+    "objectBeginDate": 1911,
+    "objectEndDate": 1911,
+    "medium": "Watercolor over graphite on paper",
+    "dimensions": "10 in. × 12 1/2 in. (25.4 × 31.8 cm)",
+    "measurements": [
+      {
+        "elementName": "Overall",
+        "elementDescription": null,
+        "elementMeasurements": {
+          "Height": 25.4,
+          "Width": 31.8
+        }
+      },
+      {
+        "elementName": "Framed",
+        "elementDescription": "F.1999.363.30 Black wood w/reg Plexi",
+        "elementMeasurements": {
+          "Depth": 5.08001,
+          "Face Width": 8.8900175,
+          "Height": 50.800102,
+          "Width": 56.515114
+        }
+      }
+    ],
+    "creditLine": "Jacques and Natasha Gelman Collection, 1998",
+    "geographyType": "",
+    "city": "",
+    "state": "",
+    "county": "",
+    "country": "",
+    "region": "",
+    "subregion": "",
+    "locale": "",
+    "locus": "",
+    "excavation": "",
+    "river": "",
+    "classification": "Drawings",
+    "rightsAndReproduction": "",
+    "linkResource": "",
+    "metadataDate": "2026-10-06T04:59:37.62Z",
+    "repository": "Metropolitan Museum of Art, New York, NY",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/489985",
+    "tags": [
+      {
+        "term": "Landscapes",
+        "AAT_URL": "http://vocab.getty.edu/page/aat/300132294",
+        "Wikidata_URL": "https://www.wikidata.org/wiki/Q191163"
+      },
+      {
+        "term": "Rain",
+        "AAT_URL": "http://vocab.getty.edu/page/aat/300055377",
+        "Wikidata_URL": "https://www.wikidata.org/wiki/Q7925"
+      }
+    ],
+    "objectWikidata_URL": "",
+    "isTimelineWork": false,
+    "GalleryNumber": ""
+  },
+  {
+    "objectID": 735918,
+    "isHighlight": false,
+    "accessionNumber": "31.10.10-21",
+    "accessionYear": "1931",
+    "isPublicDomain": false,
+    "primaryImage": "",
+    "primaryImageSmall": "",
+    "additionalImages": [],
+    "constituents": [
+      {
+        "constituentID": 162019,
+        "role": "Artist",
+        "name": "Vasily Kandinsky",
+        "constituentULAN_URL": "http://vocab.getty.edu/page/ulan/500021093",
+        "constituentWikidata_URL": "https://www.wikidata.org/wiki/Q61064",
+        "gender": ""
+      }
+    ],
+    "department": "Drawings and Prints",
+    "objectName": "Print",
+    "title": "Kleine Welten  (Small Worlds)",
+    "culture": "",
+    "period": "",
+    "dynasty": "",
+    "reign": "",
+    "portfolio": "Kleine Welten",
+    "artistRole": "Artist",
+    "artistPrefix": "",
+    "artistDisplayName": "Vasily Kandinsky",
+    "artistDisplayBio": "French (born Russia), Moscow 1866–1944 Neuilly-sur-Seine",
+    "artistSuffix": "",
+    "artistAlphaSort": "Kandinsky, Vasily",
+    "artistNationality": "French, born Russia",
+    "artistBeginDate": "1866",
+    "artistEndDate": "1944",
+    "artistGender": "",
+    "artistWikidata_URL": "https://www.wikidata.org/wiki/Q61064",
+    "artistULAN_URL": "http://vocab.getty.edu/page/ulan/500021093",
+    "objectDate": "1922",
+    "objectBeginDate": 1922,
+    "objectEndDate": 1922,
+    "medium": "Portfolio of drypoints, woodcuts, and lithographs",
+    "dimensions": "Plate: 9 5/16 × 7 7/8 in. (23.7 × 20 cm)\r\nSheet: 10 1/2 × 11 13/16 in. (26.7 × 30 cm)",
+    "measurements": [
+      {
+        "elementName": "Sheet",
+        "elementDescription": null,
+        "elementMeasurements": {
+          "Height": 26.7,
+          "Width": 30
+        }
+      },
+      {
+        "elementName": "Plate",
+        "elementDescription": null,
+        "elementMeasurements": {
+          "Height": 23.7,
+          "Width": 20
+        }
+      }
+    ],
+    "creditLine": "Harris Brisbane Dick Fund, 1931",
+    "geographyType": "",
+    "city": "",
+    "state": "",
+    "county": "",
+    "country": "",
+    "region": "",
+    "subregion": "",
+    "locale": "",
+    "locus": "",
+    "excavation": "",
+    "river": "",
+    "classification": "Prints",
+    "rightsAndReproduction": "",
+    "linkResource": "",
+    "metadataDate": "2025-03-06T04:54:30Z",
+    "repository": "Metropolitan Museum of Art, New York, NY",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/735918",
+    "tags": [
+      {
+        "term": "Abstraction",
+        "AAT_URL": "http://vocab.getty.edu/page/aat/300056508",
+        "Wikidata_URL": "https://www.wikidata.org/wiki/Q162150"
+      }
+    ],
+    "objectWikidata_URL": "",
+    "isTimelineWork": false,
+    "GalleryNumber": ""
+  },
+  {
+    "objectID": 818895,
+    "isHighlight": true,
+    "accessionNumber": "171 K131",
+    "accessionYear": "",
+    "isPublicDomain": false,
+    "primaryImage": "",
+    "primaryImageSmall": "",
+    "additionalImages": [],
+    "constituents": [
+      {
+        "constituentID": 162019,
+        "role": "Author",
+        "name": "Vasily Kandinsky",
+        "constituentULAN_URL": "http://vocab.getty.edu/page/ulan/500021093",
+        "constituentWikidata_URL": "https://www.wikidata.org/wiki/Q61064",
+        "gender": ""
+      },
+      {
+        "constituentID": 123311,
+        "role": "Publisher",
+        "name": "Albert Langen Verlag",
+        "constituentULAN_URL": "",
+        "constituentWikidata_URL": "",
+        "gender": ""
+      }
+    ],
+    "department": "The Libraries",
+    "objectName": "",
+    "title": "Punkt und Linie zu Fläche : Beitrag zur Analyse der malerischen Elemente",
+    "culture": "",
+    "period": "",
+    "dynasty": "",
+    "reign": "",
+    "portfolio": "",
+    "artistRole": "Author",
+    "artistPrefix": "",
+    "artistDisplayName": "Vasily Kandinsky",
+    "artistDisplayBio": "French (born Russia), Moscow 1866–1944 Neuilly-sur-Seine",
+    "artistSuffix": "",
+    "artistAlphaSort": "Kandinsky, Vasily",
+    "artistNationality": "French, born Russia",
+    "artistBeginDate": "1866",
+    "artistEndDate": "1944",
+    "artistGender": "",
+    "artistWikidata_URL": "https://www.wikidata.org/wiki/Q61064",
+    "artistULAN_URL": "http://vocab.getty.edu/page/ulan/500021093",
+    "objectDate": "1928",
+    "objectBeginDate": 1928,
+    "objectEndDate": 1928,
+    "medium": "",
+    "dimensions": "190, [6] pages, 6 leaves of plates : illustrations (some color) ; Height: 9 1/16 in. (23 cm)",
+    "measurements": [
+      {
+        "elementName": "Height",
+        "elementDescription": null,
+        "elementMeasurements": {
+          "Height": 23
+        }
+      }
+    ],
+    "creditLine": "",
+    "geographyType": "",
+    "city": "Munich",
+    "state": "",
+    "county": "",
+    "country": "Germany",
+    "region": "",
+    "subregion": "",
+    "locale": "",
+    "locus": "",
+    "excavation": "",
+    "river": "",
+    "classification": "",
+    "rightsAndReproduction": "",
+    "linkResource": "",
+    "metadataDate": "2026-06-05T04:55:53.757Z",
+    "repository": "Metropolitan Museum of Art, New York, NY",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/818895",
+    "tags": null,
+    "objectWikidata_URL": "",
+    "isTimelineWork": false,
+    "GalleryNumber": ""
+  }
+]

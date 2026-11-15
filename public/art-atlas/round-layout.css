@@ -1,0 +1,288 @@
+/* Active rounds divide the viewport between the prompt, task and action. */
+body:has(.journey-question) { overflow: hidden; }
+.site-shell:has(.journey-question) { width: 100%; max-width: none; height: 100dvh; padding: 0 clamp(22px,4vw,76px); }
+#app:has(> .journey-question) { height: 100%; min-height: 0; }
+.deep-question.journey-question { display: grid; grid-template-rows: 54px auto minmax(0,1fr) 66px; width: 100%; height: 100%; max-width: 1480px; min-height: 0; margin: 0 auto; padding: 0 0 max(8px,env(safe-area-inset-bottom)) !important; }
+.journey-question > .journey-chrome { grid-row: 1; height: 54px; }
+.journey-question > .question-head { grid-row: 2; margin: 10px 0 22px; }
+.journey-question > .question-head h1 { font-size: clamp(29px,3vw,43px); margin: 0; line-height: 1.12; }
+.journey-question > .question-head p { margin: 10px 0 0; font-size: 12px; line-height: 1.5; }
+.journey-question > .deep-round-body { grid-row: 3; display: grid; align-items: center; min-height: 0; min-width: 0; height: 100%; container-type: size; }
+.journey-question > .round-actions { grid-row: 4; align-self: end; margin: 0; padding: 12px 0 0; min-height: 54px; }
+.journey-question > .image-status:not([hidden]) { position: absolute; top: 49px; left: 50%; transform: translateX(-50%); z-index: 20; width: max-content; max-width: 90%; padding: 8px 14px; margin: 0; background: var(--paper); }
+
+/* A single focused work and its four references share the same task area. */
+.journey-question.deep-question .placement-layout { width: 100%; max-width: 1400px; height: 100%; min-height: 0; margin: 0 auto; grid-template-columns: minmax(0,1fr) minmax(0,1fr); grid-template-rows: minmax(0,1fr) 96px; gap: 14px clamp(30px,4vw,75px); align-items: center; }
+.journey-question .placement-layout > .focus-column { height: 100%; min-height: 0; display: grid; grid-template-rows: 25px minmax(0,1fr); align-items: center; }
+.journey-question .focus-meta { margin: 0; font-size: 10px; }
+.journey-question .focus-art { height: 100%; min-height: 0; }
+.journey-question .focus-art > .art-visual { display: block; width: 100%; height: 100%; min-height: 0; }
+.journey-question.deep-question .focus-column .focus-art .art-visual > img { width: 100%; height: 100%; max-height: min(590px,calc(100cqh - 150px)); object-fit: contain; }
+.journey-question .placement-layout > .placement-column { width: 100%; min-height: 0; margin: 0 auto; }
+.journey-question.deep-question .placement-layout > .work-overview { grid-column: 1 / -1; grid-row: 2; width: 100%; height: 96px; display: flex; align-items: center; justify-content: center; gap: clamp(24px,3vw,50px); margin: 0; }
+.journey-question.deep-question .work-overview .reference-work { width: 130px; min-width: 0; }
+.journey-question.deep-question .reference-art .art-visual > img { height: 72px; object-fit: contain; }
+.journey-question .reference-work.has-placement > .reference-art .art-visual > img { filter: grayscale(.85); opacity: .42; }
+.journey-question .reference-work.has-placement > .reference-art[aria-pressed=true] .art-visual > img { filter: none; opacity: 1; }
+.journey-question .reference-art .drag-caption { padding-top: 5px; font-size: 9px; }
+.journey-question .fine-controls { min-height: 28px; margin-top: 14px; gap: 7px; }
+.journey-question .fine-controls > span { font-size: 9px; }
+.journey-question .fine-controls button { width: 28px; height: 28px; }
+
+/* Maps carry only the axes and the artworks. */
+.journey-question .response-pad,
+.journey-question .response-pad.drag-over,
+.journey-question .scenario-response { background: transparent; background-image: none; box-shadow: none; }
+.journey-question .spectrum-target::before { content: none; background: none; }
+.journey-question .map-surround { width: min(100%,calc(100cqh - 80px)); max-width: 650px; margin: 0 auto; grid-template-columns: 58px minmax(0,1fr) 58px; grid-template-rows: 22px auto 22px; gap: 4px; font-size: 10px; }
+.journey-question .pad-axis { background: #aaa49a; opacity: .65; }
+.journey-question .map-layout .fine-controls { margin-top: 10px; }
+
+/* The two-work comparison gets a full-width scale below both large works. */
+.journey-question .spectrum-input { display: grid; grid-template-columns: minmax(0,1fr); grid-template-rows: minmax(0,1fr) 198px; width: min(1180px,100%); height: 100%; min-height: 0; margin: 0 auto; gap: 18px; align-items: center; }
+.journey-question .spectrum-input .art-tray.two-works { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); height: 100%; min-height: 0; width: 100%; margin: 0; gap: clamp(26px,6vw,100px); align-items: center; }
+.journey-question .spectrum-input .tray-work { min-height: 0; height: 100%; display: flex; flex-direction: column; justify-content: center; }
+.journey-question .spectrum-input .tray-work > .drag-art { min-height: 0; }
+.journey-question .spectrum-input .two-works .drag-art .art-visual > img { width: 100%; height: min(450px,calc(100cqh - 270px)); min-height: 0; object-fit: contain; }
+.journey-question .spectrum-input .look-button { align-self: center; margin-top: 4px; font-size: 10px; }
+.journey-question .spectrum-input .drag-caption { padding-top: 5px; font-size: 10px; }
+.journey-question .spectrum-input > .placement-column { width: 100%; }
+.journey-question .spectrum-input .spectrum-target { height: 142px !important; min-height: 0; margin: 0; }
+.journey-question .spectrum-input .spectrum-labels { padding-top: 10px; }
+.journey-question .spectrum-input .fine-controls { margin-top: 8px; }
+.journey-question .spectrum-labels { font-size: 11px; }
+
+/* Matching uses the same bounded task area before and after checking. */
+.journey-question.deep-question .matching-input { position: relative; display: grid; grid-template-rows: minmax(0,1fr) minmax(0,1fr) 82px; gap: 12px; width: 100%; max-width: 1180px; height: 100%; min-height: 0; min-width: 0; margin: 0 auto; align-self: stretch; }
+.journey-question .matching-input > .input-status { position: absolute; left: 0; top: 0; width: 1px; height: 1px; min-height: 0; margin: 0; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.journey-question .matching-input:not(.revealed):has(.unsure-works:empty) { grid-template-rows: minmax(0,1fr) minmax(0,1fr) 32px; }
+.journey-question.deep-question .matching-input > .art-tray { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); grid-template-rows: minmax(0,1fr); gap: 24px; width: 100%; height: 100%; min-height: 0; min-width: 0; max-width: none; margin: 0; align-items: stretch; }
+.journey-question .matching-input .tray-work { display: grid; grid-template-rows: minmax(0,1fr) 16px; gap: 4px; height: 100%; min-height: 0; min-width: 0; }
+.journey-question .matching-input .tray-work > .drag-art { display: grid; grid-template-rows: minmax(0,1fr) 14px; gap: 2px; height: 100%; min-height: 0; min-width: 0; }
+.journey-question .matching-input .tray-work > .drag-art > .art-visual { display: block; width: 100%; height: 100%; min-height: 0; }
+.journey-question.deep-question .matching-input .drag-art .art-visual > img { width: 100%; height: 100%; max-height: 100%; min-height: 0; object-fit: contain; }
+.journey-question .matching-input .drag-caption { margin: 0; padding: 0; font-size: 9px; line-height: 14px; }
+.journey-question .matching-input .drag-caption span:last-child { font-size: 8px; }
+.journey-question .matching-input .look-button { min-height: 0; margin: 0; padding: 0; font-size: 9px; line-height: 16px; }
+.journey-question.deep-question .matching-input > .match-targets { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); grid-template-rows: minmax(0,1fr); gap: 24px; height: 100%; min-height: 0; min-width: 0; margin: 0; }
+.journey-question .matching-input .match-target { display: grid; grid-template-rows: minmax(0,1fr) 42px; gap: 5px; height: 100%; min-height: 0; min-width: 0; }
+.journey-question.deep-question .matching-input .match-painting { position: relative; display: grid; grid-template-rows: minmax(0,1fr) auto; gap: 4px; width: 100%; height: 100%; min-height: 0; min-width: 0; padding: 8px; align-items: stretch; justify-items: stretch; }
+.journey-question .matching-input .match-painting::before { content: ''; position: absolute; inset: 2px; pointer-events: none; color: #a6a093; background: linear-gradient(currentColor,currentColor) left top/9px 1px no-repeat,linear-gradient(currentColor,currentColor) left top/1px 9px no-repeat,linear-gradient(currentColor,currentColor) right top/9px 1px no-repeat,linear-gradient(currentColor,currentColor) right top/1px 9px no-repeat,linear-gradient(currentColor,currentColor) left bottom/9px 1px no-repeat,linear-gradient(currentColor,currentColor) left bottom/1px 9px no-repeat,linear-gradient(currentColor,currentColor) right bottom/9px 1px no-repeat,linear-gradient(currentColor,currentColor) right bottom/1px 9px no-repeat; opacity: .65; }
+.journey-question .matching-input .match-painting:has(.matched-art)::before { opacity: .25; }
+.journey-question .matching-input .match-target.drag-over .match-painting::before { color: var(--ink); opacity: 1; }
+.journey-question .matching-input [data-drop-option].drag-over::after { content: none; }
+.journey-question .matching-input .matched-art { display: block; width: 100%; height: 100%; min-height: 0; min-width: 0; }
+.journey-question .matching-input .matched-art > .art-visual { display: block; width: 100%; height: 100%; min-height: 0; }
+.journey-question .matching-input .drop-placeholder { display: grid; align-self: stretch; place-items: center; min-height: 0; padding: 5px; font-size: 10px; }
+.journey-question .matching-input .match-label { width: 100%; height: 100%; min-height: 0; margin: 0; padding: 3px 6px; border: 0; border-radius: 0; font-size: 11px; line-height: 1.3; white-space: normal; overflow-wrap: anywhere; background: none; }
+.journey-question .matching-input .match-feedback { min-width: 0; margin: 0; font-size: 9px; line-height: 1.3; overflow-wrap: anywhere; }
+.journey-question.deep-question .matching-input > .unsure-target { display: grid; grid-template-rows: 22px minmax(0,1fr); gap: 4px; height: 100%; min-height: 0; min-width: 0; margin: 0; padding: 0; }
+.journey-question .matching-input .unsure-target > button { min-height: 0; padding: 0; margin: 0; font-size: 10px; line-height: 22px; }
+.journey-question .matching-input .unsure-works { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); grid-template-rows: minmax(0,1fr); gap: 16px; height: 100%; min-height: 0; min-width: 0; align-items: stretch; }
+.journey-question .matching-input .unsure-works:empty { display: none; }
+.journey-question .matching-input .unsure-works > div { display: grid; grid-template-rows: minmax(0,1fr) auto; gap: 4px; width: auto; height: 100%; min-height: 0; min-width: 0; margin: 0; }
+.journey-question.deep-question .matching-input.revealed { grid-template-rows: minmax(0,1fr) 120px; }
+.journey-question.deep-question .matching-input.revealed:has(.unsure-works:empty) { grid-template-rows: minmax(0,1fr) 0; gap: 0; }
+.journey-question .matching-input.revealed:has(.unsure-works:empty) > .unsure-target { display: none; }
+.journey-question.deep-question .matching-input.revealed > .unsure-target { grid-template-rows: minmax(0,1fr); }
+.journey-question .matching-input.revealed .unsure-target > button { display: none; }
+.journey-question.deep-question .matching-input.revealed:has(.match-review-grid) { grid-template-rows: minmax(0,1fr); gap: 0; }
+.journey-question .match-review-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); grid-template-rows: minmax(0,1fr); gap: clamp(20px,3vw,48px); height: 100%; min-height: 0; min-width: 0; }
+.journey-question .match-review-work { display: grid; grid-template-rows: minmax(0,1fr) 74px; gap: 12px; height: 100%; min-height: 0; min-width: 0; margin: 0; }
+.journey-question .match-review-painting { height: 100%; min-height: 0; min-width: 0; }
+.journey-question .match-review-grid .matched-art { cursor: default; }
+.journey-question .match-review-grid .drag-caption { display: none; }
+.journey-question .match-review-grid .art-visual::after { opacity: 0; }
+.journey-question .match-review-grid .drag-art[aria-pressed=true] .art-visual > img { filter: none; }
+.journey-question .match-review-work figcaption { display: flex; flex-direction: column; gap: 7px; min-height: 0; margin: 0; padding: 0; text-align: center; overflow-wrap: anywhere; }
+.journey-question .match-review-answer { font-size: 14px; font-weight: 400; line-height: 1.35; color: var(--ink); }
+.journey-question .match-review-status { display: block; font-size: 10px; line-height: 1.4; color: var(--soft); }
+
+/* Agreement tasks use the actual statement as the question. */
+.journey-question[data-kind=statements] > .question-head { display: none; }
+.journey-question[data-kind=statements] { grid-template-rows: 54px 0 minmax(0,1fr) 66px; }
+.journey-question .deep-statement { width: min(850px,100%); margin: 0 auto; padding: 0 0 6vh; }
+.journey-question .deep-statement h2 { font-size: clamp(27px,3.2vw,43px); margin: 0 auto clamp(35px,6vh,65px); line-height: 1.3; }
+.journey-question .deep-agreement { gap: clamp(20px,3vw,48px); }
+.journey-question .deep-reference { display: none; }
+
+/* Embedded exercises inherit the remaining viewport, rather than another vh. */
+.deep-question.journey-question.embedded-exercise { grid-template-rows: 54px minmax(0,1fr) 32px; }
+.embedded-exercise > .lab-active,
+.embedded-exercise > .gallery-studio { grid-row: 2; width: 100%; min-height: 0; height: 100%; margin: 0; }
+.journey-question .journey-exercise-skip { grid-row: 3; margin: 0; align-self: center; }
+.journey-question .journey-exercise-skip .text-button { font-size: 10px; }
+.embedded-exercise .sorting-table { max-width: none; display: grid; grid-template-columns: minmax(180px,290px) minmax(0,1fr); grid-template-rows: auto auto minmax(0,1fr) 82px 55px; column-gap: 40px; }
+.embedded-exercise .sorting-head { grid-row: 1; grid-column: 1 / -1; min-height: 0; padding: 4px 0; }
+.embedded-exercise .sorting-head h1 { font-size: clamp(28px,3vw,40px); }
+.embedded-exercise .sorting-instruction { grid-row: 2; grid-column: 1 / -1; align-self: start; margin: 2px auto 0; max-width: 800px; font-size: 11px; }
+.embedded-exercise .sorting-pan { grid-row: 3; grid-column: 2; display: grid; place-items: center; width: 100%; height: 100%; min-height: 0; min-width: 0; overflow: hidden; container-type: size; }
+.embedded-exercise .sorting-pan:has(.sorting-enlarged) { overflow: auto; }
+.embedded-exercise .sorting-board:not(.sorting-enlarged) { width: min(100cqw,150cqh); height: auto; min-width: 0; max-width: none; aspect-ratio: 3 / 2; margin: 0; }
+.embedded-exercise .sorting-board.sorting-enlarged { width: 1450px; min-width: 1450px; height: auto; aspect-ratio: 3 / 2; align-self: start; justify-self: start; margin: 0; }
+.embedded-exercise .sorting-tray { display: contents; }
+.embedded-exercise .sorting-selected { grid-row: 3; grid-column: 1; display: grid; grid-template-rows: minmax(0,1fr) auto; height: 100%; min-height: 0; width: 100%; align-self: stretch; justify-items: center; gap: 12px; }
+.embedded-exercise .sorting-focused-art { width: 100%; height: 100%; min-height: 0; max-height: 420px; }
+.embedded-exercise .sorting-selected > div { max-width: 270px; }
+.embedded-exercise .sorting-selected > div > p { font-size: 11px; line-height: 1.5; }
+.embedded-exercise .sorting-cycle { margin: 5px 0 0; }
+.embedded-exercise .sorting-sources { grid-row: 4; grid-column: 1 / -1; grid-template-columns: repeat(8,minmax(0,1fr)); align-items: end; height: 100%; min-height: 0; margin: 0; padding: 7px 0 2px; gap: 20px; }
+.embedded-exercise .sorting-source { height: 56px; }
+.embedded-exercise .sorting-source-item > span { margin-top: 3px; font-size: 8px; }
+.embedded-exercise .sorting-actions { grid-row: 5; grid-column: 1 / -1; min-height: 0; margin: 0; gap: 20px; }
+.embedded-exercise .sorting-actions > div:last-child { gap: 24px; }
+.embedded-exercise #sorting-status { font-size: 10px; line-height: 1.5; }
+.embedded-exercise #sorting-image-status:not([hidden]) { position: absolute; z-index: 20; top: 58px; left: 50%; transform: translateX(-50%); background: var(--paper); padding: 8px 12px; margin: 0; }
+
+.embedded-exercise .difficult-edit { display: flex; flex-direction: column; }
+.embedded-exercise .difficult-question { flex: 0 0 auto; margin: 6px auto 12px; }
+.embedded-exercise .difficult-question h1 { font-size: clamp(28px,3vw,42px); }
+.embedded-exercise .difficult-question > p:last-child { margin-top: 10px; font-size: 11px; line-height: 1.6; }
+.embedded-exercise .difficult-wall { flex: 1 1 0; min-height: 0; gap: 30px; padding: 8px 0; }
+.embedded-exercise .difficult-art { height: clamp(120px,calc(100dvh - 400px),350px); }
+.embedded-exercise .difficult-work figcaption { min-height: 46px; padding-top: 10px; }
+.embedded-exercise .difficult-empty-slot { min-height: 150px; }
+.embedded-exercise .difficult-storage { width: min(650px,100%); min-height: 72px; flex: 0 0 auto; margin: 10px auto; padding: 12px 24px; }
+.embedded-exercise .difficult-storage .eyebrow { margin-bottom: 4px; }
+.embedded-exercise .difficult-stored-art img { width: 80px; height: 64px; }
+.embedded-exercise .difficult-actions { flex: 0 0 52px; min-height: 0; margin: 0; }
+.embedded-exercise .difficult-comparisons { flex: 1 1 0; min-height: 0; margin-top: 15px; align-items: center; }
+.embedded-exercise .difficult-comparison-art { min-height: 0; padding: 10px 0; }
+.embedded-exercise .difficult-comparison-art img { height: clamp(95px,calc(100dvh - 450px),260px); }
+.embedded-exercise .difficult-equal-choice { margin: 10px auto; }
+
+.embedded-exercise .gallery-studio { display: flex; flex-direction: column; padding: 0; }
+.embedded-exercise .gallery-studio-head { flex: 0 0 45px; }
+.embedded-exercise .gallery-studio-head h1 { font-size: clamp(27px,3vw,39px); }
+.embedded-exercise .gallery-task { flex: 0 0 auto; margin: 4px 0 13px; }
+.embedded-exercise .gallery-tools { flex: 0 0 25px; }
+.embedded-exercise .gallery-workspace { flex: 1 1 0; min-height: 0; }
+.embedded-exercise .gallery-pan { height: 100%; min-height: 0; overflow: hidden; }
+.embedded-exercise .gallery-pan:has(.gallery-zoomed) { overflow: auto; }
+.embedded-exercise .gallery-plan-board:not(.gallery-zoomed) { min-height: 0; }
+.embedded-exercise .gallery-art-tray { flex: 0 0 128px; min-height: 0; margin-top: 8px; }
+.embedded-exercise .gallery-focus-image { height: 110px; width: 140px; flex-basis: 140px; }
+.embedded-exercise .gallery-source .art-visual { height: 60px; }
+.embedded-exercise .gallery-bottom { flex: 0 0 52px; margin-top: 2px; }
+.embedded-exercise .gallery-names { flex: 0 0 auto; margin-top: 0; }
+.embedded-exercise .gallery-walkthrough-answer { margin-top: 8px; flex: 0 0 100px; }
+
+@media (max-width: 700px) {
+  .site-shell:has(.journey-question) { padding-inline: 20px; }
+  .deep-question.journey-question { grid-template-rows: 44px auto minmax(0,1fr) 60px; }
+  .journey-question > .journey-chrome { height: 44px; }
+  .journey-question > .question-head { margin: 8px 0 15px; }
+  .journey-question > .question-head h1 { font-size: clamp(26px,6.9vw,33px); line-height: 1.14; }
+  .journey-question > .question-head p { margin-top: 8px; font-size: 10px; }
+  .journey-question > .round-actions { min-height: 48px; padding-top: 8px; margin: 0; }
+  .journey-question .primary-button { min-height: 42px; font-size: 11px; padding: 10px 21px; }
+  .journey-question.deep-question .placement-layout { grid-template-columns: minmax(0,1fr); grid-template-rows: minmax(0,.8fr) minmax(0,1.3fr) 66px; gap: 8px; }
+  .journey-question.deep-question .placement-layout > .work-overview { grid-row: 3; height: 66px; gap: 16px; }
+  .journey-question.deep-question .work-overview .reference-work { width: 72px; }
+  .journey-question.deep-question .reference-art .art-visual > img { height: 45px; }
+  .journey-question .reference-art .drag-caption { padding-top: 3px; font-size: 8px; }
+  .journey-question .placement-layout > .focus-column { grid-template-rows: 21px minmax(0,1fr); }
+  .journey-question.deep-question .focus-column .focus-art .art-visual > img { height: 100%; max-height: 100%; }
+  .journey-question .focus-meta { font-size: 9px; }
+  .journey-question .focus-meta .text-button { font-size: 9px; }
+  .journey-question .map-layout > .placement-column { display: flex; flex-direction: column; justify-content: center; height: 100%; }
+  .journey-question .map-surround { width: min(100%,calc(62cqh - 40px)); max-width: 390px; grid-template-columns: 43px minmax(0,1fr) 43px; grid-template-rows: 19px auto 19px; gap: 3px; font-size: 9px; }
+  .journey-question .map-axis-left { padding-right: 1px; }
+  .journey-question .map-axis-right { padding-left: 1px; }
+  .journey-question .fine-controls { flex-wrap: nowrap; gap: 5px; margin-top: 8px; }
+  .journey-question .fine-controls > span { width: auto; margin: 0 5px 0 0; font-size: 8px; }
+  .journey-question .fine-controls button { flex-basis: 26px; width: 26px; height: 26px; }
+  .journey-question .map-layout .fine-controls { margin-top: 6px; }
+  .journey-question .placement-layout:not(.map-layout) { grid-template-rows: minmax(0,1fr) 230px 66px; }
+  .journey-question .placement-layout:not(.map-layout) .spectrum-target { height: 175px !important; min-height: 0; }
+  .journey-question .spectrum-target .spectrum-token { width: 42px; }
+  .journey-question .spectrum-token .placed-art .art-visual > img { width: 42px; height: 42px; }
+  .journey-question .spectrum-token[style*="bottom:87px"] { bottom: 61px !important; }
+  .journey-question .spectrum-token[style*="bottom:152px"] { bottom: 100px !important; }
+  .journey-question .spectrum-token[style*="bottom:217px"] { bottom: 139px !important; }
+  .journey-question .spectrum-token[style*="bottom:87px"] .spectrum-stem { height: 59px !important; }
+  .journey-question .spectrum-token[style*="bottom:152px"] .spectrum-stem { height: 98px !important; }
+  .journey-question .spectrum-token[style*="bottom:217px"] .spectrum-stem { height: 137px !important; }
+  .journey-question .spectrum-labels { padding-top: 9px; font-size: 10px; }
+  .journey-question .spectrum-input { grid-template-rows: minmax(0,1fr) 165px; gap: 14px; }
+  .journey-question .spectrum-input .art-tray.two-works { gap: 22px; }
+  .journey-question .spectrum-input .two-works .drag-art .art-visual > img { height: min(340px,calc(100cqh - 220px)); }
+  .journey-question .spectrum-input .spectrum-target { height: 112px !important; }
+  .journey-question .spectrum-input .drag-caption { font-size: 9px; }
+  .journey-question.deep-question .matching-input { grid-template-rows: minmax(0,1fr) minmax(0,1fr) 82px; gap: 10px; }
+  .journey-question.deep-question .matching-input:not(.revealed):has(.unsure-works:empty) { grid-template-rows: minmax(0,1fr) minmax(0,1fr) 30px; }
+  .journey-question.deep-question .matching-input > .art-tray,
+  .journey-question.deep-question .matching-input > .match-targets { grid-template-columns: repeat(2,minmax(0,1fr)); grid-template-rows: repeat(2,minmax(0,1fr)); gap: 8px 18px; }
+  .journey-question .matching-input .match-target { grid-template-rows: minmax(0,1fr) 36px; gap: 3px; }
+  .journey-question.deep-question .matching-input .match-painting { padding: 6px; gap: 3px; }
+  .journey-question .matching-input .match-label { padding: 2px 3px; font-size: 10px; line-height: 1.25; }
+  .journey-question .matching-input .match-feedback { font-size: 8px; line-height: 1.3; }
+  .journey-question .matching-input .drop-placeholder { font-size: 9px; }
+  .journey-question .matching-input .unsure-works { gap: 10px; }
+  .journey-question .matching-input .unsure-target > button { font-size: 9px; }
+  .journey-question.deep-question .matching-input.revealed { grid-template-rows: minmax(0,1fr) 130px; }
+  .journey-question.deep-question .matching-input.revealed:has(.unsure-works:empty) { grid-template-rows: minmax(0,1fr) 0; }
+  .journey-question .match-review-grid { grid-template-columns: repeat(2,minmax(0,1fr)); grid-template-rows: repeat(2,minmax(0,1fr)); gap: 18px; }
+  .journey-question .match-review-work { grid-template-rows: minmax(0,1fr) 70px; gap: 8px; }
+  .journey-question .match-review-work figcaption { gap: 5px; }
+  .journey-question .match-review-answer { font-size: 12px; line-height: 1.35; }
+  .journey-question .match-review-status { font-size: 9px; }
+  .journey-question[data-kind=statements] { grid-template-rows: 44px 0 minmax(0,1fr) 60px; }
+  .journey-question .deep-statement { padding-bottom: 9vh; }
+  .journey-question .deep-statement h2 { font-size: 28px; margin-bottom: 42px; }
+  .journey-question .deep-agreement { gap: 8px; }
+  .journey-question .deep-agreement-choice { font-size: 9px; }
+  .deep-question.journey-question.embedded-exercise { grid-template-rows: 44px minmax(0,1fr) 26px; }
+  .embedded-exercise .sorting-table { grid-template-columns: minmax(0,1fr); grid-template-rows: auto auto minmax(85px,1fr) calc((100vw - 40px) * 2 / 3) 80px 54px; row-gap: 5px; column-gap: 0; }
+  .embedded-exercise .sorting-head { display: flex; flex-wrap: nowrap; justify-content: flex-start; }
+  .embedded-exercise .sorting-head > div:nth-child(2) { margin: 0 !important; text-align: left; max-width: calc(100% - 90px); }
+  .embedded-exercise .sorting-head h1 { font-size: 26px; }
+  .embedded-exercise .sorting-zoom { right: 0; top: 16px; gap: 13px; }
+  .embedded-exercise .sorting-zoom .text-button { font-size: 9px; }
+  .embedded-exercise .sorting-instruction { font-size: 10px; line-height: 1.5; }
+  .embedded-exercise .sorting-selected { grid-row: 3; grid-column: 1; grid-template-columns: minmax(0,1fr) minmax(0,1fr); grid-template-rows: minmax(0,1fr); gap: 18px; text-align: left; }
+  .embedded-exercise .sorting-focused-art { width: 100%; height: 100%; max-height: 200px; }
+  .embedded-exercise .sorting-selected > div > p { font-size: 10px; }
+  .embedded-exercise .sorting-cycle { justify-content: flex-start; gap: 9px; }
+  .embedded-exercise .sorting-pan { grid-row: 4; grid-column: 1; }
+  .embedded-exercise .sorting-board.sorting-enlarged { width: 1100px; min-width: 1100px; }
+  .embedded-exercise .sorting-sources { grid-row: 5; grid-column: 1; display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); grid-template-rows: repeat(2,minmax(0,1fr)); overflow: visible; padding: 2px 0; gap: 4px 16px; align-items: center; }
+  .embedded-exercise .sorting-source-item { width: auto; min-width: 0; }
+  .embedded-exercise .sorting-source { height: 32px; }
+  .embedded-exercise .sorting-source-item > span { font-size: 7px; margin-top: 1px; }
+  .embedded-exercise .sorting-actions { grid-row: 6; grid-column: 1; display: flex; align-items: center; gap: 10px; }
+  .embedded-exercise .sorting-actions > div:first-child { max-width: 105px; }
+  .embedded-exercise #sorting-status { font-size: 8px; }
+  .embedded-exercise .sorting-actions > div:last-child { margin: 0; gap: 14px; }
+  .embedded-exercise .sorting-actions .text-button { font-size: 9px; }
+  .embedded-exercise .sorting-actions .primary-button { padding-inline: 16px; }
+  .embedded-exercise .difficult-question h1 { font-size: 28px; }
+  .embedded-exercise .difficult-question > p:last-child { font-size: 10px; }
+  .embedded-exercise .difficult-wall { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px 18px; }
+  .embedded-exercise .difficult-art { height: clamp(80px,calc((100dvh - 490px) / 2),145px); }
+  .embedded-exercise .difficult-work figcaption { min-height: 38px; padding-top: 5px; gap: 1px; }
+  .embedded-exercise .difficult-work figcaption > span { font-size: 8px; }
+  .embedded-exercise .difficult-empty-slot { min-height: 120px; }
+  .embedded-exercise .difficult-storage { min-height: 68px; padding: 9px 15px; gap: 18px; }
+  .embedded-exercise .difficult-storage p { font-size: 10px; }
+  .embedded-exercise .difficult-stored-art { flex-direction: row; text-align: left; gap: 8px; max-width: 170px; }
+  .embedded-exercise .difficult-stored-art img { width: 50px; height: 46px; }
+  .embedded-exercise .difficult-comparisons { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px; }
+  .embedded-exercise .difficult-version-heading { display: block; margin-bottom: 12px; }
+  .embedded-exercise .difficult-comparison-art { grid-template-columns: minmax(0,1fr); gap: 8px; }
+  .embedded-exercise .difficult-comparison-art img { height: 80px; }
+  .embedded-exercise .difficult-comparison-art span { font-size: 8px; margin-top: 4px; }
+  .embedded-exercise .difficult-equal-choice { font-size: 10px; margin: 6px auto; }
+  .embedded-exercise .gallery-art-tray { flex-basis: 120px; display: grid; grid-template-columns: 105px minmax(0,1fr); gap: 13px; margin-inline: 0; }
+  .embedded-exercise .gallery-active-work { flex-direction: column; gap: 3px; }
+  .embedded-exercise .gallery-focus-image { width: 90px; height: 65px; flex-basis: auto; }
+  .embedded-exercise .gallery-active-work > div > p { font-size: 8px; }
+  .embedded-exercise .gallery-library-head { font-size: 8px; margin-bottom: 3px; }
+  .embedded-exercise .gallery-source { flex-basis: 62px; width: 62px; }
+  .embedded-exercise .gallery-source .art-visual { height: 48px; }
+  .embedded-exercise .gallery-tray-scroll { gap: 15px; padding-block: 5px; }
+  .embedded-exercise .gallery-bottom { gap: 12px; margin-inline: 0; flex-basis: 54px; }
+  .embedded-exercise .gallery-bottom-actions { gap: 12px; }
+  .embedded-exercise .gallery-bottom .primary-button { padding-inline: 15px; }
+  .embedded-exercise .gallery-names { font-size: 9px; }
+}

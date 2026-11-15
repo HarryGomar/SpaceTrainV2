@@ -1,0 +1,350 @@
+{
+  "retrievedAt": "2026-11-13T19:03:10.936Z",
+  "notice": "New expansion only; existing artworks preserved. Editorial feature annotations and tradition labels are not validated measurements.",
+  "errors": [],
+  "artworks": [
+    {
+      "id": "velasco-valley-mexico",
+      "rights": "Public domain",
+      "rightsUrl": "https://commons.wikimedia.org/wiki/File:Jos%C3%A9_Mar%C3%ADa_Velasco_-_The_Valley_of_Mexico_from_the_Santa_Isabel_Mountain_Range_-_Google_Art_Project.jpg#Licensing",
+      "provider": "Wikimedia Commons; institutional Google Art Project reproduction",
+      "recordUrl": "https://commons.wikimedia.org/wiki/File:Jos%C3%A9_Mar%C3%ADa_Velasco_-_The_Valley_of_Mexico_from_the_Santa_Isabel_Mountain_Range_-_Google_Art_Project.jpg",
+      "institutionRecordUrl": "https://www.munal.gob.mx/munal/exposicion-velasco.html",
+      "retrievedAt": "2026-11-13T19:03:10.936Z",
+      "workRights": "Public domain: Commons identifies the author death year and pre-1931 publication basis.",
+      "authorDeathYear": 1912,
+      "imageRights": "Commons identifies this as a faithful reproduction of a two-dimensional public-domain artwork.",
+      "licenseMetadata": {
+        "LicenseShortName": "Public domain",
+        "UsageTerms": "Public domain",
+        "Copyrighted": "False",
+        "AttributionRequired": "false",
+        "License": "pd",
+        "Credit": "<a rel=\"nofollow\" class=\"external text\" href=\"//www.google.com/culturalinstitute/asset-viewer/kQHTX4IX7HO5lg\">kQHTX4IX7HO5lg at Google Cultural Institute</a> maximum zoom level",
+        "Categories": "Landscape paintings of Mexico|Texcoco Lake, Mexico|Valley of Mexico|Google Art Project works in Museo Nacional de Arte|PD-old-100-expired|PD-Art (PD-old-100-expired)|Artworks with Wikidata item|Artworks with known accession number|Large images|CC-PD-Mark|Google Art Project paintings|Artworks with Wikidata item missing genre|Volcanoes in Mexico in the 19th century|Artworks digital representation of 2D work|Files from Google Arts & Culture|Popocatépetl in art|Google Art Project works by José María Velasco"
+      },
+      "download": {
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e2/Jos%C3%A9_Mar%C3%ADa_Velasco_-_The_Valley_of_Mexico_from_the_Santa_Isabel_Mountain_Range_-_Google_Art_Project.jpg/1280px-Jos%C3%A9_Mar%C3%ADa_Velasco_-_The_Valley_of_Mexico_from_the_Santa_Isabel_Mountain_Range_-_Google_Art_Project.jpg",
+        "contentType": "image/jpeg",
+        "bytes": 233088,
+        "sha256": "a309aae69806aa1dfb6fb00e2df38946638a11fef6e7d08a2146127f24e1e534"
+      },
+      "visuallyInspected": true
+    },
+    {
+      "id": "herran-la-ofrenda",
+      "rights": "Public domain",
+      "rightsUrl": "https://commons.wikimedia.org/wiki/File:Saturnino_Herr%C3%A1n_-_The_offering_-_Google_Art_Project.jpg#Licensing",
+      "provider": "Wikimedia Commons; institutional Google Art Project reproduction",
+      "recordUrl": "https://commons.wikimedia.org/wiki/File:Saturnino_Herr%C3%A1n_-_The_offering_-_Google_Art_Project.jpg",
+      "institutionRecordUrl": "https://www.munal.gob.mx/munal/acervo.html",
+      "retrievedAt": "2026-11-13T19:03:10.936Z",
+      "workRights": "Public domain: Commons identifies the author death year and pre-1931 publication basis.",
+      "authorDeathYear": 1918,
+      "imageRights": "Commons identifies this as a faithful reproduction of a two-dimensional public-domain artwork.",
+      "licenseMetadata": {
+        "LicenseShortName": "Public domain",
+        "UsageTerms": "Public domain",
+        "Copyrighted": "False",
+        "AttributionRequired": "false",
+        "License": "pd",
+        "Credit": "<a rel=\"nofollow\" class=\"external text\" href=\"//www.google.com/culturalinstitute/asset-viewer/mgEn860XTFg7QA\">mgEn860XTFg7QA at Google Cultural Institute</a> maximum zoom level",
+        "Categories": "Tagetes erecta|Google Art Project works in Museo Nacional de Arte|PD-old-100-expired|PD-Art (PD-old-auto-expired)|Artworks with Wikidata item|Artworks with known accession number|CC-PD-Mark|Google Art Project paintings|La ofrenda (Saturnino Herrán)|PD-Art missing SDC copyright status|PD-old missing SDC copyright status|Artworks digital representation of 2D work|Files from Google Arts & Culture|Google Art Project works by Saturnino Herrán"
+      },
+      "download": {
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/df/Saturnino_Herr%C3%A1n_-_The_offering_-_Google_Art_Project.jpg/1280px-Saturnino_Herr%C3%A1n_-_The_offering_-_Google_Art_Project.jpg",
+        "contentType": "image/jpeg",
+        "bytes": 593020,
+        "sha256": "f4abba5a9ce7681934ae4e8533f440967abdd8f623e25fc9ee2b27f78d2f842a"
+      },
+      "visuallyInspected": true
+    },
+    {
+      "id": "almeida-junior-saudade",
+      "rights": "Public domain",
+      "rightsUrl": "https://commons.wikimedia.org/wiki/File:Almeida_J%C3%BAnior_-_Saudade_(Longing)_-_Google_Art_Project.jpg#Licensing",
+      "provider": "Wikimedia Commons; institutional Google Art Project reproduction",
+      "recordUrl": "https://commons.wikimedia.org/wiki/File:Almeida_J%C3%BAnior_-_Saudade_(Longing)_-_Google_Art_Project.jpg",
+      "institutionRecordUrl": "https://pinacoteca.org.br/programacao/exposicoes/caipiras-das-derrubadas-a-saudade/",
+      "retrievedAt": "2026-11-13T19:03:10.936Z",
+      "workRights": "Public domain: Commons identifies the author death year and pre-1931 publication basis.",
+      "authorDeathYear": 1899,
+      "imageRights": "Commons identifies this as a faithful reproduction of a two-dimensional public-domain artwork.",
+      "licenseMetadata": {
+        "LicenseShortName": "Public domain",
+        "UsageTerms": "Public domain",
+        "Copyrighted": "False",
+        "AttributionRequired": "false",
+        "License": "pd",
+        "Credit": "<a rel=\"nofollow\" class=\"external text\" href=\"//www.google.com/culturalinstitute/asset-viewer/ogE09zoFEjV57A\">ogE09zoFEjV57A at Google Cultural Institute</a> zoom level scaled down from 2nd highest",
+        "Categories": "Saudade (Almeida Júnior)|Gigapixel images from the Google Art Project|Google Art Project works in Pinacoteca do Estado de São Paulo|PD-old-100-expired|Featured pictures of São Paulo|Featured pictures on Wikipedia, English|PD-Art (PD-old-auto-expired)|Artworks with Wikidata item|Artworks with known accession number|Large images|Featured pictures on Wikipedia, Persian|CC-PD-Mark|Google Art Project paintings|Artworks with Wikidata item missing genre|Featured pictures of paintings from Brazil|Featured pictures in the public domain|Artworks digital representation of 2D work|Files from Google Arts & Culture|Featured pictures from the Google Art Project|Google Art Project works by Almeida Júnior|Reading people in Brazil"
+      },
+      "download": {
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/53/Almeida_J%C3%BAnior_-_Saudade_%28Longing%29_-_Google_Art_Project.jpg/500px-Almeida_J%C3%BAnior_-_Saudade_%28Longing%29_-_Google_Art_Project.jpg",
+        "contentType": "image/jpeg",
+        "bytes": 93098,
+        "sha256": "4f10cc2513c3b32adab6dc2a285ad3459b059e57e20419f0fda2b1f644522c6b"
+      },
+      "visuallyInspected": true
+    },
+    {
+      "id": "figari-candombe-moon",
+      "rights": "Public domain",
+      "rightsUrl": "https://commons.wikimedia.org/wiki/File:Pedro_Figari_-_Candombe_o_Candombe_bajo_la_luna_-_Google_Art_Project.jpg#Licensing",
+      "provider": "Wikimedia Commons; institutional Google Art Project reproduction",
+      "recordUrl": "https://commons.wikimedia.org/wiki/File:Pedro_Figari_-_Candombe_o_Candombe_bajo_la_luna_-_Google_Art_Project.jpg",
+      "institutionRecordUrl": "https://artsandculture.google.com/asset/VgEVQPchqYWZfQ",
+      "retrievedAt": "2026-11-13T19:03:10.936Z",
+      "workRights": "Public domain: Commons identifies the author death year and pre-1931 publication basis.",
+      "authorDeathYear": 1938,
+      "imageRights": "Commons identifies this as a faithful reproduction of a two-dimensional public-domain artwork.",
+      "licenseMetadata": {
+        "LicenseShortName": "Public domain",
+        "UsageTerms": "Public domain",
+        "Copyrighted": "False",
+        "AttributionRequired": "false",
+        "License": "pd",
+        "Credit": "<a rel=\"nofollow\" class=\"external text\" href=\"//www.google.com/culturalinstitute/asset-viewer/VgEVQPchqYWZfQ\">VgEVQPchqYWZfQ at Google Cultural Institute</a> maximum zoom level",
+        "Categories": "1920s paintings from Uruguay|Candombe|1920s paintings in Argentina|PD-Art (PD-old-auto-expired)|Artworks with Wikidata item|Artworks with known accession number|PD-old-80-expired|CC-PD-Mark|Dance by Pedro Figari|Google Art Project paintings|Artworks with Wikidata item missing genre|Artworks digital representation of 2D work|Files from Google Arts & Culture|Afro-Uruguayans in art|Paintings by Pedro Figari|Uruguayan paintings in the Museo Nacional de Bellas Artes (Argentina)|Google Art Project works in Museo Nacional de Bellas Artes de Buenos Aires|Google Art Project works by Pedro Figari"
+      },
+      "download": {
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9e/Pedro_Figari_-_Candombe_o_Candombe_bajo_la_luna_-_Google_Art_Project.jpg/1280px-Pedro_Figari_-_Candombe_o_Candombe_bajo_la_luna_-_Google_Art_Project.jpg",
+        "contentType": "image/jpeg",
+        "bytes": 329549,
+        "sha256": "fc173d806e4755dd4d4b44aa7bad64c1a6c9726b6983442cd73574f2dde2d1eb"
+      },
+      "visuallyInspected": true
+    },
+    {
+      "id": "teotihuacan-mural",
+      "rights": "CC0",
+      "rightsUrl": "https://www.clevelandart.org/open-access-api",
+      "provider": "Cleveland Museum of Art Open Access API",
+      "recordUrl": "https://openaccess-api.clevelandart.org/api/artworks/138881",
+      "institutionRecordUrl": "https://clevelandart.org/art/1963.252",
+      "retrievedAt": "2026-11-13T19:03:10.936Z",
+      "share_license_status": "CC0",
+      "accessionNumber": "1963.252",
+      "culture": [
+        "Central Mexico, Tlacuilapaxco apartment compound(?), Teotihuacán style, Classic Period"
+      ],
+      "creatorAttribution": [],
+      "medium": "fresco on wall fragment",
+      "officialDescription": "This richly dressed elite male belonged to a row of identical figures who processed along the walls of a patio in one of Teotihuacán’s wealthy apartment compounds. He offers a chant or prayer, materialized in a mouth scroll, along with a flower-filled libation that cascades from one hand. In the other hand, he carries an incense bag. The thorny spines of the maguey cactus, in front and behind, may allude to the offering of precious blood and a ritual beverage made from the cactus’s sap (pulque, a less refined form of tequila). The spines are thrust into objects that may represent bundles or plots of land.",
+      "imageRecord": {
+        "url": "https://openaccess-cdn.clevelandart.org/1963.252/1963.252_web.jpg",
+        "width": "900",
+        "height": "626",
+        "filesize": "324153",
+        "filename": "1963.252_web.jpg"
+      },
+      "download": {
+        "url": "https://openaccess-cdn.clevelandart.org/1963.252/1963.252_web.jpg",
+        "contentType": "image/jpeg",
+        "bytes": 314294,
+        "sha256": "39ed90d1b2c67c79d51e2ce691a2fa67cc1cfa0a334b4060278549a33904527f"
+      },
+      "visuallyInspected": true
+    },
+    {
+      "id": "ethiopian-apostles",
+      "rights": "CC0",
+      "rightsUrl": "https://www.clevelandart.org/open-access-api",
+      "provider": "Cleveland Museum of Art Open Access API",
+      "recordUrl": "https://openaccess-api.clevelandart.org/api/artworks/535124",
+      "institutionRecordUrl": "https://clevelandart.org/art/2023.4",
+      "retrievedAt": "2026-11-13T19:03:10.936Z",
+      "share_license_status": "CC0",
+      "accessionNumber": "2023.4",
+      "culture": [
+        "Africa, East Africa, Ethiopia, presumably Gondär"
+      ],
+      "creatorAttribution": [
+        "Workshop or Circle of Wäldä Maryam (Ethiopia, active mid- to late 1600s-early 1700s)"
+      ],
+      "medium": "Tempera, wood, textile",
+      "officialDescription": "Depicting 13 holy men, this diptych (two-panel painting) is sized for an Ethiopian Orthodox Christian church or elite home. It is painted in the bold, colorful style associated with royal court workshops from the early 1600s to the mid-1700s. Painter Wäldä Maryam (or someone he trained) set this scene of Christ’s apostles in the context of his homeland. Each saint wears fashionable clothing imported from India. While they are posed and dressed similarly to emphasize their group identity, the artist portrayed their faces and hairstyles individually. Captions in Ge’ez––an eastern African language dating to the 400s BCE––identify each by name.",
+      "imageRecord": {
+        "url": "https://openaccess-cdn.clevelandart.org/2023.4/2023.4_web.jpg",
+        "width": "900",
+        "height": "860",
+        "filesize": "414450",
+        "filename": "2023.4_web.jpg"
+      },
+      "download": {
+        "url": "https://openaccess-cdn.clevelandart.org/2023.4/2023.4_web.jpg",
+        "contentType": "image/jpeg",
+        "bytes": 404578,
+        "sha256": "5e176b4739eb5c1ed5dcec33633bd5a959ddd1a9d9222b9c87e8cffda39a5c59"
+      },
+      "visuallyInspected": true
+    },
+    {
+      "id": "bengal-todi-ragini",
+      "rights": "CC0",
+      "rightsUrl": "https://www.clevelandart.org/open-access-api",
+      "provider": "Cleveland Museum of Art Open Access API",
+      "recordUrl": "https://openaccess-api.clevelandart.org/api/artworks/170864",
+      "institutionRecordUrl": "https://clevelandart.org/art/2013.340",
+      "retrievedAt": "2026-11-13T19:03:10.936Z",
+      "share_license_status": "CC0",
+      "accessionNumber": "2013.340",
+      "culture": [
+        "Eastern India, Bengal, Murshidabad, 18th century"
+      ],
+      "creatorAttribution": [],
+      "medium": "Gum tempera and gold on paper",
+      "officialDescription": "Ragamala paintings were recognized as being associated with a season and time of day. Evoking a late morning in spring, here a young woman beguiles deer from the woodlands with her music to prevent them from destroying the crops in the field. The saturated hues and romantic idealization of the scene continue idioms begun in the Mughal court that were disseminated to regional centers of patronage such as Murshidabad. The inscription at the top of this page identifies the name, <em>ragini todi</em>, in Arabic script, which suggests that this ragamala series was made for a Muslim patron.",
+      "imageRecord": {
+        "url": "https://openaccess-cdn.clevelandart.org/2013.340/2013.340_web.jpg",
+        "width": "582",
+        "height": "900",
+        "filesize": "188909",
+        "filename": "2013.340_web.jpg"
+      },
+      "download": {
+        "url": "https://openaccess-cdn.clevelandart.org/2013.340/2013.340_web.jpg",
+        "contentType": "image/jpeg",
+        "bytes": 178804,
+        "sha256": "6e73df9d2c9b661942b79ef3beb6c920a4683960951506624510fe999ea66dbe"
+      },
+      "visuallyInspected": true
+    },
+    {
+      "id": "chitarman-tiered-court",
+      "rights": "CC0",
+      "rightsUrl": "https://www.clevelandart.org/open-access-api",
+      "provider": "Cleveland Museum of Art Open Access API",
+      "recordUrl": "https://openaccess-api.clevelandart.org/api/artworks/147506",
+      "institutionRecordUrl": "https://clevelandart.org/art/1973.237",
+      "retrievedAt": "2026-11-13T19:03:10.936Z",
+      "share_license_status": "CC0",
+      "accessionNumber": "1973.237",
+      "culture": [
+        "Northern India, Delhi, Mughal court of Muhammad Shah (reigned 1719–48)"
+      ],
+      "creatorAttribution": [
+        "Chitarman II (Indian, c. 1680–с. 1750)"
+      ],
+      "medium": "Gum tempera, ink, and gold on paper",
+      "officialDescription": "Emperor Muhammad Shah rekindled an imperial interest in Hinduism that had not been so strong since the time of Akbar, 150 years before. He commissioned this painting that shows the acts of Rama, hero of a Hindu epic, who slays the demon of the golden city of Lanka at the top of the page. In the middle sections, various Hindu deities enjoy music, kite flying, and boating, while at the bottom the Krishna plays Holi with his lover Radha and other palace women. They shoot red-colored water at one another with plunger guns in celebration of the coming of spring.",
+      "imageRecord": {
+        "url": "https://openaccess-cdn.clevelandart.org/1973.237/1973.237_web.jpg",
+        "width": "629",
+        "height": "893",
+        "filesize": "188501",
+        "filename": "1973.237_web.jpg"
+      },
+      "download": {
+        "url": "https://openaccess-cdn.clevelandart.org/1973.237/1973.237_web.jpg",
+        "contentType": "image/jpeg",
+        "bytes": 191916,
+        "sha256": "1e91d72a476907f97771158888a6106b234d31699fab6438f23be15f6481382e"
+      },
+      "visuallyInspected": true
+    },
+    {
+      "id": "joseon-seven-jeweled-mountain",
+      "rights": "CC0",
+      "rightsUrl": "https://www.clevelandart.org/open-access-api",
+      "provider": "Cleveland Museum of Art Open Access API",
+      "recordUrl": "https://openaccess-api.clevelandart.org/api/artworks/155043",
+      "institutionRecordUrl": "https://clevelandart.org/art/1989.6",
+      "retrievedAt": "2026-11-13T19:03:10.936Z",
+      "share_license_status": "CC0",
+      "accessionNumber": "1989.6",
+      "culture": [
+        "Korea, Joseon dynasty (1392–1910)"
+      ],
+      "creatorAttribution": [],
+      "medium": "ten-panel screen; ink and color on silk",
+      "officialDescription": "With a bird’s-eye view, this ten-panel folding screen portrays the famous Seven Jeweled Mountain 칠보산 in North Korea. Ancient volcanic eruptions shaped the mountain’s unique and awe-inspiring terrain such as phallic-shaped pillars (panel #5, from the right); a large flat-topped, steep-sided cliff (panels #7 and #8), and a rugged mountain composed of metamorphic and igneous rocks (panels #9 and #10). The tradition of landscape painting that details actual natural sites and captures their topographic features in Korea began in the 1700s and continued onward. <br><br>While such natural wonders were beloved as popular destinations for tourism and pilgrimage, after the Korean War (1950–53), these sites in North Korea are no longer accessible to the outside world. This folding screen detailing the mountain’s distinctive topography feeds our imagination and longing for such an unattainable place.",
+      "imageRecord": {
+        "url": "https://openaccess-cdn.clevelandart.org/1989.6/1989.6_web.jpg",
+        "width": "1263",
+        "height": "521",
+        "filesize": "530801",
+        "filename": "1989.6_web.jpg"
+      },
+      "download": {
+        "url": "https://openaccess-cdn.clevelandart.org/1989.6/1989.6_web.jpg",
+        "contentType": "image/jpeg",
+        "bytes": 534214,
+        "sha256": "4d2fd857b8abadc06305d7af780807b3a288cc1d45f33d401784b42bce67f19e"
+      },
+      "visuallyInspected": true
+    },
+    {
+      "id": "hua-yan-children-garden",
+      "rights": "CC0",
+      "rightsUrl": "https://www.clevelandart.org/open-access-api",
+      "provider": "Cleveland Museum of Art Open Access API",
+      "recordUrl": "https://openaccess-api.clevelandart.org/api/artworks/151036",
+      "institutionRecordUrl": "https://clevelandart.org/art/1982.68.9",
+      "retrievedAt": "2026-11-13T19:03:10.936Z",
+      "share_license_status": "CC0",
+      "accessionNumber": "1982.68.9",
+      "culture": [
+        "China, Qing dynasty (1644-1911)"
+      ],
+      "creatorAttribution": [
+        "Hua Yan (Chinese, 1682–c. 1765)"
+      ],
+      "medium": "Album leaf; ink and light color on paper",
+      "officialDescription": "Hua Yan is one of the Eight Eccentrics of Yangzhou, who rejected orthodox ideas about painting.",
+      "imageRecord": {
+        "url": "https://openaccess-cdn.clevelandart.org/1982.68.9/1982.68.9_web.jpg",
+        "width": "1079",
+        "height": "893",
+        "filesize": "722666",
+        "filename": "1982.68.9_web.jpg"
+      },
+      "download": {
+        "url": "https://openaccess-cdn.clevelandart.org/1982.68.9/1982.68.9_web.jpg",
+        "contentType": "image/jpeg",
+        "bytes": 726082,
+        "sha256": "c73d1bf4b1328c22f4748ec9e4c14e1b9dc7b06dab9a427d2740e7d4228a3c1f"
+      },
+      "visuallyInspected": true
+    },
+    {
+      "id": "nepal-chakrasamvara-mandala",
+      "rights": "CC0",
+      "rightsUrl": "https://www.clevelandart.org/open-access-api",
+      "provider": "Cleveland Museum of Art Open Access API",
+      "recordUrl": "https://openaccess-api.clevelandart.org/api/artworks/136335",
+      "institutionRecordUrl": "https://clevelandart.org/art/1960.211",
+      "retrievedAt": "2026-11-13T19:03:10.936Z",
+      "share_license_status": "CC0",
+      "accessionNumber": "1960.211",
+      "culture": [
+        "Nepal"
+      ],
+      "creatorAttribution": [],
+      "medium": "Gum tempera on cloth",
+      "officialDescription": "A mandala is a two-dimensional diagram of a palace-like structure, viewed from above. This mandala depicts the abode of a 4-headed, 12-armed figure who personifies a major tantric Buddhist text, the <em>Chakrasamvara-tantra</em>. He dances in the bliss of sexual union with his consort, the red Vajravarahi, in the central circle, which is equivalent to the penthouse of their palace. <br><br>Through guided meditation, practitioners can visualize entering through each of the four gates to experience the beauty of the enlightened realm. The outermost ring of cremation grounds indicates that one must overcome fear of death before reaching the realm of enlightenment.",
+      "imageRecord": {
+        "url": "https://openaccess-cdn.clevelandart.org/1960.211/1960.211_web.jpg",
+        "width": "786",
+        "height": "900",
+        "filesize": "468270",
+        "filename": "1960.211_web.jpg"
+      },
+      "download": {
+        "url": "https://openaccess-cdn.clevelandart.org/1960.211/1960.211_web.jpg",
+        "contentType": "image/jpeg",
+        "bytes": 457049,
+        "sha256": "6e6e31be5cff443648dbfa8ca54da57000ca91f633d54dcbd7e989d14de9be84"
+      },
+      "visuallyInspected": true
+    }
+  ],
+  "validation": {
+    "allImagesJPEG": true,
+    "allImagesVisuallyInspected": true,
+    "allCoreQuizFalse": true,
+    "distinctIds": true,
+    "noOriginalIdCollisions": true,
+    "originalRecordCount": 16
+  }
+}

@@ -1,0 +1,62 @@
+import {AXES,validAnswer} from './engine.mjs';
+import {contextPurpose} from './profile-comparisons.mjs';
+const unique=items=>[...new Set(items)];
+const short=work=>work.shortTitle||work.title;
+const named={abstraction:['recognisable subjects','more abstract work'],energy:['quieter compositions','busier compositions'],complexity:['simpler compositions','more detail'],humanity:['less figure-focused work','human figures'],narrative:['scenes with less action','scenes with more action'],atmosphere:['less emphasis on setting','more emphasis on setting'],color:['restrained colour','stronger colour']};
+export function readingTitle(item){
+  if(item.module==='patterns'&&named[item.feature]&&item.patternStatus==='mixed-candidate')return `Your choices about ${named[item.feature][item.direction>0?1:0]} were mixed.`;
+  if(item.module==='patterns'&&item.feature==='humanity')return item.direction>0?(item.counter?.length?'Human figures recur, with exceptions.':'Human figures recurred in these choices.'):'Less figure-focused work recurred in these choices.';
+  if(item.module==='patterns'&&named[item.feature])return 'A possible preference for '+named[item.feature][item.direction>0?1:0]+'.';
+  if(item.module==='curiosity')return 'You were more curious about paintings you preferred less.';
+  if(item.module==='exceptions')return 'A choice that went the other way.';
+  if(item.module==='context')return item.contextWorkLabel&&contextPurpose(item.brief)?`${item.contextWorkLabel} for ${contextPurpose(item.brief)}.`:contextPurpose(item.brief)?`Your choice changed for ${contextPurpose(item.brief)}.`:`Your choice changed under “${item.brief||'the stated question'}”.`;
+  return item.title;
+}
+export function readingSummary(item){
+  if(item.module==='patterns'&&item.discoveryBalance){const b=item.discoveryBalance,extra=item.additionalBalance;return `${b.supportingSets} of ${b.eligibleSets} early groups leaned this way overall.${b.setsWithOpposingPairs?` ${b.setsWithOpposingPairs} of ${b.eligibleSets} also contained opposing choices.`:''}${extra?.opposingSets?` ${extra.opposingSets} later ${extra.opposingSets===1?'comparison went':'comparisons went'} against it.`:''}`;}
+  if(item.module==='patterns')return `This direction appeared in ${item.supportedSetCount} different painting groups.${item.counter?.length?' Some choices went the other way.':''}`;
+  if(item.module==='curiosity')return Number.isInteger(item.contrastingSetCount)&&item.contrastingSetCount>0?`This happened in ${item.contrastingSetCount} painting ${item.contrastingSetCount===1?'group':'groups'}. The pair shows one comparison.`:'Your preference and curiosity followed different orders in this comparison.';
+  if(item.module==='exceptions')return (item.text||'').replace(/ The exception belongs in the profile alongside the pattern\.?$/,'');
+  return item.text;
+}
+export function readingTitleMarkup(item,esc){
+  const text=readingTitle(item)||'',term=item.module==='patterns'?named[item.feature]?.[item.direction>0?1:0]:null;
+  if(term){const start=text.toLowerCase().indexOf(term.toLowerCase());if(start>=0)return esc(text.slice(0,start))+`<span class="profile-highlight">${esc(text.slice(start,start+term.length))}</span>`+esc(text.slice(start+term.length));}
+  if(item.module==='curiosity')return 'You were <span class="profile-highlight curiosity">more curious</span> about paintings you <span class="profile-highlight preference">preferred less</span>.';
+  if(item.module==='making-and-taste')return item.readingBasis==='matched-preference'?'You <span class="profile-highlight meaning">admired</span> paintings you <span class="profile-highlight preference">preferred less</span>.':'Your <span class="profile-highlight preference">taste</span> and <span class="profile-highlight meaning">admiration</span> differed.';
+  if(item.module==='tension-and-return')return esc(text).replace(/revisit|return|unsettling/g,word=>`<span class="profile-highlight ${word==='unsettling'?'response':'preference'}">${word}</span>`);
+  if(item.module==='scene-and-meaning')return esc(text).replace(/clearer scene|clear scene|fewer possible readings|meaning open/g,word=>`<span class="profile-highlight ${word.includes('scene')?'curiosity':'meaning'}">${word}</span>`);
+  return esc(text);
+}
+const tone=round=>round?.kind==='grid'?(['meaning','reading','achievement'].includes(round.axis)?'meaning':round.axis==='connection'?'connection':'response'):round?.criterion==='interest'?'curiosity':'preference';
+export function renderProfileEvidence({item,works,rounds,answers,image,esc}){
+  const byId=new Map(works.map(work=>[work.id,work]));
+  const support=Array.isArray(item.support)?item.support:[],counter=Array.isArray(item.counter)?item.counter:[];
+  function row(entry,role){
+    const round=rounds.find(round=>round.id===entry.roundId||entry.roundId==='scenario:'+answers[round.id]?.record?.id),answer=answers[entry.roundId],artIds=unique((entry.workIds||[]).filter(id=>byId.has(id))),sourceLabel=(round?'Round '+(rounds.indexOf(round)+1)+' · ':'')+(entry.label||entry.roundId)+(entry.sourceRole?' · '+entry.sourceRole:'');
+    let recorded=false;try{recorded=round&&answer&&!/frozen/i.test(entry.label||'')&&['spectrum','grid'].includes(round.kind)&&validAnswer(round,answer);}catch{}
+    const detail=artIds.reduce((text,id)=>{const escaped=id.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');return text.replace(new RegExp('(^|[^\\p{L}\\p{N}_-])'+escaped+'(?![\\p{L}\\p{N}_-])','gu'),(_,prefix)=>prefix+short(byId.get(id)));},entry.detail||'');
+    const roleLabel=item.module==='patterns'?(role==='exception'?'Against this pattern':'Supports this pattern'):item.module==='exceptions'?(role==='exception'?'The broader pattern':'The exception'):role==='exception'?'A different result':'Source comparison';
+    return `<div class="tp-evidence-row" data-evidence-role="${role}"><p class="profile-evidence-role">${roleLabel}</p><span>${esc(sourceLabel)}</span>${recorded?'':`<p>${esc(detail)}</p>`}<div class="tp-evidence-artworks">${artIds.map(id=>{
+      const work=byId.get(id);let values=[];
+      if(recorded&&round.kind==='spectrum'&&Number.isFinite(answer.positions?.[id]))values=[{label:round.criterion==='interest'?'Curiosity':'Preference',value:answer.positions[id],tone:tone(round)}];
+      if(recorded&&round.kind==='grid'&&Array.isArray(answer.points?.[id])){const axes=round.axisDefinition||AXES[round.axis],colours=round.axis==='achievement'?['preference','meaning']:round.axis==='reading'?['curiosity','meaning']:round.axis==='returnResponse'?['response','preference']:[tone(round),tone(round)];if(axes)values=[{label:axes.xName,value:answer.points[id][0],tone:colours[0]},{label:axes.yName,value:answer.points[id][1],tone:colours[1]}];}
+      return `<figure><button class="tp-art" type="button" data-action="deep-art" data-work="${esc(id)}" aria-label="View ${esc(short(work))}">${image(work)}</button><figcaption>${esc(short(work))}</figcaption>${values.map(value=>`<div class="profile-evidence-value" data-tone="${value.tone}"><span>${esc(value.label)}</span><strong>${value.value}<small> / 100</small></strong></div>`).join('')}</figure>`;
+    }).join('')}</div></div>`;
+  }
+  return `<details class="tp-evidence"${item.module==='patterns'?' data-evidence-title="Choices for and against this pattern"':''}><summary aria-haspopup="dialog">View ${counter.length?'choices & exceptions':'the choices'} <span aria-hidden="true">↗</span></summary><div class="tp-evidence-body">${[['Supporting choices',support,'support'],['Exceptions',counter,'exception']].filter(([,entries])=>entries.length).map(([label,entries,role])=>`<div class="tp-evidence-group"><h4>${label}</h4>${entries.map(entry=>row(entry,role)).join('')}</div>`).join('')}${(item.alternatives||item.limits||[]).map(text=>`<p class="tp-limit">${esc(text)}</p>`).join('')}${Array.isArray(item.sourceUrls)?item.sourceUrls.filter(url=>/^https?:\/\//.test(url)).map(url=>`<p><a href="${esc(url)}" target="_blank" rel="noopener noreferrer">Source ↗</a></p>`).join(''):''}</div></details>`;
+}
+
+/** Group pictures by the user's placements, with direct response maps kept separate. */
+export function renderTasteConnections({connections={},works,image,esc,evidence}){
+  const byId=new Map(works.map(work=>[work.id,work]));
+  const art=id=>{const work=byId.get(id);return work?`<button class="tc-art" type="button" data-action="deep-art" data-work="${esc(id)}" aria-label="View ${esc(short(work))}">${image(work)}</button>`:'';};
+  function facts(group){const list=(group.allWorkIds||group.workIds).map(id=>byId.get(id)).filter(Boolean),artists=new Set(list.filter(work=>typeof work.artist==='string'&&work.artistKnown!==false&&!/unidentified|unknown|anonymous/i.test(work.artist)).map(work=>work.artist)),countries=new Set(list.map(work=>work.country).filter(Boolean)),ranges=list.map(work=>work.analysis?.yearRange),dates=ranges.length&&ranges.every(range=>Array.isArray(range)&&range.length===2&&range.every(Number.isFinite))?[Math.min(...ranges.map(range=>range[0])),Math.max(...ranges.map(range=>range[1]))]:null;return [artists.size>1?artists.size+' named artists':null,countries.size>1?countries.size+' countries':null,dates&&dates[1]>dates[0]?'c. '+dates[0]+'–'+dates[1]:null].filter(Boolean).map(text=>'<span>'+esc(text)+'</span>').join('');}
+  const groups=(connections.groups||[]).slice(0,6),map=(connections.responseMaps||[]).find(map=>map.kind==='preference-curiosity')||connections.responseMaps?.[0];
+  const groupSection=groups.length?`<section class="tc-groups" id="profile-groups"><div class="tp-section-heading"><p class="tp-kicker">Your arrangements</p><h2>The groups you made.</h2><p>These paintings shared a room or sat close on your table.</p></div><div class="tc-clusters">${groups.map((group,index)=>`<article class="tc-cluster" data-group-color="${index%4}"><div class="tc-cluster-pictures">${group.workIds.map(art).join('')}</div><h3>${esc(group.recurring?(group.totalWorkCount===2?'A pair you kept together.':'A group you kept together.'):group.label)}</h3><p>${group.recurring?`${group.evidenceCount} ${group.instrument==='museum'?'museum arrangements':'sorting tables'}`:group.instrument==='museum'?'From your museum':'From your sorting table'}${group.totalWorkCount>group.workIds.length?` · ${group.workIds.length} of ${group.totalWorkCount} works shown`:''}</p><div class="tc-group-facts">${facts(group)}</div>${evidence({...group,title:group.label})}</article>`).join('')}</div></section>`:'';
+  const isMeaning=map?.kind==='preference-meaning';
+  const responseMap=map?`<section class="tc-response-map" data-axis="${isMeaning?'meaning':'curiosity'}" id="profile-responses"><div><p class="tp-kicker">Two separate responses</p><h2>${isMeaning?'Meaning and preference.':'Preference & curiosity.'}</h2><p>${isMeaning?'The same paintings, compared by your preference and how much meaning they suggested.':'These are the same paintings, placed by your preference and your wish to understand them.'}</p><div class="tc-map-legend"><span data-tone="preference">Preference runs across</span><span data-tone="${isMeaning?'meaning':'curiosity'}">${isMeaning?'Suggested meaning':'Curiosity'} runs up</span></div>${evidence({...map,title:map.label})}</div><div class="tc-map-wrap"><span class="tc-map-top">${isMeaning?'More to interpret':'More curious'}</span><div class="tc-map"><i class="tc-map-mid-x"></i><i class="tc-map-mid-y"></i><span class="tc-map-zone a">${isMeaning?'More meaning, less preferred':'Curious, less preferred'}</span><span class="tc-map-zone b">${isMeaning?'Preferred and meaningful':'Preferred and curious'}</span>${map.points.map(point=>`<div class="tc-map-point" style="left:${8+point.x*.84}%;bottom:${8+point.y*.84}%">${art(point.workId)}</div>`).join('')}</div><div class="tc-map-bottom"><span>Less preferred</span><span>More preferred</span></div><p>One comparison group. Positions are your recorded responses.</p></div></section>`:'';
+  const changes=(connections.crossTaskPatterns||[]).filter(item=>item.kind==='cross-task-placement').slice(0,2);
+  const changeSection=changes.length?`<section class="tc-changing-groups"><div class="tp-section-heading"><h2>Where the grouping changed.</h2></div>${changes.map(item=>`<article><div>${item.workIds.map(art).join('')}</div><h3>Near on the table. Different rooms in the museum.</h3>${evidence({...item,title:item.label})}</article>`).join('')}</section>`:'';
+  return groupSection+responseMap+changeSection;
+}
