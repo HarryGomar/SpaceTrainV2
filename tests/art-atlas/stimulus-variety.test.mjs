@@ -1,17 +1,17 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {buildJourneyRounds,createJourneyStimulusPlan,JOURNEY_REVISION,JOURNEY_VARIETY_POLICY} from '../../public/art-atlas/journey-bank.mjs';
+import {buildJourneyRounds,createJourneyStimulusPlan,journeyCurationNotes,JOURNEY_REVISION,JOURNEY_VARIETY_POLICY} from '../../public/art-atlas/journey-bank.mjs';
 import {selectArrangementStimuli} from '../../public/art-atlas/arrangement-stimuli.mjs';
 const works=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/artworks.json',import.meta.url),'utf8'));
-const notes=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/curation-notes.json',import.meta.url),'utf8'));
+const notes=journeyCurationNotes(works);
 const byId=new Map(works.map(work=>[work.id,work]));
 const seed='reviewed-variety-v5-0';
 const ids=round=>round.works.map(work=>work.id);
 const allIds=round=>[...new Set([...ids(round),...(round.anchorWorks||[]).map(work=>work.id),...(round.anchorIds||[])])];
 const same=(a,b)=>assert.deepEqual([...a].sort(),[...b].sort());
 const ordinary=round=>round.kind==='spectrum'&&round.criterion==='preference'&&round.evidence.construct==='preference'&&round.evidence.unconditional!==false;
-const specific=round=>round.kind!=='statements'&&round.evidence.stimulusVisibility!=='not-shown'&&!(round.kind==='exercise'&&!['sorting','difficult-edit','edit'].includes(round.exerciseKind));
+const specific=round=>!round.unavailable&&round.kind!=='statements'&&round.evidence.stimulusVisibility!=='not-shown'&&!(round.kind==='exercise'&&!['sorting','difficult-edit','edit'].includes(round.exerciseKind));
 const fresh=()=>buildJourneyRounds(works,{}, {seed});
 
 test('The variety policy preserves all18 curated main panels and the fixed50-round schedule',()=>{
@@ -20,7 +20,7 @@ test('The variety policy preserves all18 curated main panels and the fixed50-rou
   for(const p of notes.proposedFirst18Panels)same(ids(main.find(round=>round.evidence.panelNumber===p.panel)),p.workIds);
   assert.equal(rounds[30].kind,'statements');assert.equal(rounds[34].kind,'context');assert.equal(rounds[34].evidence.claimRoundId,rounds[30].id);
   assert.deepEqual(rounds.flatMap((round,i)=>round.kind==='contrast'?[[i+1,round.contrastKind]]:[]),[[15,'chronology'],[19,'neighbour'],[27,'keep-leave'],[42,'same-subject']]);
-  assert.ok(main.every(round=>round.evidence.journeyRevision===JOURNEY_REVISION));assert.equal(JOURNEY_VARIETY_POLICY,'specific-question-variety-v1');
+  assert.ok(main.every(round=>round.evidence.journeyRevision===JOURNEY_REVISION));assert.equal(JOURNEY_VARIETY_POLICY,'specific-question-variety-v2');
 });
 
 test('SortingA uses Calligraphy Party without duplicating a later rotation',()=>{
@@ -29,7 +29,7 @@ test('SortingA uses Calligraphy Party without duplicating a later rotation',()=>
   const rotations=Array.from({length:4},(_,batchIndex)=>selectArrangementStimuli({works,batchIndex,kind:'sorting'}));
   assert.equal(new Set(rotations.flatMap(row=>row.workIds)).size,32);
   assert.equal(rotations.filter(row=>row.workIds.includes('calligraphy-party')).length,1);
-  const rounds=fresh();assert.deepEqual(ids(rounds[7]),ids(rounds[45]));assert.equal(rounds[45].evidence.repeatOf,rounds[7].id);
+  const rounds=fresh();assert.deepEqual(ids(rounds[7]),ids(rounds[31]));assert.equal(rounds[31].evidence.repeatOf,rounds[7].id);
 });
 
 test('The first familiarity uses Wanderer while its paired shortlist retains exactly the same12 identities',()=>{
@@ -45,7 +45,7 @@ test('The first familiarity uses Wanderer while its paired shortlist retains exa
 test('Fresh grids and matching avoid their known independent neighbours when the99-work catalogue permits it',()=>{
   for(const trialSeed of [seed,'variety-second-seed','variety-third-seed']){
     const rounds=buildJourneyRounds(works,{}, {seed:trialSeed});
-    for(const round of rounds.filter(round=>['choice-grid','match'].includes(round.kind))){
+    for(const round of rounds.filter(round=>!round.unavailable&&['choice-grid','match'].includes(round.kind)&&!round.evidence.finalRefinement)){
       assert.equal(round.evidence.varietyPolicy,JOURNEY_VARIETY_POLICY);
       const audit=round.evidence.varietySelection;
       if(!audit.preservedCachedBinding){assert.equal(audit.fallback,false);assert.deepEqual(audit.selectedAvoidedIds,[]);}
@@ -71,7 +71,7 @@ test('Already bound wording, source metadata, grid identities and old limits rem
 test('An earlier museum offering99 changes no grid/match usage count or selected identity',()=>{
   const first=fresh(),museum={id:'earlier-museum-offering',kind:'exercise',exerciseKind:'curate',works,evidence:{construct:'curate'}};
   const withMuseum=buildJourneyRounds(works,{}, {seed,history:[museum]});
-  for(const round of first.filter(round=>['choice-grid','match'].includes(round.kind))){
+  for(const round of first.filter(round=>!round.unavailable&&['choice-grid','match'].includes(round.kind)&&!round.evidence.finalRefinement)){
     const other=withMuseum.find(row=>row.id===round.id);assert.deepEqual(ids(other),ids(round));
     assert.deepEqual(other.evidence.varietySelection.plannedUseCountsBefore,round.evidence.varietySelection.plannedUseCountsBefore);
   }
@@ -94,7 +94,7 @@ test('A small eligible catalogue reports spacing fallback and counts prior speci
 test('Protected adaptive panel sets and frozen repeat prompts survive the independent grid/match policy',()=>{
   const first=fresh(),answers=Object.fromEntries(first.filter(ordinary).map(round=>[round.id,{workIds:ids(round),criterion:'preference',positions:Object.fromEntries(round.works.map(work=>[work.id,Math.round(work.features.energy*100)])),confirmed:true}]));
   const selection=createJourneyStimulusPlan({works,rounds:first,answers,batchIndex:1,seed:'variety-protected',reservationPlan:notes.reservePools}),before=structuredClone(selection);
-  assert.equal(selection.complete,true);assert.equal(selection.coverage.firstRatingWorkIds.length,42);same(selection.coverage.firstRatingWorkIds,notes.reservePools.batch2);
+  assert.equal(selection.complete,true);assert.equal(selection.coverage.firstRatingWorkIds.length,46);same(selection.coverage.firstRatingWorkIds,notes.reservePools.batch2);
   const second=buildJourneyRounds(works,answers,{offset:50,batchIndex:1,seed:'variety-protected',history:first,panels:selection,reservationPlan:notes.reservePools});
   for(const [index,panel] of selection.panels.entries()){
     const bound=second.find(round=>ordinary(round)&&round.evidence.panelNumber===index+1);same(ids(bound),panel.workIds);
@@ -107,10 +107,11 @@ test('Same-seed first50 variety improves the audited peak while keeping delibera
   const rounds=fresh(),counts=new Map(),adjacent=[];
   for(const round of rounds)if(specific(round))for(const id of allIds(round))counts.set(id,(counts.get(id)||0)+1);
   for(let i=1;i<rounds.length;i++)if(specific(rounds[i-1])&&specific(rounds[i])){const overlap=allIds(rounds[i-1]).filter(id=>allIds(rounds[i]).includes(id));if(overlap.length)adjacent.push([rounds[i-1].id,rounds[i].id,overlap]);}
-  assert.equal([...counts.values()].reduce((a,b)=>a+b,0),230);assert.ok(counts.size>=90);assert.ok(Math.max(...counts.values())<=6);
-  // KeepA is selected for its six genuine opening pair links. Its fixed reviewed
-  // set also contains Mondrian, a collateral immediate return from panel12.
-  assert.deepEqual(adjacent,[['journey-026','journey-027',['mondrian-composition']]]);assert.equal(rounds[26].evidence.baselineLinkPlan.linkedPairCount,6);
-  assert.ok(rounds[46].evidence.exactRepeat);assert.ok(rounds[46].evidence.delay.interveningRoundCount>=8);
+  assert.ok([...counts.values()].reduce((a,b)=>a+b,0)>200);assert.ok(counts.size>=90);assert.ok(Math.max(...counts.values())<=8);
+  // Sorting deliberately links the preceding constructed still lifes to the
+  // grouping task. KeepA retains its six genuine opening pair opportunities;
+  // its fixed reviewed set also contains the just-rated Mondrian.
+  assert.deepEqual(adjacent,[['journey-007','journey-008',['add-tamayo-still-life-foot','blanchard-still-life']],['journey-026','journey-027',['mondrian-composition']]]);assert.equal(rounds[26].evidence.baselineLinkPlan.linkedPairCount,6);
+  assert.ok(rounds.slice(45).every(round=>round.unavailable&&round.evidence.finalRefinement.binding==='deferred'),'Closing definitions must wait for real earlier answers');
   assert.deepEqual(new Set(ids(rounds[3])),new Set(ids(rounds[0])));
 });

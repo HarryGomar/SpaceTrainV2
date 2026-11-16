@@ -1,5 +1,5 @@
 import {validAnswer} from './engine.mjs';
-import {validContrastAnswer} from './contrast-rounds.mjs';
+import {validContrastAnswer, allowsMultipleNeighbourReasons, neighbourRelationshipLabels} from './contrast-rounds.mjs';
 
 export const CONTRAST_READING_THRESHOLDS = Object.freeze({preferenceGap:15, featureGap:.25, minimumSubjectSets:2});
 const unique = values => [...new Set(values)];
@@ -12,6 +12,7 @@ const mean = values => values.reduce((sum, value) => sum + value, 0) / values.le
 const features = {complexity:['sparser compositions','denser compositions'], color:['restrained colour','more intense colour'], abstraction:['more representational treatment','more abstract treatment'], energy:['quieter compositions','more visual activity']};
 const families = new Set(['individual-choice','feature-check','unconditional-preference','adaptive-preference']);
 const scope = 'These observations connect recorded decisions under different instructions. They do not establish a personality, a stable motive or the cause of a choice.';
+const joinLabels = labels => labels.length < 2 ? labels[0] || '' : labels.slice(0,-1).join(', ') + ' and ' + labels.at(-1);
 const sourceRole = entry => entry.round.evidence?.repeatOf ? 'repeated preference' : entry.round.kind === 'spectrum' ? 'earlier preference' : entry.round.contrastKind === 'neighbour' ? 'connection beside a fixed anchor' : entry.round.contrastKind === 'keep-leave' ? 'relative keep and leave choices' : 'subject-matched choice';
 
 function entriesFor(works, rounds, answers) {
@@ -87,20 +88,21 @@ function neighbourReading(entries, preferences) {
   const support = distinctSets(records.filter(item => item.gap < 0)), counter = distinctSets(records.filter(item => item.gap > 0));
   if (!support.length) return null;
   const sample = support[0], work = id => sample.entry.round.works.find(candidate => candidate.id === id), anchor = sample.entry.round.anchorWorks[0];
-  const relationship = sample.entry.round.relationshipOptions?.find(option => option.id === sample.entry.answer.relationshipId)?.label;
+  const relationships = neighbourRelationshipLabels(sample.entry.round,sample.entry.answer), relationship = joinLabels(relationships);
   const pack = item => {
-    const anchor = item.entry.round.anchorWorks[0], chosen = item.entry.round.works.find(work => work.id === item.a), label = item.entry.round.relationshipOptions?.find(option => option.id === item.entry.answer.relationshipId)?.label;
-    return [preferenceEvidence(item.source,[item.a,item.b]),ev(item.entry,`Chose ${short(chosen)} beside ${short(anchor)} under "${item.entry.round.prompt || item.entry.round.title}".${label ? ` Reported connection: ${label}.` : ''} Other candidates were not ranked.`,[anchor.id,...ids(item.entry.round)])];
+    const anchor = item.entry.round.anchorWorks[0], chosen = item.entry.round.works.find(work => work.id === item.a), labels = neighbourRelationshipLabels(item.entry.round,item.entry.answer), label = joinLabels(labels);
+    return [preferenceEvidence(item.source,[item.a,item.b]),ev(item.entry,`Chose ${short(chosen)} beside ${short(anchor)} under "${item.entry.round.prompt || item.entry.round.title}".${label ? ` Reported connection${labels.length > 1 ? 's' : ''}: ${label}.` : ''} Other candidates were not ranked.`,[anchor.id,...ids(item.entry.round)])];
   };
   const comparison = (item, role = 'support') => categorical([item.a,item.b], {
     [item.a]:[{role:'earlier-preference',tone:'preference',text:'Earlier preference: '+item.source.answer.positions[item.a]+' / 100'},{role:'chosen-neighbour',tone:'curation',text:'Chosen beside '+short(item.entry.round.anchorWorks[0])}],
     [item.b]:[{role:'earlier-preference',tone:'preference',text:'Earlier preference: '+item.source.answer.positions[item.b]+' / 100'},{role:'offered-neighbour',tone:'neutral',text:'Offered, not chosen'}]
   },[item.source.round.id,item.entry.round.id],role);
-  return finding('contrast-neighbour','taste-and-neighbours','Your chosen neighbour differed from your earlier preference.',`You preferred ${short(work(sample.b))} to ${short(work(sample.a))}, then chose ${short(work(sample.a))} as the stronger connection to ${short(anchor)}.${relationship ? ` You connected them through ${relationship.toLowerCase()}.` : ''}${counter.length ? ' Other recorded comparisons also aligned with earlier preference.' : ''}`,support.slice(0,3).flatMap(pack),counter.slice(0,2).flatMap(pack),[...support.slice(0,2).map(item => comparison(item)),...counter.slice(0,1).map(item => comparison(item,'counter'))],[
+  return finding('contrast-neighbour','taste-and-neighbours','Your chosen neighbour differed from your earlier preference.',`You preferred ${short(work(sample.b))} to ${short(work(sample.a))}, then chose ${short(work(sample.a))} as the stronger connection to ${short(anchor)}.${relationship ? allowsMultipleNeighbourReasons(sample.entry.round) ? ` You named ${relationship.toLowerCase()} as connections.` : ` You connected them through ${relationship.toLowerCase()}.` : ''}${counter.length ? ' Other recorded comparisons also aligned with earlier preference.' : ''}`,support.slice(0,3).flatMap(pack),counter.slice(0,2).flatMap(pack),[...support.slice(0,2).map(item => comparison(item)),...counter.slice(0,1).map(item => comparison(item,'counter'))],[
     'The neighbour task asks for a connection to one fixed painting. It is not an unconditional preference or an answer with a single correct pairing.',
     'An offered candidate that was not chosen is not a dislike. This reading compares only pairs that had an earlier complete preference response.',
     'The anchor, company, instructions, timing and any earlier knowledge differ. A reported connection is an explanation offered in this task, not a demonstrated cause.',
-    'Each candidate set contributes once per direction; a later opposing choice remains counterevidence, not an independent replication. The fixed anchor remains attached to its evidence.'
+    'Each candidate set contributes once per direction; a later opposing choice remains counterevidence, not an independent replication. The fixed anchor remains attached to its evidence.',
+    ...(records.some(item => allowsMultipleNeighbourReasons(item.entry.round)) ? ['Several reported reasons still describe one pairing decision. They are not separate preference responses or independent supporting observations.'] : [])
   ],{supportingSetCount:support.length,counterSetCount:counter.length});
 }
 

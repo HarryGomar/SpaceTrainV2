@@ -1,0 +1,25 @@
+const labels={achievement:'Appeal & admiration',reading:'Scene & interpretation',returnResponse:'Feeling & return'};
+const tones={achievement:['preference','meaning'],reading:['curiosity','meaning'],returnResponse:['response','preference']};
+
+export function renderProfileResponseMaps({maps=[],works=[],image,esc,evidence=()=>''}){
+  const byId=new Map(works.map(work=>[work.id,work]));
+  const valid=maps.filter(map=>labels[map.axis]&&map.axisDefinition&&Array.isArray(map.points)&&map.points.length>=2&&new Set(map.points.map(point=>point.workId)).size===map.points.length&&map.points.every(point=>byId.has(point.workId)&&[point.x,point.y].every(value=>Number.isFinite(value)&&value>=0&&value<=100)));
+  if(!valid.length)return '';
+  const art=(id,extra='')=>{const work=byId.get(id);return `<button type="button" class="${extra}" data-action="deep-art" data-work="${esc(id)}" aria-label="View ${esc(work.shortTitle||work.title)}">${image(work)}</button>`;};
+  return `<section class="profile-response-explorer" id="profile-response-maps"><div class="tp-section-heading"><p class="tp-kicker">Your recorded placements</p><h2>Your responses</h2></div><div class="profile-response-tabs" role="tablist" aria-label="Response maps">${valid.map((map,index)=>`<button type="button" role="tab" id="response-tab-${index}" aria-controls="response-panel-${index}" aria-selected="${index===0}" tabindex="${index===0?0:-1}" data-action="profile-response-select" data-response-index="${index}"><span>${esc(labels[map.axis])}</span><small>${esc(/^journey-(\d+)$/.test(map.roundId)?'Round '+Number(map.roundId.slice(-3)):map.roundId)}</small></button>`).join('')}</div><div class="profile-response-stack">${valid.map((map,index)=>{
+    const axes=map.axisDefinition,tone=tones[map.axis],source={id:map.id,title:map.title,support:[{roundId:map.roundId,label:map.title,detail:'Original placements on this response map.',workIds:map.points.map(point=>point.workId)}],alternatives:map.limits||[]};
+    return `<div class="profile-response-panel" id="response-panel-${index}" role="tabpanel" aria-labelledby="response-tab-${index}" aria-hidden="${index!==0}" ${index?'hidden inert':''}><div class="profile-response-description"><h3>${esc(map.title)}</h3><div class="profile-response-key"><span data-tone="${tone[0]}">↔ ${esc(axes.xName)}</span><span data-tone="${tone[1]}">↑ ${esc(axes.yName)}</span></div>${evidence(source)}</div><div class="profile-response-map" data-x-tone="${tone[0]}" data-y-tone="${tone[1]}"><span class="response-axis top" data-tone="${tone[1]}">${esc(axes.top)}</span><span class="response-axis left" data-tone="${tone[0]}">${esc(axes.left)}</span><div class="profile-response-plane" aria-label="${esc(axes.xName)} runs across; ${esc(axes.yName)} runs up."><i class="response-guide horizontal"></i><i class="response-guide vertical"></i>${map.points.map((point,n)=>`<div class="profile-response-point" style="left:${8+point.x*.84}%;bottom:${8+point.y*.84}%;--point-order:${n}">${art(point.workId,'profile-response-art')}</div>`).join('')}</div><span class="response-axis right" data-tone="${tone[0]}">${esc(axes.right)}</span><span class="response-axis bottom" data-tone="${tone[1]}">${esc(axes.bottom)}</span></div><div class="profile-response-values">${map.points.map(point=>{const work=byId.get(point.workId);return `<figure>${art(point.workId,'profile-response-reference')}<figcaption>${esc(work.shortTitle||work.title)}<span data-tone="${tone[0]}">${esc(axes.xName)} <strong>${point.x}</strong></span><span data-tone="${tone[1]}">${esc(axes.yName)} <strong>${point.y}</strong></span></figcaption></figure>`;}).join('')}</div></div>`;
+  }).join('')}</div></section>`;
+}
+
+/** Change only the active fixed-size panel, retaining page position and focus. */
+export function createProfileResponseTabs({app}){
+  function select(button){
+    const root=button.closest('.profile-response-explorer');if(!root)return;
+    const tabs=[...root.querySelectorAll('[data-response-index]')],index=tabs.indexOf(button);if(index<0)return;
+    for(const tab of tabs){const selected=tab===button;tab.setAttribute('aria-selected',String(selected));tab.tabIndex=selected?0:-1;}
+    for(const [n,panel] of [...root.querySelectorAll('.profile-response-panel')].entries()){panel.hidden=n!==index;panel.inert=n!==index;panel.setAttribute('aria-hidden',String(n!==index));}
+  }
+  app.addEventListener('click',event=>{const tab=event.target.closest('[data-action="profile-response-select"]');if(tab){event.preventDefault();select(tab);}});
+  app.addEventListener('keydown',event=>{const tab=event.target.closest('[data-action="profile-response-select"]');if(!tab||!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;event.preventDefault();const tabs=[...tab.closest('[role="tablist"]').querySelectorAll('[role="tab"]')],index=tabs.indexOf(tab),next=event.key==='Home'?0:event.key==='End'?tabs.length-1:(index+(event.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length;select(tabs[next]);tabs[next].focus({preventScroll:true});});
+}

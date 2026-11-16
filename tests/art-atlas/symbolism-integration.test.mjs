@@ -13,12 +13,12 @@ const answer=(round,before,after)=>({workIds:[round.works[0].id],workId:round.wo
 
 test('Three sourced symbolism exercises occupy distinct slots and preserve the prospective claim link',()=>{
   const rounds=buildJourneyRounds(works),notes=rounds.filter(round=>round.symbolismProtocol);
-  assert.deepEqual(notes.map(round=>round.id),['journey-035','journey-040','journey-048']);
+  assert.deepEqual(notes.map(round=>round.id),['journey-025','journey-035','journey-040']);
   assert.equal(new Set(notes.map(round=>round.works[0].id)).size,3);
   for(const round of notes){assert.ok(validSymbolismDefinition(round));assert.equal(round.bankRoundId,undefined);assert.ok(round.evidence.newInstrument);}
-  assert.equal(notes[0].evidence.claimRoundId,rounds[30].id);
-  assert.equal(rounds[30].evidence.contextRoundId,notes[0].id);
-  if(works.some(work=>work.id==='add-watts-hope'))assert.equal(notes[0].works[0].id,'add-watts-hope');
+  const claimed=notes.find(round=>round.evidence.claimRoundId);assert.ok(claimed);assert.equal(claimed.evidence.claimRoundId,rounds[30].id);
+  assert.equal(rounds[30].evidence.contextRoundId,claimed.id);
+  if(works.some(work=>work.id==='add-watts-hope'))assert.equal(claimed.works[0].id,'add-watts-hope');
 });
 
 test('Malformed typed context cannot fall through to a generic before/after reading',()=>{

@@ -97,7 +97,7 @@ test('Missing imported exercise presentation metadata suppresses a novelty claim
 
 test('Sorting proof respects actual presented IDs and catches an earlier viewed pair',()=>{
   const f=fixture(),offeredIds=['w0','w1','w2','w3','w4','w5','w9','w11'];let record=createSortingRecord(f.works,{},[],{id:'sorting',now:1,offeredIds});const positions=[[.12,.2],[.23,.2],[.7,.2],[.81,.2],[.12,.75],[.23,.75],[.7,.75],[.81,.75]];for(let i=0;i<8;i++)record=placeSortingWork(record,offeredIds[i],positions[i]).record;record.confirmed=true;record.finishedAt=2;const round={id:'sorting-round',kind:'exercise',exerciseKind:'sorting',works:offeredIds.map(id=>f.works.find(work=>work.id===id)),evidence:{construct:'sorting'}};f.rounds.splice(3,0,round);f.answers[round.id]={workIds:offeredIds,record};assert.deepEqual(checks(f),[]);
-  delete record.positions.w9;delete record.positions.w11;record.presentedIds=record.presentedIds.filter(id=>!['w9','w11'].includes(id));assert.equal(checks(f).length,1,'Offered works without a presentation record do not invalidate a new pair');
+  delete record.positions.w9;delete record.positions.w11;record.stackOrder=record.stackOrder.filter(id=>!['w9','w11'].includes(id));record.presentedIds=record.presentedIds.filter(id=>!['w9','w11'].includes(id));assert.equal(checks(f).length,1,'Offered works without a presentation record do not invalidate a new pair');
 });
 
 test('An eligible earlier repeated set can supply one frozen source without counting as another set',()=>{

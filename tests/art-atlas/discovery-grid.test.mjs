@@ -5,6 +5,14 @@ import {validAnswer,sanitizeDraft} from '../../public/art-atlas/engine.mjs';
 const round=mode=>({id:'grid',kind:'choice-grid',selectionMode:mode,maxChoices:mode==='shortlist'?3:12,works:Array.from({length:12},(_,i)=>({id:'work-'+i}))});
 const complete=(r,answer)=>({...sanitizeChoiceGrid(r,answer),confirmed:true});
 
+test('An explicit overall-favourites choice keeps its stated limit while an ordinary keep grid can expand',()=>{
+  const favourites={...round('shortlist'),maxChoices:5,evidence:{construct:'overall-favourites'}};
+  assert.equal(expandKeepSelectionRound(favourites),null);
+  assert.ok(expandKeepSelectionRound(round('shortlist')));
+  const chosen=complete(favourites,{selectedIds:favourites.works.slice(0,5).map(work=>work.id)});assert.equal(validChoiceGrid(favourites,chosen),true);
+  assert.equal(validChoiceGrid(favourites,{...chosen,selectedIds:favourites.works.slice(0,6).map(work=>work.id)}),false);
+});
+
 test('An untouched selection is missing; explicit none is a valid separate answer',()=>{
   for(const mode of ['familiarity','shortlist']){
     const r=round(mode);assert.equal(validChoiceGrid(r,complete(r,{})),false);

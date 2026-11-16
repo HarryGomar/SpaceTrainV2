@@ -8,7 +8,7 @@ test('The museum presents recognisable works first while retaining every distinc
   const before=structuredClone(works),ordered=museumLibraryOrder(works);
   assert.deepEqual(ordered.slice(0,4).map(work=>work.id),['van-gogh-starry-night','study-leonardo-mona-lisa','study-hokusai-great-wave','klimt-kiss']);
   assert.deepEqual(new Set(ordered.map(work=>work.id)),new Set(works.map(work=>work.id)));
-  assert.equal(ordered.length,156);assert.ok(ordered.slice(0,12).every(work=>recognitionTier(work)!=='discovery'));
+  assert.equal(ordered.length,164);assert.ok(ordered.slice(0,12).every(work=>recognitionTier(work)!=='discovery'));
   assert.deepEqual(works,before);
 });
 test('The journey museum records the landmark-first tray order instead of shuffling it again',()=>{

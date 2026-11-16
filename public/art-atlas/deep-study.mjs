@@ -1,12 +1,16 @@
 import {isReviewedVisualDescriptor} from './visual-descriptor-semantics.mjs';
-import {discoveryGridMarkup,toggleGridChoice,expandKeepSelectionRound} from './discovery-grid.mjs';
+import {museumOffer,restrictMuseumDraft,MUSEUM_OFFER_SCOPE} from './museum-offer.mjs';
+import {isOverallAppealRound} from './appeal-scale.mjs';
+import {isFinalRefinementRound,bindFinalRefinementRound} from './final-refinement.mjs';
+import {createStudyArchiveStore,storeStudyArchives,loadStudyArchives,encodeStudyWithArchives} from './study-archives.mjs';
+import {discoveryGridMarkup,toggleGridChoice,expandKeepSelectionRound,setChoiceGridPage,PAGED_FAVOURITES} from './discovery-grid.mjs';
 import {isSymbolismRound,validSymbolismDefinition,reduceSymbolismDraft} from './symbolism-rounds.mjs';
-import {createContrastController,validContrastDefinition} from './contrast-rounds.mjs';
+import {createContrastController,validContrastDefinition,upgradeActiveNeighbourRound} from './contrast-rounds.mjs';
 import {applyTaskSignals} from './task-signals.mjs';
 import { buildStudyRounds, STUDY_LENGTHS, STUDY_BANK_REVISION } from './question-bank.mjs';
 import { createInteractions } from './interactions.mjs';
 import { renderStudyTitle } from './experience-view.mjs';
-import {buildJourneyRounds,createJourneyStimulusPlan,bindJourneyStimulusPlan,JOURNEY_PROTOCOL,JOURNEY_REVISION,JOURNEY_LENGTH} from './journey-bank.mjs';
+import {buildJourneyRounds,createJourneyStimulusPlan,bindJourneyStimulusPlan,journeyAdaptiveQuotas,JOURNEY_PROTOCOL,JOURNEY_REVISION,JOURNEY_LENGTH} from './journey-bank.mjs';
 import {updateArtworkCorners} from './artwork-corners.mjs';
 import {captureGalleryPreview,GALLERY_CONTEXT_KEY} from './painting-gallery-data.mjs';
 import {planAdaptivePanels} from './adaptive-selection.mjs';
@@ -15,7 +19,7 @@ import {renderTastePortrait} from './taste-portrait-view.mjs';
 import {buildTasteConnections} from './taste-connections.mjs';
 import {createScenario,validScenario,validScenarioDraft,analyzeScenarios} from './scenarios.mjs';
 import {createSortingTable} from './sorting-table.mjs';
-import {createDifficultEdit} from './difficult-edit.mjs';
+import {createDifficultEdit,upgradeActiveDifficultEditRecord} from './difficult-edit.mjs';
 import {createGalleryStudio} from './gallery-studio.mjs';
 import {isGallery} from './gallery-model.mjs';
 import { AGREEMENT, FEATURES, AXES, validAnswer, sanitizeDraft, describePoint, matchResults, feature } from './engine.mjs';
@@ -255,7 +259,7 @@ export function prepareJourneySession(saved,works,now=Date.now()){
           // A shown legacy map can pin a different set than the saved selector.
           // Keep its real works without carrying a prediction or repeat onto them.
           const bindings=new Map();
-          for(const round of history){const match=/^journey-(\d+)$/.exec(round.id),legacy=/^panel-(\d+)$/.exec(round.evidence?.setId||''),number=round.evidence?.panelNumber||(legacy?Number(legacy[1]):null),sourceBatch=round.evidence?.batchIndex??Math.floor((Number(match?.[1]||1)-1)/JOURNEY_LENGTH);if((['art-profile-50-v2','art-profile-50-v3','art-profile-50-v4','art-profile-50-v5','art-profile-50-v6','art-profile-50-v7',JOURNEY_REVISION].includes(round.evidence?.journeyRevision)||legacy)&&sourceBatch===batchIndex&&Number.isInteger(number)&&number>=1&&number<=18&&!bindings.has(number))bindings.set(number,ids(round));}
+          for(const round of history){const match=/^journey-(\d+)$/.exec(round.id),legacy=/^panel-(\d+)$/.exec(round.evidence?.setId||''),number=round.evidence?.panelNumber||(legacy?Number(legacy[1]):null),sourceBatch=round.evidence?.batchIndex??Math.floor((Number(match?.[1]||1)-1)/JOURNEY_LENGTH);if((['art-profile-50-v2','art-profile-50-v3','art-profile-50-v4','art-profile-50-v5','art-profile-50-v6','art-profile-50-v7','art-profile-50-v8','art-profile-50-v9',JOURNEY_REVISION].includes(round.evidence?.journeyRevision)||legacy)&&sourceBatch===batchIndex&&Number.isInteger(number)&&number>=1&&number<=18&&!bindings.has(number))bindings.set(number,ids(round));}
           for(const [number,binding] of bindings){const panel=options.panels[number-1];if(!Array.isArray(panel?.workIds)||!sameWorks(panel.workIds,binding)){options.panels[number-1]={workIds:[...binding],construct:'preference',role:'exploration',selectionReason:'Preserve the artwork set in the recorded question. Conflicting repeat or prediction metadata has been removed.',evidenceRoundIds:[]};demotedPanels.push(number);}}
         }
         try{
@@ -287,7 +291,7 @@ export function extendJourneySession(source,currentWorks,now=Date.now()){
   });
   if(sessionJourneyRounds(data).some(r=>!r.unavailable&&!data.answers[r.id]?.skipped&&!validStudyAnswer(r,data.answers[r.id])))throw Error('Finish this set before adding another.');
   const known=new Set(data.manifest.catalogue.map(w=>w.id)),added=currentWorks.filter(w=>!known.has(w.id));data.manifest.catalogue.push(...structuredClone(added));data.manifest.catalogueIds=data.manifest.catalogue.map(w=>w.id);
-  const offset=data.plan.length,batchIndex=offset/JOURNEY_LENGTH,seed=data.manifest.id+'-'+batchIndex,curated=createJourneyStimulusPlan({works:data.manifest.catalogue,rounds:history,answers:data.answers,batchIndex,seed,reservationPlan:data.manifest.stimulusPlanning?.reservations}),selection=curated.complete?curated:{...planAdaptivePanels({works:data.manifest.catalogue,rounds:history,answers:data.answers,batchIndex,seed,...(batchIndex===2?{quotas:{exactRepeats:2,recontextualizations:1,challenges:4}}:{})}),reservations:structuredClone(data.manifest.stimulusPlanning?.reservations||curated.reservations),curationFallback:{status:curated.status,reason:curated.audit?.shortageReason||curated.audit?.warnings||'The current catalogue could not supply a complete curated batch.'}};
+  const offset=data.plan.length,batchIndex=offset/JOURNEY_LENGTH,seed=data.manifest.id+'-'+batchIndex,curated=createJourneyStimulusPlan({works:data.manifest.catalogue,rounds:history,answers:data.answers,batchIndex,seed,reservationPlan:data.manifest.stimulusPlanning?.reservations}),selection=curated.complete?curated:{...planAdaptivePanels({works:data.manifest.catalogue,rounds:history,answers:data.answers,batchIndex,seed,quotas:journeyAdaptiveQuotas(batchIndex,data.manifest.stimulusPlanning?.reservations||curated.reservations)}),reservations:structuredClone(data.manifest.stimulusPlanning?.reservations||curated.reservations),curationFallback:{status:curated.status,reason:curated.audit?.shortageReason||curated.audit?.warnings||'The current catalogue could not supply a complete curated batch.'}};
   const rounds=buildJourneyRounds(data.manifest.catalogue,data.answers,{offset,batchIndex,panels:selection,seed:data.manifest.id+'-'+batchIndex,history});
   data.plan.push(...rounds.map(snapshotStudyRound));data.target=data.plan.length;data.index=offset;data.screen='question';data.finishedAt=null;
   data.batches=[...(data.batches||[]),{index:batchIndex,offset,createdAt:now,selection}];return data;
@@ -315,6 +319,12 @@ export function sessionJourneyRounds(data,{regenerateBlock=buildJourneyRounds}={
     const shown=data.shown[planned.id],round=restoreStudyRound(shown||planned,works);
     if(!round)return unavailableRound(shown||planned,index,'This saved round is unavailable.');
     if(!shown&&data.answers[planned.id])return unavailableRound(planned,index,'The original presentation record is unavailable.');
+    if(!shown&&isFinalRefinementRound(round)){
+      indices??=new Map(data.plan.map((snapshot,position)=>[snapshot.id,position]));
+      shownHistory??=Object.values(data.shown).map(snapshot=>restoreStudyRound(snapshot,works)).filter(Boolean);
+      const earlier=shownHistory.filter(item=>indices.has(item.id)&&indices.get(item.id)<index);
+      return bindFinalRefinementRound({round,works,rounds:earlier,answers:data.answers,seed:data.manifest.id});
+    }
     if(!shown&&round.evidence.family==='feature-check'){
       const generated=refreshBlock(index),candidate=generated.rounds[index%JOURNEY_LENGTH],evidence={...round.evidence,provisionalPrediction:null,trainingRoundIds:[],heldOut:false,comparisonNovel:false,holdoutUnit:null};
       delete evidence.trainingAnswers;
@@ -330,12 +340,20 @@ export function sessionJourneyRounds(data,{regenerateBlock=buildJourneyRounds}={
     return round;
   });
 }
+/** Start the revised instrument without converting or discarding an older run. */
+export function retakeJourneySession(source,currentWorks,now=Date.now()){
+  const previous=structuredClone(source),archives=Array.isArray(previous.archives)?previous.archives:[];
+  delete previous.archives;
+  const fresh=prepareJourneySession(null,currentWorks,now);
+  return {...fresh,archives:[...archives,previous],startedAt:now,screen:'question'};
+}
 export function createDeepStudy({app,getWorks,image,esc,keepButtons,navigate,showArtwork,getExhibitionFindings=()=>[],getSavedExercises=()=>[],getSavedCollection=()=>({}),mode='legacy'}) {
   const journey=mode==='journey',storageKey=journey?'art-profile-journey-v1':KEY,prepare=journey?prepareJourneySession:prepareStudySession;
   let data=fresh(),round=null,draft=null,ready=false,storage=true,statementIndex=0,statementTimer=null,contrastController=null;
+  const archiveStore=createStudyArchiveStore();let archiveReferences=new Map(),sessionChangePending=false;
   const sessionWorks=()=>data.manifest?.catalogue||getWorks();
   const lookup=id=>sessionWorks().find(w=>w.id===id)||getWorks().find(w=>w.id===id);
-  const save=()=>{try{localStorage.setItem(storageKey,JSON.stringify(data));}catch{storage=false;}};
+  const save=()=>{try{localStorage.setItem(storageKey,encodeStudyWithArchives(data,archiveReferences));return true;}catch{storage=false;return false;}};
   const ensureSession=()=>{if(!data.manifest)data=prepare(null,getWorks());};
   const actualRounds=(target=data.target)=>{ensureSession();return journey?sessionJourneyRounds(data):sessionStudyRounds(data,target);};
   const resolved=(r)=>r.unavailable||data.answers[r.id]?.skipped||validStudyAnswer(r,data.answers[r.id]);
@@ -346,22 +364,40 @@ export function createDeepStudy({app,getWorks,image,esc,keepButtons,navigate,sho
   const embeddedOptions={app,getRecord:()=>draft?.record,setRecord:record=>{draft.record=record;},getWorks:sessionWorks,image,esc,save:saveExercise,rerender:()=>{render();},inspect:id=>showArtwork(id,true)};
   const embedded={sorting:createSortingTable(embeddedOptions),'difficult-edit':createDifficultEdit(embeddedOptions),curate:createGalleryStudio(embeddedOptions)};
   const chrome=()=>`<header class="journey-chrome"><button class="text-button" type="button" data-action="deep-back" ${data.index?'':'disabled'} aria-label="Previous round">←</button><span>${data.index%JOURNEY_LENGTH+1} / ${JOURNEY_LENGTH}</span><button class="text-button" type="button" data-action="deep-save" aria-label="Close">×</button></header>`;
+  function earlierPreferenceOptions(){
+    const rounds=actualRounds(),index=rounds.findIndex(item=>item.id===round.id);
+    return {preferenceCatalogue:sessionWorks(),preferenceContext:{roundId:round.id,index},preferenceSources:rounds.slice(0,index).flatMap((item,sourceIndex)=>data.shown[item.id]&&!item.unavailable&&validStudyAnswer(item,data.answers[item.id])?[{round:item,answer:data.answers[item.id],index:sourceIndex}]:[])};
+  }
   function exerciseQuestion(){
+    if(round.exerciseKind==='difficult-edit'&&data.answers[round.id]?.record&&!data.answers[round.id].skipped){
+      const answer=data.answers[round.id],upgrade=upgradeActiveDifficultEditRecord(answer.record,sessionWorks(),{active:true,...earlierPreferenceOptions()});
+      if(upgrade.changed){data.instrumentRevisions=[...(data.instrumentRevisions||[]),{roundId:round.id,...upgrade.archive,question:snapshotStudyRound(round),answer:structuredClone(answer)}];data.answers[round.id]={...answer,record:upgrade.record};}
+    }
+    if(journey&&round.exerciseKind==='curate'&&!data.answers[round.id]?.record?.confirmed&&round.evidence?.museumOfferScope!==MUSEUM_OFFER_SCOPE){
+      const shown=Object.fromEntries(actualRounds().filter(item=>data.shown[item.id]&&!item.unavailable).map(item=>[item.id,snapshotStudyRound(item)]));
+      const answer=data.answers[round.id],offer=museumOffer({catalogue:sessionWorks(),plan:data.plan,shown,answers:data.answers,roundId:round.id,currentRecord:answer?.record}),eligible=round.works.filter(work=>offer.workIds.includes(work.id));
+      if(eligible.length<6){app.innerHTML=`<section class="deep-question journey-question">${chrome()}<h1 id="question-title">A few more paintings are needed.</h1><p>This room uses paintings from earlier rounds.</p><button class="primary-button" type="button" data-action="deep-skip">Continue</button></section>`;return;}
+      if(data.shown[round.id]||answer?.record)data.instrumentRevisions=[...(data.instrumentRevisions||[]),{roundId:round.id,reason:'museum-earlier-rounds',revisedAt:Date.now(),question:snapshotStudyRound(round),...(answer?{answer:structuredClone(answer)}:{})}];
+      round={...round,works:eligible,evidence:{...round.evidence,museumOfferScope:offer.scope,museumOfferSourceRoundIds:offer.sourceRoundIds}};
+      const snapshot=snapshotStudyRound(round);data.shown[round.id]=snapshot;const planned=data.plan.findIndex(item=>item.id===round.id);if(planned>=0)data.plan[planned]=structuredClone(snapshot);
+      if(answer?.record)data.answers[round.id]={...answer,workIds:ids(round),record:restrictMuseumDraft(answer.record,ids(round))};
+    }
     const answer=data.answers[round.id];
     if(answer?.record&&!validScenarioDraft(answer.record,sessionWorks())){
       app.innerHTML=`<section class="deep-question journey-question">${chrome()}<h1 id="question-title">This saved round is unavailable.</h1><button class="primary-button" type="button" data-action="deep-unavailable-next">Continue</button></section>`;return;
     }
-    const creationWorks=round.exerciseKind==='difficult-edit'?round.works:sessionWorks();
-    draft=answer?.record?structuredClone(answer):{workIds:ids(round),record:createScenario(round.exerciseKind,creationWorks,{},exerciseRecords(),{id:data.manifest.id+'-'+round.id,...(round.exerciseKind==='sorting'?{offeredIds:ids(round)}:{}),...(round.exerciseKind==='curate'?{presentationOrder:'landmark-first-v1'}:{})})};
+    const creationWorks=['difficult-edit','curate'].includes(round.exerciseKind)?round.works:sessionWorks();
+    draft=answer?.record?structuredClone(answer):{workIds:ids(round),record:createScenario(round.exerciseKind,creationWorks,{},exerciseRecords(),{id:data.manifest.id+'-'+round.id,...(round.exerciseKind==='sorting'?{offeredIds:ids(round)}:{}),...earlierPreferenceOptions(),...(round.exerciseKind==='curate'?{presentationOrder:'landmark-first-v1'}:{})})};
     if(!answer?.record&&round.exerciseKind==='curate'){
+      if(round.evidence?.museumOfferScope===MUSEUM_OFFER_SCOPE)draft.record.offerScope=MUSEUM_OFFER_SCOPE;
       const previous=getSavedExercises().find(r=>isGallery(r)&&validScenarioDraft(r,sessionWorks())&&r.offeredIds.every(id=>ids(round).includes(id)));
-      if(previous){const next=structuredClone(previous);next.resumesDraftId=next.id;next.offeredIds=[...next.offeredIds,...ids(round).filter(id=>!next.offeredIds.includes(id))];next.id=draft.record.id;next.createdAt=draft.record.createdAt;next.confirmed=false;delete next.finishedAt;draft.record=next;}
+      if(previous){const next=structuredClone(previous);next.resumesDraftId=next.id;next.offeredIds=[...next.offeredIds,...ids(round).filter(id=>!next.offeredIds.includes(id))];next.id=draft.record.id;next.createdAt=draft.record.createdAt;next.confirmed=false;if(round.evidence?.museumOfferScope===MUSEUM_OFFER_SCOPE)next.offerScope=MUSEUM_OFFER_SCOPE;delete next.finishedAt;draft.record=next;}
     }
     if(!data.shown[round.id])data.shown[round.id]=snapshotStudyRound(round);
     saveExercise();
     app.innerHTML=`<section class="deep-question journey-question embedded-exercise" data-exercise="${round.exerciseKind}" data-deep-round="${round.id}">${chrome()}${embedded[round.exerciseKind].markup()}<div class="journey-exercise-skip"><button class="text-button" type="button" data-action="deep-skip">Skip</button></div></section>`;
     const heading=app.querySelector('#question-title');if(heading&&(round.exerciseKind!=='difficult-edit'||draft.record.phase==='edit'))heading.textContent=round.title;
-    const instruction=app.querySelector('.sorting-instruction');if(instruction)instruction.textContent=round.hint;
+    const instruction=app.querySelector('.sorting-instruction');if(instruction)instruction.textContent='Drag related paintings together. You can stack them.';
     const empty=app.querySelector('.sorting-empty');if(empty)empty.textContent='Place the painting here';
     if(round.exerciseKind==='curate'&&draft.record.phase!=='walkthrough')app.querySelector('.gallery-task').innerHTML='<p>Group the paintings across the rooms.</p><p class="gallery-input-hint">Choose a painting, then a + on a wall.</p>';
     if(round.exerciseKind==='curate'&&draft.record.phase==='walkthrough'){heading?.removeAttribute('id');app.querySelector('.gallery-task h2')?.setAttribute('id','question-title');}
@@ -370,7 +406,7 @@ export function createDeepStudy({app,getWorks,image,esc,keepButtons,navigate,sho
     syncImages();
   }
   function restore() {
-    let raw=null;try{raw=localStorage.getItem(storageKey);data=prepare(JSON.parse(raw),getWorks());}
+    let raw=null;try{raw=localStorage.getItem(storageKey);const parsed=JSON.parse(raw);data=prepare(parsed,getWorks());if(parsed?.archives?.some(item=>item?.archiveStorage))return loadStudyArchives(parsed.archives,archiveStore).then(loaded=>{archiveReferences=loaded.references;data.archives=loaded.archives;});}
     catch{data=prepare(null,getWorks());if(raw!==null)data.unreadableSource=raw;storage=false;/* Keep an unreadable source record in storage and later exports. */}
   }
   function focus() {requestAnimationFrame(()=>{const h=app.querySelector('#question-title')||app.querySelector('h1');h?.setAttribute('tabindex','-1');h?.focus({preventScroll:true});window.scrollTo({top:0,behavior:'instant'});});}
@@ -396,16 +432,20 @@ export function createDeepStudy({app,getWorks,image,esc,keepButtons,navigate,sho
     if(round.unavailable){ready=false;draft=null;app.innerHTML=`<section class="deep-question"><div class="deep-top"><button class="text-button" type="button" data-action="deep-save">← Study overview</button><span>${data.index+1} / ${data.target}</span></div><h1 id="question-title">This saved decision is unavailable.</h1><p class="deep-intro">${esc(round.unavailableReason)} Its question and response remain in the downloaded record. No replacement artwork or answer has been inserted.</p><div class="deep-home-actions"><button class="primary-button" type="button" data-action="deep-unavailable-next">Continue without changing it →</button><button class="text-button" type="button" data-action="deep-export">Download study record ↓</button></div></section>`;return;}
     if(!data.shown[r.id]&&round.evidence?.provisionalPrediction){round={...round,evidence:{...round.evidence,trainingAnswers:Object.fromEntries((round.evidence.trainingRoundIds||[]).filter(id=>data.answers[id]).map(id=>[id,structuredClone(data.answers[id])]))}};}
     if(!data.answers[round.id]?.confirmed&&!data.answers[round.id]?.skipped)expandKeepSelection();
+    if(round.kind==='contrast'){
+      const original=data.answers[round.id],upgrade=upgradeActiveNeighbourRound(round,original,{active:true});
+      if(upgrade.changed){data.instrumentRevisions=[...(data.instrumentRevisions||[]),{roundId:round.id,...upgrade.archive,question:snapshotStudyRound(upgrade.archive.question)}];round=upgrade.round;const snapshot=snapshotStudyRound(round);data.shown[round.id]=snapshot;const planned=data.plan.findIndex(item=>item.id===round.id);if(planned>=0)data.plan[planned]=structuredClone(snapshot);if(original!==undefined)data.answers[round.id]=upgrade.draft;}
+    }
     if(round.kind==='match'&&!data.shown[r.id]){try{const galleryPreview=captureGalleryPreview(JSON.parse(localStorage.getItem(GALLERY_CONTEXT_KEY)||'null'),ids(round));if(galleryPreview)round={...round,evidence:{...round.evidence,galleryPreview}};}catch{}}
     if(!data.shown[r.id])data.shown[r.id]=snapshotStudyRound(round);
     const a=data.answers[round.id];draft=a&&!a.skipped?(validStudyAnswer(round,a)?structuredClone(a):sanitizeStudyDraft(round,a)):sanitizeStudyDraft(round,{});
+    if(round.kind==='choice-grid'&&round.evidence?.instrumentRevision===PAGED_FAVOURITES)data.answers[round.id]=structuredClone(draft);
     if(round.kind==='contrast')contrastController=createContrastController({app,round,draft,image,esc,saveDraft:answer=>{draft=answer;data.answers[round.id]=structuredClone(answer);data.finishedAt=null;save();},sync:()=>syncImages()});
     statementIndex=round.kind==='statements'?Math.max(0,round.statements.findIndex(s=>draft.claims[s.id]===undefined)):0;
     const body=round.kind==='contrast'?contrastController.markup():round.kind==='choice-grid'?discoveryGridMarkup(round,draft,{image,esc}):['spectrum','grid','match'].includes(round.kind)?inputs.markup():round.kind==='statements'?statementMarkup():round.contextMode==='preference-before-after-v1'?contextShiftMarkup():`<div class="deep-context"><figure>${image(round.works[0])}<button class="text-button" type="button" data-action="deep-art" data-work="${esc(round.works[0].id)}">Look closer ↗</button></figure><div><p class="eyebrow">${esc(round.works[0].artist)}</p><h2>${esc(short(round.works[0]))}</h2><p class="deep-note">${esc(round.works[0].note)}</p><div class="deep-context-options">${[['more','More curious'],['same','About the same'],['less','Less curious'],['unsure','Not sure']].map(([value,label])=>`<button class="context-circle" type="button" data-action="deep-context" data-value="${value}" aria-pressed="${draft.change===value}"><span class="context-ring" aria-hidden="true"></span><span>${label}</span></button>`).join('')}</div><a href="${esc(round.works[0].sourceUrl)}" target="_blank" rel="noopener noreferrer">Museum source ↗</a></div></div>`;
     app.innerHTML=`<section class="deep-question ${journey?'journey-question':''}" data-deep-round="${esc(round.id)}" data-kind="${round.kind}">${journey?chrome():`<div class="deep-top"><button class="text-button" type="button" data-action="deep-save">← Back</button><span>${data.index+1} / ${data.target}</span></div>`}<div class="question-head"><h1 id="${journey&&round.kind==='statements'?'round-format-title':'question-title'}">${esc(round.contextMode==='preference-before-after-v1'?(draft.storySeen?(round.contextPrompts?.after||'How much do you like it now?'):(round.contextPrompts?.before||'How much do you like this painting?')):round.title)}</h1>${round.hint?'<p'+(round.contextMode==='preference-before-after-v1'&&draft.storySeen?' aria-hidden="true"':'')+'>'+(round.contextMode==='preference-before-after-v1'&&draft.storySeen?'&nbsp;':esc(round.hint))+'</p>':''}</div><div id="deep-image-status" class="image-status" role="status" hidden></div><div class="deep-round-body">${round.kind!=='contrast'&&round.anchorWorks?.length?`<div class="deep-anchors">${round.anchorWorks.map(w=>`<figure>${image(w)}</figure>`).join('')}</div>`:''}${body}</div><div class="round-actions"><div class="action-side">${!journey?'<button class="text-button" type="button" data-action="deep-back">Back</button>':''}<button class="text-button" type="button" data-action="deep-skip">Skip</button></div><button class="primary-button" type="button" data-action="deep-next" disabled>${round.contextMode==='preference-before-after-v1'&&!draft.storySeen?(round.symbolismProtocol?'Read the note':'Read the story'):round.kind==='contrast'&&round.contrastKind==='chronology'&&!draft.confirmed?'Check dates':round.kind==='match'&&!draft.confirmed?'Check':data.index===data.target-1?'View profile':'Continue'}</button></div></section>`;
     if(['spectrum','grid','match'].includes(round.kind))inputs.attach();
     applyTaskSignals(app,round);
-    if(round.scale&&round.kind==='spectrum'){const labels=app.querySelector('.spectrum-labels');if(labels)labels.innerHTML=`<span>${esc(round.scale.left)}</span><span>${esc(round.scale.right)}</span>`;}
     syncImages();save();
   }
   function evidenceMarkup(items,label) {
@@ -423,7 +463,7 @@ export function createDeepStudy({app,getWorks,image,esc,keepButtons,navigate,sho
     const rounds=actualRounds(200),activeRounds=journey?rounds:rounds.slice(0,data.target),records=journey?exerciseRecords(rounds):[],result=analyzeStudy(sessionWorks(),rounds,data.answers),leading=result.findings.slice(0,3),rest=result.findings.slice(3);
     const continueButton=activeRounds.some(r=>!resolved(r))?'<button class="primary-button" type="button" data-action="deep-start">Continue the study →</button>':'<button class="primary-button" type="button" data-action="deep-home">Study overview →</button>';
     const markup=f=>`<article class="deep-finding"><h2>${esc(f.title)}</h2><p>${esc(f.text)}</p><details><summary>Works, evidence and limits${f.counter.length?' · including exceptions':''}</summary>${evidenceMarkup(f.support,'Supporting comparisons')}${evidenceMarkup(f.counter,'Comparisons going the other way')}${f.alternatives.map(text=>`<p>${esc(text)}</p>`).join('')}</details></article>`;
-    if(journey){const universe=[...new Map([...getWorks(),...sessionWorks()].map(w=>[w.id,w])).values()],arrangements=analyzeScenarios(sessionWorks(),records),portrait=buildTastePortrait({works:universe,rounds,answers:data.answers,records,saved:getSavedCollection()});portrait.connections=buildTasteConnections({works:universe,rounds,answers:data.answers,records});const continuation={action:rounds.some(r=>!resolved(r))?'deep-start':'deep-extend',label:rounds.some(r=>!resolved(r))?'Continue your rounds':'Continue with 50 more'};const view=renderTastePortrait({portrait,study:result,arrangements,rounds,answers:data.answers,works:universe,image,esc,keepButtons,continuation});const footer=`<div class="deep-reading-actions tp-footer">${rounds.some(r=>!resolved(r))?'<button class="primary-button" type="button" data-action="deep-start">Continue</button>':'<button class="primary-button" type="button" data-action="deep-extend">Continue with 50 more</button>'}<button class="text-button" type="button" data-action="collection">Your collection</button><a class="text-button" href="./maps.html">Your maps ↗</a><a class="text-button" href="./paintings.html">Paintings ↗</a><a class="text-button" href="./profiles.html">Explore profiles ↗</a><button class="text-button" type="button" data-action="deep-review">Review answers</button><button class="text-button" type="button" data-action="deep-export">Download</button></div>`;const end=view.lastIndexOf('</section>');return view.slice(0,end)+footer+view.slice(end);}
+    if(journey){const universe=[...new Map([...getWorks(),...sessionWorks()].map(w=>[w.id,w])).values()],arrangements=analyzeScenarios(sessionWorks(),records),portrait=buildTastePortrait({works:universe,rounds,answers:data.answers,records,saved:getSavedCollection()});portrait.connections=buildTasteConnections({works:universe,rounds,answers:data.answers,records});const completed=rounds.every(resolved),legacyOnly=completed&&!rounds.some(item=>isOverallAppealRound(item)&&validStudyAnswer(item,data.answers[item.id]));const continuation={action:legacyOnly?'deep-retake':completed?'deep-extend':'deep-start',label:legacyOnly?'Start updated quiz':completed?'Continue with 50 more':'Continue your rounds'};const view=renderTastePortrait({portrait,study:result,arrangements,rounds,answers:data.answers,works:universe,image,esc,keepButtons,continuation});const footer=`<div class="deep-reading-actions tp-footer"><button class="primary-button" type="button" data-action="${esc(continuation.action)}">${esc(continuation.label)}</button><button class="text-button" type="button" data-action="collection">Your collection</button><a class="text-button" href="./maps.html">Your maps ↗</a><a class="text-button" href="./paintings.html">Paintings ↗</a><a class="text-button" href="./profiles.html">Explore profiles ↗</a><button class="text-button" type="button" data-action="deep-retake">Start a new quiz</button>${data.archives.length?'<button class="text-button" type="button" data-action="deep-archives">Previous quizzes</button>':''}<button class="text-button" type="button" data-action="deep-review">Review answers</button><button class="text-button" type="button" data-action="deep-export">Download</button></div>`;const end=view.lastIndexOf('</section>');return view.slice(0,end)+footer+view.slice(end);}
     return `<section class="deep-reading"><div class="deep-top"><button class="text-button" type="button" data-action="deep-home">← Study overview</button><span>Saved in this browser</span></div><p class="eyebrow">${result.answered} answered rounds · ${result.artworks} distinct works</p><h1>${esc(result.name)}</h1><p class="deep-intro">This reading connects the decisions you actually completed. Specific comparisons, exceptions and task wording stay attached to each observation.</p>${!result.findings.length?'<p class="deep-empty-reading">Complete preference choices and the related response tasks to connect them. An isolated placement stays a response, without an invented explanation.</p>':''}${leading.map(markup).join('')}${rest.length?`<details class="deep-more"><summary>${rest.length} more observations</summary>${rest.map(markup).join('')}</details>`:''}${checksMarkup(result)}${exhibitionsMarkup(markup)}<div class="deep-reading-actions">${continueButton}<button class="text-button" type="button" data-action="deep-export">Download study record ↓</button></div><details class="deep-method"><summary>What this reading can establish</summary><p>${esc(result.basis)}</p><p>${result.skipped} decisions were skipped. Missing answers and ties do not become preferences. Contextual selection tasks and agreement statements do not train the individual preference explanation.</p><p>This prototype has not been psychometrically validated. A long path through ${sessionWorks().length} artworks does not establish an unrestricted profile of taste.</p></details>${result.evidence.length?`<section class="deep-keeps"><h2>Keep works for another look.</h2>${result.evidence.slice(0,12).map(id=>`<div><span>${esc(short(lookup(id)))}</span>${keepButtons(lookup(id))}</div>`).join('')}</section>`:''}</section>`;
   }
   function syncImages() {
@@ -484,8 +524,23 @@ export function createDeepStudy({app,getWorks,image,esc,keepButtons,navigate,sho
     if(portrait)portrait.connections=buildTasteConnections({works:universe,rounds,answers:data.answers,records});
     return {version:1,target:data.target,index:data.index,startedAt:data.startedAt,finishedAt:data.finishedAt,manifest:structuredClone(data.manifest),answers:structuredClone(data.answers),rounds:structuredClone(Object.values(data.shown)),plannedRounds:structuredClone(data.plan),archives:structuredClone(data.archives),unavailableDecisions:unavailable.map(r=>({id:r.id,workIds:r.unavailableWorkIds,reason:r.unavailableReason})),reading:analyzeStudy(sessionWorks(),rounds,data.answers),...(journey?{batches:structuredClone(data.batches||[]),planRevisions:structuredClone(data.planRevisions||[]),instrumentRevisions:structuredClone(data.instrumentRevisions||[]),portrait}:{}),exhibitionFindings:structuredClone(journey?analyzeScenarios(sessionWorks(),records).findings:getExhibitionFindings()),...(data.unreadableSource?{unreadableSource:data.unreadableSource}:{}),...(data.unmappedAnswers!==undefined?{unmappedAnswers:structuredClone(data.unmappedAnswers)}:{}),...(data.unmappedShown!==undefined?{unmappedShown:structuredClone(data.unmappedShown)}:{}),...(data.retainedSource?{retainedSource:structuredClone(data.retainedSource)}:{})};
   }
-  function startNewSession() {ensureSession();const previous=structuredClone(data);delete previous.archives;const archives=data.archives;data=prepare(null,getWorks());data.archives=[...archives,previous];save();navigate('study');}
-  function switchSession(id) {const target=data.archives.find(s=>s?.manifest?.id===id);if(!target)return;const current=structuredClone(data);delete current.archives;const archives=data.archives.filter(s=>s?.manifest?.id!==id);data=prepare(target,getWorks());data.archives=[...archives,current];data.screen='home';save();navigate('study');}
+  async function commitSessionChange(candidate) {
+    if(sessionChangePending)return;sessionChangePending=true;
+    const current=data,priorReferences=archiveReferences;
+    try{
+      try{archiveReferences=await storeStudyArchives(candidate.archives,archiveStore);}catch{archiveReferences=new Map();}
+      data=candidate;
+      if(!save()){data=current;archiveReferences=priorReferences;const message=app.ownerDocument.createElement('p');message.setAttribute('role','alert');message.textContent='The new quiz could not be saved. Download this quiz before trying again.';app.prepend(message);return;}
+      navigate('study');
+    }finally{sessionChangePending=false;}
+  }
+  function startNewSession(){ensureSession();let candidate;if(journey)candidate=retakeJourneySession(data,getWorks());else{const previous=structuredClone(data);delete previous.archives;candidate=prepare(null,getWorks());candidate.archives=[...data.archives,previous];candidate.startedAt=Date.now();candidate.screen='question';}return commitSessionChange(candidate);}
+  function switchSession(id) {const target=data.archives.find(s=>s?.manifest?.id===id&&!s.unavailable);if(!target)return;const current=structuredClone(data);delete current.archives;const candidate=prepare(target,getWorks());candidate.archives=[...data.archives.filter(s=>s?.manifest?.id!==id),current];candidate.screen='reading';return commitSessionChange(candidate);}
+  function showPreviousQuizzes(){
+    const document=app.ownerDocument,dialog=document.createElement('dialog');dialog.className='profile-details-dialog';dialog.setAttribute('aria-label','Previous quizzes');
+    dialog.innerHTML=`<header><h2>Previous quizzes</h2><button type="button" class="profile-details-close" data-action="deep-archives-close" aria-label="Close previous quizzes">×</button></header><div class="profile-details-content">${data.archives.map(saved=>`<button class="previous-quiz" type="button" data-action="deep-session" data-session="${esc(saved.manifest?.id)}" ${saved.unavailable?'disabled':''}><strong>${esc(new Date(saved.manifest?.createdAt||saved.startedAt||Date.now()).toLocaleDateString())}</strong><span>${saved.unavailable?'Unavailable in this browser':Object.keys(saved.answers||{}).length+' responses'}</span><span aria-hidden="true">↗</span></button>`).join('')}</div>`;
+    app.append(dialog);dialog.addEventListener('close',()=>dialog.remove());dialog.showModal();
+  }
   function download(){const url=URL.createObjectURL(new Blob([JSON.stringify(exportData(),null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download=journey?'my-art-atlas.json':'my-art-study.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
   return {restore,render,exportData,startNewSession,opening:home,started:()=>!!data.startedAt,clear(){clearTimeout(statementTimer);contrastController?.dispose();contrastController=null;data=fresh();round=null;draft=null;ready=false;try{localStorage.removeItem(storageKey);}catch{storage=false;}},handle(action,control,event){
     if(app.querySelector('.embedded-exercise')&&round?.kind==='exercise'){
@@ -500,6 +555,13 @@ export function createDeepStudy({app,getWorks,image,esc,keepButtons,navigate,sho
     if(app.querySelector('.deep-question')&&action==='zoom'){showArtwork(control.dataset.work,round.kind==='context'&&(!round.contextMode||draft.storySeen)||round.kind==='match'&&draft.confirmed?(round.kind==='match'&&round.field==='artist'?'artist':true):false);return true;}
     if(!action?.startsWith('deep-'))return false;
     if(action==='deep-extend'&&journey){data=extendJourneySession(data,getWorks());save();navigate('study');focus();return true;}
+    if(action==='deep-retake'){startNewSession();return true;}
+    if(action==='deep-grid-page'&&round?.kind==='choice-grid'&&round.evidence?.instrumentRevision===PAGED_FAVOURITES){
+      if(!ready)return true;draft=setChoiceGridPage(round,draft,Number(control.dataset.page));data.answers[round.id]=structuredClone(draft);save();
+      const grid=app.querySelector('.discovery-grid');if(grid)grid.outerHTML=discoveryGridMarkup(round,draft,{image,esc});syncImages();return true;
+    }
+    if(action==='deep-archives'){showPreviousQuizzes();return true;}
+    if(action==='deep-archives-close'){control.closest('dialog')?.close();return true;}
     if(action==='deep-home')changeScreen('home');
     if(action==='deep-new-session')startNewSession();
     if(action==='deep-session')switchSession(control.dataset.session);

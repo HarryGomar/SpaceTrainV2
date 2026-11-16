@@ -5,7 +5,7 @@ import { isDifficultEdit,createDifficultEditRecord,validDifficultEditDraft,valid
 
 export const SCENARIOS = [
   { id:'sorting', title:'Sorting table.', short:'Sorting table', description:'Arrange eight paintings freely. Bring related works together and leave space between those that feel apart.', instruction:'Put works that belong together near each other. You decide what connects them.' },
-  { id:'difficult-edit', title:'Difficult edit.', short:'Difficult edit', description:'Four works, three places. Remove one, then compare your wall with a different edit.', instruction:'Keep three paintings that work together. Put one back.' },
+  { id:'difficult-edit', title:'Difficult edit.', short:'Difficult edit', description:'Four works, three places. Choose the painting to leave out.', instruction:'Keep three paintings that work together. Put one back.' },
   { id:'curate', title:'Build your museum.', short:'Your museum', description:'Place paintings in five connected rooms. Make your own groups, then choose a starting work, a longer stop and a connection across rooms.', instruction:'Put paintings that belong together in the same room. You decide the groups.' },
   { id:'pair', title:'Choose a companion.', short:'A neighbouring work', description:'One painting is already on the wall. Choose the work you would hang beside it.', instruction:'Choose one work to hang beside the painting on the left. A shared quality or a deliberate contrast can both work.' },
   { id:'bridge', title:'Connect two rooms.', short:'A transition', description:'Find a painting that can carry a visitor between two different parts of an exhibition.', instruction:'Choose a work that makes the transition between these two paintings interesting to you.' },

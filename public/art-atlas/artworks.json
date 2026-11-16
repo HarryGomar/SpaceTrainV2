@@ -83,7 +83,20 @@
         1915,
         1926
       ],
-      "movementKey": "impressionism"
+      "movementKey": "impressionism",
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "landscape"
+        ],
+        "sourceUrls": [
+          "https://clevelandart.org/art/1960.81"
+        ],
+        "reviewedImage": "assets/art/monet-water-lilies.jpg",
+        "reviewedImageSha256": "4c20ffad9fe2dadf335e825bce3d0983d9b65193fb23097dce659d4505fd8c2b",
+        "reviewReason": "Water, floating vegetation and reflections occupy the composition without clearly separated foreground and distant spatial stages."
+      }
     },
     "recognitionTier": "landmark",
     "recognitionTierSource": "Editorial curation for stimulus selection; not a population familiarity measure.",
@@ -383,7 +396,20 @@
         1927,
         1927
       ],
-      "movementKey": "de stijl / neo-plasticism"
+      "movementKey": "de stijl / neo-plasticism",
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "geometric-structure"
+        ],
+        "sourceUrls": [
+          "https://clevelandart.org/art/1967.215"
+        ],
+        "reviewedImage": "assets/art/mondrian-composition.jpg",
+        "reviewedImageSha256": "79f82c7e28afc064bd19199dd6883d90d3bb42af26cd61517b6cd28e27dbe58e",
+        "reviewReason": "Straight black divisions and rectangular colour fields visibly organise the surface."
+      }
     },
     "recognitionTier": "landmark",
     "recognitionTierSource": "Editorial curation for stimulus selection; not a population familiarity measure.",
@@ -583,7 +609,20 @@
         1830,
         1833
       ],
-      "movementKey": "ukiyo-e"
+      "movementKey": "ukiyo-e",
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "landscape"
+        ],
+        "sourceUrls": [
+          "https://clevelandart.org/art/1930.189"
+        ],
+        "reviewedImage": "assets/art/hokusai-mount-fuji.jpg",
+        "reviewedImageSha256": "b0f546cc1972fb8e7ef84d21eb7d30805de189297a22a248b1ecaf11c5b5468d",
+        "reviewReason": "The recognisable mountain and surrounding bands of natural setting organise the print."
+      }
     },
     "recognitionTier": "landmark",
     "recognitionTierSource": "Editorial curation for stimulus selection; not a population familiarity measure.",
@@ -1712,7 +1751,23 @@
         1875,
         1875
       ],
-      "movementKey": "mexican academic landscape painting"
+      "movementKey": "mexican academic landscape painting",
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "layered-space",
+          "landscape"
+        ],
+        "sourceUrls": [
+          "https://www.munal.gob.mx/munal/exposicion-velasco.html",
+          "https://commons.wikimedia.org/wiki/File:Jos%C3%A9_Mar%C3%ADa_Velasco_-_The_Valley_of_Mexico_from_the_Santa_Isabel_Mountain_Range_-_Google_Art_Project.jpg",
+          "https://commons.wikimedia.org/wiki/File:Jos%C3%A9_Mar%C3%ADa_Velasco_-_The_Valley_of_Mexico_from_the_Santa_Isabel_Mountain_Range_-_Google_Art_Project.jpg#Licensing"
+        ],
+        "reviewedImage": "assets/art/velasco-valley-mexico.jpg",
+        "reviewedImageSha256": "a309aae69806aa1dfb6fb00e2df38946638a11fef6e7d08a2146127f24e1e534",
+        "reviewReason": "Near terrain, the broad valley, water and distant mountain ranges organise a succession of natural spatial stages."
+      }
     },
     "recognitionTier": "established",
     "recognitionTierSource": "Editorial curation for stimulus selection; not a population familiarity measure.",
@@ -5615,7 +5670,22 @@
         1817,
         1818
       ],
-      "movementKey": "romanticism"
+      "movementKey": "romanticism",
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "layered-space",
+          "landscape"
+        ],
+        "sourceUrls": [
+          "https://www.hamburger-kunsthalle.de/en/nineteenth-century",
+          "https://commons.wikimedia.org/wiki/File:Caspar_David_Friedrich_-_Wanderer_above_the_Sea_of_Fog.jpeg"
+        ],
+        "reviewedImage": "assets/collection-friedrich-wanderer.jpg",
+        "reviewedImageSha256": "8a2fde852d5d5d5ef7b0b6b408cc63eb940f83b1199c605e9133aa0ff29cd494",
+        "reviewReason": "Near rocks, banks of mist and distant peaks create distinct spatial stages around the stationary back-facing figure."
+      }
     },
     "recognitionTier": "landmark",
     "recognitionTierSource": "Editorial curation for stimulus selection; not a population familiarity measure.",
@@ -5737,7 +5807,24 @@
         1820,
         1823
       ],
-      "movementKey": "romanticism"
+      "movementKey": "romanticism",
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "imagined-world",
+          "dramatic-light",
+          "visible-gesture",
+          "intimate-figures"
+        ],
+        "sourceUrls": [
+          "https://www.museodelprado.es/en/the-collection/art-work/saturn/18110a75-b0e7-430c-bc73-2a4d55893bd6",
+          "https://commons.wikimedia.org/wiki/File:Francisco_de_Goya,_Saturno_devorando_a_su_hijo_(1819-1823).jpg"
+        ],
+        "reviewedImage": "assets/collection-goya-saturn.jpg",
+        "reviewedImageSha256": "ab1ab49d163b1063eb2bf0aca267594e316712ca18c9a5ebdf83098215b86086",
+        "reviewReason": "A giant grips and bites a body under selective illumination against a nearly empty dark ground."
+      }
     },
     "recognitionTier": "landmark",
     "recognitionTierSource": "Editorial curation for stimulus selection; not a population familiarity measure.",
@@ -5859,7 +5946,24 @@
         1656,
         1656
       ],
-      "movementKey": "baroque"
+      "movementKey": "baroque",
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "narrative-detail",
+          "dramatic-light",
+          "layered-space",
+          "visible-gesture"
+        ],
+        "sourceUrls": [
+          "https://www.museodelprado.es/en/the-collection/art-work/las-meninas/9fdc7800-9ade-48b0-ab8b-edee94ea877f",
+          "https://commons.wikimedia.org/wiki/File:Las_Meninas,_by_Diego_Vel%C3%A1zquez,_from_Prado_in_Google_Earth.jpg"
+        ],
+        "reviewedImage": "assets/collection-velazquez-las-meninas.jpg",
+        "reviewedImageSha256": "4cdd81d247468366ce62d6ba0912489ee3eec38b8ccd775b3e17479079fdb168",
+        "reviewReason": "Attendants, the mirror and the open doorway distribute clues across a selectively lit room with several spatial stages."
+      }
     },
     "recognitionTier": "landmark",
     "recognitionTierSource": "Editorial curation for stimulus selection; not a population familiarity measure.",
@@ -5982,7 +6086,22 @@
         1533,
         1533
       ],
-      "movementKey": "northern renaissance"
+      "movementKey": "northern renaissance",
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "narrative-detail",
+          "intimate-figures"
+        ],
+        "sourceUrls": [
+          "https://www.nationalgallery.org.uk/paintings/hans-holbein-the-younger-the-ambassadors",
+          "https://commons.wikimedia.org/wiki/File:Hans_Holbein_the_Younger_-_The_Ambassadors_-_Google_Art_Project.jpg"
+        ],
+        "reviewedImage": "assets/collection-holbein-ambassadors.jpg",
+        "reviewedImageSha256": "cb0315fa08bfd95b8b6eed875480d96fab2488af26ac82db4f65145e4b424459",
+        "reviewReason": "The closely framed pair is surrounded by instruments, books and an oblique skull that supply separate visual clues."
+      }
     },
     "recognitionTier": "landmark",
     "recognitionTierSource": "Editorial curation for stimulus selection; not a population familiarity measure.",
@@ -6104,7 +6223,22 @@
         1617,
         1617
       ],
-      "movementKey": "flemish baroque"
+      "movementKey": "flemish baroque",
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "narrative-detail",
+          "layered-space"
+        ],
+        "sourceUrls": [
+          "https://www.museodelprado.es/en/the-collection/art-work/the-sense-of-sight/494fd4d5-16d2-4857-811b-e0b2a0eb7fc7",
+          "https://commons.wikimedia.org/wiki/File:Jan_Brueghel_I_%26_Peter_Paul_Rubens_-_Sight_(Museo_del_Prado).jpg"
+        ],
+        "reviewedImage": "assets/collection-brueghel-sight.jpg",
+        "reviewedImageSha256": "9d9821476e42b10c35d9b03142914bb562dfcfd70a9ac5d63d9f1f6bb10126d5",
+        "reviewReason": "Pictures, instruments and collected objects surround the central figures, while an opening leads into a second spatial zone."
+      }
     },
     "recognitionTier": "established",
     "recognitionTierSource": "Editorial curation for stimulus selection; not a population familiarity measure.",
@@ -6226,7 +6360,25 @@
         1490,
         1500
       ],
-      "movementKey": "early netherlandish painting"
+      "movementKey": "early netherlandish painting",
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "narrative-detail",
+          "imagined-world",
+          "layered-space",
+          "visible-gesture",
+          "landscape"
+        ],
+        "sourceUrls": [
+          "https://www.museodelprado.es/en/the-collection/art-work/the-garden-of-earthly-delights-triptych/02388242-6d6a-4e9e-a992-e1311eab3609",
+          "https://commons.wikimedia.org/wiki/File:El_jard%C3%ADn_de_las_Delicias,_de_El_Bosco.jpg"
+        ],
+        "reviewedImage": "assets/collection-bosch-garden-delights.jpg",
+        "reviewedImageSha256": "3924574619f80a40b8be1b967c1a0cc5462e180ffbe47dabd1ba46ea11782503",
+        "reviewReason": "Many bodily incidents and fantastic creatures occupy successive terrain and water zones across the three panels."
+      }
     },
     "recognitionTier": "landmark",
     "recognitionTierSource": "Editorial curation for stimulus selection; not a population familiarity measure.",
@@ -6348,7 +6500,23 @@
         1851,
         1852
       ],
-      "movementKey": "pre-raphaelite"
+      "movementKey": "pre-raphaelite",
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "narrative-detail",
+          "intimate-figures",
+          "landscape"
+        ],
+        "sourceUrls": [
+          "https://www.tate.org.uk/art/artworks/millais-ophelia-n01506",
+          "https://commons.wikimedia.org/wiki/File:John_Everett_Millais_-_Ophelia_-_Google_Art_Project.jpg"
+        ],
+        "reviewedImage": "assets/collection-millais-ophelia.jpg",
+        "reviewedImageSha256": "63b741111485f5f93e04a8b13ad8a25d9049768def6f58fbb37137ec813474f5",
+        "reviewReason": "The large reclining figure, surrounding flowers and dense streamside vegetation organise the image and provide secondary clues."
+      }
     },
     "recognitionTier": "landmark",
     "recognitionTierSource": "Editorial curation for stimulus selection; not a population familiarity measure.",
@@ -6470,7 +6638,23 @@
         1888,
         1888
       ],
-      "movementKey": "post-impressionism"
+      "movementKey": "post-impressionism",
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "narrative-detail",
+          "dramatic-light",
+          "layered-space"
+        ],
+        "sourceUrls": [
+          "https://artgallery.yale.edu/collections/objects/12507",
+          "https://commons.wikimedia.org/wiki/File:Van_Gogh_-_The_Night_Caf%C3%A9_(1888).jpg"
+        ],
+        "reviewedImage": "assets/collection-van-gogh-night-cafe.jpg",
+        "reviewedImageSha256": "413cfc210a0fa2be8bf457f8ce6b8751ff4102199449ee3b353fcdc89d477785",
+        "reviewReason": "Lamps illuminate the room, while the billiard table, distant doorway and scattered patrons create depth and secondary clues."
+      }
     },
     "recognitionTier": "established",
     "recognitionTierSource": "Editorial curation for stimulus selection; not a population familiarity measure.",
@@ -6592,7 +6776,21 @@
         1889,
         1889
       ],
-      "movementKey": "post-impressionism"
+      "movementKey": "post-impressionism",
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "landscape"
+        ],
+        "sourceUrls": [
+          "https://www.moma.org/collection/works/79802",
+          "https://commons.wikimedia.org/wiki/File:Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg"
+        ],
+        "reviewedImage": "assets/collection-van-gogh-starry-night.jpg",
+        "reviewedImageSha256": "c8c60124c2d1b9a43dd435130b26438f3f79c5b286524bdfdcb24966748dbf13",
+        "reviewReason": "The village, hills and sky form a substantial recognisable natural setting despite the strongly stylised brushwork."
+      }
     },
     "recognitionTier": "landmark",
     "recognitionTierSource": "Editorial curation for stimulus selection; not a population familiarity measure.",
@@ -6714,7 +6912,23 @@
         1907,
         1909
       ],
-      "movementKey": "vienna secession"
+      "movementKey": "vienna secession",
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "geometric-structure",
+          "visible-gesture",
+          "intimate-figures"
+        ],
+        "sourceUrls": [
+          "https://sammlung.belvedere.at/objects/6678/der-kuss-liebespaar",
+          "https://commons.wikimedia.org/wiki/File:The_Kiss_-_Gustav_Klimt_-_Google_Cultural_Institute.jpg"
+        ],
+        "reviewedImage": "assets/collection-klimt-kiss.jpg",
+        "reviewedImageSha256": "2b52b0917eed41f950ebdb694dbecac24b7fb36c11065d14a3c48bf6350e43d7",
+        "reviewReason": "A close embracing pair is wrapped in conspicuous rectangular and circular patterning, with hands and heads defining the bodily relation."
+      }
     },
     "recognitionTier": "landmark",
     "recognitionTierSource": "Editorial curation for stimulus selection; not a population familiarity measure.",
@@ -6948,6 +7162,23 @@
           0.065918,
           0.565674
         ]
+      },
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "narrative-detail",
+          "layered-space",
+          "landscape"
+        ],
+        "sourceUrls": [
+          "https://www.metmuseum.org/art/collection/search/45434",
+          "https://collectionapi.metmuseum.org/public/collection/v1/objects/45434",
+          "https://www.metmuseum.org/about-the-met/policies-and-documents/open-access"
+        ],
+        "reviewedImage": "assets/study-hokusai-great-wave.jpg",
+        "reviewedImageSha256": "6797908772d0872d1742eb70cf5e27ee632db558b1d4a1392af1889dcdda1cd3",
+        "reviewReason": "Boats and their crouching occupants sit between the large foreground wave and distant Fuji, supplying small incidents across depth."
       }
     },
     "provenance": {
@@ -7089,6 +7320,22 @@
           0,
           0
         ]
+      },
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "intimate-figures",
+          "landscape"
+        ],
+        "sourceUrls": [
+          "https://collections.louvre.fr/ark:/53355/cl010062370",
+          "https://commons.wikimedia.org/wiki/File:Mona_Lisa,_by_Leonardo_da_Vinci,_from_C2RMF.jpg",
+          "https://commons.wikimedia.org/wiki/File:Mona_Lisa,_by_Leonardo_da_Vinci,_from_C2RMF.jpg#Licensing"
+        ],
+        "reviewedImage": "assets/study-leonardo-mona-lisa.jpg",
+        "reviewedImageSha256": "3c91811816eaacfd1d1d9313a1712b69bab00df6a7df7305281256e742c4acda",
+        "reviewReason": "The close half-length sitter occupies the foreground against a substantial winding terrain and water background."
       }
     },
     "provenance": {
@@ -7238,6 +7485,22 @@
           0.020752,
           0.026855
         ]
+      },
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "dramatic-light",
+          "intimate-figures"
+        ],
+        "sourceUrls": [
+          "https://www.mauritshuis.nl/en/our-collection/artworks/670-girl-with-a-pearl-earring",
+          "https://commons.wikimedia.org/wiki/File:1665_Girl_with_a_Pearl_Earring.jpg",
+          "https://commons.wikimedia.org/wiki/File:1665_Girl_with_a_Pearl_Earring.jpg#Licensing"
+        ],
+        "reviewedImage": "assets/study-vermeer-pearl.jpg",
+        "reviewedImageSha256": "ef5cc11cb793589e18647a26dad1b6872dda95cf7217f037ad2bd7427dd6800e",
+        "reviewReason": "Selective illumination isolates a closely framed head and shoulder against a plain dark ground."
       }
     },
     "provenance": {
@@ -7387,6 +7650,23 @@
           0.030273,
           0.21875
         ]
+      },
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "narrative-detail",
+          "visible-gesture",
+          "intimate-figures"
+        ],
+        "sourceUrls": [
+          "https://www.rijksmuseum.nl/en/story/milkmaid-vermeer",
+          "https://commons.wikimedia.org/wiki/File:Johannes_Vermeer_-_Het_melkmeisje_-_Google_Art_Project.jpg",
+          "https://commons.wikimedia.org/wiki/File:Johannes_Vermeer_-_Het_melkmeisje_-_Google_Art_Project.jpg#Licensing"
+        ],
+        "reviewedImage": "assets/study-vermeer-milkmaid.jpg",
+        "reviewedImageSha256": "478d0ca5bcc5074f5163f7a3d3aa5c8bbd1661c7cbd31dab2d560594a5e3ba45",
+        "reviewReason": "The closely framed pouring action, bread and table objects provide visible bodily action and secondary domestic clues."
       }
     },
     "provenance": {
@@ -7536,6 +7816,24 @@
           0,
           0.001221
         ]
+      },
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "narrative-detail",
+          "dramatic-light",
+          "layered-space",
+          "visible-gesture"
+        ],
+        "sourceUrls": [
+          "https://www.rijksmuseum.nl/en/collection/object/The-Night-Watch-Militia-Company-of-District-II-under-the-Command-of-Captain-Frans-Banninck-Cocq--3137deb45cd7765f9a76084a16c99544",
+          "https://commons.wikimedia.org/wiki/File:The_Nightwatch_by_Rembrandt_-_Rijksmuseum.jpg",
+          "https://commons.wikimedia.org/wiki/File:The_Nightwatch_by_Rembrandt_-_Rijksmuseum.jpg#Licensing"
+        ],
+        "reviewedImage": "assets/study-rembrandt-night-watch.jpg",
+        "reviewedImageSha256": "2135b4ccda3081be8c7693bcb0d10929003aec295b5241ddfb26a0b145d814ba",
+        "reviewReason": "Selective light separates gesturing figures and scattered incidents at different depths within the broad group."
       }
     },
     "provenance": {
@@ -7685,6 +7983,25 @@
           0.033447,
           0.000244
         ]
+      },
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "narrative-detail",
+          "imagined-world",
+          "visible-gesture",
+          "intimate-figures",
+          "landscape"
+        ],
+        "sourceUrls": [
+          "https://www.uffizi.it/en/artworks/birth-of-venus",
+          "https://commons.wikimedia.org/wiki/File:Sandro_Botticelli_-_La_nascita_di_Venere_-_Google_Art_Project.jpg",
+          "https://commons.wikimedia.org/wiki/File:Sandro_Botticelli_-_La_nascita_di_Venere_-_Google_Art_Project.jpg#Licensing"
+        ],
+        "reviewedImage": "assets/study-botticelli-birth-venus.jpg",
+        "reviewedImageSha256": "8b9899ee81a81228211359b27c25ad8181c23741f4174aeee6442e03538b922a",
+        "reviewReason": "Winged figures, shell and arriving drapery surround the large central body within a substantial shore and sea setting."
       }
     },
     "provenance": {
@@ -7834,6 +8151,24 @@
           0.090088,
           0.067871
         ]
+      },
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "narrative-detail",
+          "layered-space",
+          "geometric-structure",
+          "visible-gesture"
+        ],
+        "sourceUrls": [
+          "https://www.museivaticani.va/content/museivaticani/en/collezioni/musei/stanze-di-raffaello/stanza-della-segnatura/scuola-di-atene.html",
+          "https://commons.wikimedia.org/wiki/File:Raffael_058.jpg",
+          "https://commons.wikimedia.org/wiki/File:Raffael_058.jpg#Licensing"
+        ],
+        "reviewedImage": "assets/study-raphael-school-athens.jpg",
+        "reviewedImageSha256": "6f48d02ada787828c82800b482da20f5abbd6f853e392ca7dab3de626373a8f4",
+        "reviewReason": "Many distinct bodily gestures and groups occupy successive architectural stages structured by repeated arches and the floor grid."
       }
     },
     "provenance": {
@@ -7983,6 +8318,24 @@
           0.014404,
           0.006104
         ]
+      },
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "narrative-detail",
+          "visible-gesture",
+          "intimate-figures",
+          "landscape"
+        ],
+        "sourceUrls": [
+          "https://www.tate.org.uk/art/artworks/waterhouse-the-lady-of-shalott-n01543",
+          "https://commons.wikimedia.org/wiki/File:John_William_Waterhouse_-_The_Lady_of_Shalott_-_Google_Art_Project.jpg",
+          "https://commons.wikimedia.org/wiki/File:John_William_Waterhouse_-_The_Lady_of_Shalott_-_Google_Art_Project.jpg#Licensing"
+        ],
+        "reviewedImage": "assets/study-waterhouse-shalott.jpg",
+        "reviewedImageSha256": "3919d81b251d00bd0eaf25fb4f1ca262ef2f25e6ef88e86a92f2e4f77b9a0c1c",
+        "reviewReason": "The large figure reaches within a boat, while its objects and the wooded riverbank provide setting and secondary clues."
       }
     },
     "provenance": {
@@ -8132,6 +8485,25 @@
           0.000977,
           0
         ]
+      },
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "narrative-detail",
+          "dramatic-light",
+          "layered-space",
+          "visible-gesture",
+          "landscape"
+        ],
+        "sourceUrls": [
+          "https://collections.louvre.fr/en/ark:/53355/cl010059199",
+          "https://commons.wikimedia.org/wiki/File:Th%C3%A9odore_G%C3%A9ricault_-_Le_Radeau_de_la_M%C3%A9duse.jpg",
+          "https://commons.wikimedia.org/wiki/File:Th%C3%A9odore_G%C3%A9ricault_-_Le_Radeau_de_la_M%C3%A9duse.jpg#Licensing"
+        ],
+        "reviewedImage": "assets/study-gericault-raft.jpg",
+        "reviewedImageSha256": "930942b20a1b182df8d5464700341000ddd947229f58de2fba07445784b66c35",
+        "reviewReason": "Selectively lit bodies and signalling gestures build successive stages across the raft, with sea and sky organising the surrounding setting."
       }
     },
     "provenance": {
@@ -8281,6 +8653,23 @@
           0,
           0
         ]
+      },
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "narrative-detail",
+          "dramatic-light",
+          "intimate-figures"
+        ],
+        "sourceUrls": [
+          "https://fine-arts-museum.be/fr/la-collection/jacques-louis-david-marat-assassine",
+          "https://commons.wikimedia.org/wiki/File:Jacques-Louis_David_-_Marat_assassinated_-_Google_Art_Project_2.jpg",
+          "https://commons.wikimedia.org/wiki/File:Jacques-Louis_David_-_Marat_assassinated_-_Google_Art_Project_2.jpg#Licensing"
+        ],
+        "reviewedImage": "assets/study-david-marat.jpg",
+        "reviewedImageSha256": "0853f6112231f3c4d9cb8d4955a48096ee29bc7d6b32c72bb4d285fd85a3014c",
+        "reviewReason": "The close inactive body is selectively lit; the letter, knife and inscribed box supply separate clues around it."
       }
     },
     "provenance": {
@@ -8430,6 +8819,23 @@
           0.119629,
           0.040039
         ]
+      },
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "narrative-detail",
+          "dramatic-light",
+          "visible-gesture"
+        ],
+        "sourceUrls": [
+          "https://collections.louvre.fr/ark:/53355/cl010065872",
+          "https://commons.wikimedia.org/wiki/File:Eug%C3%A8ne_Delacroix_-_Le_28_Juillet._La_Libert%C3%A9_guidant_le_peuple.jpg",
+          "https://commons.wikimedia.org/wiki/File:Eug%C3%A8ne_Delacroix_-_Le_28_Juillet._La_Libert%C3%A9_guidant_le_peuple.jpg#Licensing"
+        ],
+        "reviewedImage": "assets/study-delacroix-liberty.jpg",
+        "reviewedImageSha256": "22687c4953717247fe39425435b371a355d355e1da131446f2adfa1b6a6c3314",
+        "reviewReason": "Raised arms and weapons lead the crowd, while light separates foreground bodies from the smoky group behind."
       }
     },
     "provenance": {
@@ -9326,6 +9732,21 @@
           0.01416,
           0.407959
         ]
+      },
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "geometric-structure"
+        ],
+        "sourceUrls": [
+          "https://www.guggenheim.org/artwork/1924",
+          "https://commons.wikimedia.org/wiki/File:Vassily_Kandinsky,_1923_-_Composition_8,_huile_sur_toile,_140_cm_x_201_cm,_Mus%C3%A9e_Guggenheim,_New_York.jpg",
+          "https://commons.wikimedia.org/wiki/File:Vassily_Kandinsky,_1923_-_Composition_8,_huile_sur_toile,_140_cm_x_201_cm,_Mus%C3%A9e_Guggenheim,_New_York.jpg#Licensing"
+        ],
+        "reviewedImage": "assets/study-kandinsky-composition-eight.jpg",
+        "reviewedImageSha256": "e0229d7538f18f8ccf7b83918bb6a3b5ec686d7c85d0a9d26bb634d394945cfd",
+        "reviewReason": "Circles, straight diagonals and measured angular forms conspicuously organise the nonfigurative composition."
       }
     },
     "provenance": {
@@ -9773,6 +10194,23 @@
           0.000244,
           0
         ]
+      },
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "narrative-detail",
+          "layered-space",
+          "landscape"
+        ],
+        "sourceUrls": [
+          "https://digitalarchive.npm.gov.tw/Collection/Detail/1195?dep=P",
+          "https://commons.wikimedia.org/wiki/File:Fan_Kuan_-_Travelers_Among_Mountains_and_Streams_-_Google_Art_Project.jpg",
+          "https://commons.wikimedia.org/wiki/File:Fan_Kuan_-_Travelers_Among_Mountains_and_Streams_-_Google_Art_Project.jpg#Licensing"
+        ],
+        "reviewedImage": "assets/study-fan-kuan-travelers.jpg",
+        "reviewedImageSha256": "311a404d2eca86d58fabc504a286eeedd13ec2e854cd48d0debd8f51700c125c",
+        "reviewReason": "A small travelling group supplies a local incident beneath successive rock, tree and mountain zones."
       }
     },
     "provenance": {
@@ -10369,6 +10807,22 @@
           0.016113,
           0.067627
         ]
+      },
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "narrative-detail",
+          "intimate-figures"
+        ],
+        "sourceUrls": [
+          "https://www.artic.edu/artworks/129884/american-gothic",
+          "https://commons.wikimedia.org/wiki/File:Grant_Wood_-_American_Gothic_-_Google_Art_Project.jpg",
+          "https://commons.wikimedia.org/wiki/File:Grant_Wood_-_American_Gothic_-_Google_Art_Project.jpg#Licensing"
+        ],
+        "reviewedImage": "assets/study-wood-american-gothic.jpg",
+        "reviewedImageSha256": "fb2aebcd741f6043d0c3486aa112dba079f0c74bd04fe2811a23aef653b23800",
+        "reviewReason": "The close posed pair, pitchfork, clothing and house details provide relational clues without an emphatic bodily action."
       }
     },
     "provenance": {
@@ -10518,6 +10972,22 @@
           0.000244,
           0
         ]
+      },
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "visible-gesture",
+          "intimate-figures"
+        ],
+        "sourceUrls": [
+          "https://www.hermitagemuseum.org/explore/buildings/rooms/room_1890",
+          "https://commons.wikimedia.org/wiki/File:Matissedance.jpg",
+          "https://commons.wikimedia.org/wiki/File:Matissedance.jpg#Licensing"
+        ],
+        "reviewedImage": "assets/study-matisse-dance.jpg",
+        "reviewedImageSha256": "530397d5ce409b5420a0e7715222e57f7497fb8839eff7f2d3bce911a36fa0d9",
+        "reviewReason": "The large compact linked group is defined by extended arms, joined hands and bodily action."
       }
     },
     "provenance": {
@@ -12058,6 +12528,23 @@
           0,
           0
         ]
+      },
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "dramatic-light",
+          "layered-space",
+          "landscape"
+        ],
+        "sourceUrls": [
+          "https://clevelandart.org/art/1965.233",
+          "https://openaccess-api.clevelandart.org/api/artworks/141639",
+          "https://creativecommons.org/publicdomain/zero/1.0/"
+        ],
+        "reviewedImage": "assets/opening-cma-141639.jpg",
+        "reviewedImageSha256": "07161ed412b9cc000370ca24a18d200171f480f46eb83d52919f391978de6114",
+        "reviewReason": "An illuminated horizon contrasts with dark foreground silhouettes, while water and successive mountain zones organise the view."
       }
     },
     "descriptorReview": {
@@ -12217,6 +12704,23 @@
           0.039795,
           0.01416
         ]
+      },
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "dramatic-light",
+          "visible-gesture",
+          "intimate-figures"
+        ],
+        "sourceUrls": [
+          "https://clevelandart.org/art/1922.1133",
+          "https://openaccess-api.clevelandart.org/api/artworks/92937",
+          "https://creativecommons.org/publicdomain/zero/1.0/"
+        ],
+        "reviewedImage": "assets/opening-cma-92937.jpg",
+        "reviewedImageSha256": "1184dde55a9c69ccb545cc6887a0286fd73c15d7c80d178a183017b22073fb23",
+        "reviewReason": "Selective light picks out the two closely framed boxers and their striking bodily actions against the darker crowd."
       }
     },
     "descriptorReview": {
@@ -12376,6 +12880,22 @@
           0.000977,
           0
         ]
+      },
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "visible-gesture",
+          "intimate-figures"
+        ],
+        "sourceUrls": [
+          "https://clevelandart.org/art/1966.49",
+          "https://openaccess-api.clevelandart.org/api/artworks/142792",
+          "https://creativecommons.org/publicdomain/zero/1.0/"
+        ],
+        "reviewedImage": "assets/opening-cma-142792.jpg",
+        "reviewedImageSha256": "6926d891bfed2d82e144d7f205a6280b8402dfcb020d0834dc5381018ed85ccf",
+        "reviewReason": "Large closely framed wrestlers organise the scene through their grappling bodies and limbs."
       }
     },
     "descriptorReview": {
@@ -12851,6 +13371,23 @@
           0.000244,
           0
         ]
+      },
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "narrative-detail",
+          "layered-space",
+          "geometric-structure"
+        ],
+        "sourceUrls": [
+          "https://clevelandart.org/art/2011.37",
+          "https://openaccess-api.clevelandart.org/api/artworks/169545",
+          "https://creativecommons.org/publicdomain/zero/1.0/"
+        ],
+        "reviewedImage": "assets/opening-cma-169545.jpg",
+        "reviewedImageSha256": "f8f1b5d27f72a5adabe37773e283dd8d28831e3aff57ed3e563b5a799eb6c619",
+        "reviewReason": "A regular cabinet grid divides recessed compartments containing books and distinct objects with many small visual clues."
       }
     },
     "descriptorReview": {
@@ -12959,7 +13496,23 @@
         ],
         "method": "HSV histogram, 40 bins; 64x64 samples; 6% edge crop"
       },
-      "yearRangeBasis": "Source date or closed source interval; not inferred from style."
+      "yearRangeBasis": "Source date or closed source interval; not inferred from style.",
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "narrative-detail",
+          "imagined-world",
+          "layered-space",
+          "visible-gesture"
+        ],
+        "sourceUrls": [
+          "https://artsandculture.google.com/asset/harmony-suggestive-self-portrait-remedios-varo/NQGzTK03j7FCXQ"
+        ],
+        "reviewedImage": "assets/collection-20261115/add-varo-harmony.jpg",
+        "reviewedImageSha256": "0ff47718783cbef27d86ecffc5a2e8569454b09ae4ac5e571ad582bb9694f897",
+        "reviewReason": "An active figure, unusual apparatus and figures emerging from walls occupy a room with several readable spatial stages."
+      }
     },
     "datePrecision": "year",
     "practiceCountries": [
@@ -13085,7 +13638,24 @@
         ],
         "method": "HSV histogram, 40 bins; 64x64 samples; 6% edge crop"
       },
-      "yearRangeBasis": "Source date or closed source interval; not inferred from style."
+      "yearRangeBasis": "Source date or closed source interval; not inferred from style.",
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "narrative-detail",
+          "imagined-world",
+          "layered-space",
+          "visible-gesture",
+          "intimate-figures"
+        ],
+        "sourceUrls": [
+          "https://artsandculture.google.com/asset/sympathy-cat’s-rage-remedios-varo/NwHUlMjuByR0-Q"
+        ],
+        "reviewedImage": "assets/collection-20261115/add-varo-sympathy.jpg",
+        "reviewedImageSha256": "eae7718a11226481ea7bb70c62fe1b2bb8670ef39cf941ba72fbcb5217ed59af",
+        "reviewReason": "The close figure and cat interact through uncanny connecting filaments within a room with readable depth."
+      }
     },
     "datePrecision": "year",
     "practiceCountries": [
@@ -13337,7 +13907,24 @@
         ],
         "method": "HSV histogram, 40 bins; 64x64 samples; 6% edge crop"
       },
-      "yearRangeBasis": "Source date or closed source interval; not inferred from style."
+      "yearRangeBasis": "Source date or closed source interval; not inferred from style.",
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "narrative-detail",
+          "imagined-world",
+          "dramatic-light",
+          "layered-space",
+          "geometric-structure"
+        ],
+        "sourceUrls": [
+          "https://artsandculture.google.com/asset/weaving-of-space-and-time-varo-remedios/hAE0BR_fo345yQ"
+        ],
+        "reviewedImage": "assets/collection-20261115/add-varo-weaving-space-time.jpg",
+        "reviewedImageSha256": "116ad4fd831d8e0f1af461af6e5c5098778b0cff0093ff0c2c6b15d590496b64",
+        "reviewReason": "A regular enclosing mesh, uncanny central formation and illuminated interior combine physical impossibility with a layered room."
+      }
     },
     "datePrecision": "year",
     "practiceCountries": [
@@ -13468,7 +14055,20 @@
         ],
         "method": "HSV histogram, 40 bins; 64x64 samples; 6% edge crop"
       },
-      "yearRangeBasis": "Source date or closed source interval; not inferred from style."
+      "yearRangeBasis": "Source date or closed source interval; not inferred from style.",
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "geometric-structure"
+        ],
+        "sourceUrls": [
+          "https://artsandculture.google.com/asset/mansión-del-agua-water-mansion-günther-gerzso/dAESFVnSqAY2Mg"
+        ],
+        "reviewedImage": "assets/collection-20261115/add-gerzso-water-mansion.jpg",
+        "reviewedImageSha256": "04bd6fe76ec1748de9354d18a5ec24a7666d8d5ba642b91057243da8f9eb72fd",
+        "reviewReason": "Sharp-edged coloured planes establish geometric structure without a clearly readable physical room or terrain."
+      }
     },
     "datePrecision": "year",
     "provenance": {
@@ -13829,7 +14429,21 @@
         ],
         "method": "HSV histogram, 40 bins; 64x64 samples; 6% edge crop"
       },
-      "yearRangeBasis": "Source date or closed source interval; not inferred from style."
+      "yearRangeBasis": "Source date or closed source interval; not inferred from style.",
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "narrative-detail",
+          "layered-space"
+        ],
+        "sourceUrls": [
+          "https://artsandculture.google.com/asset/sorrowful-friday-maría-izquierdo/NwHhuKquXf4aAQ"
+        ],
+        "reviewedImage": "assets/collection-20261115/add-izquierdo-sorrowful-friday.jpg",
+        "reviewedImageSha256": "f8d699ba0e3e9a1fdf0fa12c8160d00e7e88b9351cf082ec50894038d205cbd6",
+        "reviewReason": "A central framed head, altar objects and curtains create separate symbolic clues and shallow spatial compartments."
+      }
     },
     "datePrecision": "range",
     "provenance": {
@@ -14666,7 +15280,21 @@
         ],
         "method": "HSV histogram, 40 bins; 64x64 samples; 6% edge crop"
       },
-      "yearRangeBasis": "Source date or closed source interval; not inferred from style."
+      "yearRangeBasis": "Source date or closed source interval; not inferred from style.",
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "narrative-detail",
+          "geometric-structure"
+        ],
+        "sourceUrls": [
+          "https://artsandculture.google.com/asset/zapata-style-landscape/IAEHxJWnGTosTg"
+        ],
+        "reviewedImage": "assets/collection-20261115/add-rivera-zapatista-landscape.jpg",
+        "reviewedImageSha256": "1fcb724563125125b085d2eb355f79dc2be65c5b26b2a8cb3ae3091fdf93bce3",
+        "reviewReason": "Angular planes organise recognisable hat, weapon and fabric clues; the small distant mountain strip does not dominate the setting."
+      }
     },
     "sourceTitle": "Zapata-style Landscape",
     "datePrecision": "year",
@@ -15148,7 +15776,21 @@
         ],
         "method": "HSV histogram, 40 bins; 64x64 samples; 6% edge crop"
       },
-      "yearRangeBasis": "Source date or closed source interval; not inferred from style."
+      "yearRangeBasis": "Source date or closed source interval; not inferred from style.",
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "visible-gesture",
+          "intimate-figures"
+        ],
+        "sourceUrls": [
+          "https://artsandculture.google.com/asset/madre-niña-david-alfaro-siqueiros/8wHleA2u_UfCpA"
+        ],
+        "reviewedImage": "assets/collection-20261115/add-siqueiros-madre-nina.jpg",
+        "reviewedImageSha256": "64941c24e5e2ab7b23f23bd9f863b7e37cf2576a61dc6c44c1cf56375329262a",
+        "reviewReason": "The compact foreground adult and child are joined through a visible carrying or supporting action."
+      }
     },
     "datePrecision": "year",
     "provenance": {
@@ -15268,7 +15910,24 @@
         ],
         "method": "HSV histogram, 40 bins; 64x64 samples; 6% edge crop"
       },
-      "yearRangeBasis": "Source date or closed source interval; not inferred from style."
+      "yearRangeBasis": "Source date or closed source interval; not inferred from style.",
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "narrative-detail",
+          "imagined-world",
+          "layered-space",
+          "visible-gesture",
+          "landscape"
+        ],
+        "sourceUrls": [
+          "https://artsandculture.google.com/asset/the-distractions-of-dagobert-leonora-carrington/nwHUtTzhhjJVUA"
+        ],
+        "reviewedImage": "assets/collection-20261115/add-carrington-dagobert.jpg",
+        "reviewedImageSha256": "462ae7d6b5fa20dd04ff819d5edd9bd9627f31e4792775d3c4618a04c35fa65f",
+        "reviewReason": "Many unusual bodies and incidents occupy separate architectural and terrain zones, with repeated visible bodily actions."
+      }
     },
     "datePrecision": "year",
     "practiceCountries": [
@@ -16491,7 +17150,18 @@
         ],
         "method": "HSV histogram, 40 bins; 64x64 samples; 6% edge crop"
       },
-      "yearRangeBasis": "Source date or closed source interval; not inferred from style."
+      "yearRangeBasis": "Source date or closed source interval; not inferred from style.",
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [],
+        "sourceUrls": [
+          "https://artsandculture.google.com/asset/composition-vii-vasily-kandinsky/CQHOKgpWcL_UPA"
+        ],
+        "reviewedImage": "assets/collection-20261115/add-kandinsky-composition-seven.jpg",
+        "reviewedImageSha256": "fa6b07c6d1d064f4f8ba8826074e7023dc4b1141fa5ccbb2246d43931ec6f491",
+        "reviewReason": "Interlaced organic and fractured marks dominate; none of these eight narrowly defined content tags was assigned in this review."
+      }
     },
     "datePrecision": "year",
     "provenance": {
@@ -17091,7 +17761,20 @@
         ],
         "method": "HSV histogram, 40 bins; 64x64 samples; 6% edge crop"
       },
-      "yearRangeBasis": "Source date or closed source interval; not inferred from style."
+      "yearRangeBasis": "Source date or closed source interval; not inferred from style.",
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "geometric-structure"
+        ],
+        "sourceUrls": [
+          "https://artsandculture.google.com/asset/dove-no-2-hilma-af-klint/4AHL2EWDvLy_QA"
+        ],
+        "reviewedImage": "assets/collection-20261115/add-af-klint-dove-two.jpg",
+        "reviewedImageSha256": "0c26493af64119e5448780a21f8254e73c8ea6c1afb5c6ab8be234b5e00fd979",
+        "reviewReason": "Concentric circular forms and measured coloured divisions give the image an explicit geometric organisation."
+      }
     },
     "datePrecision": "year",
     "provenance": {
@@ -17811,7 +18494,20 @@
         ],
         "method": "HSV histogram, 40 bins; 64x64 samples; 6% edge crop"
       },
-      "yearRangeBasis": "Source date or closed source interval; not inferred from style."
+      "yearRangeBasis": "Source date or closed source interval; not inferred from style.",
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "geometric-structure"
+        ],
+        "sourceUrls": [
+          "https://artsandculture.google.com/asset/painterly-realism-of-a-football-player-–-color-masses-in-the-4th-dimension-kazimir-malevich-russian-born-ukraine-1878–1935/HAFbsVPXhzyLMg"
+        ],
+        "reviewedImage": "assets/collection-20261115/add-malevich-football-player.jpg",
+        "reviewedImageSha256": "2a22b3b1a7c2a2bac126b6b5a6956e40f0149ea59fba17db526eca648116d392",
+        "reviewReason": "Clearly shaped rectilinear colour forms and diagonals organise the nonfigurative surface."
+      }
     },
     "datePrecision": "year",
     "stimulusCaveats": [
@@ -18054,7 +18750,20 @@
         ],
         "method": "HSV histogram, 40 bins; 64x64 samples; 6% edge crop"
       },
-      "yearRangeBasis": "Source date or closed source interval; not inferred from style."
+      "yearRangeBasis": "Source date or closed source interval; not inferred from style.",
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "geometric-structure"
+        ],
+        "sourceUrls": [
+          "https://artsandculture.google.com/asset/naranja-y-amarillo-mark-rothko/eQEGSGtYwuS37A"
+        ],
+        "reviewedImage": "assets/collection-20261115/add-rothko-orange-yellow.jpg",
+        "reviewedImageSha256": "0a27cc407f58c22c3c8b62859ab2e67402cb4f069bbd3c884c47dc42b552d5c6",
+        "reviewReason": "Large rectangular colour fields organise the image; the tag describes their shape rather than an emotional response."
+      }
     },
     "datePrecision": "year",
     "provenance": {
@@ -18174,7 +18883,18 @@
         ],
         "method": "HSV histogram, 40 bins; 64x64 samples; 6% edge crop"
       },
-      "yearRangeBasis": "Source date or closed source interval; not inferred from style."
+      "yearRangeBasis": "Source date or closed source interval; not inferred from style.",
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [],
+        "sourceUrls": [
+          "https://artsandculture.google.com/asset/convergence-jackson-pollock/rgFoAwFLiZvHqQ"
+        ],
+        "reviewedImage": "assets/collection-20261115/add-pollock-convergence.jpg",
+        "reviewedImageSha256": "f7d52ee6c5f988f5d529813ef786113ac07b0f9dec2ff053defe1ba0ad5eb6dc",
+        "reviewReason": "Interlaced irregular marks dominate; none of these eight narrowly defined content tags was assigned in this review."
+      }
     },
     "datePrecision": "year",
     "stimulusCaveats": [
@@ -18657,7 +19377,21 @@
         ],
         "method": "HSV histogram, 40 bins; 64x64 samples; 6% edge crop"
       },
-      "yearRangeBasis": "Source date or closed source interval; not inferred from style."
+      "yearRangeBasis": "Source date or closed source interval; not inferred from style.",
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "geometric-structure"
+        ],
+        "sourceUrls": [
+          "https://artsandculture.google.com/asset/cobalto-y-blanco-carmen-herrera/ZwHH7CYBUapYTA?hl=en",
+          "https://www.cifo.org/mac-exhibitions/the-forms-of-silence%3A-carmen-herrera%2C-abstract-works-1948%E2%80%931987-"
+        ],
+        "reviewedImage": "assets/collection-20261115/add-herrera-cobalt-white.jpg",
+        "reviewedImageSha256": "9d1e40540498f75c82df482e4235ded618a890cd9b45e4e6fa523740fbdad1b7",
+        "reviewReason": "Clean blue and white angular planes establish the visible geometric structure."
+      }
     },
     "datePrecision": "year",
     "practiceCountries": [
@@ -19746,7 +20480,23 @@
         ],
         "method": "HSV histogram, 40 bins; 64x64 samples; 6% edge crop"
       },
-      "yearRangeBasis": "Source date or closed source interval; not inferred from style."
+      "yearRangeBasis": "Source date or closed source interval; not inferred from style.",
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "narrative-detail",
+          "imagined-world",
+          "visible-gesture",
+          "intimate-figures"
+        ],
+        "sourceUrls": [
+          "https://artsandculture.google.com/asset/hope/CgGv3RqPFUZk4A"
+        ],
+        "reviewedImage": "assets/collection-20261115/add-watts-hope.jpg",
+        "reviewedImageSha256": "cb173aae4a9f115d9dd4e65ccc431a8ed9331d7f1ee07f5b85341bae084a8d26",
+        "reviewReason": "The blindfold, lyre and globe supply symbolic clues; the hand action and closely framed body organise the image."
+      }
     },
     "datePrecision": "year",
     "additionalSourceUrls": [
@@ -19774,5 +20524,1308 @@
     "coreQuiz": false,
     "studyEligible": true,
     "featureSemanticVersion": "literal-action-setting-v1"
+  },
+  {
+    "id": "add-caravaggio-judith-barberini",
+    "title": "Judith Beheading Holofernes",
+    "artist": "Caravaggio",
+    "date": "c. 1599",
+    "movement": "Italian Baroque",
+    "country": "Italy",
+    "museum": "Gallerie Nazionali Barberini Corsini, Palazzo Barberini",
+    "sourceUrl": "https://barberinicorsini.org/wp-content/uploads/2021/11/2021_12_Barberini_Giuditta_CartellaStampa.pdf",
+    "alt": "Judith draws a sword across a man's neck while an older woman waits beside them against a dark ground and red curtain.",
+    "note": "The Palazzo Barberini painting shows Judith, Holofernes and an older attendant. The museum's catalogue dates it about 1599.",
+    "image": "assets/classics-20261115/add-caravaggio-judith-barberini.jpg",
+    "imageLarge": "assets/classics-20261115/add-caravaggio-judith-barberini-large.jpg",
+    "width": 800,
+    "height": 594,
+    "largeWidth": 2000,
+    "largeHeight": 1484,
+    "imageSourceUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9d/Judith_Beheading_Holofernes-Caravaggio_%28c.1598-9%29.jpg/3840px-Judith_Beheading_Holofernes-Caravaggio_%28c.1598-9%29.jpg",
+    "rights": "Public domain",
+    "rightsUrl": "https://commons.wikimedia.org/wiki/File:Judith_Beheading_Holofernes-Caravaggio_(c.1598-9).jpg#Licensing",
+    "creditLine": "Caravaggio. Judith Beheading Holofernes. Gallerie Nazionali Barberini Corsini, Palazzo Barberini. Faithful public-domain reproduction via Wikimedia Commons.",
+    "sourceId": 15219728,
+    "sourceStatus": "source-verified",
+    "artistKnown": true,
+    "coreQuiz": false,
+    "decorativeOnly": false,
+    "studyEligible": true,
+    "recognitionTier": "landmark",
+    "recognitionTierSource": "Editorial curation for stimulus selection; not a population familiarity measure.",
+    "featureSemanticVersion": "literal-action-setting-v1",
+    "featureQuality": "provisional_manual",
+    "countrySource": "Editorial artist-practice/cultural-tradition grouping, not a verified place of execution or a viewer trait.",
+    "movementSource": "Editorial art-historical grouping informed by the linked institutional artist and object records; not a measured visual attribute.",
+    "analysis": {
+      "revision": "gallery-descriptors-v1",
+      "yearRange": [
+        1599,
+        1599
+      ],
+      "dateApproximate": true,
+      "yearRangeSource": "https://barberinicorsini.org/wp-content/uploads/2021/11/2021_12_Barberini_Giuditta_CartellaStampa.pdf",
+      "yearRangeBasis": "Closed institutional catalogue date or date range; approximate point years remain approximate, not confidence intervals.",
+      "movementKey": "italian baroque",
+      "palette": {
+        "histogram": [
+          0.024414,
+          0.094971,
+          0.261963,
+          0.129883,
+          0.208984,
+          0.061523,
+          0.025391,
+          0.032471,
+          0.016602,
+          0.0,
+          0.001465,
+          0.000732,
+          0.0,
+          0.000732,
+          0.000977,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.000244,
+          0.000732,
+          0.0,
+          0.000244,
+          0.000244,
+          0.0,
+          0.000977,
+          0.002441,
+          0.0,
+          0.0,
+          0.0,
+          0.000244,
+          0.000488,
+          0.000488,
+          0.000244,
+          0.001465,
+          0.001709,
+          0.046143,
+          0.007812,
+          0.022705,
+          0.053711
+        ],
+        "swatches": [
+          "#101010",
+          "#301010",
+          "#501010",
+          "#503010"
+        ],
+        "method": "HSV histogram, 40 bins; 64x64 samples; 6% edge crop"
+      },
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "narrative-detail",
+          "dramatic-light",
+          "visible-gesture",
+          "intimate-figures"
+        ],
+        "sourceUrls": [
+          "https://barberinicorsini.org/wp-content/uploads/2021/11/2021_12_Barberini_Giuditta_CartellaStampa.pdf",
+          "https://commons.wikimedia.org/wiki/File:Judith_Beheading_Holofernes-Caravaggio_(c.1598-9).jpg",
+          "https://commons.wikimedia.org/wiki/File:Judith_Beheading_Holofernes-Caravaggio_(c.1598-9).jpg#Licensing"
+        ],
+        "reviewedImage": "assets/classics-20261115/add-caravaggio-judith-barberini.jpg",
+        "reviewedImageSha256": "3ddb3976586f3a40252fd0febab8ed84bd6c05c72efad2eaae6a3bc3d4aa40e5",
+        "reviewReason": "Selective light isolates the attack; the waiting older woman and cloth add clues around the closely framed bodily action."
+      }
+    },
+    "sha256": "3ddb3976586f3a40252fd0febab8ed84bd6c05c72efad2eaae6a3bc3d4aa40e5",
+    "bytes": 103854,
+    "provenance": {
+      "provider": "Wikimedia Commons faithful public-domain reproduction",
+      "recordUrl": "https://commons.wikimedia.org/wiki/File:Judith_Beheading_Holofernes-Caravaggio_(c.1598-9).jpg",
+      "metadataUrl": "https://commons.wikimedia.org/wiki/File:Judith_Beheading_Holofernes-Caravaggio_(c.1598-9).jpg",
+      "institutionRecordUrl": "https://barberinicorsini.org/wp-content/uploads/2021/11/2021_12_Barberini_Giuditta_CartellaStampa.pdf",
+      "sourceFileTitle": "File:Judith Beheading Holofernes-Caravaggio (c.1598-9).jpg",
+      "commonsPageId": 15219728,
+      "originalImageUrl": "https://upload.wikimedia.org/wikipedia/commons/9/9d/Judith_Beheading_Holofernes-Caravaggio_%28c.1598-9%29.jpg",
+      "downloadUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9d/Judith_Beheading_Holofernes-Caravaggio_%28c.1598-9%29.jpg/3840px-Judith_Beheading_Holofernes-Caravaggio_%28c.1598-9%29.jpg",
+      "retrievedAt": "2026-11-16T02:37:27Z",
+      "metadataArtist": "Caravaggio",
+      "metadataDate": "between circa 1598 and circa 1599 date QS:P571,+1598-00-00T00:00:00Z/8,P1319,+1598-00-00T00:00:00Z/9,P1326,+1599-00-00T00:00:00Z/9,P1480,Q5727902",
+      "metadataObjectName": "Judith Beheading Holofernes",
+      "licenseMetadata": {
+        "LicenseShortName": "Public domain",
+        "Copyrighted": "False",
+        "AttributionRequired": "false",
+        "License": "pd",
+        "UsageTerms": "Public domain",
+        "Credit": "Self-scanned"
+      },
+      "sourceRightsStatement": "The individually linked Commons file records a faithful public-domain reproduction. Museum photographic terms are separate and are not relabelled CC0.",
+      "reuseStatus": "public-domain-faithful-reproduction",
+      "sourceImageSha256": "179a5624eaf9f9c08c781af2885ed3257407ca1903ca02ffe03eadc5a703436a",
+      "sourceImageBytes": 2642534,
+      "downloadedWidth": 3840,
+      "downloadedHeight": 2849,
+      "originalFileWidth": 11145,
+      "originalFileHeight": 8268,
+      "largeSha256": "0d85acc28568a22d6ebd98d8622ec0f8692669716c94cf8a9eb34cff0f79e059",
+      "thumbnailSha256": "3ddb3976586f3a40252fd0febab8ed84bd6c05c72efad2eaae6a3bc3d4aa40e5",
+      "largeBytes": 714487,
+      "thumbnailBytes": 103854,
+      "transformation": "EXIF orientation respected; whole reproduction and aspect ratio retained. Preview maximum 800px JPEG quality 88; large maximum 3200px JPEG quality 90, reduced to 2400/2000px for a 1MB budget when needed. No upscaling or invented pixels.",
+      "visualReview": "Actual local reproduction inspected before annotation and catalogue append."
+    },
+    "features": {
+      "abstraction": 0.05,
+      "energy": 0.8,
+      "complexity": 0.65,
+      "humanity": 1,
+      "narrative": 1,
+      "atmosphere": 0.15,
+      "color": 0.5
+    },
+    "featureSource": "Manual provisional editorial annotations after inspection of the actual local reproduction. Narrative means depicted action; atmosphere means emphasis on setting. These are not psychometric measurements, participant emotions or causes of a preference.",
+    "featureReviewReason": "A compact naturalistic group performs a visible attack. Strong gestures and selective light dominate, while dark ground and drapery provide little setting."
+  },
+  {
+    "id": "add-caravaggio-supper-emmaus-1601",
+    "title": "The Supper at Emmaus",
+    "artist": "Caravaggio",
+    "date": "1601",
+    "movement": "Italian Baroque",
+    "country": "Italy",
+    "museum": "The National Gallery, London",
+    "sourceUrl": "https://www.nationalgallery.org.uk/paintings/michelangelo-merisi-da-caravaggio-the-supper-at-emmaus",
+    "alt": "Four men gather at a table of food, with one seated man extending both arms and another pushing back from his chair.",
+    "note": "Caravaggio painted this London version in 1601 and another version in Milan in 1606. The London museum record supplies the date used here.",
+    "image": "assets/classics-20261115/add-caravaggio-supper-emmaus-1601.jpg",
+    "imageLarge": "assets/classics-20261115/add-caravaggio-supper-emmaus-1601-large.jpg",
+    "width": 800,
+    "height": 569,
+    "largeWidth": 2400,
+    "largeHeight": 1706,
+    "imageSourceUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4d/1602-3_Caravaggio%2CSupper_at_Emmaus_National_Gallery%2C_London.jpg/3840px-1602-3_Caravaggio%2CSupper_at_Emmaus_National_Gallery%2C_London.jpg",
+    "rights": "Public domain",
+    "rightsUrl": "https://commons.wikimedia.org/wiki/File:1602-3_Caravaggio,Supper_at_Emmaus_National_Gallery,_London.jpg#Licensing",
+    "creditLine": "Caravaggio. The Supper at Emmaus. The National Gallery, London. Faithful public-domain reproduction via Wikimedia Commons.",
+    "sourceId": 270022,
+    "sourceStatus": "source-verified",
+    "artistKnown": true,
+    "coreQuiz": false,
+    "decorativeOnly": false,
+    "studyEligible": true,
+    "recognitionTier": "landmark",
+    "recognitionTierSource": "Editorial curation for stimulus selection; not a population familiarity measure.",
+    "featureSemanticVersion": "literal-action-setting-v1",
+    "featureQuality": "provisional_manual",
+    "countrySource": "Editorial artist-practice/cultural-tradition grouping, not a verified place of execution or a viewer trait.",
+    "movementSource": "Editorial art-historical grouping informed by the linked institutional artist and object records; not a measured visual attribute.",
+    "analysis": {
+      "revision": "gallery-descriptors-v1",
+      "yearRange": [
+        1601,
+        1601
+      ],
+      "dateApproximate": false,
+      "yearRangeSource": "https://www.nationalgallery.org.uk/paintings/michelangelo-merisi-da-caravaggio-the-supper-at-emmaus",
+      "yearRangeBasis": "Closed institutional catalogue date or date range; approximate point years remain approximate, not confidence intervals.",
+      "movementKey": "italian baroque",
+      "palette": {
+        "histogram": [
+          0.160645,
+          0.222412,
+          0.004639,
+          0.292969,
+          0.264404,
+          0.008545,
+          0.009277,
+          0.00293,
+          0.0,
+          0.000244,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.000488,
+          0.0,
+          0.0,
+          0.002197,
+          0.0,
+          0.0,
+          0.01123,
+          0.001953,
+          0.0,
+          0.012695,
+          0.00293,
+          0.002441,
+          0.0
+        ],
+        "swatches": [
+          "#101010",
+          "#303010",
+          "#301010",
+          "#503010"
+        ],
+        "method": "HSV histogram, 40 bins; 64x64 samples; 6% edge crop"
+      },
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "narrative-detail",
+          "dramatic-light",
+          "visible-gesture",
+          "intimate-figures"
+        ],
+        "sourceUrls": [
+          "https://www.nationalgallery.org.uk/paintings/michelangelo-merisi-da-caravaggio-the-supper-at-emmaus",
+          "https://commons.wikimedia.org/wiki/File:1602-3_Caravaggio,Supper_at_Emmaus_National_Gallery,_London.jpg",
+          "https://commons.wikimedia.org/wiki/File:1602-3_Caravaggio,Supper_at_Emmaus_National_Gallery,_London.jpg#Licensing"
+        ],
+        "reviewedImage": "assets/classics-20261115/add-caravaggio-supper-emmaus-1601.jpg",
+        "reviewedImageSha256": "7253bcba32d01986fd5a9d19e85c27be63146f0f6c5ea0f048cf2cf106b84618",
+        "reviewReason": "Outstretched arms, table objects and the standing attendant support a compact scene staged through strong light and shadow."
+      }
+    },
+    "sha256": "7253bcba32d01986fd5a9d19e85c27be63146f0f6c5ea0f048cf2cf106b84618",
+    "bytes": 65148,
+    "provenance": {
+      "provider": "Wikimedia Commons faithful public-domain reproduction",
+      "recordUrl": "https://commons.wikimedia.org/wiki/File:1602-3_Caravaggio,Supper_at_Emmaus_National_Gallery,_London.jpg",
+      "metadataUrl": "https://commons.wikimedia.org/wiki/File:1602-3_Caravaggio,Supper_at_Emmaus_National_Gallery,_London.jpg",
+      "institutionRecordUrl": "https://www.nationalgallery.org.uk/paintings/michelangelo-merisi-da-caravaggio-the-supper-at-emmaus",
+      "sourceFileTitle": "File:1602-3 Caravaggio,Supper at Emmaus National Gallery, London.jpg",
+      "commonsPageId": 270022,
+      "originalImageUrl": "https://upload.wikimedia.org/wikipedia/commons/4/4d/1602-3_Caravaggio%2CSupper_at_Emmaus_National_Gallery%2C_London.jpg",
+      "downloadUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4d/1602-3_Caravaggio%2CSupper_at_Emmaus_National_Gallery%2C_London.jpg/3840px-1602-3_Caravaggio%2CSupper_at_Emmaus_National_Gallery%2C_London.jpg",
+      "retrievedAt": "2026-11-16T02:37:29Z",
+      "metadataArtist": "Caravaggio",
+      "metadataDate": "1601         Baroque   (late 16 th  century date QS:P,+1550-00-00T00:00:00Z/7,P4241,Q40719766 –1750s date QS:P,+1750-00-00T00:00:00Z/8 )",
+      "metadataObjectName": "Supper at Emmaus          title QS:P1476,en:\"Supper at Emmaus      \"  label QS:Len,\"Supper at Emmaus      \"  label QS:Les,\"Los discípulos de Emaús (Caravaggio, Londres)\"  label QS:Lhu,\"Emmauszi vacsora\"  label QS:Leu,\"Emausko afaria\"  label QS:Lca,\"Sopar a Emaús\"  label QS:Lde,\"Abendmahl in Emmaus\"  label QS:Len-gb,\"Supper at Emmaus\"  label QS:Lfa,\"شام در اماوس\"  label QS:Lzh,\"以马忤斯的晚餐 (伦敦)\"  label QS:Lda,\"Måltidet i Emmaus\"  label QS:Lro,\"Cina din Emmaus\"  label QS:Lja,\"エマオの晩餐\"  label QS:Larz,\"العشاء فى عمواس\"  label QS:Lhe,\"ארוחת ערב באמאוס\"  label QS:Lla,\"Cena in Emmao (Caravaggius)\"  label QS:Lavk,\"Estura koe Emmaus (1) (trutca ke Caravaggio)\"  label QS:Lko,\"엠마오의 만찬\"  label QS:Lit,\"Cena in Emmaus\"  label QS:Lfr,\"Le Souper à Emmaüs\"  label QS:Lpt,\"A Ceia em Emaús\"  label QS:Lsv,\"Måltiden i Emmaus\"  label QS:Lsl,\"Večerja v Emavsu\"  label QS:Lka,\"ვახშამი ემაუსში\"  label QS:Lhy,\"Ընթրիք Էմաուսում\"  label QS:Lnl,\"Avondmaal in Emmaüs\"  label QS:Luk,\"Вечеря в Емаусі (Караваджо, Лондон)\"  label QS:Lpl,\"Wieczerza w Emmaus (1601)\"  label QS:Lnb,\"Måltidet i Emmaus\"  label QS:Laz,\"Emmausda şam yeməyi\"  label QS:Lbe,\"Вячэра ў Эмаусе\"  label QS:Lru,\"Ужин в Эммаусе\"  label QS:Lcs,\"Večeře v Emauzích\"  label QS:Ltr,\"Emmaus'ta Yemek (Londra)\"  label QS:Lvi,\"Bữa tối ở Emmaus\"  label QS:Lar,\"العشاء في عمواس (كارافاجيو، لندن)\"  label QS:Lbr,\"Koan en Emmaus\"  label QS:Lmk,\"Вечера во Емаус\"",
+      "licenseMetadata": {
+        "LicenseShortName": "Public domain",
+        "Copyrighted": "False",
+        "AttributionRequired": "false",
+        "License": "pd",
+        "UsageTerms": "Public domain",
+        "Credit": "National Gallery, London web site"
+      },
+      "sourceRightsStatement": "The individually linked Commons file records a faithful public-domain reproduction. Museum photographic terms are separate and are not relabelled CC0.",
+      "reuseStatus": "public-domain-faithful-reproduction",
+      "sourceImageSha256": "92df89399d586fe8def6e4fc2635773846061a03081831a7bfd4b45d1e09ee38",
+      "sourceImageBytes": 2006061,
+      "downloadedWidth": 3840,
+      "downloadedHeight": 2729,
+      "originalFileWidth": 5946,
+      "originalFileHeight": 4226,
+      "largeSha256": "40d9a1e822c9aa5befb2aec7ce5c5b39e5620e98d9612ec4f3e51253eef113ab",
+      "thumbnailSha256": "7253bcba32d01986fd5a9d19e85c27be63146f0f6c5ea0f048cf2cf106b84618",
+      "largeBytes": 813170,
+      "thumbnailBytes": 65148,
+      "transformation": "EXIF orientation respected; whole reproduction and aspect ratio retained. Preview maximum 800px JPEG quality 88; large maximum 3200px JPEG quality 90, reduced to 2400/2000px for a 1MB budget when needed. No upscaling or invented pixels.",
+      "visualReview": "Actual local reproduction inspected before annotation and catalogue append."
+    },
+    "features": {
+      "abstraction": 0.05,
+      "energy": 0.6,
+      "complexity": 0.75,
+      "humanity": 1,
+      "narrative": 0.6,
+      "atmosphere": 0.35,
+      "color": 0.55
+    },
+    "featureSource": "Manual provisional editorial annotations after inspection of the actual local reproduction. Narrative means depicted action; atmosphere means emphasis on setting. These are not psychometric measurements, participant emotions or causes of a preference.",
+    "featureReviewReason": "Naturalistic figures gesture around a table crowded with food and objects. The plain rear wall limits setting despite the strong light and bodily movement."
+  },
+  {
+    "id": "add-caravaggio-taking-christ",
+    "title": "The Taking of Christ",
+    "artist": "Caravaggio",
+    "date": "1602",
+    "movement": "Italian Baroque",
+    "country": "Italy",
+    "museum": "National Gallery of Ireland, on loan from the Jesuit Community, Leeson Street",
+    "sourceUrl": "https://onlinecollection.nationalgallery.ie/objects/2882/the-taking-of-christ",
+    "alt": "A tightly packed group surrounds Christ, with a kissing figure, armoured soldiers, raised hands and a lantern against darkness.",
+    "note": "The National Gallery of Ireland identifies this as the 1602 painting on indefinite loan from the Jesuit Community in Dublin.",
+    "image": "assets/classics-20261115/add-caravaggio-taking-christ.jpg",
+    "imageLarge": "assets/classics-20261115/add-caravaggio-taking-christ-large.jpg",
+    "width": 800,
+    "height": 620,
+    "largeWidth": 2000,
+    "largeHeight": 1550,
+    "imageSourceUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4d/The_Taking_of_Christ-Caravaggio_%28c.1602%29.jpg/3840px-The_Taking_of_Christ-Caravaggio_%28c.1602%29.jpg",
+    "rights": "Public domain",
+    "rightsUrl": "https://commons.wikimedia.org/wiki/File:The_Taking_of_Christ-Caravaggio_(c.1602).jpg#Licensing",
+    "creditLine": "Caravaggio. The Taking of Christ. National Gallery of Ireland, on loan from the Jesuit Community, Leeson Street. Faithful public-domain reproduction via Wikimedia Commons.",
+    "sourceId": 15219530,
+    "sourceStatus": "source-verified",
+    "artistKnown": true,
+    "coreQuiz": false,
+    "decorativeOnly": false,
+    "studyEligible": true,
+    "recognitionTier": "landmark",
+    "recognitionTierSource": "Editorial curation for stimulus selection; not a population familiarity measure.",
+    "featureSemanticVersion": "literal-action-setting-v1",
+    "featureQuality": "provisional_manual",
+    "countrySource": "Editorial artist-practice/cultural-tradition grouping, not a verified place of execution or a viewer trait.",
+    "movementSource": "Editorial art-historical grouping informed by the linked institutional artist and object records; not a measured visual attribute.",
+    "analysis": {
+      "revision": "gallery-descriptors-v1",
+      "yearRange": [
+        1602,
+        1602
+      ],
+      "dateApproximate": false,
+      "yearRangeSource": "https://onlinecollection.nationalgallery.ie/objects/2882/the-taking-of-christ",
+      "yearRangeBasis": "Closed institutional catalogue date or date range; approximate point years remain approximate, not confidence intervals.",
+      "movementKey": "italian baroque",
+      "palette": {
+        "histogram": [
+          0.012451,
+          0.141113,
+          0.068604,
+          0.017822,
+          0.017822,
+          0.0,
+          0.000488,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.000977,
+          0.0,
+          0.0,
+          0.001221,
+          0.0,
+          0.0,
+          0.000244,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.001953,
+          0.005127,
+          0.000488,
+          0.002197,
+          0.031738,
+          0.111572,
+          0.003662,
+          0.090332,
+          0.481689,
+          0.004639,
+          0.000488,
+          0.0,
+          0.005371
+        ],
+        "swatches": [
+          "#101010",
+          "#301010",
+          "#501010",
+          "#503010"
+        ],
+        "method": "HSV histogram, 40 bins; 64x64 samples; 6% edge crop"
+      },
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "narrative-detail",
+          "dramatic-light",
+          "visible-gesture",
+          "intimate-figures"
+        ],
+        "sourceUrls": [
+          "https://onlinecollection.nationalgallery.ie/objects/2882/the-taking-of-christ",
+          "https://commons.wikimedia.org/wiki/File:The_Taking_of_Christ-Caravaggio_(c.1602).jpg",
+          "https://commons.wikimedia.org/wiki/File:The_Taking_of_Christ-Caravaggio_(c.1602).jpg#Licensing"
+        ],
+        "reviewedImage": "assets/classics-20261115/add-caravaggio-taking-christ.jpg",
+        "reviewedImageSha256": "aeb0c077aaedc799d34ac5bc5471b75fe6989cf7e529363237bfcdb833eb9462",
+        "reviewReason": "The kiss, restraining hands, fleeing figure and lantern bearer crowd into a selectively lit foreground group."
+      }
+    },
+    "sha256": "aeb0c077aaedc799d34ac5bc5471b75fe6989cf7e529363237bfcdb833eb9462",
+    "bytes": 97752,
+    "provenance": {
+      "provider": "Wikimedia Commons faithful public-domain reproduction",
+      "recordUrl": "https://commons.wikimedia.org/wiki/File:The_Taking_of_Christ-Caravaggio_(c.1602).jpg",
+      "metadataUrl": "https://commons.wikimedia.org/wiki/File:The_Taking_of_Christ-Caravaggio_(c.1602).jpg",
+      "institutionRecordUrl": "https://onlinecollection.nationalgallery.ie/objects/2882/the-taking-of-christ",
+      "sourceFileTitle": "File:The Taking of Christ-Caravaggio (c.1602).jpg",
+      "commonsPageId": 15219530,
+      "originalImageUrl": "https://upload.wikimedia.org/wikipedia/commons/4/4d/The_Taking_of_Christ-Caravaggio_%28c.1602%29.jpg",
+      "downloadUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4d/The_Taking_of_Christ-Caravaggio_%28c.1602%29.jpg/3840px-The_Taking_of_Christ-Caravaggio_%28c.1602%29.jpg",
+      "retrievedAt": "2026-11-16T02:37:31Z",
+      "metadataArtist": "Caravaggio",
+      "metadataDate": "1602",
+      "metadataObjectName": "The Taking of Christ          title QS:P1476,en:\"The Taking of Christ      \"  label QS:Len,\"The Taking of Christ      \"  label QS:Les,\"La captura de Cristo\"  label QS:Lhu,\"Krisztus elfogatása\"  label QS:Lco,\"L'Arrestu di Cristu\"  label QS:Lru,\"Поцелуй Иуды\"  label QS:Lde,\"Die Gefangennahme Christi\"  label QS:Lpt,\"A Captura de Cristo\"  label QS:Lga,\"Gabháil Chríost\"  label QS:Lfa,\"دستگیری عیسی\"  label QS:Lfr,\"L'Arrestation du Christ\"  label QS:Lsv,\"Judaskyssen\"  label QS:Lsl,\"Prijetje Jezusa (Caravaggio)\"  label QS:Larz,\"اخذ المسيح\"  label QS:Lpt-br,\"A Captura de Cristo\"  label QS:Lit,\"La cattura di Cristo nell’orto\"  label QS:Lid,\"Penangkapan Kristus\"  label QS:Lpl,\"Pojmanie Chrystusa\"  label QS:Lhe,\"מאסרו של ישו\"  label QS:Lla,\"Captura Christi\"  label QS:Lnl,\"De gevangenneming van Christus\"  label QS:Lavk,\"Sopera va Krist (trutca ke Caravaggio)\"  label QS:Lhy,\"Հուդայի համբույրը (նկար, Կարավաջո)\"  label QS:Luk,\"Христа беруть під варту\"  label QS:Leo,\"La Aresto de Kristo\"",
+      "licenseMetadata": {
+        "LicenseShortName": "Public domain",
+        "Copyrighted": "False",
+        "AttributionRequired": "false",
+        "License": "pd",
+        "UsageTerms": "Public domain",
+        "Credit": "Self-scanned"
+      },
+      "sourceRightsStatement": "The individually linked Commons file records a faithful public-domain reproduction. Museum photographic terms are separate and are not relabelled CC0.",
+      "reuseStatus": "public-domain-faithful-reproduction",
+      "sourceImageSha256": "40fb112dab52ab5a0672db05b3c7fef5e4e26392c72b356e2b97a278c060c3f5",
+      "sourceImageBytes": 2978001,
+      "downloadedWidth": 3840,
+      "downloadedHeight": 2976,
+      "originalFileWidth": 9893,
+      "originalFileHeight": 7666,
+      "largeSha256": "3a08bc2d7cd5b73612aabce7029b4e6d3ac389d401812d472b1760b93d5ec13c",
+      "thumbnailSha256": "aeb0c077aaedc799d34ac5bc5471b75fe6989cf7e529363237bfcdb833eb9462",
+      "largeBytes": 761164,
+      "thumbnailBytes": 97752,
+      "transformation": "EXIF orientation respected; whole reproduction and aspect ratio retained. Preview maximum 800px JPEG quality 88; large maximum 3200px JPEG quality 90, reduced to 2400/2000px for a 1MB budget when needed. No upscaling or invented pixels.",
+      "visualReview": "Actual local reproduction inspected before annotation and catalogue append."
+    },
+    "features": {
+      "abstraction": 0.05,
+      "energy": 0.8,
+      "complexity": 0.75,
+      "humanity": 1,
+      "narrative": 0.85,
+      "atmosphere": 0.05,
+      "color": 0.5
+    },
+    "featureSource": "Manual provisional editorial annotations after inspection of the actual local reproduction. Narrative means depicted action; atmosphere means emphasis on setting. These are not psychometric measurements, participant emotions or causes of a preference.",
+    "featureReviewReason": "Interlocked foreground bodies, grasping hands and a lantern dominate. The compressed scene provides almost no surrounding place."
+  },
+  {
+    "id": "add-bruegel-triumph-death",
+    "title": "The Triumph of Death",
+    "artist": "Pieter Bruegel the Elder",
+    "date": "1562–63",
+    "movement": "Northern Renaissance",
+    "country": "Flanders",
+    "museum": "Museo Nacional del Prado",
+    "sourceUrl": "https://www.museodelprado.es/en/the-collection/art-work/the-triumph-of-death/d3d82b0b-9bf2-4082-ab04-66ed53196ccc",
+    "alt": "An army of skeletons overwhelms people across a crowded landscape of fires, bodies, carts and distant ships.",
+    "note": "Bruegel distributes many encounters across one broad landscape. This is the Prado painting by Pieter Bruegel the Elder, rather than a later version by his sons.",
+    "image": "assets/classics-20261115/add-bruegel-triumph-death.jpg",
+    "imageLarge": "assets/classics-20261115/add-bruegel-triumph-death-large.jpg",
+    "width": 800,
+    "height": 571,
+    "largeWidth": 2000,
+    "largeHeight": 1427,
+    "imageSourceUrl": "https://upload.wikimedia.org/wikipedia/commons/b/b3/The_Triumph_of_Death_by_Pieter_Bruegel_the_Elder.jpg",
+    "rights": "Public domain",
+    "rightsUrl": "https://commons.wikimedia.org/wiki/File:The_Triumph_of_Death_by_Pieter_Bruegel_the_Elder.jpg#Licensing",
+    "creditLine": "Pieter Bruegel the Elder. The Triumph of Death. Museo Nacional del Prado. Faithful public-domain reproduction via Wikimedia Commons.",
+    "sourceId": 74450965,
+    "sourceStatus": "source-verified",
+    "artistKnown": true,
+    "coreQuiz": false,
+    "decorativeOnly": false,
+    "studyEligible": true,
+    "recognitionTier": "landmark",
+    "recognitionTierSource": "Editorial curation for stimulus selection; not a population familiarity measure.",
+    "featureSemanticVersion": "literal-action-setting-v1",
+    "featureQuality": "provisional_manual",
+    "countrySource": "Editorial artist-practice/cultural-tradition grouping, not a verified place of execution or a viewer trait.",
+    "movementSource": "Editorial art-historical grouping informed by the linked institutional artist and object records; not a measured visual attribute.",
+    "analysis": {
+      "revision": "gallery-descriptors-v1",
+      "yearRange": [
+        1562,
+        1563
+      ],
+      "dateApproximate": false,
+      "yearRangeSource": "https://www.museodelprado.es/en/the-collection/art-work/the-triumph-of-death/d3d82b0b-9bf2-4082-ab04-66ed53196ccc",
+      "yearRangeBasis": "Closed institutional catalogue date or date range; approximate point years remain approximate, not confidence intervals.",
+      "movementKey": "northern renaissance",
+      "palette": {
+        "histogram": [
+          0.093018,
+          0.256592,
+          0.050537,
+          0.22998,
+          0.201904,
+          0.035889,
+          0.020508,
+          0.002197,
+          0.0,
+          0.010254,
+          0.0,
+          0.0,
+          0.001709,
+          0.0,
+          0.0,
+          0.001709,
+          0.000732,
+          0.0,
+          0.000977,
+          0.000244,
+          0.0,
+          0.000488,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.000488,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.000732,
+          0.0,
+          0.0,
+          0.021729,
+          0.020996,
+          0.03833,
+          0.010986
+        ],
+        "swatches": [
+          "#705030",
+          "#503030",
+          "#303010",
+          "#503010"
+        ],
+        "method": "HSV histogram, 40 bins; 64x64 samples; 6% edge crop"
+      },
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "narrative-detail",
+          "imagined-world",
+          "layered-space",
+          "visible-gesture",
+          "landscape"
+        ],
+        "sourceUrls": [
+          "https://www.museodelprado.es/en/the-collection/art-work/the-triumph-of-death/d3d82b0b-9bf2-4082-ab04-66ed53196ccc",
+          "https://commons.wikimedia.org/wiki/File:The_Triumph_of_Death_by_Pieter_Bruegel_the_Elder.jpg",
+          "https://commons.wikimedia.org/wiki/File:The_Triumph_of_Death_by_Pieter_Bruegel_the_Elder.jpg#Licensing"
+        ],
+        "reviewedImage": "assets/classics-20261115/add-bruegel-triumph-death.jpg",
+        "reviewedImageSha256": "08ffb15dcc3973603f2a6f49310508385d1cb8683bc16c1b43733bff9d263fd4",
+        "reviewReason": "Skeleton armies and many separate incidents spread through successive landscape zones, with repeated physical attacks and impossible bodies."
+      }
+    },
+    "sha256": "08ffb15dcc3973603f2a6f49310508385d1cb8683bc16c1b43733bff9d263fd4",
+    "bytes": 174414,
+    "provenance": {
+      "provider": "Wikimedia Commons faithful public-domain reproduction",
+      "recordUrl": "https://commons.wikimedia.org/wiki/File:The_Triumph_of_Death_by_Pieter_Bruegel_the_Elder.jpg",
+      "metadataUrl": "https://commons.wikimedia.org/wiki/File:The_Triumph_of_Death_by_Pieter_Bruegel_the_Elder.jpg",
+      "institutionRecordUrl": "https://www.museodelprado.es/en/the-collection/art-work/the-triumph-of-death/d3d82b0b-9bf2-4082-ab04-66ed53196ccc",
+      "sourceFileTitle": "File:The Triumph of Death by Pieter Bruegel the Elder.jpg",
+      "commonsPageId": 74450965,
+      "originalImageUrl": "https://upload.wikimedia.org/wikipedia/commons/b/b3/The_Triumph_of_Death_by_Pieter_Bruegel_the_Elder.jpg",
+      "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/b/b3/The_Triumph_of_Death_by_Pieter_Bruegel_the_Elder.jpg",
+      "retrievedAt": "2026-11-16T02:37:33Z",
+      "metadataArtist": "Pieter Bruegel the Elder",
+      "metadataDate": "circa 1562 date QS:P571,+1562-00-00T00:00:00Z/9,P1480,Q5727902",
+      "metadataObjectName": "De triomf van de Doods    The Triumph of Death",
+      "licenseMetadata": {
+        "LicenseShortName": "Public domain",
+        "Copyrighted": "False",
+        "AttributionRequired": "false",
+        "License": "pd",
+        "UsageTerms": "Public domain",
+        "Credit": "<a rel=\"nofollow\" class=\"external text\" href=\"http://www.museodelprado.es/en/the-collection/online-gallery/on-line-gallery/obra/the-triumph-of-death/\">Museo del Prado</a>"
+      },
+      "sourceRightsStatement": "The individually linked Commons file records a faithful public-domain reproduction. Museum photographic terms are separate and are not relabelled CC0.",
+      "reuseStatus": "public-domain-faithful-reproduction",
+      "sourceImageSha256": "e6f35f29f8d771bcf7b82510ebe430651575e01c2279a7158487c5ee37cecb63",
+      "sourceImageBytes": 1689490,
+      "downloadedWidth": 2126,
+      "downloadedHeight": 1517,
+      "originalFileWidth": 2126,
+      "originalFileHeight": 1517,
+      "largeSha256": "e9b516eb02734a56569e5c84706e99bec4c38a19d658550435ed7213c2ab03ba",
+      "thumbnailSha256": "08ffb15dcc3973603f2a6f49310508385d1cb8683bc16c1b43733bff9d263fd4",
+      "largeBytes": 1064310,
+      "thumbnailBytes": 174414,
+      "transformation": "EXIF orientation respected; whole reproduction and aspect ratio retained. Preview maximum 800px JPEG quality 88; large maximum 3200px JPEG quality 90, reduced to 2400/2000px for a 1MB budget when needed. No upscaling or invented pixels.",
+      "visualReview": "Actual local reproduction inspected before annotation and catalogue append."
+    },
+    "features": {
+      "abstraction": 0.1,
+      "energy": 0.9,
+      "complexity": 1,
+      "humanity": 0.9,
+      "narrative": 1,
+      "atmosphere": 0.95,
+      "color": 0.4
+    },
+    "featureSource": "Manual provisional editorial annotations after inspection of the actual local reproduction. Narrative means depicted action; atmosphere means emphasis on setting. These are not psychometric measurements, participant emotions or causes of a preference.",
+    "featureReviewReason": "Many small physical encounters and objects fill a deep landscape. Density and visible action are scored separately from any viewer feeling about the subject."
+  },
+  {
+    "id": "add-velazquez-spinners",
+    "title": "The Spinners, or The Fable of Arachne",
+    "artist": "Diego Velázquez",
+    "date": "1655–60",
+    "movement": "Baroque",
+    "country": "Spain",
+    "museum": "Museo Nacional del Prado",
+    "sourceUrl": "https://www.museodelprado.es/en/the-collection/art-work/the-spinners-or-the-fable-of-arachne/3d8e510d-2acf-4efb-af0c-8ffd665acd8d",
+    "alt": "Women work with wool and a spinning wheel in a shadowed foreground while another group stands before a tapestry in a brighter rear space.",
+    "note": "Foreground work and a second scene occupy different spatial stages. The canvas has later edge additions; the selected reproduction is retained consistently without a new crop.",
+    "image": "assets/classics-20261115/add-velazquez-spinners.jpg",
+    "imageLarge": "assets/classics-20261115/add-velazquez-spinners-large.jpg",
+    "width": 800,
+    "height": 616,
+    "largeWidth": 2000,
+    "largeHeight": 1540,
+    "imageSourceUrl": "https://upload.wikimedia.org/wikipedia/commons/5/5f/Vel%C3%A1zquez_-_La_F%C3%A1bula_de_Aracne_o_Las_Hilanderas_%28Museo_del_Prado%2C_1657-58%29.jpg",
+    "rights": "Public domain",
+    "rightsUrl": "https://commons.wikimedia.org/wiki/File:Vel%C3%A1zquez_-_La_F%C3%A1bula_de_Aracne_o_Las_Hilanderas_(Museo_del_Prado,_1657-58).jpg#Licensing",
+    "creditLine": "Diego Velázquez. The Spinners, or The Fable of Arachne. Museo Nacional del Prado. Faithful public-domain reproduction via Wikimedia Commons.",
+    "sourceId": 15657965,
+    "sourceStatus": "source-verified",
+    "artistKnown": true,
+    "coreQuiz": false,
+    "decorativeOnly": false,
+    "studyEligible": true,
+    "recognitionTier": "landmark",
+    "recognitionTierSource": "Editorial curation for stimulus selection; not a population familiarity measure.",
+    "featureSemanticVersion": "literal-action-setting-v1",
+    "featureQuality": "provisional_manual",
+    "countrySource": "Editorial artist-practice/cultural-tradition grouping, not a verified place of execution or a viewer trait.",
+    "movementSource": "Editorial art-historical grouping informed by the linked institutional artist and object records; not a measured visual attribute.",
+    "analysis": {
+      "revision": "gallery-descriptors-v1",
+      "yearRange": [
+        1655,
+        1660
+      ],
+      "dateApproximate": false,
+      "yearRangeSource": "https://www.museodelprado.es/en/the-collection/art-work/the-spinners-or-the-fable-of-arachne/3d8e510d-2acf-4efb-af0c-8ffd665acd8d",
+      "yearRangeBasis": "Closed institutional catalogue date or date range; approximate point years remain approximate, not confidence intervals.",
+      "movementKey": "baroque",
+      "palette": {
+        "histogram": [
+          0.077393,
+          0.134277,
+          0.020996,
+          0.234375,
+          0.025635,
+          0.000244,
+          0.015625,
+          0.000244,
+          0.0,
+          0.001221,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.001221,
+          0.000244,
+          0.0,
+          0.08374,
+          0.044189,
+          0.011963,
+          0.018799,
+          0.003418,
+          0.000244,
+          0.000244,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.000244,
+          0.0,
+          0.000244,
+          0.170166,
+          0.092285,
+          0.049561,
+          0.013428
+        ],
+        "swatches": [
+          "#101010",
+          "#303010",
+          "#303030",
+          "#503030"
+        ],
+        "method": "HSV histogram, 40 bins; 64x64 samples; 6% edge crop"
+      },
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "narrative-detail",
+          "dramatic-light",
+          "layered-space",
+          "visible-gesture"
+        ],
+        "sourceUrls": [
+          "https://www.museodelprado.es/en/the-collection/art-work/the-spinners-or-the-fable-of-arachne/3d8e510d-2acf-4efb-af0c-8ffd665acd8d",
+          "https://commons.wikimedia.org/wiki/File:Vel%C3%A1zquez_-_La_F%C3%A1bula_de_Aracne_o_Las_Hilanderas_(Museo_del_Prado,_1657-58).jpg",
+          "https://commons.wikimedia.org/wiki/File:Vel%C3%A1zquez_-_La_F%C3%A1bula_de_Aracne_o_Las_Hilanderas_(Museo_del_Prado,_1657-58).jpg#Licensing"
+        ],
+        "reviewedImage": "assets/classics-20261115/add-velazquez-spinners.jpg",
+        "reviewedImageSha256": "7afe845036480e3c88af917ff75534e901f4a905a03a10a6464e4bcb7671809a",
+        "reviewReason": "Working hands occupy the foreground while an illuminated rear scene opens beyond the darker spinning room."
+      }
+    },
+    "sha256": "7afe845036480e3c88af917ff75534e901f4a905a03a10a6464e4bcb7671809a",
+    "bytes": 108846,
+    "provenance": {
+      "provider": "Wikimedia Commons faithful public-domain reproduction",
+      "recordUrl": "https://commons.wikimedia.org/wiki/File:Vel%C3%A1zquez_-_La_F%C3%A1bula_de_Aracne_o_Las_Hilanderas_(Museo_del_Prado,_1657-58).jpg",
+      "metadataUrl": "https://commons.wikimedia.org/wiki/File:Vel%C3%A1zquez_-_La_F%C3%A1bula_de_Aracne_o_Las_Hilanderas_(Museo_del_Prado,_1657-58).jpg",
+      "institutionRecordUrl": "https://www.museodelprado.es/en/the-collection/art-work/the-spinners-or-the-fable-of-arachne/3d8e510d-2acf-4efb-af0c-8ffd665acd8d",
+      "sourceFileTitle": "File:Velázquez - La Fábula de Aracne o Las Hilanderas (Museo del Prado, 1657-58).jpg",
+      "commonsPageId": 15657965,
+      "originalImageUrl": "https://upload.wikimedia.org/wikipedia/commons/5/5f/Vel%C3%A1zquez_-_La_F%C3%A1bula_de_Aracne_o_Las_Hilanderas_%28Museo_del_Prado%2C_1657-58%29.jpg",
+      "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/5/5f/Vel%C3%A1zquez_-_La_F%C3%A1bula_de_Aracne_o_Las_Hilanderas_%28Museo_del_Prado%2C_1657-58%29.jpg",
+      "retrievedAt": "2026-11-16T02:37:35Z",
+      "metadataArtist": "Diego Velázquez",
+      "metadataDate": "between circa 1655 and circa 1660 date QS:P571,+1650-00-00T00:00:00Z/7,P1319,+1655-00-00T00:00:00Z/9,P1326,+1660-00-00T00:00:00Z/9,P1480,Q5727902",
+      "metadataObjectName": "Spanish:    Las hilanderas o la fábula de Aracne o los afiladores              Las Hilanderas     label QS:Les,\" Las Hilanderas o La fábula de Aracne \"  label QS:Leu,\" Arakneren fabula \"  label QS:Last,\" Les filanderes \"  label QS:Lru,\" Пряхи (картина) \"  label QS:Lcy,\" Chwedl Arachne \"  label QS:Lbe,\" Праллі, карціна \"  label QS:Leo,\" La Ŝpinistinoj \"  label QS:Lit,\" Filatrici \"  label QS:Lfr,\" Les Fileuses \"  label QS:Lde,\" Die Spinnerinnen \"  label QS:Lca,\" Les filadores \"  label QS:Lpt,\" As Fiandeiras \"  label QS:Lpl,\" Baśń o Arachne \"  label QS:Lgl,\" As fiandeiras \"  label QS:Lar,\"أ سطورة أراكني (لوحة) \"  label QS:Lel,\" Ο μύθος της αράχνης \"  label QS:Len,\" Las Hilanderas \"",
+      "licenseMetadata": {
+        "LicenseShortName": "Public domain",
+        "Copyrighted": "False",
+        "AttributionRequired": "false",
+        "License": "pd",
+        "UsageTerms": "Public domain",
+        "Credit": "Unknown source<span style=\"display: none;\">Unknown source</span>"
+      },
+      "sourceRightsStatement": "The individually linked Commons file records a faithful public-domain reproduction. Museum photographic terms are separate and are not relabelled CC0.",
+      "reuseStatus": "public-domain-faithful-reproduction",
+      "sourceImageSha256": "6e18e51e919b5c0556a511e2ea2a26d73c734e6dcf0483b786c7401a7b07c070",
+      "sourceImageBytes": 2136630,
+      "downloadedWidth": 3051,
+      "downloadedHeight": 2349,
+      "originalFileWidth": 3051,
+      "originalFileHeight": 2349,
+      "largeSha256": "2d802e24d3068d6b48cf38714770fea8f2315b84cb41e6cb00fba69f4ffb210f",
+      "thumbnailSha256": "7afe845036480e3c88af917ff75534e901f4a905a03a10a6464e4bcb7671809a",
+      "largeBytes": 752208,
+      "thumbnailBytes": 108846,
+      "transformation": "EXIF orientation respected; whole reproduction and aspect ratio retained. Preview maximum 800px JPEG quality 88; large maximum 3200px JPEG quality 90, reduced to 2400/2000px for a 1MB budget when needed. No upscaling or invented pixels.",
+      "visualReview": "Actual local reproduction inspected before annotation and catalogue append."
+    },
+    "features": {
+      "abstraction": 0.05,
+      "energy": 0.55,
+      "complexity": 0.8,
+      "humanity": 1,
+      "narrative": 0.6,
+      "atmosphere": 0.85,
+      "color": 0.4
+    },
+    "featureSource": "Manual provisional editorial annotations after inspection of the actual local reproduction. Narrative means depicted action; atmosphere means emphasis on setting. These are not psychometric measurements, participant emotions or causes of a preference.",
+    "featureReviewReason": "Visible work in the foreground and a smaller rear scene occupy separate spatial stages within a detailed room."
+  },
+  {
+    "id": "add-van-eyck-arnolfini",
+    "title": "The Arnolfini Portrait",
+    "artist": "Jan van Eyck",
+    "date": "1434",
+    "movement": "Early Netherlandish painting",
+    "country": "Flanders",
+    "museum": "The National Gallery, London",
+    "sourceUrl": "https://www.nationalgallery.org.uk/paintings/jan-van-eyck-the-arnolfini-portrait",
+    "alt": "A richly dressed pair stand in a furnished room with a small dog, chandelier, red bed and a round mirror reflecting the doorway.",
+    "note": "The painting's mirror reflects additional figures beyond the pictured couple. The National Gallery cautions that the woman's gathered dress is not evidence of pregnancy.",
+    "image": "assets/classics-20261115/add-van-eyck-arnolfini.jpg",
+    "imageLarge": "assets/classics-20261115/add-van-eyck-arnolfini-large.jpg",
+    "width": 585,
+    "height": 800,
+    "largeWidth": 1754,
+    "largeHeight": 2400,
+    "imageSourceUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/33/Van_Eyck_-_Arnolfini_Portrait.jpg/3840px-Van_Eyck_-_Arnolfini_Portrait.jpg",
+    "rights": "Public domain",
+    "rightsUrl": "https://commons.wikimedia.org/wiki/File:Van_Eyck_-_Arnolfini_Portrait.jpg#Licensing",
+    "creditLine": "Jan van Eyck. The Arnolfini Portrait. The National Gallery, London. Faithful public-domain reproduction via Wikimedia Commons.",
+    "sourceId": 11343084,
+    "sourceStatus": "source-verified",
+    "artistKnown": true,
+    "coreQuiz": false,
+    "decorativeOnly": false,
+    "studyEligible": true,
+    "recognitionTier": "landmark",
+    "recognitionTierSource": "Editorial curation for stimulus selection; not a population familiarity measure.",
+    "featureSemanticVersion": "literal-action-setting-v1",
+    "featureQuality": "provisional_manual",
+    "countrySource": "Editorial artist-practice/cultural-tradition grouping, not a verified place of execution or a viewer trait.",
+    "movementSource": "Editorial art-historical grouping informed by the linked institutional artist and object records; not a measured visual attribute.",
+    "analysis": {
+      "revision": "gallery-descriptors-v1",
+      "yearRange": [
+        1434,
+        1434
+      ],
+      "dateApproximate": false,
+      "yearRangeSource": "https://www.nationalgallery.org.uk/paintings/jan-van-eyck-the-arnolfini-portrait",
+      "yearRangeBasis": "Closed institutional catalogue date or date range; approximate point years remain approximate, not confidence intervals.",
+      "movementKey": "early netherlandish painting",
+      "palette": {
+        "histogram": [
+          0.11499,
+          0.156494,
+          0.002441,
+          0.21582,
+          0.078125,
+          0.000244,
+          0.028076,
+          0.059082,
+          0.152832,
+          0.001953,
+          0.001221,
+          0.000488,
+          0.0,
+          0.0,
+          0.0,
+          0.000244,
+          0.0,
+          0.0,
+          0.00415,
+          0.003662,
+          0.0,
+          0.000244,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.015869,
+          0.0,
+          0.0,
+          0.155762,
+          0.001953,
+          0.006348,
+          0.0
+        ],
+        "swatches": [
+          "#303010",
+          "#101010",
+          "#303030",
+          "#301010"
+        ],
+        "method": "HSV histogram, 40 bins; 64x64 samples; 6% edge crop"
+      },
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "narrative-detail",
+          "layered-space",
+          "visible-gesture",
+          "intimate-figures"
+        ],
+        "sourceUrls": [
+          "https://www.nationalgallery.org.uk/paintings/jan-van-eyck-the-arnolfini-portrait",
+          "https://commons.wikimedia.org/wiki/File:Van_Eyck_-_Arnolfini_Portrait.jpg",
+          "https://commons.wikimedia.org/wiki/File:Van_Eyck_-_Arnolfini_Portrait.jpg#Licensing"
+        ],
+        "reviewedImage": "assets/classics-20261115/add-van-eyck-arnolfini.jpg",
+        "reviewedImageSha256": "6eacb79bb3582bdffc79e3c80feff559b0ec6999d9ea1178312b6787c42bdbe4",
+        "reviewReason": "Raised and joined hands, domestic objects and the small mirror organise a close pair within a visibly recessed room."
+      }
+    },
+    "sha256": "6eacb79bb3582bdffc79e3c80feff559b0ec6999d9ea1178312b6787c42bdbe4",
+    "bytes": 77021,
+    "provenance": {
+      "provider": "Wikimedia Commons faithful public-domain reproduction",
+      "recordUrl": "https://commons.wikimedia.org/wiki/File:Van_Eyck_-_Arnolfini_Portrait.jpg",
+      "metadataUrl": "https://commons.wikimedia.org/wiki/File:Van_Eyck_-_Arnolfini_Portrait.jpg",
+      "institutionRecordUrl": "https://www.nationalgallery.org.uk/paintings/jan-van-eyck-the-arnolfini-portrait",
+      "sourceFileTitle": "File:Van Eyck - Arnolfini Portrait.jpg",
+      "commonsPageId": 11343084,
+      "originalImageUrl": "https://upload.wikimedia.org/wikipedia/commons/3/33/Van_Eyck_-_Arnolfini_Portrait.jpg",
+      "downloadUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/33/Van_Eyck_-_Arnolfini_Portrait.jpg/3840px-Van_Eyck_-_Arnolfini_Portrait.jpg",
+      "retrievedAt": "2026-11-16T02:37:38Z",
+      "metadataArtist": "Jan van Eyck",
+      "metadataDate": "1434",
+      "metadataObjectName": "The Arnolfini Portrait          title QS:P1476,en:\"The Arnolfini Portrait      \"  label QS:Len,\"The Arnolfini Portrait      \"  label QS:Les,\"Retrato de Arnolfini y su esposa\"  label QS:Lhu,\"Arnolfini házaspár\"  label QS:Leu,\"Arnolfini senar-emazteen erretratua\"  label QS:Lru,\"Портрет четы Арнольфини\"  label QS:Lde-ch,\"Arnolfini-Hochzeit\"  label QS:Lde,\"Arnolfini-Porträt\"  label QS:Len-gb,\"Arnolfini Portrait\"  label QS:Lhy,\"Ադոլֆինի ամուսնական զույգի դիմանկար\"  label QS:Lzh,\"阿尔诺非尼夫妇\"  label QS:Lda,\"Arnolfinis bryllup\"  label QS:Lka,\"არნოლფინების ოჯახის პორტრეტი\"  label QS:Lja,\"アルノルフィーニ夫妻像\"  label QS:Lsv,\"Makarna Arnolfinis trolovning\"  label QS:Lhe,\"נישואי הזוג ארנולפיני\"  label QS:Lla,\"Coniuges Arnolfini\"  label QS:Lfi,\"Giovanni Arnolfini ja hänen vaimonsa\"  label QS:Leo,\"La geedzoj Arnolfini\"  label QS:Lit,\"Ritratto dei coniugi Arnolfini\"  label QS:Lfr,\"Les Époux Arnolfini\"  label QS:Lhr,\"Portret Arnolfinijevih\"  label QS:Lmk,\"Портрет на Арнолфиниеви\"  label QS:Larz,\"بورتريه ارنولفينى\"  label QS:Lro,\"Portretul soților Arnolfini\"  label QS:Lfa,\"پرتره آرنولفینی\"  label QS:Lvi,\"Chân dung Arnolfini\"  label QS:Lpt,\"O Casal Arnolfini\"  label QS:Laz,\"Arnolfini cütlüyünün portreti\"  label QS:Lko,\"아르놀피니 부부의 초상\"  label QS:Len-ca,\"Arnolfini Portrait\"  label QS:Lsr,\"Портрет Арнолфинијевих\"  label QS:Lsl,\"Portret Arnolfinijev\"  label QS:Lsh,\"Portret Arnolfinijevih\"  label QS:Lpt-br,\"O Casal Arnolfini\"  label QS:Lid,\"Potret Arnolfini\"  label QS:Lth,\"ภาพเหมือนอาร์นอลฟีนี\"  label QS:Lpl,\"Portret małżonków Arnolfinich\"  label QS:Lnb,\"Arnolfinis bryllup\"  label QS:Lnl,\"Portret van Giovanni Arnolfini en zijn vrouw\"  label QS:Luk,\"Портрет подружжя Арнольфіні\"  label QS:Lsk,\"Manželia Arnolfiniovci\"  label QS:Lca,\"El matrimoni Arnolfini\"  label QS:Ltr,\"Arnolfini'nin Evlenmesi\"  label QS:Lgl,\"O matrimonio Arnolfini\"  label QS:Lar,\"بورتريه أرنولفيني\"  label QS:Lel,\"Ο γάμος των Αρνολφίνι\"  label QS:Lcs,\"Svatba manželů Arnolfiniových\"",
+      "licenseMetadata": {
+        "LicenseShortName": "Public domain",
+        "Copyrighted": "False",
+        "AttributionRequired": "false",
+        "License": "pd",
+        "UsageTerms": "Public domain",
+        "Credit": "<a rel=\"nofollow\" class=\"external text\" href=\"http://www.nationalgallery.org.uk/paintings/jan-van-eyck-the-arnolfini-portrait\">Web site of National Gallery, London</a>"
+      },
+      "sourceRightsStatement": "The individually linked Commons file records a faithful public-domain reproduction. Museum photographic terms are separate and are not relabelled CC0.",
+      "reuseStatus": "public-domain-faithful-reproduction",
+      "sourceImageSha256": "f053fe36c9e8335b1b5ca59128c555559f68230db482da8408db62de3199ae51",
+      "sourceImageBytes": 3315120,
+      "downloadedWidth": 3840,
+      "downloadedHeight": 5253,
+      "originalFileWidth": 4386,
+      "originalFileHeight": 6000,
+      "largeSha256": "6e5103782e476b4052a5e8605c9a0b5dfcebc4fb390366188b1277f7e090dc23",
+      "thumbnailSha256": "6eacb79bb3582bdffc79e3c80feff559b0ec6999d9ea1178312b6787c42bdbe4",
+      "largeBytes": 838589,
+      "thumbnailBytes": 77021,
+      "transformation": "EXIF orientation respected; whole reproduction and aspect ratio retained. Preview maximum 800px JPEG quality 88; large maximum 3200px JPEG quality 90, reduced to 2400/2000px for a 1MB budget when needed. No upscaling or invented pixels.",
+      "visualReview": "Actual local reproduction inspected before annotation and catalogue append."
+    },
+    "features": {
+      "abstraction": 0.05,
+      "energy": 0.15,
+      "complexity": 0.75,
+      "humanity": 0.95,
+      "narrative": 0.1,
+      "atmosphere": 0.75,
+      "color": 0.65
+    },
+    "featureSource": "Manual provisional editorial annotations after inspection of the actual local reproduction. Narrative means depicted action; atmosphere means emphasis on setting. These are not psychometric measurements, participant emotions or causes of a preference.",
+    "featureReviewReason": "The pair hold restrained poses, while the mirror, furnishings, dog and other objects create dense detail within a coherent room."
+  },
+  {
+    "id": "add-renoir-boating-party",
+    "title": "Luncheon of the Boating Party",
+    "artist": "Pierre-Auguste Renoir",
+    "date": "1880–81",
+    "movement": "Impressionism",
+    "country": "France",
+    "museum": "The Phillips Collection",
+    "sourceUrl": "https://www.phillipscollection.org/collection/luncheon-boating-party",
+    "alt": "A group eat, drink and talk around a crowded table beneath a striped awning beside a riverside railing.",
+    "note": "Renoir combines a social gathering, table objects and a riverside setting. The Phillips Collection dates the painting between 1880 and 1881.",
+    "image": "assets/classics-20261115/add-renoir-boating-party.jpg",
+    "imageLarge": "assets/classics-20261115/add-renoir-boating-party-large.jpg",
+    "width": 800,
+    "height": 593,
+    "largeWidth": 2000,
+    "largeHeight": 1481,
+    "imageSourceUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8d/Pierre-Auguste_Renoir_-_Luncheon_of_the_Boating_Party_-_Google_Art_Project.jpg/3840px-Pierre-Auguste_Renoir_-_Luncheon_of_the_Boating_Party_-_Google_Art_Project.jpg",
+    "rights": "Public domain",
+    "rightsUrl": "https://commons.wikimedia.org/wiki/File:Pierre-Auguste_Renoir_-_Luncheon_of_the_Boating_Party_-_Google_Art_Project.jpg#Licensing",
+    "creditLine": "Pierre-Auguste Renoir. Luncheon of the Boating Party. The Phillips Collection. Faithful public-domain reproduction via Wikimedia Commons.",
+    "sourceId": 23598834,
+    "sourceStatus": "source-verified",
+    "artistKnown": true,
+    "coreQuiz": false,
+    "decorativeOnly": false,
+    "studyEligible": true,
+    "recognitionTier": "landmark",
+    "recognitionTierSource": "Editorial curation for stimulus selection; not a population familiarity measure.",
+    "featureSemanticVersion": "literal-action-setting-v1",
+    "featureQuality": "provisional_manual",
+    "countrySource": "Editorial artist-practice/cultural-tradition grouping, not a verified place of execution or a viewer trait.",
+    "movementSource": "Editorial art-historical grouping informed by the linked institutional artist and object records; not a measured visual attribute.",
+    "analysis": {
+      "revision": "gallery-descriptors-v1",
+      "yearRange": [
+        1880,
+        1881
+      ],
+      "dateApproximate": false,
+      "yearRangeSource": "https://www.phillipscollection.org/collection/luncheon-boating-party",
+      "yearRangeBasis": "Closed institutional catalogue date or date range; approximate point years remain approximate, not confidence intervals.",
+      "movementKey": "impressionism",
+      "palette": {
+        "histogram": [
+          0.227783,
+          0.074463,
+          0.0,
+          0.058105,
+          0.024414,
+          0.0,
+          0.010742,
+          0.000977,
+          0.0,
+          0.004883,
+          0.000488,
+          0.0,
+          0.00708,
+          0.001465,
+          0.0,
+          0.008545,
+          0.003174,
+          0.0,
+          0.028076,
+          0.015625,
+          0.0,
+          0.044434,
+          0.020508,
+          0.001465,
+          0.003418,
+          0.0,
+          0.0,
+          0.001465,
+          0.0,
+          0.0,
+          0.001221,
+          0.0,
+          0.0,
+          0.01416,
+          0.002441,
+          0.0,
+          0.012451,
+          0.115967,
+          0.164307,
+          0.152344
+        ],
+        "swatches": [
+          "#505050",
+          "#b0b0b0",
+          "#d0b0b0",
+          "#909090"
+        ],
+        "method": "HSV histogram, 40 bins; 64x64 samples; 6% edge crop"
+      },
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "narrative-detail",
+          "layered-space",
+          "visible-gesture"
+        ],
+        "sourceUrls": [
+          "https://www.phillipscollection.org/collection/luncheon-boating-party",
+          "https://commons.wikimedia.org/wiki/File:Pierre-Auguste_Renoir_-_Luncheon_of_the_Boating_Party_-_Google_Art_Project.jpg",
+          "https://commons.wikimedia.org/wiki/File:Pierre-Auguste_Renoir_-_Luncheon_of_the_Boating_Party_-_Google_Art_Project.jpg#Licensing"
+        ],
+        "reviewedImage": "assets/classics-20261115/add-renoir-boating-party.jpg",
+        "reviewedImageSha256": "13b0d6fe348e5224e9477b65dd6af76f07ef1bef161f430bfa816bf40dc4a388",
+        "reviewReason": "Overlapping conversations and drinking gestures occupy the table and balcony, with an awning and railing creating spatial stages."
+      }
+    },
+    "sha256": "13b0d6fe348e5224e9477b65dd6af76f07ef1bef161f430bfa816bf40dc4a388",
+    "bytes": 141239,
+    "provenance": {
+      "provider": "Wikimedia Commons faithful public-domain reproduction",
+      "recordUrl": "https://commons.wikimedia.org/wiki/File:Pierre-Auguste_Renoir_-_Luncheon_of_the_Boating_Party_-_Google_Art_Project.jpg",
+      "metadataUrl": "https://commons.wikimedia.org/wiki/File:Pierre-Auguste_Renoir_-_Luncheon_of_the_Boating_Party_-_Google_Art_Project.jpg",
+      "institutionRecordUrl": "https://www.phillipscollection.org/collection/luncheon-boating-party",
+      "sourceFileTitle": "File:Pierre-Auguste Renoir - Luncheon of the Boating Party - Google Art Project.jpg",
+      "commonsPageId": 23598834,
+      "originalImageUrl": "https://upload.wikimedia.org/wikipedia/commons/8/8d/Pierre-Auguste_Renoir_-_Luncheon_of_the_Boating_Party_-_Google_Art_Project.jpg",
+      "downloadUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8d/Pierre-Auguste_Renoir_-_Luncheon_of_the_Boating_Party_-_Google_Art_Project.jpg/3840px-Pierre-Auguste_Renoir_-_Luncheon_of_the_Boating_Party_-_Google_Art_Project.jpg",
+      "retrievedAt": "2026-11-16T02:37:40Z",
+      "metadataArtist": "Pierre-Auguste Renoir",
+      "metadataDate": "from 1880 until 1881 date QS:P571,+1880-00-00T00:00:00Z/8,P580,+1880-00-00T00:00:00Z/9,P582,+1881-00-00T00:00:00Z/9",
+      "metadataObjectName": "Le déjeuner des canotiers",
+      "licenseMetadata": {
+        "LicenseShortName": "Public domain",
+        "Copyrighted": "False",
+        "AttributionRequired": "false",
+        "License": "pd",
+        "UsageTerms": "Public domain",
+        "Credit": "<a rel=\"nofollow\" class=\"external text\" href=\"//www.google.com/culturalinstitute/asset-viewer/mgHsTKDNJVzPAg\">mgHsTKDNJVzPAg at Google Cultural Institute</a> maximum zoom level"
+      },
+      "sourceRightsStatement": "The individually linked Commons file records a faithful public-domain reproduction. Museum photographic terms are separate and are not relabelled CC0.",
+      "reuseStatus": "public-domain-faithful-reproduction",
+      "sourceImageSha256": "2484c15d83d2f2c07a13adc64fbda9d5f37a3eb47e8a381b5ebb98aaa25b4e38",
+      "sourceImageBytes": 2928528,
+      "downloadedWidth": 3840,
+      "downloadedHeight": 2844,
+      "originalFileWidth": 9025,
+      "originalFileHeight": 6684,
+      "largeSha256": "83fc2b62b2b2639f56e43a5ccb4dae0ccddd643587017b4a89533e8cb6b8f1a6",
+      "thumbnailSha256": "13b0d6fe348e5224e9477b65dd6af76f07ef1bef161f430bfa816bf40dc4a388",
+      "largeBytes": 938953,
+      "thumbnailBytes": 141239,
+      "transformation": "EXIF orientation respected; whole reproduction and aspect ratio retained. Preview maximum 800px JPEG quality 88; large maximum 3200px JPEG quality 90, reduced to 2400/2000px for a 1MB budget when needed. No upscaling or invented pixels.",
+      "visualReview": "Actual local reproduction inspected before annotation and catalogue append."
+    },
+    "features": {
+      "abstraction": 0.1,
+      "energy": 0.6,
+      "complexity": 0.95,
+      "humanity": 1,
+      "narrative": 0.5,
+      "atmosphere": 0.7,
+      "color": 0.7
+    },
+    "featureSource": "Manual provisional editorial annotations after inspection of the actual local reproduction. Narrative means depicted action; atmosphere means emphasis on setting. These are not psychometric measurements, participant emotions or causes of a preference.",
+    "featureReviewReason": "Numerous people drink, converse and gesture around table objects within a bright riverside social setting."
+  },
+  {
+    "id": "add-marc-animal-destinies",
+    "title": "Animal Destinies (Tierschicksale)",
+    "artist": "Franz Marc",
+    "date": "1913",
+    "movement": "Der Blaue Reiter / Expressionism",
+    "country": "Germany",
+    "museum": "Kunstmuseum Basel",
+    "sourceUrl": "https://kunstmuseumbasel.ch/de/museum/blog/2020/5",
+    "alt": "Animals and trees overlap within sharp red, blue, green and brown planes that fracture the surrounding forest.",
+    "note": "The work is also known in English as Fate of the Animals. Its fragmented forms retain recognisable animals and trees rather than becoming fully nonfigurative.",
+    "image": "assets/classics-20261115/add-marc-animal-destinies.jpg",
+    "imageLarge": "assets/classics-20261115/add-marc-animal-destinies-large.jpg",
+    "width": 800,
+    "height": 593,
+    "largeWidth": 2732,
+    "largeHeight": 2024,
+    "imageSourceUrl": "https://upload.wikimedia.org/wikipedia/commons/0/0c/Franz_Marc_026.jpg",
+    "rights": "Public domain",
+    "rightsUrl": "https://commons.wikimedia.org/wiki/File:Franz_Marc_026.jpg#Licensing",
+    "creditLine": "Franz Marc. Animal Destinies (Tierschicksale). Kunstmuseum Basel. Faithful public-domain reproduction via Wikimedia Commons.",
+    "sourceId": 154625,
+    "sourceStatus": "source-verified",
+    "artistKnown": true,
+    "coreQuiz": false,
+    "decorativeOnly": false,
+    "studyEligible": true,
+    "recognitionTier": "landmark",
+    "recognitionTierSource": "Editorial curation for stimulus selection; not a population familiarity measure.",
+    "featureSemanticVersion": "literal-action-setting-v1",
+    "featureQuality": "provisional_manual",
+    "countrySource": "Editorial artist-practice/cultural-tradition grouping, not a verified place of execution or a viewer trait.",
+    "movementSource": "Editorial art-historical grouping informed by the linked institutional artist and object records; not a measured visual attribute.",
+    "analysis": {
+      "revision": "gallery-descriptors-v1",
+      "yearRange": [
+        1913,
+        1913
+      ],
+      "dateApproximate": false,
+      "yearRangeSource": "https://kunstmuseumbasel.ch/de/museum/blog/2020/5",
+      "yearRangeBasis": "Closed institutional catalogue date or date range; approximate point years remain approximate, not confidence intervals.",
+      "movementKey": "der blaue reiter / expressionism",
+      "palette": {
+        "histogram": [
+          0.175049,
+          0.18457,
+          0.002441,
+          0.049805,
+          0.010986,
+          0.0,
+          0.016113,
+          0.0,
+          0.0,
+          0.001465,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.015869,
+          0.0,
+          0.0,
+          0.054199,
+          0.0,
+          0.0,
+          0.034668,
+          0.000244,
+          0.0,
+          0.021973,
+          0.00293,
+          0.0,
+          0.102051,
+          0.257324,
+          0.005371,
+          0.000977,
+          0.043701,
+          0.015869,
+          0.004395
+        ],
+        "swatches": [
+          "#503030",
+          "#703030",
+          "#303030",
+          "#505050"
+        ],
+        "method": "HSV histogram, 40 bins; 64x64 samples; 6% edge crop"
+      },
+      "curatorialFacets": {
+        "version": "curatorial-facets-v1",
+        "reviewed": true,
+        "tags": [
+          "geometric-structure",
+          "visible-gesture",
+          "landscape"
+        ],
+        "sourceUrls": [
+          "https://kunstmuseumbasel.ch/de/museum/blog/2020/5",
+          "https://commons.wikimedia.org/wiki/File:Franz_Marc_026.jpg",
+          "https://commons.wikimedia.org/wiki/File:Franz_Marc_026.jpg#Licensing"
+        ],
+        "reviewedImage": "assets/classics-20261115/add-marc-animal-destinies.jpg",
+        "reviewedImageSha256": "f155cb91fa3e6da6196be879e4aeaf53302ad370002f4be2cb583d70c3170126",
+        "reviewReason": "Sharp angular planes break across animals, trees and terrain, with the animals' bodily actions embedded in the fractured natural scene."
+      }
+    },
+    "sha256": "f155cb91fa3e6da6196be879e4aeaf53302ad370002f4be2cb583d70c3170126",
+    "bytes": 122609,
+    "provenance": {
+      "provider": "Wikimedia Commons faithful public-domain reproduction",
+      "recordUrl": "https://commons.wikimedia.org/wiki/File:Franz_Marc_026.jpg",
+      "metadataUrl": "https://commons.wikimedia.org/wiki/File:Franz_Marc_026.jpg",
+      "institutionRecordUrl": "https://kunstmuseumbasel.ch/de/museum/blog/2020/5",
+      "sourceFileTitle": "File:Franz Marc 026.jpg",
+      "commonsPageId": 154625,
+      "originalImageUrl": "https://upload.wikimedia.org/wikipedia/commons/0/0c/Franz_Marc_026.jpg",
+      "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/0/0c/Franz_Marc_026.jpg",
+      "retrievedAt": "2026-11-16T02:37:42Z",
+      "metadataArtist": "Franz Marc",
+      "metadataDate": "1913 date QS:P571,+1913-00-00T00:00:00Z/9",
+      "metadataObjectName": "Tierschicksale",
+      "licenseMetadata": {
+        "LicenseShortName": "Public domain",
+        "Copyrighted": "False",
+        "AttributionRequired": "false",
+        "License": "pd",
+        "UsageTerms": "Public domain",
+        "Credit": "<cite class=\"book\" style=\"font-style:normal\">The Yorck Project (2002)      <i> 10.000 Meisterwerke der Malerei</i> (DVD-ROM), distributed by <a href=\"//commons.wikimedia.org/wiki/Commons:10,000_paintings_from_Directmedia\" title=\"Commons:10,000 paintings from Directmedia\">DIRECTMEDIA</a> Publishing GmbH.  <small><span lang=\"en\" dir=\"ltr\"><a href=\"https://en.wikipedia.org/wiki/ISBN\" class=\"extiw\" title=\"en:ISBN\"><span lang=\"en\" dir=\"ltr\">ISBN</span></a></span>:  <a href=\"//commons.wikimedia.org/wiki/Special:BookSources/3936122202\" title=\"Special:BookSources/3936122202\">3936122202</a>. </small></cite>"
+      },
+      "sourceRightsStatement": "The individually linked Commons file records a faithful public-domain reproduction. Museum photographic terms are separate and are not relabelled CC0.",
+      "reuseStatus": "public-domain-faithful-reproduction",
+      "sourceImageSha256": "600a3c6583e76d812e049a3ef22655551610cfe057e3eb759798c29dfdc3bb7b",
+      "sourceImageBytes": 512385,
+      "downloadedWidth": 2732,
+      "downloadedHeight": 2024,
+      "originalFileWidth": 2732,
+      "originalFileHeight": 2024,
+      "largeSha256": "0ac0c2bfe7cad00858e093a84c3f05e21e6a34438924e88c23cb77d43667fe7a",
+      "thumbnailSha256": "f155cb91fa3e6da6196be879e4aeaf53302ad370002f4be2cb583d70c3170126",
+      "largeBytes": 687083,
+      "thumbnailBytes": 122609,
+      "transformation": "EXIF orientation respected; whole reproduction and aspect ratio retained. Preview maximum 800px JPEG quality 88; large maximum 3200px JPEG quality 90, reduced to 2400/2000px for a 1MB budget when needed. No upscaling or invented pixels.",
+      "visualReview": "Actual local reproduction inspected before annotation and catalogue append."
+    },
+    "features": {
+      "abstraction": 0.65,
+      "energy": 0.9,
+      "complexity": 0.9,
+      "humanity": 0,
+      "narrative": 0.65,
+      "atmosphere": 0.85,
+      "color": 0.8
+    },
+    "featureSource": "Manual provisional editorial annotations after inspection of the actual local reproduction. Narrative means depicted action; atmosphere means emphasis on setting. These are not psychometric measurements, participant emotions or causes of a preference.",
+    "featureReviewReason": "Angular saturated planes fracture recognisable animals and trees. Animal movement and the forest remain visible; no human figures are depicted."
   }
 ]

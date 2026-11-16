@@ -3,18 +3,21 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { buildRounds } from '../../public/art-atlas/engine.mjs';
 import { createGalleryRecord, gallerySlots, placePainting, validGallery } from '../../public/art-atlas/gallery-model.mjs';
-import { isDifficultEdit, createDifficultEditRecord, validDifficultEditDraft, validDifficultEdit, difficultEditIds, difficultEditWalls, setDifficultEditRemoval, startDifficultEditComparison, chooseDifficultEditComparison, resetDifficultEditComparison, analyzeDifficultEdit, createDifficultEdit } from '../../public/art-atlas/difficult-edit.mjs';
+import { isDifficultEdit, LEGACY_DIFFICULT_EDIT_PROTOCOL, createDifficultEditRecord, validDifficultEditDraft, validDifficultEdit, difficultEditIds, difficultEditWalls, setDifficultEditRemoval, startDifficultEditComparison, chooseDifficultEditComparison, resetDifficultEditComparison, analyzeDifficultEdit, createDifficultEdit } from '../../public/art-atlas/difficult-edit.mjs';
 
 const works=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/artworks.json',import.meta.url),'utf8'));
 function baseline(){const r=buildRounds(works,{})[0];return {preferenceRank:{workIds:r.works.map(w=>w.id),criterion:'preference',positions:Object.fromEntries(r.works.map((w,i)=>[w.id,[100,65,35,0][i]])),confirmed:true}};}
 function room(ids=baseline().preferenceRank.workIds){let r=createGalleryRecord(works,{}, {id:'my-gallery',now:1,roomStudy:false});r.roomNames.g1='My landscape room';for(const id of ids){const slot=gallerySlots(r).find(s=>s.roomId==='g1');const result=placePainting(r,id,slot.wallId,slot.t);assert.ok(result.ok);r=result.record;}r.confirmed=true;r.finishedAt=2;assert.ok(validGallery(r,works));return r;}
 function edit(options={},answers={}){return createDifficultEditRecord(works,answers,[],{id:'edit-one',now:3,...options});}
-function compared(r=edit(),removed=r.offeredIds[0],choice='initial'){r={...r,presentedIds:[...r.offeredIds]};r=setDifficultEditRemoval(r,removed,works);r=startDifficultEditComparison(r,works);if(choice)r=chooseDifficultEditComparison(r,choice,works);return r;}
+// A frozen v1 record retains its original two-step instrument after the new default changes.
+function legacyRecord(record){const r=structuredClone(record);delete r.preferenceContext;delete r.preferenceSources;delete r.confirmed;return {...r,version:1,protocol:LEGACY_DIFFICULT_EDIT_PROTOCOL,alternativeRemovedId:null,comparisonBasis:null,compareChoice:null,comparisonOrder:['initial','alternative']};}
+function legacyEdit(options={},answers={}){return legacyRecord(edit(options,answers));}
+function compared(r=legacyEdit(),removed=r.offeredIds[0],choice='initial'){r={...r,presentedIds:[...r.offeredIds]};r=setDifficultEditRemoval(r,removed,works);r=startDifficultEditComparison(r,works);if(choice)r=chooseDifficultEditComparison(r,choice,works);return r;}
 function finished(r=compared()){return {...r,confirmed:true,finishedAt:4};}
 
 test('A new edit binds four real works, with Mexico represented, and leaves every decision missing',()=>{
   const r=edit();assert.ok(isDifficultEdit(r));assert.ok(validDifficultEditDraft(r,works));assert.equal(r.offeredIds.length,4);assert.equal(new Set(r.offeredIds).size,4);assert.ok(r.offeredIds.some(id=>works.find(w=>w.id===id).country==='Mexico'));
-  assert.equal(r.source.kind,'catalogue-set');assert.equal(r.phase,'edit');assert.equal(r.removedId,null);assert.equal(r.alternativeRemovedId,null);assert.equal(r.compareChoice,null);assert.deepEqual(r.presentedIds,[]);assert.equal(validDifficultEdit(r,works,false),false);
+  assert.equal(r.version,2);assert.equal(r.source.kind,'catalogue-set');assert.equal(r.phase,'edit');assert.equal(r.removedId,null);assert.equal(Object.hasOwn(r,'alternativeRemovedId'),false);assert.equal(Object.hasOwn(r,'compareChoice'),false);assert.deepEqual(r.presentedIds,[]);assert.equal(validDifficultEdit(r,works,false),false);
   for(const source of r.artworkSources){const w=works.find(w=>w.id===source.id);assert.equal(source.image,w.image);assert.equal(source.sourceUrl,w.sourceUrl);}
 });
 
@@ -35,8 +38,8 @@ test('An unfinished gallery does not masquerade as a completed source room',()=>
   const r=createDifficultEditRecord(works,{},[source],{id:'fallback',now:3});assert.equal(r.source.kind,'catalogue-set');assert.ok(validDifficultEditDraft(r,works));
 });
 
-test('The edit and final wall choice need separate explicit decisions and all four works presented',()=>{
-  let r=edit();r=setDifficultEditRemoval(r,r.offeredIds[0],works);assert.equal(r.phase,'edit');assert.equal(validDifficultEdit(r,works,false),false);assert.equal(startDifficultEditComparison(r,works),r);
+test('A saved v1 edit still needs its original separate final wall choice and all four works presented',()=>{
+  let r=legacyEdit();r=setDifficultEditRemoval(r,r.offeredIds[0],works);assert.equal(r.phase,'edit');assert.equal(validDifficultEdit(r,works,false),false);assert.equal(startDifficultEditComparison(r,works),r);
   r.presentedIds=[...r.offeredIds];r=startDifficultEditComparison(r,works);assert.equal(r.phase,'compare');assert.equal(r.compareChoice,null);assert.equal(validDifficultEdit(r,works,false),false);
   r=chooseDifficultEditComparison(r,'initial',works);assert.equal(validDifficultEdit(r,works,false),true);assert.equal(validDifficultEdit(r,works),false);assert.ok(validDifficultEdit(finished(r),works));
 });
@@ -53,23 +56,23 @@ test('Changing the removal clears dependent comparison data; a no-op leaves it i
 });
 
 test('Either-wall is explicit missing direction, not an invented unique final wall',()=>{
-  const r=finished(compared(edit(),undefined,'equal'));assert.ok(validDifficultEdit(r,works));assert.equal(difficultEditIds(r).length,4);
+  const r=finished(compared(legacyEdit(),undefined,'equal'));assert.ok(validDifficultEdit(r,works));assert.equal(difficultEditIds(r).length,4);
   const findings=analyzeDifficultEdit(works,r);assert.equal(findings.length,1);assert.match(findings[0].title,/Both three-work walls/);assert.match(findings[0].text,/did not identify one unique set/);
 });
 
 test('Actual earlier ratings can target the alternative and support a contextual exception',()=>{
-  const answers=baseline(),high=answers.preferenceRank.workIds[0],low=answers.preferenceRank.workIds.at(-1),r=finished(compared(edit({},answers),high,'initial'));
+  const answers=baseline(),high=answers.preferenceRank.workIds[0],low=answers.preferenceRank.workIds.at(-1),r=finished(compared(legacyEdit({},answers),high,'initial'));
   assert.equal(r.alternativeRemovedId,low);assert.equal(r.comparisonBasis,'earlier-preference');const f=analyzeDifficultEdit(works,r).find(f=>f.id.endsWith('-preference'));assert.ok(f);assert.match(f.title,/higher-rated work stayed outside/);
   const prior=f.support.find(e=>e.roundId==='preferenceRank');assert.deepEqual([...prior.workIds].sort(),[high,low].sort());assert.match(prior.detail,/100/);assert.match(prior.detail,/0/);assert.match(f.alternatives.join(' '),/targeted comparison/);
 });
 
 test('The final alternative is interpreted from the actual retained and returned works',()=>{
-  const answers=baseline(),source=room(),low=answers.preferenceRank.workIds.at(-1);let r=createDifficultEditRecord(works,answers,[source],{id:'restore-lower',now:3});r=finished(compared(r,low,'alternative'));
+  const answers=baseline(),source=room(),low=answers.preferenceRank.workIds.at(-1);let r=legacyRecord(createDifficultEditRecord(works,answers,[source],{id:'restore-lower',now:3}));r=finished(compared(r,low,'alternative'));
   const walls=difficultEditWalls(r),f=analyzeDifficultEdit(works,r).find(f=>f.id.endsWith('-preference'));assert.ok(f);assert.match(f.title,/higher-rated work stayed outside/);assert.ok(difficultEditIds(r).includes(low));assert.equal(difficultEditIds(r).includes(r.alternativeRemovedId),false);assert.deepEqual(difficultEditIds(r),walls.alternative);
 });
 
 test('Missing or invalid baseline preferences produce a scoped comparison rather than invented liking',()=>{
-  const r=finished(compared(edit({}, {preferenceRank:{confirmed:false,positions:{invented:100}}}))),findings=analyzeDifficultEdit(works,r);
+  const r=finished(compared(legacyEdit({}, {preferenceRank:{confirmed:false,positions:{invented:100}}}))),findings=analyzeDifficultEdit(works,r);
   assert.ok(validDifficultEdit(r,works));assert.equal(findings.length,1);assert.equal(findings.some(f=>f.support.some(e=>e.roundId==='preferenceRank')),false);assert.match(findings[0].alternatives.join(' '),/not a recorded dislike/);
   for(const f of findings)for(const e of [...f.support,...f.counter]){assert.equal(e.roundId,'scenario:'+r.id);assert.ok(e.workIds.every(id=>r.offeredIds.includes(id)));}
 });
@@ -83,7 +86,7 @@ test('Malformed identities, source snapshots or comparison metadata are rejected
 });
 
 test('Repeated records only compare initial edits when the same four works were available',()=>{
-  const a=finished(compared(edit({id:'first'}))),b=finished(compared(edit({id:'second'}),a.removedId));const f=analyzeDifficultEdit(works,b,[a]).find(f=>f.id.endsWith('-revisit'));assert.ok(f);assert.match(f.text,/same four works/);assert.match(f.text,/rather than a taste-consistency score/);assert.equal(f.support[0].roundId,'scenario:'+a.id);
+  const a=finished(compared(legacyEdit({id:'first'}))),b=finished(compared(legacyEdit({id:'second'}),a.removedId));const f=analyzeDifficultEdit(works,b,[a]).find(f=>f.id.endsWith('-revisit'));assert.ok(f);assert.match(f.text,/same four works/);assert.match(f.text,/rather than a taste-consistency score/);assert.equal(f.support[0].roundId,'scenario:'+a.id);
 });
 
 function fakeController(initial) {
@@ -103,5 +106,5 @@ test('Undo history stays with its own record when another draft is opened',()=>{
 test('A failed image blocks new edits and final confirmation, with no answer manufactured on recovery',()=>{
   const fake=fakeController(edit());fake.breakImage(true);fake.controller.sync();assert.equal(fake.controller.mountedReady(),false);assert.deepEqual(fake.current().presentedIds,[]);fake.controller.handle('difficult-remove',{dataset:{difficultWork:fake.current().offeredIds[0]}});assert.equal(fake.current().removedId,null);
   fake.breakImage(false);fake.controller.sync();assert.equal(fake.controller.mountedReady(),true);assert.equal(fake.current().presentedIds.length,4);assert.equal(fake.current().removedId,null);
-  fake.switchTo(compared(fake.current()));fake.controller.sync();assert.equal(fake.finish.disabled,false);fake.breakImage(true);fake.controller.sync();assert.equal(fake.finish.disabled,true);assert.equal(fake.current().compareChoice,'initial');
+  fake.switchTo(compared(legacyEdit()));fake.controller.sync();assert.equal(fake.finish.disabled,false);fake.breakImage(true);fake.controller.sync();assert.equal(fake.finish.disabled,true);assert.equal(fake.current().compareChoice,'initial');
 });

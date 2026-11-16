@@ -5,6 +5,7 @@ import { createDeepStudy } from './deep-study.mjs';
 import { analyzeScenarios } from './scenarios.mjs';
 import { createOpeningScene } from './opening-scene.mjs';
 import {createProfileDetails} from './profile-details.mjs';
+import {createProfileResponseTabs} from './profile-response-view.mjs';
 import { SCHEMA, ROUND_IDS, FORMATS, AGREEMENT, freshState, pruneAfter, buildRounds, buildProfile, describePoint, validAnswer, sanitizeDraft } from './engine.mjs';
 
 const app = document.getElementById('app');
@@ -29,6 +30,7 @@ const lab = createCurationLab({app:legacyLabSurface,getWorks:()=>works,getBaseli
 const deep=createDeepStudy({app,getWorks:()=>works,image,esc,keepButtons,mode:'journey',getSavedCollection:()=>collection.saved,getSavedExercises:()=>lab.exportData().drafts,getExhibitionFindings:()=>analyzeScenarios(works,lab.records()).findings,navigate:stage=>{state.stage=stage||'study';save();render();focusQuestion();},showArtwork:(id,reveal)=>showArtwork(id,reveal)});
 const titleScene=createOpeningScene({app,getWorks:()=>[...works,...openingWorks]});
 createProfileDetails({app,showArtwork});
+createProfileResponseTabs({app});
 function persist(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch { storageAvailable = false; } }
 function save() { persist(STORAGE_KEY, state); }
 function restore() {
@@ -239,5 +241,5 @@ try {
   const response = await fetch('./artworks.json'); if (!response.ok) throw new Error('The collection did not load.'); works = await response.json();
   if (!Array.isArray(works) || works.length < 12 || new Set(works.map(w => w.id)).size !== works.length || works.some(w => !w.image || !w.title || !w.artist || !w.features || !w.sourceUrl || typeof w.rights !== 'string' || !w.rights.trim() || w.rights !== 'CC0' && !/^https:\/\//.test(w.rightsUrl||''))) throw new Error('The artwork collection is incomplete.');
   openingWorks=await openingRequest; if(!Array.isArray(openingWorks))openingWorks=[];
-  restore(); lab.restore(); deep.restore(); render(); for (const w of works.filter(w => w.coreQuiz !== false)) { const preload = new Image(); preload.src = './' + w.image; }
+  restore(); lab.restore(); await deep.restore(); render(); for (const w of works.filter(w => w.coreQuiz !== false)) { const preload = new Image(); preload.src = './' + w.image; }
 } catch (error) { app.innerHTML = `<section class="error-state"><h1>The collection could not open.</h1><p>${esc(error.message)} Reload to try again.</p><button class="primary-button" type="button" id="retry-load">Try again</button></section>`; document.getElementById('retry-load').addEventListener('click',() => location.reload()); }

@@ -34,7 +34,7 @@ test('Ordinary panels compare the same artworks across preference, curiosity and
   const panels=new Map();for(const r of all)if(r.evidence.role==='discovery'&&['preference','curiosity','response','connection'].includes(r.evidence.construct)){const key=r.evidence.setId;panels.set(key,[...(panels.get(key)||[]),r]);}
   assert.equal(panels.size,32);const seen=new Set();
   for(const panel of panels.values()){assert.equal(panel.length,4);assert.deepEqual(panel.map(r=>r.evidence.construct),['preference','curiosity','response','connection']);for(const r of panel)assert.deepEqual(ids(r.works),ids(panel[0].works));const key=sortedIds(panel[0].works);assert.equal(seen.has(key),false);seen.add(key);}
-  assert.equal(new Set(all.flatMap(r=>ids(r.works))).size,137);
+  assert.equal(new Set(all.flatMap(r=>ids(r.works))).size,136);
 });
 
 test('Repeated tasks are identified and preserve the original choice brief and works',()=>{
@@ -86,6 +86,6 @@ test('Only the three established self-description links are marked for compariso
 });
 
 test('The summary reports actual task instances and catalogue coverage without a validity score',()=>{
-  const summary=studyBankSummary(works);assert.equal(summary.interactions,200);assert.equal(summary.artworks,137);assert.equal(summary.repeats,10);assert.equal(summary.reservedChecks,16);assert.deepEqual(summary.byKind,{spectrum:114,grid:64,statements:12,match:5,context:5});assert.equal(summary.confidence,undefined);
+  const summary=studyBankSummary(works);assert.equal(summary.interactions,200);assert.equal(summary.artworks,139);assert.equal(summary.artworks,new Set(all.flatMap(round=>ids([...round.works,...(round.anchorWorks||[])])).values()).size);assert.equal(summary.repeats,10);assert.equal(summary.reservedChecks,16);assert.deepEqual(summary.byKind,{spectrum:114,grid:64,statements:12,match:5,context:5});assert.equal(summary.confidence,undefined);
   assert.throws(()=>buildStudyRounds(works,75),/50, 100, 150 or 200/);assert.throws(()=>buildStudyRounds(works.slice(0,8),50),/twelve distinct/);assert.throws(()=>buildStudyRounds([...works,works[0]],50),/twelve distinct/);
 });

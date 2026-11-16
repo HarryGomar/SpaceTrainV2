@@ -8,22 +8,22 @@ const decorativeWorks=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas
 const fullCollection=[...studyWorks,...decorativeWorks];
 
 test('The painting field is deterministic, uses the whole catalogue and has actual depth',()=>{
-  assert.equal(studyWorks.length,156);
+  assert.equal(studyWorks.length,164);
   assert.equal(decorativeWorks.length,255);
-  assert.equal(fullCollection.length,411);
+  assert.equal(fullCollection.length,419);
   const field=createArtField({workCount:fullCollection.length});
   assert.deepEqual(field,createArtField({workCount:fullCollection.length}));
-  assert.equal(new Set(field.paintings.map(p=>p.workIndex)).size,411);
-  assert.equal(new Set(field.paintings.map(p=>fullCollection[p.workIndex].id)).size,411);
-  assert.equal(field.paintings.length,411);
+  assert.equal(new Set(field.paintings.map(p=>p.workIndex)).size,419);
+  assert.equal(new Set(field.paintings.map(p=>fullCollection[p.workIndex].id)).size,419);
+  assert.equal(field.paintings.length,419);
   assert.ok(field.particles.length>20000);
   const depth=field.paintings.map(p=>p.position[2]);
   assert.ok(Math.max(...depth)-Math.min(...depth)>2);
   assert.ok(field.paintings.every(p=>p.position.every(Number.isFinite)&&p.edge>0));
   const mobile=createArtField({mobile:true,workCount:fullCollection.length});
-  assert.equal(mobile.paintings.length,411);
+  assert.equal(mobile.paintings.length,419);
   assert.ok(mobile.particles.length<field.particles.length);
-  assert.equal(new Set(mobile.paintings.map(p=>p.workIndex)).size,411);
+  assert.equal(new Set(mobile.paintings.map(p=>p.workIndex)).size,419);
   for(const workCount of [0,1,12,59,96,99,125,255,320,354]){
     const sample=createArtField({workCount});
     assert.equal(sample.paintings.length,workCount);

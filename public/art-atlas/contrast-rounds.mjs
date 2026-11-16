@@ -2,6 +2,7 @@ import {updateArtworkCorners} from './artwork-corners.mjs';
 
 // Categorical art decisions. These answers never become invented numeric ratings.
 export const CONTRAST_PROTOCOL = 'contrast-rounds-v1';
+export const NEIGHBOUR_REASONS_PROTOCOL = 'contrast-neighbour-reasons-v2';
 export const CONTRAST_KINDS = Object.freeze(['keep-leave', 'neighbour', 'chronology', 'same-subject']);
 const plain = value => !!value && typeof value === 'object' && !Array.isArray(value);
 const text = value => typeof value === 'string' && value.trim().length > 0;
@@ -15,6 +16,18 @@ const clone = value => structuredClone(value);
 const html = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[char]));
 const short = work => work.shortTitle || work.title;
 const constructs = Object.freeze({'keep-leave':'set-extremes', neighbour:'contextual-neighbour', chronology:'chronological-order', 'same-subject':'subject-matched-preference'});
+export const allowsMultipleNeighbourReasons = round => round?.contrastKind === 'neighbour' && round.evidence?.protocol === NEIGHBOUR_REASONS_PROTOCOL;
+
+/** Reported labels describe one pairing decision, never separate preference observations. */
+export function neighbourRelationshipIds(round, answer) {
+  const allowed = (Array.isArray(round?.relationshipOptions) ? round.relationshipOptions : []).filter(option => text(option?.id)).map(option => option.id);
+  return allowsMultipleNeighbourReasons(round)
+    ? unique((Array.isArray(answer?.relationshipIds) ? answer.relationshipIds : []).filter(id => allowed.includes(id)))
+    : allowed.includes(answer?.relationshipId) ? [answer.relationshipId] : [];
+}
+export function neighbourRelationshipLabels(round, answer) {
+  return neighbourRelationshipIds(round, answer).map(id => round.relationshipOptions.find(option => option.id === id).label);
+}
 
 function validWorks(works) {
   return Array.isArray(works) && works.every(work => plain(work) && text(work.id) && text(work.title) && text(work.image) && url(work.sourceUrl)) && new Set(works.map(work => work.id)).size === works.length;
@@ -25,7 +38,7 @@ export function validContrastDefinition(round) {
   const offered = ids(round), kind = round.contrastKind;
   if (offered.length !== ({'keep-leave':6, neighbour:4, chronology:4}[kind] || offered.length) || kind === 'same-subject' && ![2,4].includes(offered.length)) return false;
   if (!Array.isArray(round.sourceUrls) || !round.sourceUrls.length || !round.sourceUrls.every(url)) return false;
-  if (round.evidence?.protocol !== CONTRAST_PROTOCOL || round.evidence?.construct !== constructs[kind] || !text(round.evidence?.contentId)) return false;
+  if (!(round.evidence?.protocol === CONTRAST_PROTOCOL || kind === 'neighbour' && round.evidence?.protocol === NEIGHBOUR_REASONS_PROTOCOL) || round.evidence?.construct !== constructs[kind] || !text(round.evidence?.contentId)) return false;
   if (kind === 'neighbour') {
     if (!validWorks(round.anchorWorks) || round.anchorWorks.length !== 1 || offered.includes(round.anchorWorks[0].id)) return false;
     if (round.relationshipOptions !== undefined && (!Array.isArray(round.relationshipOptions) || !round.relationshipOptions.length || round.relationshipOptions.some(option => !text(option?.id) || !text(option?.label)) || new Set(round.relationshipOptions.map(option => option.id)).size !== round.relationshipOptions.length)) return false;
@@ -52,11 +65,26 @@ export function buildContrastRound({works, content, id, batchIndex = 0} = {}) {
     anchorWorks:content.anchorId ? [clone(byId.get(content.anchorId))] : [],
     sourceUrls:clone(content.sourceUrls || []), curationNotes:clone(content.curationNotes || []),
     residualConfounds:clone(content.residualConfounds || []),
-    evidence:{protocol:CONTRAST_PROTOCOL, contentId:content.contentId, construct:constructs[content.contrastKind], family:'contrast-decision', role:'discovery', batchIndex, unconditional:false, sourceUrls:clone(content.sourceUrls || [])}
+    evidence:{protocol:content.contrastKind === 'neighbour' ? NEIGHBOUR_REASONS_PROTOCOL : CONTRAST_PROTOCOL, contentId:content.contentId, construct:constructs[content.contrastKind], family:'contrast-decision', role:'discovery', batchIndex, unconditional:false, sourceUrls:clone(content.sourceUrls || [])}
   };
   for (const key of ['subject','dateEvidence','relationshipOptions','exposureAudit']) if (content[key] !== undefined) round[key] = clone(content[key]);
   if (round.contrastKind === 'chronology') round.hideDatesUntilFeedback = true;
   return validContrastDefinition(round) ? round : null;
+}
+
+/** Opt-in migration for the active unfinished question only. The host stores archive unchanged. */
+export function upgradeActiveNeighbourRound(round, answer, {active = false, now = Date.now()} = {}) {
+  const unchanged = {changed:false, round, draft:answer};
+  if (!active || !validContrastDefinition(round) || round.contrastKind !== 'neighbour' || round.evidence.protocol !== CONTRAST_PROTOCOL || !Number.isFinite(now)) return unchanged;
+  if (answer !== undefined && answer !== null && !plain(answer)) return unchanged;
+  if (answer?.skipped || answer?.confirmed !== undefined && answer.confirmed !== false) return unchanged;
+  if (plain(answer) && Object.keys(answer).length && (answer.contrastKind !== 'neighbour' || !exact(answer.workIds, ids(round)))) return unchanged;
+  if (answer?.noGoodNeighbour !== undefined && typeof answer.noGoodNeighbour !== 'boolean' || answer?.neighbourId != null && !ids(round).includes(answer.neighbourId)) return unchanged;
+  if (answer?.relationshipIds !== undefined || answer?.relationshipId != null && (!ids(round).includes(answer.neighbourId) || answer.noGoodNeighbour === true || !round.relationshipOptions?.some(option => option.id === answer.relationshipId))) return unchanged;
+  const previous = sanitizeContrastDraft(round, answer || {}), upgraded = clone(round);
+  upgraded.evidence.protocol = NEIGHBOUR_REASONS_PROTOCOL;
+  const draft = sanitizeContrastDraft(upgraded, {...previous, relationshipIds:previous.relationshipId ? [previous.relationshipId] : []});
+  return {changed:true, round:upgraded, draft, archive:{reason:'neighbour-multiple-reasons', revisedAt:now, question:clone(round), hadAnswer:answer !== undefined, answer:answer === undefined ? null : clone(answer)}};
 }
 
 /** Sanitizing leaves a question unanswered. It never supplies a missing response. */
@@ -71,7 +99,8 @@ export function sanitizeContrastDraft(round, answer = {}) {
   } else if (kind === 'neighbour') {
     draft.neighbourId = offered.includes(answer.neighbourId) ? answer.neighbourId : null;
     draft.noGoodNeighbour = !draft.neighbourId && answer.noGoodNeighbour === true;
-    if (Array.isArray(round.relationshipOptions)) draft.relationshipId = round.relationshipOptions.some(option => option.id === answer.relationshipId) ? answer.relationshipId : null;
+    if (allowsMultipleNeighbourReasons(round)) draft.relationshipIds = draft.neighbourId && !draft.noGoodNeighbour ? neighbourRelationshipIds(round, answer) : [];
+    else if (Array.isArray(round.relationshipOptions)) draft.relationshipId = round.relationshipOptions.some(option => option.id === answer.relationshipId) ? answer.relationshipId : null;
   } else if (kind === 'chronology') {
     draft.orderedIds = sameIds(answer.orderedIds, offered) ? [...answer.orderedIds] : [...offered];
     draft.uncertainIds = Array.isArray(answer.uncertainIds) ? unique(answer.uncertainIds.filter(id => offered.includes(id))) : [];
@@ -91,6 +120,10 @@ export function validContrastAnswer(round, answer) {
   if (round.contrastKind === 'keep-leave') return offered.includes(answer.keepId) && offered.includes(answer.leaveId) && answer.keepId !== answer.leaveId;
   if (round.contrastKind === 'neighbour') {
     if (typeof answer.noGoodNeighbour !== 'boolean' || !((offered.includes(answer.neighbourId) && !answer.noGoodNeighbour) || answer.neighbourId === null && answer.noGoodNeighbour)) return false;
+    if (allowsMultipleNeighbourReasons(round)) {
+      if (Object.hasOwn(answer, 'relationshipId') || !Array.isArray(answer.relationshipIds) || new Set(answer.relationshipIds).size !== answer.relationshipIds.length || answer.relationshipIds.some(id => !round.relationshipOptions?.some(option => option.id === id))) return false;
+      return answer.noGoodNeighbour || !round.relationshipOptions?.length ? answer.relationshipIds.length === 0 : answer.relationshipIds.length > 0;
+    }
     if (answer.noGoodNeighbour) return answer.relationshipId === undefined || answer.relationshipId === null;
     return !round.relationshipOptions?.length || round.relationshipOptions.some(option => option.id === answer.relationshipId);
   }
@@ -118,17 +151,22 @@ export function handleContrastAction(round, previous, action, payload = {}) {
     } else if (round.contrastKind === 'neighbour') {
       next.neighbourId = next.neighbourId === workId ? null : workId;
       next.noGoodNeighbour = false;
-      next.relationshipId = null;
+      if (allowsMultipleNeighbourReasons(round)) next.relationshipIds = [];
+      else next.relationshipId = null;
     } else if (round.contrastKind === 'same-subject') {
       next.preferredId = next.preferredId === workId ? null : workId;
       next.noPreference = false;
     } else if (round.contrastKind === 'chronology') next.activeId = workId;
   }
   if (action === 'contrast-none') {
-    if (round.contrastKind === 'neighbour') { next.neighbourId = null; next.noGoodNeighbour = !next.noGoodNeighbour; next.relationshipId = null; }
+    if (round.contrastKind === 'neighbour') { next.neighbourId = null; next.noGoodNeighbour = !next.noGoodNeighbour; if (allowsMultipleNeighbourReasons(round)) next.relationshipIds = []; else next.relationshipId = null; }
     if (round.contrastKind === 'same-subject') { next.preferredId = null; next.noPreference = !next.noPreference; }
   }
-  if (action === 'contrast-relationship' && round.contrastKind === 'neighbour' && next.neighbourId) next.relationshipId = round.relationshipOptions?.some(option => option.id === payload.relationshipId) ? payload.relationshipId : null;
+  if (action === 'contrast-relationship' && round.contrastKind === 'neighbour' && next.neighbourId) {
+    if (allowsMultipleNeighbourReasons(round)) {
+      if (round.relationshipOptions?.some(option => option.id === payload.relationshipId)) next.relationshipIds = next.relationshipIds.includes(payload.relationshipId) ? next.relationshipIds.filter(id => id !== payload.relationshipId) : [...next.relationshipIds, payload.relationshipId];
+    } else next.relationshipId = round.relationshipOptions?.some(option => option.id === payload.relationshipId) ? payload.relationshipId : null;
+  }
   if (round.contrastKind === 'chronology') {
     if (action === 'contrast-move' && ids(round).includes(workId)) {
       const current = next.orderedIds.indexOf(workId), target = Number.isInteger(payload.targetIndex) ? payload.targetIndex : current + (payload.direction === 'later' ? 1 : -1);
@@ -161,7 +199,7 @@ export function contrastAnswerSummary(round, answer) {
   if (!validContrastAnswer(round, answer)) return null;
   const common = {roundId:round.id, contrastKind:round.contrastKind, workIds:ids(round), anchorIds:(round.anchorWorks || []).map(work => work.id), prompt:round.title, construct:round.evidence.construct};
   if (round.contrastKind === 'keep-leave') return {...common, keepId:answer.keepId, leaveId:answer.leaveId, unrankedIds:ids(round).filter(id => id !== answer.keepId && id !== answer.leaveId)};
-  if (round.contrastKind === 'neighbour') return {...common, neighbourId:answer.neighbourId, noGoodNeighbour:answer.noGoodNeighbour, relationshipId:answer.relationshipId || null, unchosenIds:ids(round).filter(id => id !== answer.neighbourId)};
+  if (round.contrastKind === 'neighbour') return {...common, neighbourId:answer.neighbourId, noGoodNeighbour:answer.noGoodNeighbour, ...(allowsMultipleNeighbourReasons(round) ? {relationshipIds:[...answer.relationshipIds]} : {relationshipId:answer.relationshipId || null}), unchosenIds:ids(round).filter(id => id !== answer.neighbourId)};
   if (round.contrastKind === 'chronology') return {...common, orderedIds:[...answer.orderedIds], uncertainIds:[...answer.uncertainIds], feedback:chronologyFeedback(round, answer)};
   return {...common, preferredId:answer.preferredId, noPreference:answer.noPreference, unrankedIds:ids(round).filter(id => id !== answer.preferredId), subject:clone(round.subject), residualConfounds:[...round.residualConfounds]};
 }
@@ -181,7 +219,8 @@ function feedbackMarkup(round, draft, esc) {
   return `<p class="contrast-feedback-note">${note}${result.uncertain ? ' Uncertain works are left unscored.' : ''}${result.overlap ? ' Overlapping date ranges stay open.' : ''}</p>`;
 }
 function relationshipMarkup(round, draft, esc) {
-  return round.contrastKind === 'neighbour' && draft.neighbourId && round.relationshipOptions?.length ? `<div class="contrast-relationship"><span>What connects them?</span><div>${round.relationshipOptions.map(option => circle('contrast-relationship', esc(option.label), draft.relationshipId === option.id, `data-relationship-id="${esc(option.id)}"`)).join('')}</div></div>` : '';
+  const multiple = allowsMultipleNeighbourReasons(round), selected = neighbourRelationshipIds(round, draft);
+  return round.contrastKind === 'neighbour' && draft.neighbourId && round.relationshipOptions?.length ? `<div class="contrast-relationship" data-reason-selection="${multiple ? 'multiple' : 'single'}"><span>What connects them?</span>${multiple ? '<span class="contrast-multiple-hint">Choose all that apply.</span>' : ''}<div role="group" aria-label="${multiple ? 'Connections — choose all that apply' : 'Connection'}">${round.relationshipOptions.map(option => circle('contrast-relationship', esc(option.label), selected.includes(option.id), `data-relationship-id="${esc(option.id)}"`)).join('')}</div></div>` : '';
 }
 
 /** Body only. The host owns the title, progress, Skip and Continue controls. */
@@ -245,7 +284,7 @@ export function createContrastController({app, round, draft:initial = {}, image,
     const relationshipSlot = root.querySelector('.contrast-relationship-slot');
     if (relationshipSlot) {
       if (relationshipSlot.dataset.relationshipWork !== (draft.neighbourId || '')) { relationshipSlot.innerHTML = relationshipMarkup(round, draft, esc); relationshipSlot.dataset.relationshipWork = draft.neighbourId || ''; }
-      relationshipSlot.querySelectorAll('[data-action="contrast-relationship"]').forEach(control => control.setAttribute('aria-pressed',String(control.dataset.relationshipId === draft.relationshipId)));
+      relationshipSlot.querySelectorAll('[data-action="contrast-relationship"]').forEach(control => control.setAttribute('aria-pressed',String(neighbourRelationshipIds(round, draft).includes(control.dataset.relationshipId))));
     }
     root.querySelector('[data-action="contrast-reviewed"]')?.setAttribute('aria-pressed', String(draft.orderReviewed === true));
     root.querySelector('[data-action="contrast-all-uncertain"]')?.setAttribute('aria-pressed', String(draft.uncertainIds?.length === offered.length));

@@ -122,7 +122,8 @@ test('An expanding v7 session retains recorded wording, answers, catalogue metad
   assert.equal(actual.title,shownRound.title);assert.equal(actual.hint,shownRound.hint);assert.deepEqual(actual.works.map(w=>w.id),shownRound.works.map(w=>w.id));
 });
 
-const liveCatalogue=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/artworks.json',import.meta.url),'utf8'));
+const legacyNotes=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/curation-notes.json',import.meta.url),'utf8')),legacyIds=new Set([...legacyNotes.proposedFirst18Panels.flatMap(panel=>panel.workIds),...legacyNotes.reservePools.batch2,...legacyNotes.reservePools.batch3]);
+const liveCatalogue=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/artworks.json',import.meta.url),'utf8')).filter(work=>legacyIds.has(work.id));
 test('The merged expanded catalogue and reviewed notes meet their released first-rating pools across real descriptors',{
   skip:liveCatalogue.length<144?'The reviewed expansion has not been merged yet.':false
 },()=>{

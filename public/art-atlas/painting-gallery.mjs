@@ -1,6 +1,7 @@
 import {buildPaintingGallery,filterPaintingGallery,nextGalleryContext,GALLERY_CONTEXT_KEY} from './painting-gallery-data.mjs';
 import {updateArtworkCorners} from './artwork-corners.mjs';
 import {artworkImageAttributes,setArtworkImage} from './artwork-image.mjs';
+import {journeyCurationNotes} from './journey-bank.mjs';
 
 const root=document.querySelector('#painting-gallery'),dialog=document.querySelector('#painting-view'),esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 let gallery=null,viewId='first',query='',selectedKey=null,visibleItems=[],selectedIndex=0,cornerFrame=null;
@@ -49,7 +50,7 @@ dialog.addEventListener('keydown',event=>{if(['ArrowLeft','ArrowRight'].includes
 dialog.addEventListener('close',()=>document.documentElement.classList.remove('pg-modal-open'));
 
 try{
-  const [artResponse,notesResponse]=await Promise.all([fetch('./artworks.json'),fetch('./curation-notes.json')]);if(!artResponse.ok||!notesResponse.ok)throw Error('Collection unavailable');const [works,notes]=await Promise.all([artResponse.json(),notesResponse.json()]);
+  const artResponse=await fetch('./artworks.json');if(!artResponse.ok)throw Error('Collection unavailable');const works=await artResponse.json(),notes=journeyCurationNotes(works);
   let saved=null;try{saved=JSON.parse(localStorage.getItem('art-profile-journey-v1'));}catch{}
   gallery=buildPaintingGallery({works,notes,saved});if(gallery.views.some(view=>view.id===location.hash.slice(1)))viewId=location.hash.slice(1);shell();
   // This records only that this gallery was opened, never which names were read.

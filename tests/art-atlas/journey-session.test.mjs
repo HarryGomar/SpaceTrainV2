@@ -1,11 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {prepareJourneySession,extendJourneySession,sessionJourneyRounds,snapshotStudyRound,validStudyAnswer,analyzeStudy} from '../../public/art-atlas/deep-study.mjs';
+import {prepareJourneySession,extendJourneySession,sessionJourneyRounds,snapshotStudyRound,restoreStudyRound,validStudyAnswer,analyzeStudy} from '../../public/art-atlas/deep-study.mjs';
 import {JOURNEY_REVISION} from '../../public/art-atlas/journey-bank.mjs';
 import {validAnswer,sanitizeDraft,AXES} from '../../public/art-atlas/engine.mjs';
 import {createGalleryRecord,gallerySlots,placePainting,validGallery} from '../../public/art-atlas/gallery-model.mjs';
 import {createScenario} from '../../public/art-atlas/scenarios.mjs';
+import {isFinalRefinementRound,bindFinalRefinementRound} from '../../public/art-atlas/final-refinement.mjs';
+import {allowsMultipleNeighbourReasons} from '../../public/art-atlas/contrast-rounds.mjs';
 
 // Use the complete sourced catalogue, not a synthetic small pool.
 const works=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/artworks.json',import.meta.url),'utf8'));
@@ -15,14 +17,14 @@ function completeAnswer(round){
   const workIds=ids(round);
   if(round.kind==='spectrum')return {workIds,criterion:round.criterion,positions:Object.fromEntries(round.works.map((work,index)=>[work.id,Math.round(index/(round.works.length-1)*100)])),confirmed:true};
   if(round.kind==='grid')return {workIds,axis:round.axis,points:Object.fromEntries(round.works.map((work,index)=>[work.id,[10+index*20,90-index*20]])),confirmed:true};
-  if(round.kind==='choice-grid')return {workIds,selectionMode:round.selectionMode,selectedIds:workIds.slice(0,round.selectionMode==='familiarity'?2:round.maxChoices||3),explicitNone:false,unsure:false,confirmed:true};
+  if(round.kind==='choice-grid')return {workIds,selectionMode:round.selectionMode,selectedIds:workIds.slice(0,round.selectionMode==='familiarity'?2:round.maxChoices||3),explicitNone:false,unsure:false,confirmed:true,...(round.evidence?.instrumentRevision==='paged-favourites-v1'?{presentation:{protocol:'paged-favourites-v1',pageSize:18,visitedPages:[0],activePage:0}}:{})};
   if(round.kind==='statements')return {workIds,claims:Object.fromEntries(round.statements.map(statement=>[statement.id,3]))};
   if(round.kind==='match')return {workIds,field:round.field,guesses:Object.fromEntries(round.works.map(work=>[work.id,round.options.find(option=>option.label===work[round.field]).id])),confirmed:true};
   if(round.kind==='context')return round.contextMode==='preference-before-after-v1'?{workIds,workId:workIds[0],before:25,after:75,storySeen:true}:{workIds,workId:workIds[0],change:'same'};
   if(round.kind==='contrast'){
     const base={workIds,contrastKind:round.contrastKind,confirmed:true};
     if(round.contrastKind==='chronology')return {...base,orderedIds:[...workIds],uncertainIds:[],orderReviewed:true};
-    if(round.contrastKind==='neighbour')return {...base,neighbourId:workIds[0],noGoodNeighbour:false,...(round.relationshipOptions?.length?{relationshipId:round.relationshipOptions[0].id}:{})};
+    if(round.contrastKind==='neighbour')return {...base,neighbourId:workIds[0],noGoodNeighbour:false,...(allowsMultipleNeighbourReasons(round)?{relationshipIds:round.relationshipOptions?.length?[round.relationshipOptions[0].id]:[]}:round.relationshipOptions?.length?{relationshipId:round.relationshipOptions[0].id}:{})};
     if(round.contrastKind==='keep-leave')return {...base,keepId:workIds[0],leaveId:workIds.at(-1)};
     if(round.contrastKind==='same-subject')return {...base,preferredId:workIds[0],noPreference:false};
   }
@@ -31,8 +33,12 @@ function completeAnswer(round){
   if(round.kind==='exercise')return {workIds,skipped:true};
   throw Error('Unexpected round '+round.id);
 }
-function finish(data){for(const round of sessionJourneyRounds(data)){
+function finish(data){const fixed=sessionJourneyRounds(data);for(let index=0;index<data.plan.length;index++){
+  data.index=index;
+  let round=fixed[index];
+  if(isFinalRefinementRound(round)&&!data.shown[round.id])round=bindFinalRefinementRound({round:restoreStudyRound(data.plan[index],data.manifest.catalogue),works:data.manifest.catalogue,rounds:fixed.slice(0,index).filter(source=>data.shown[source.id]).map(source=>restoreStudyRound(data.shown[source.id],data.manifest.catalogue)).filter(Boolean),answers:data.answers});
   if(data.answers[round.id]?.skipped||validStudyAnswer(round,data.answers[round.id]))continue;
+  if(round.unavailable){assert.ok(isFinalRefinementRound(round),round.id);continue;}
   assert.equal(round.unavailable,undefined,round.id);
   data.shown[round.id]=snapshotStudyRound(round);data.answers[round.id]=completeAnswer(round);
   assert.ok(data.answers[round.id].skipped||validStudyAnswer(round,data.answers[round.id]),round.id);
@@ -69,20 +75,20 @@ test('Journey extends 50 → 100 → 150 → 200 without rewriting prior respons
   assert.deepEqual(data.batches.map(batch=>batch.offset),[50,100,150]);
 });
 
-test('The live journey retains72/42/42 first-rating allocations and third-block protected evidence roles',()=>{
+test('The fresh164 journey retains72/46/46 first-rating allocations and protected evidence roles',()=>{
   let data=structuredClone(initial);data.manifest.id='curated-trajectory';const planning=structuredClone(data.manifest.stimulusPlanning),rated=new Set();assert.equal(planning.bindingStatus,'exact-curated-plan');assert.equal(planning.boundMainWorkCount,72);assert.equal(planning.firstPlan.coverage.selectedSlots,72);assert.equal(planning.reservations.scope,'first-preference-ratings');
-  assert.equal(planning.reservations.batch2.length,42);assert.equal(planning.reservations.batch3.length,42);assert.equal(new Set([...planning.boundMainWorkIds,...planning.reservations.batch2,...planning.reservations.batch3]).size,works.length);
+  assert.equal(planning.reservations.batch2.length,46);assert.equal(planning.reservations.batch3.length,46);assert.equal(new Set([...planning.boundMainWorkIds,...planning.reservations.batch2,...planning.reservations.batch3]).size,works.length);
   for(let batchIndex=0;batchIndex<3;batchIndex++){
     const previousRated=new Set(rated);finish(data);
     for(const round of sessionJourneyRounds(data).slice(batchIndex*50)){
       if(round.kind==='exercise')data.answers[round.id].record=createScenario(round.exerciseKind,round.works,{},[],{id:'known-empty-'+round.id,now:2000,offeredIds:ids(round)});
       if(round.kind==='spectrum'&&round.evidence.construct==='preference'&&round.evidence.family==='individual-choice'&&round.evidence.unconditional!==false){data.answers[round.id]={workIds:ids(round),criterion:'preference',positions:Object.fromEntries(round.works.map(work=>[work.id,Math.round(work.features.energy*100)])),confirmed:true};assert.ok(validStudyAnswer(round,data.answers[round.id]));ids(round).forEach(id=>rated.add(id));}
     }
-    const additions=[...rated].filter(id=>!previousRated.has(id));assert.equal(additions.length,[72,42,42][batchIndex]);if(batchIndex)assert.deepEqual(new Set(additions),new Set(planning.reservations[batchIndex===1?'batch2':'batch3']));
+    const additions=[...rated].filter(id=>!previousRated.has(id));assert.equal(additions.length,[72,46,46][batchIndex]);if(batchIndex)assert.deepEqual(new Set(additions),new Set(planning.reservations[batchIndex===1?'batch2':'batch3']));
     assert.deepEqual(data.manifest.stimulusPlanning,planning,'The first design and reservations stay frozen');
-    if(batchIndex<2){const before=structuredClone(data);data=extendJourneySession(data,works,3000+batchIndex);assert.deepEqual(data.plan.slice(0,before.plan.length),before.plan);assert.deepEqual(data.answers,before.answers);assert.deepEqual(data.shown,before.shown);const selection=data.batches.at(-1).selection;assert.deepEqual(selection.reservations.batch2,planning.reservations.batch2);assert.deepEqual(selection.reservations.batch3,planning.reservations.batch3);assert.equal(selection.coverage.firstRatingTargetMet,true);assert.equal(selection.coverage.firstRatingWorkIds.length,[42,42][batchIndex]);if(batchIndex===1){assert.deepEqual(selection.coverage.quotas.requested,{repeat:2,recontextualization:1,challenge:4});assert.deepEqual(selection.coverage.actualRoles,{exploration:11,repeat:2,recontextualization:1,challenge:4});for(const panel of selection.panels.filter(panel=>panel.role==='challenge'))assert.ok(panel.provisionalHypothesis.trainingEvidence.length>=3);}}
+    if(batchIndex<2){const before=structuredClone(data);data=extendJourneySession(data,works,3000+batchIndex);assert.deepEqual(data.plan.slice(0,before.plan.length),before.plan);assert.deepEqual(data.answers,before.answers);assert.deepEqual(data.shown,before.shown);const selection=data.batches.at(-1).selection;assert.deepEqual(selection.reservations.batch2,planning.reservations.batch2);assert.deepEqual(selection.reservations.batch3,planning.reservations.batch3);assert.equal(selection.coverage.firstRatingTargetMet,true);assert.equal(selection.coverage.firstRatingWorkIds.length,[46,46][batchIndex]);if(batchIndex===1){assert.deepEqual(selection.coverage.quotas.requested,{repeat:2,recontextualization:1,challenge:3});assert.deepEqual(selection.coverage.actualRoles,{exploration:12,repeat:2,recontextualization:1,challenge:3});for(const panel of selection.panels.filter(panel=>panel.role==='challenge'))assert.ok(panel.provisionalHypothesis.trainingEvidence.length>=3);}}
   }
-  assert.equal(rated.size,156);assert.deepEqual(prepareJourneySession(data,works,9000),data);
+  assert.equal(rated.size,164);assert.deepEqual(prepareJourneySession(data,works,9000),data);
 });
 
 test('A partially shown v3 session keeps original questions, answers and artwork metadata without inheriting the curated64 audit',()=>{
@@ -91,7 +97,7 @@ test('A partially shown v3 session keeps original questions, answers and artwork
   delete data.manifest.stimulusPlanning;data.manifest.journeyRevision='art-profile-50-v3';data.index=4;data.screen='question';const before=structuredClone(data),changed=works.map(work=>({...work,title:'Changed live title',features:{...work.features,energy:0}})),restored=prepareJourneySession(data,changed,6000),resolved=sessionJourneyRounds(restored);
   assert.deepEqual(data,before);assert.deepEqual(restored.shown,before.shown);assert.deepEqual(restored.answers,before.answers);assert.deepEqual(restored.manifest.catalogue,before.manifest.catalogue);assert.equal(restored.manifest.journeyRevision,JOURNEY_REVISION);assert.equal(restored.index,4);assert.equal(restored.screen,'question');
   for(const round of [preference,map]){assert.deepEqual(restored.plan[Number(round.id.slice(-3))-1],snapshotStudyRound(round));assert.deepEqual(snapshotStudyRound(resolved.find(item=>item.id===round.id)),snapshotStudyRound(round));assert.ok(validStudyAnswer(round,restored.answers[round.id]));}
-  const audit=restored.manifest.stimulusPlanning,actual=resolved.filter(round=>round.evidence.construct==='preference'&&Number.isInteger(round.evidence.panelNumber));assert.equal(audit.bindingStatus,'saved-or-fallback-bindings');assert.equal(audit.firstPlan,null);assert.ok(audit.proposalMismatchPanels.includes(1));assert.equal(audit.boundMainWorkCount,new Set(actual.flatMap(ids)).size);assert.deepEqual(audit.boundPanels[0].workIds,ids(preference));assert.equal(audit.reservations.batch2.length,42);assert.equal(audit.reservations.batch3.length,42);assert.ok(restored.planRevisions.at(-1).previousUnshown.length);assert.deepEqual(prepareJourneySession(restored,changed,7000),restored);
+  const audit=restored.manifest.stimulusPlanning,actual=resolved.filter(round=>round.evidence.construct==='preference'&&Number.isInteger(round.evidence.panelNumber));assert.equal(audit.bindingStatus,'saved-or-fallback-bindings');assert.equal(audit.firstPlan,null);assert.ok(audit.proposalMismatchPanels.includes(1));assert.equal(audit.boundMainWorkCount,new Set(actual.flatMap(ids)).size);assert.deepEqual(audit.boundPanels[0].workIds,ids(preference));assert.equal(audit.reservations.batch2.length,46);assert.equal(audit.reservations.batch3.length,46);assert.ok(restored.planRevisions.at(-1).previousUnshown.length);assert.deepEqual(prepareJourneySession(restored,changed,7000),restored);
 });
 
 test('v2 throughv5 shown maps, appraisals and capped keep questions survive the v6 replacement slots unchanged',()=>{

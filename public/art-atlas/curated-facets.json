@@ -1,0 +1,1006 @@
+{
+  "version": "curatorial-facets-v1",
+  "meaning": "Provisional editorial descriptions of visible artwork content and composition. These are not measured user emotions, psychological traits or causal explanations of a preference.",
+  "method": "Current local reproductions were inspected in a visual review. Source links identify the artwork and reproduction; the tag assignments and review reasons are editorial annotations.",
+  "reviewedCount": 56,
+  "definitions": {
+    "narrative-detail": {
+      "label": "Story clues",
+      "definition": "Secondary incidents, objects or relationships offer clues beyond the focal pose. A sparse symbolic image can qualify.",
+      "excludes": "Visual busyness alone, a suggestive title alone, or the mere presence of a person."
+    },
+    "imagined-world": {
+      "label": "Imagined worlds",
+      "definition": "Visibly fantastical or physically uncanny bodies, objects or settings appear in the reproduction.",
+      "excludes": "Religious or historical subject matter alone, unusual colour, or expressive distortion alone."
+    },
+    "dramatic-light": {
+      "label": "Dramatic light",
+      "definition": "Strong selective illumination and deep shadow materially stage the subject or setting.",
+      "excludes": "A dark palette alone, presumed mood, or ordinary diffuse daylight."
+    },
+    "layered-space": {
+      "label": "Layers of space",
+      "definition": "Distinct spatial stages, frames, mirrors, doorways or recessed compartments organise the view.",
+      "excludes": "Any overlap, every use of perspective, or overlapping abstract planes without a readable setting."
+    },
+    "geometric-structure": {
+      "label": "Geometric structure",
+      "definition": "Salient regular shapes, straight lines, grids or clearly shaped colour fields organise the composition.",
+      "excludes": "All abstraction, gestural marks alone, an isolated triangular mountain, or ordinary room perspective."
+    },
+    "visible-gesture": {
+      "label": "Bodily gestures",
+      "definition": "Emphasised reaching, striking, guiding, embracing, carrying or another visible bodily action shapes the image. Quiet hand actions can qualify.",
+      "excludes": "Every posed figure, resting hands, depicted weather, brushwork, or movement inferred only from a title."
+    },
+    "intimate-figures": {
+      "label": "Figures close up",
+      "definition": "A near-view foreground human figure or compact bodily group occupies a substantial part of the view.",
+      "excludes": "A claim about tenderness, sympathy, the viewer's feelings, or a broad crowd of small figures."
+    },
+    "landscape": {
+      "label": "Natural settings",
+      "definition": "Substantial recognisable terrain, water or vegetation organises the composition, including some figure scenes.",
+      "excludes": "A tiny natural background strip or window view, a landscape title alone, or a claim about the viewer's love of nature."
+    }
+  },
+  "unknownSemantics": {
+    "missingAnnotation": "Unknown. Missing or differently versioned annotations must not be interpreted as absent tags or numeric zero.",
+    "reviewedEmptyTags": "Explicitly reviewed, with none of these eight tags assigned. This does not imply an absence of subject, structure or meaning.",
+    "negativeEvidence": "Non-assignment is meaningful only within this finite reviewed vocabulary and reproduction. Tags are nonexclusive editorial judgements.",
+    "archivedWorks": "Use the annotation embedded in the actual captured artwork object. Never attach current sidecar annotations to an archived artwork solely by matching its ID.",
+    "identityGuard": "Each annotation records the exact reviewed local image path and SHA256. A different reproduction or source needs a new review."
+  },
+  "annotations": [
+    {
+      "workId": "add-watts-hope",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "narrative-detail",
+        "imagined-world",
+        "visible-gesture",
+        "intimate-figures"
+      ],
+      "sourceUrls": [
+        "https://artsandculture.google.com/asset/hope/CgGv3RqPFUZk4A"
+      ],
+      "reviewedImage": "assets/collection-20261115/add-watts-hope.jpg",
+      "reviewedImageSha256": "cb173aae4a9f115d9dd4e65ccc431a8ed9331d7f1ee07f5b85341bae084a8d26",
+      "reviewReason": "The blindfold, lyre and globe supply symbolic clues; the hand action and closely framed body organise the image."
+    },
+    {
+      "workId": "velazquez-las-meninas",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "narrative-detail",
+        "dramatic-light",
+        "layered-space",
+        "visible-gesture"
+      ],
+      "sourceUrls": [
+        "https://www.museodelprado.es/en/the-collection/art-work/las-meninas/9fdc7800-9ade-48b0-ab8b-edee94ea877f",
+        "https://commons.wikimedia.org/wiki/File:Las_Meninas,_by_Diego_Vel%C3%A1zquez,_from_Prado_in_Google_Earth.jpg"
+      ],
+      "reviewedImage": "assets/collection-velazquez-las-meninas.jpg",
+      "reviewedImageSha256": "4cdd81d247468366ce62d6ba0912489ee3eec38b8ccd775b3e17479079fdb168",
+      "reviewReason": "Attendants, the mirror and the open doorway distribute clues across a selectively lit room with several spatial stages."
+    },
+    {
+      "workId": "van-gogh-night-cafe",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "narrative-detail",
+        "dramatic-light",
+        "layered-space"
+      ],
+      "sourceUrls": [
+        "https://artgallery.yale.edu/collections/objects/12507",
+        "https://commons.wikimedia.org/wiki/File:Van_Gogh_-_The_Night_Caf%C3%A9_(1888).jpg"
+      ],
+      "reviewedImage": "assets/collection-van-gogh-night-cafe.jpg",
+      "reviewedImageSha256": "413cfc210a0fa2be8bf457f8ce6b8751ff4102199449ee3b353fcdc89d477785",
+      "reviewReason": "Lamps illuminate the room, while the billiard table, distant doorway and scattered patrons create depth and secondary clues."
+    },
+    {
+      "workId": "goya-saturn",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "imagined-world",
+        "dramatic-light",
+        "visible-gesture",
+        "intimate-figures"
+      ],
+      "sourceUrls": [
+        "https://www.museodelprado.es/en/the-collection/art-work/saturn/18110a75-b0e7-430c-bc73-2a4d55893bd6",
+        "https://commons.wikimedia.org/wiki/File:Francisco_de_Goya,_Saturno_devorando_a_su_hijo_(1819-1823).jpg"
+      ],
+      "reviewedImage": "assets/collection-goya-saturn.jpg",
+      "reviewedImageSha256": "ab1ab49d163b1063eb2bf0aca267594e316712ca18c9a5ebdf83098215b86086",
+      "reviewReason": "A giant grips and bites a body under selective illumination against a nearly empty dark ground."
+    },
+    {
+      "workId": "bosch-garden-delights",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "narrative-detail",
+        "imagined-world",
+        "layered-space",
+        "visible-gesture",
+        "landscape"
+      ],
+      "sourceUrls": [
+        "https://www.museodelprado.es/en/the-collection/art-work/the-garden-of-earthly-delights-triptych/02388242-6d6a-4e9e-a992-e1311eab3609",
+        "https://commons.wikimedia.org/wiki/File:El_jard%C3%ADn_de_las_Delicias,_de_El_Bosco.jpg"
+      ],
+      "reviewedImage": "assets/collection-bosch-garden-delights.jpg",
+      "reviewedImageSha256": "3924574619f80a40b8be1b967c1a0cc5462e180ffbe47dabd1ba46ea11782503",
+      "reviewReason": "Many bodily incidents and fantastic creatures occupy successive terrain and water zones across the three panels."
+    },
+    {
+      "workId": "add-caravaggio-judith-barberini",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "narrative-detail",
+        "dramatic-light",
+        "visible-gesture",
+        "intimate-figures"
+      ],
+      "sourceUrls": [
+        "https://barberinicorsini.org/wp-content/uploads/2021/11/2021_12_Barberini_Giuditta_CartellaStampa.pdf",
+        "https://commons.wikimedia.org/wiki/File:Judith_Beheading_Holofernes-Caravaggio_(c.1598-9).jpg",
+        "https://commons.wikimedia.org/wiki/File:Judith_Beheading_Holofernes-Caravaggio_(c.1598-9).jpg#Licensing"
+      ],
+      "reviewedImage": "assets/classics-20261115/add-caravaggio-judith-barberini.jpg",
+      "reviewedImageSha256": "3ddb3976586f3a40252fd0febab8ed84bd6c05c72efad2eaae6a3bc3d4aa40e5",
+      "reviewReason": "Selective light isolates the attack; the waiting older woman and cloth add clues around the closely framed bodily action."
+    },
+    {
+      "workId": "add-caravaggio-supper-emmaus-1601",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "narrative-detail",
+        "dramatic-light",
+        "visible-gesture",
+        "intimate-figures"
+      ],
+      "sourceUrls": [
+        "https://www.nationalgallery.org.uk/paintings/michelangelo-merisi-da-caravaggio-the-supper-at-emmaus",
+        "https://commons.wikimedia.org/wiki/File:1602-3_Caravaggio,Supper_at_Emmaus_National_Gallery,_London.jpg",
+        "https://commons.wikimedia.org/wiki/File:1602-3_Caravaggio,Supper_at_Emmaus_National_Gallery,_London.jpg#Licensing"
+      ],
+      "reviewedImage": "assets/classics-20261115/add-caravaggio-supper-emmaus-1601.jpg",
+      "reviewedImageSha256": "7253bcba32d01986fd5a9d19e85c27be63146f0f6c5ea0f048cf2cf106b84618",
+      "reviewReason": "Outstretched arms, table objects and the standing attendant support a compact scene staged through strong light and shadow."
+    },
+    {
+      "workId": "add-caravaggio-taking-christ",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "narrative-detail",
+        "dramatic-light",
+        "visible-gesture",
+        "intimate-figures"
+      ],
+      "sourceUrls": [
+        "https://onlinecollection.nationalgallery.ie/objects/2882/the-taking-of-christ",
+        "https://commons.wikimedia.org/wiki/File:The_Taking_of_Christ-Caravaggio_(c.1602).jpg",
+        "https://commons.wikimedia.org/wiki/File:The_Taking_of_Christ-Caravaggio_(c.1602).jpg#Licensing"
+      ],
+      "reviewedImage": "assets/classics-20261115/add-caravaggio-taking-christ.jpg",
+      "reviewedImageSha256": "aeb0c077aaedc799d34ac5bc5471b75fe6989cf7e529363237bfcdb833eb9462",
+      "reviewReason": "The kiss, restraining hands, fleeing figure and lantern bearer crowd into a selectively lit foreground group."
+    },
+    {
+      "workId": "add-bruegel-triumph-death",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "narrative-detail",
+        "imagined-world",
+        "layered-space",
+        "visible-gesture",
+        "landscape"
+      ],
+      "sourceUrls": [
+        "https://www.museodelprado.es/en/the-collection/art-work/the-triumph-of-death/d3d82b0b-9bf2-4082-ab04-66ed53196ccc",
+        "https://commons.wikimedia.org/wiki/File:The_Triumph_of_Death_by_Pieter_Bruegel_the_Elder.jpg",
+        "https://commons.wikimedia.org/wiki/File:The_Triumph_of_Death_by_Pieter_Bruegel_the_Elder.jpg#Licensing"
+      ],
+      "reviewedImage": "assets/classics-20261115/add-bruegel-triumph-death.jpg",
+      "reviewedImageSha256": "08ffb15dcc3973603f2a6f49310508385d1cb8683bc16c1b43733bff9d263fd4",
+      "reviewReason": "Skeleton armies and many separate incidents spread through successive landscape zones, with repeated physical attacks and impossible bodies."
+    },
+    {
+      "workId": "add-velazquez-spinners",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "narrative-detail",
+        "dramatic-light",
+        "layered-space",
+        "visible-gesture"
+      ],
+      "sourceUrls": [
+        "https://www.museodelprado.es/en/the-collection/art-work/the-spinners-or-the-fable-of-arachne/3d8e510d-2acf-4efb-af0c-8ffd665acd8d",
+        "https://commons.wikimedia.org/wiki/File:Vel%C3%A1zquez_-_La_F%C3%A1bula_de_Aracne_o_Las_Hilanderas_(Museo_del_Prado,_1657-58).jpg",
+        "https://commons.wikimedia.org/wiki/File:Vel%C3%A1zquez_-_La_F%C3%A1bula_de_Aracne_o_Las_Hilanderas_(Museo_del_Prado,_1657-58).jpg#Licensing"
+      ],
+      "reviewedImage": "assets/classics-20261115/add-velazquez-spinners.jpg",
+      "reviewedImageSha256": "7afe845036480e3c88af917ff75534e901f4a905a03a10a6464e4bcb7671809a",
+      "reviewReason": "Working hands occupy the foreground while an illuminated rear scene opens beyond the darker spinning room."
+    },
+    {
+      "workId": "add-van-eyck-arnolfini",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "narrative-detail",
+        "layered-space",
+        "visible-gesture",
+        "intimate-figures"
+      ],
+      "sourceUrls": [
+        "https://www.nationalgallery.org.uk/paintings/jan-van-eyck-the-arnolfini-portrait",
+        "https://commons.wikimedia.org/wiki/File:Van_Eyck_-_Arnolfini_Portrait.jpg",
+        "https://commons.wikimedia.org/wiki/File:Van_Eyck_-_Arnolfini_Portrait.jpg#Licensing"
+      ],
+      "reviewedImage": "assets/classics-20261115/add-van-eyck-arnolfini.jpg",
+      "reviewedImageSha256": "6eacb79bb3582bdffc79e3c80feff559b0ec6999d9ea1178312b6787c42bdbe4",
+      "reviewReason": "Raised and joined hands, domestic objects and the small mirror organise a close pair within a visibly recessed room."
+    },
+    {
+      "workId": "add-renoir-boating-party",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "narrative-detail",
+        "layered-space",
+        "visible-gesture"
+      ],
+      "sourceUrls": [
+        "https://www.phillipscollection.org/collection/luncheon-boating-party",
+        "https://commons.wikimedia.org/wiki/File:Pierre-Auguste_Renoir_-_Luncheon_of_the_Boating_Party_-_Google_Art_Project.jpg",
+        "https://commons.wikimedia.org/wiki/File:Pierre-Auguste_Renoir_-_Luncheon_of_the_Boating_Party_-_Google_Art_Project.jpg#Licensing"
+      ],
+      "reviewedImage": "assets/classics-20261115/add-renoir-boating-party.jpg",
+      "reviewedImageSha256": "13b0d6fe348e5224e9477b65dd6af76f07ef1bef161f430bfa816bf40dc4a388",
+      "reviewReason": "Overlapping conversations and drinking gestures occupy the table and balcony, with an awning and railing creating spatial stages."
+    },
+    {
+      "workId": "add-marc-animal-destinies",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "geometric-structure",
+        "visible-gesture",
+        "landscape"
+      ],
+      "sourceUrls": [
+        "https://kunstmuseumbasel.ch/de/museum/blog/2020/5",
+        "https://commons.wikimedia.org/wiki/File:Franz_Marc_026.jpg",
+        "https://commons.wikimedia.org/wiki/File:Franz_Marc_026.jpg#Licensing"
+      ],
+      "reviewedImage": "assets/classics-20261115/add-marc-animal-destinies.jpg",
+      "reviewedImageSha256": "f155cb91fa3e6da6196be879e4aeaf53302ad370002f4be2cb583d70c3170126",
+      "reviewReason": "Sharp angular planes break across animals, trees and terrain, with the animals' bodily actions embedded in the fractured natural scene."
+    },
+    {
+      "workId": "holbein-ambassadors",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "narrative-detail",
+        "intimate-figures"
+      ],
+      "sourceUrls": [
+        "https://www.nationalgallery.org.uk/paintings/hans-holbein-the-younger-the-ambassadors",
+        "https://commons.wikimedia.org/wiki/File:Hans_Holbein_the_Younger_-_The_Ambassadors_-_Google_Art_Project.jpg"
+      ],
+      "reviewedImage": "assets/collection-holbein-ambassadors.jpg",
+      "reviewedImageSha256": "cb0315fa08bfd95b8b6eed875480d96fab2488af26ac82db4f65145e4b424459",
+      "reviewReason": "The closely framed pair is surrounded by instruments, books and an oblique skull that supply separate visual clues."
+    },
+    {
+      "workId": "brueghel-sight",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "narrative-detail",
+        "layered-space"
+      ],
+      "sourceUrls": [
+        "https://www.museodelprado.es/en/the-collection/art-work/the-sense-of-sight/494fd4d5-16d2-4857-811b-e0b2a0eb7fc7",
+        "https://commons.wikimedia.org/wiki/File:Jan_Brueghel_I_%26_Peter_Paul_Rubens_-_Sight_(Museo_del_Prado).jpg"
+      ],
+      "reviewedImage": "assets/collection-brueghel-sight.jpg",
+      "reviewedImageSha256": "9d9821476e42b10c35d9b03142914bb562dfcfd70a9ac5d63d9f1f6bb10126d5",
+      "reviewReason": "Pictures, instruments and collected objects surround the central figures, while an opening leads into a second spatial zone."
+    },
+    {
+      "workId": "millais-ophelia",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "narrative-detail",
+        "intimate-figures",
+        "landscape"
+      ],
+      "sourceUrls": [
+        "https://www.tate.org.uk/art/artworks/millais-ophelia-n01506",
+        "https://commons.wikimedia.org/wiki/File:John_Everett_Millais_-_Ophelia_-_Google_Art_Project.jpg"
+      ],
+      "reviewedImage": "assets/collection-millais-ophelia.jpg",
+      "reviewedImageSha256": "63b741111485f5f93e04a8b13ad8a25d9049768def6f58fbb37137ec813474f5",
+      "reviewReason": "The large reclining figure, surrounding flowers and dense streamside vegetation organise the image and provide secondary clues."
+    },
+    {
+      "workId": "van-gogh-starry-night",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "landscape"
+      ],
+      "sourceUrls": [
+        "https://www.moma.org/collection/works/79802",
+        "https://commons.wikimedia.org/wiki/File:Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg"
+      ],
+      "reviewedImage": "assets/collection-van-gogh-starry-night.jpg",
+      "reviewedImageSha256": "c8c60124c2d1b9a43dd435130b26438f3f79c5b286524bdfdcb24966748dbf13",
+      "reviewReason": "The village, hills and sky form a substantial recognisable natural setting despite the strongly stylised brushwork."
+    },
+    {
+      "workId": "klimt-kiss",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "geometric-structure",
+        "visible-gesture",
+        "intimate-figures"
+      ],
+      "sourceUrls": [
+        "https://sammlung.belvedere.at/objects/6678/der-kuss-liebespaar",
+        "https://commons.wikimedia.org/wiki/File:The_Kiss_-_Gustav_Klimt_-_Google_Cultural_Institute.jpg"
+      ],
+      "reviewedImage": "assets/collection-klimt-kiss.jpg",
+      "reviewedImageSha256": "2b52b0917eed41f950ebdb694dbecac24b7fb36c11065d14a3c48bf6350e43d7",
+      "reviewReason": "A close embracing pair is wrapped in conspicuous rectangular and circular patterning, with hands and heads defining the bodily relation."
+    },
+    {
+      "workId": "friedrich-wanderer",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "layered-space",
+        "landscape"
+      ],
+      "sourceUrls": [
+        "https://www.hamburger-kunsthalle.de/en/nineteenth-century",
+        "https://commons.wikimedia.org/wiki/File:Caspar_David_Friedrich_-_Wanderer_above_the_Sea_of_Fog.jpeg"
+      ],
+      "reviewedImage": "assets/collection-friedrich-wanderer.jpg",
+      "reviewedImageSha256": "8a2fde852d5d5d5ef7b0b6b408cc63eb940f83b1199c605e9133aa0ff29cd494",
+      "reviewReason": "Near rocks, banks of mist and distant peaks create distinct spatial stages around the stationary back-facing figure."
+    },
+    {
+      "workId": "study-hokusai-great-wave",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "narrative-detail",
+        "layered-space",
+        "landscape"
+      ],
+      "sourceUrls": [
+        "https://www.metmuseum.org/art/collection/search/45434",
+        "https://collectionapi.metmuseum.org/public/collection/v1/objects/45434",
+        "https://www.metmuseum.org/about-the-met/policies-and-documents/open-access"
+      ],
+      "reviewedImage": "assets/study-hokusai-great-wave.jpg",
+      "reviewedImageSha256": "6797908772d0872d1742eb70cf5e27ee632db558b1d4a1392af1889dcdda1cd3",
+      "reviewReason": "Boats and their crouching occupants sit between the large foreground wave and distant Fuji, supplying small incidents across depth."
+    },
+    {
+      "workId": "study-leonardo-mona-lisa",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "intimate-figures",
+        "landscape"
+      ],
+      "sourceUrls": [
+        "https://collections.louvre.fr/ark:/53355/cl010062370",
+        "https://commons.wikimedia.org/wiki/File:Mona_Lisa,_by_Leonardo_da_Vinci,_from_C2RMF.jpg",
+        "https://commons.wikimedia.org/wiki/File:Mona_Lisa,_by_Leonardo_da_Vinci,_from_C2RMF.jpg#Licensing"
+      ],
+      "reviewedImage": "assets/study-leonardo-mona-lisa.jpg",
+      "reviewedImageSha256": "3c91811816eaacfd1d1d9313a1712b69bab00df6a7df7305281256e742c4acda",
+      "reviewReason": "The close half-length sitter occupies the foreground against a substantial winding terrain and water background."
+    },
+    {
+      "workId": "study-vermeer-pearl",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "dramatic-light",
+        "intimate-figures"
+      ],
+      "sourceUrls": [
+        "https://www.mauritshuis.nl/en/our-collection/artworks/670-girl-with-a-pearl-earring",
+        "https://commons.wikimedia.org/wiki/File:1665_Girl_with_a_Pearl_Earring.jpg",
+        "https://commons.wikimedia.org/wiki/File:1665_Girl_with_a_Pearl_Earring.jpg#Licensing"
+      ],
+      "reviewedImage": "assets/study-vermeer-pearl.jpg",
+      "reviewedImageSha256": "ef5cc11cb793589e18647a26dad1b6872dda95cf7217f037ad2bd7427dd6800e",
+      "reviewReason": "Selective illumination isolates a closely framed head and shoulder against a plain dark ground."
+    },
+    {
+      "workId": "study-vermeer-milkmaid",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "narrative-detail",
+        "visible-gesture",
+        "intimate-figures"
+      ],
+      "sourceUrls": [
+        "https://www.rijksmuseum.nl/en/story/milkmaid-vermeer",
+        "https://commons.wikimedia.org/wiki/File:Johannes_Vermeer_-_Het_melkmeisje_-_Google_Art_Project.jpg",
+        "https://commons.wikimedia.org/wiki/File:Johannes_Vermeer_-_Het_melkmeisje_-_Google_Art_Project.jpg#Licensing"
+      ],
+      "reviewedImage": "assets/study-vermeer-milkmaid.jpg",
+      "reviewedImageSha256": "478d0ca5bcc5074f5163f7a3d3aa5c8bbd1661c7cbd31dab2d560594a5e3ba45",
+      "reviewReason": "The closely framed pouring action, bread and table objects provide visible bodily action and secondary domestic clues."
+    },
+    {
+      "workId": "study-rembrandt-night-watch",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "narrative-detail",
+        "dramatic-light",
+        "layered-space",
+        "visible-gesture"
+      ],
+      "sourceUrls": [
+        "https://www.rijksmuseum.nl/en/collection/object/The-Night-Watch-Militia-Company-of-District-II-under-the-Command-of-Captain-Frans-Banninck-Cocq--3137deb45cd7765f9a76084a16c99544",
+        "https://commons.wikimedia.org/wiki/File:The_Nightwatch_by_Rembrandt_-_Rijksmuseum.jpg",
+        "https://commons.wikimedia.org/wiki/File:The_Nightwatch_by_Rembrandt_-_Rijksmuseum.jpg#Licensing"
+      ],
+      "reviewedImage": "assets/study-rembrandt-night-watch.jpg",
+      "reviewedImageSha256": "2135b4ccda3081be8c7693bcb0d10929003aec295b5241ddfb26a0b145d814ba",
+      "reviewReason": "Selective light separates gesturing figures and scattered incidents at different depths within the broad group."
+    },
+    {
+      "workId": "study-botticelli-birth-venus",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "narrative-detail",
+        "imagined-world",
+        "visible-gesture",
+        "intimate-figures",
+        "landscape"
+      ],
+      "sourceUrls": [
+        "https://www.uffizi.it/en/artworks/birth-of-venus",
+        "https://commons.wikimedia.org/wiki/File:Sandro_Botticelli_-_La_nascita_di_Venere_-_Google_Art_Project.jpg",
+        "https://commons.wikimedia.org/wiki/File:Sandro_Botticelli_-_La_nascita_di_Venere_-_Google_Art_Project.jpg#Licensing"
+      ],
+      "reviewedImage": "assets/study-botticelli-birth-venus.jpg",
+      "reviewedImageSha256": "8b9899ee81a81228211359b27c25ad8181c23741f4174aeee6442e03538b922a",
+      "reviewReason": "Winged figures, shell and arriving drapery surround the large central body within a substantial shore and sea setting."
+    },
+    {
+      "workId": "study-raphael-school-athens",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "narrative-detail",
+        "layered-space",
+        "geometric-structure",
+        "visible-gesture"
+      ],
+      "sourceUrls": [
+        "https://www.museivaticani.va/content/museivaticani/en/collezioni/musei/stanze-di-raffaello/stanza-della-segnatura/scuola-di-atene.html",
+        "https://commons.wikimedia.org/wiki/File:Raffael_058.jpg",
+        "https://commons.wikimedia.org/wiki/File:Raffael_058.jpg#Licensing"
+      ],
+      "reviewedImage": "assets/study-raphael-school-athens.jpg",
+      "reviewedImageSha256": "6f48d02ada787828c82800b482da20f5abbd6f853e392ca7dab3de626373a8f4",
+      "reviewReason": "Many distinct bodily gestures and groups occupy successive architectural stages structured by repeated arches and the floor grid."
+    },
+    {
+      "workId": "study-waterhouse-shalott",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "narrative-detail",
+        "visible-gesture",
+        "intimate-figures",
+        "landscape"
+      ],
+      "sourceUrls": [
+        "https://www.tate.org.uk/art/artworks/waterhouse-the-lady-of-shalott-n01543",
+        "https://commons.wikimedia.org/wiki/File:John_William_Waterhouse_-_The_Lady_of_Shalott_-_Google_Art_Project.jpg",
+        "https://commons.wikimedia.org/wiki/File:John_William_Waterhouse_-_The_Lady_of_Shalott_-_Google_Art_Project.jpg#Licensing"
+      ],
+      "reviewedImage": "assets/study-waterhouse-shalott.jpg",
+      "reviewedImageSha256": "3919d81b251d00bd0eaf25fb4f1ca262ef2f25e6ef88e86a92f2e4f77b9a0c1c",
+      "reviewReason": "The large figure reaches within a boat, while its objects and the wooded riverbank provide setting and secondary clues."
+    },
+    {
+      "workId": "study-gericault-raft",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "narrative-detail",
+        "dramatic-light",
+        "layered-space",
+        "visible-gesture",
+        "landscape"
+      ],
+      "sourceUrls": [
+        "https://collections.louvre.fr/en/ark:/53355/cl010059199",
+        "https://commons.wikimedia.org/wiki/File:Th%C3%A9odore_G%C3%A9ricault_-_Le_Radeau_de_la_M%C3%A9duse.jpg",
+        "https://commons.wikimedia.org/wiki/File:Th%C3%A9odore_G%C3%A9ricault_-_Le_Radeau_de_la_M%C3%A9duse.jpg#Licensing"
+      ],
+      "reviewedImage": "assets/study-gericault-raft.jpg",
+      "reviewedImageSha256": "930942b20a1b182df8d5464700341000ddd947229f58de2fba07445784b66c35",
+      "reviewReason": "Selectively lit bodies and signalling gestures build successive stages across the raft, with sea and sky organising the surrounding setting."
+    },
+    {
+      "workId": "study-david-marat",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "narrative-detail",
+        "dramatic-light",
+        "intimate-figures"
+      ],
+      "sourceUrls": [
+        "https://fine-arts-museum.be/fr/la-collection/jacques-louis-david-marat-assassine",
+        "https://commons.wikimedia.org/wiki/File:Jacques-Louis_David_-_Marat_assassinated_-_Google_Art_Project_2.jpg",
+        "https://commons.wikimedia.org/wiki/File:Jacques-Louis_David_-_Marat_assassinated_-_Google_Art_Project_2.jpg#Licensing"
+      ],
+      "reviewedImage": "assets/study-david-marat.jpg",
+      "reviewedImageSha256": "0853f6112231f3c4d9cb8d4955a48096ee29bc7d6b32c72bb4d285fd85a3014c",
+      "reviewReason": "The close inactive body is selectively lit; the letter, knife and inscribed box supply separate clues around it."
+    },
+    {
+      "workId": "study-delacroix-liberty",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "narrative-detail",
+        "dramatic-light",
+        "visible-gesture"
+      ],
+      "sourceUrls": [
+        "https://collections.louvre.fr/ark:/53355/cl010065872",
+        "https://commons.wikimedia.org/wiki/File:Eug%C3%A8ne_Delacroix_-_Le_28_Juillet._La_Libert%C3%A9_guidant_le_peuple.jpg",
+        "https://commons.wikimedia.org/wiki/File:Eug%C3%A8ne_Delacroix_-_Le_28_Juillet._La_Libert%C3%A9_guidant_le_peuple.jpg#Licensing"
+      ],
+      "reviewedImage": "assets/study-delacroix-liberty.jpg",
+      "reviewedImageSha256": "22687c4953717247fe39425435b371a355d355e1da131446f2adfa1b6a6c3314",
+      "reviewReason": "Raised arms and weapons lead the crowd, while light separates foreground bodies from the smoky group behind."
+    },
+    {
+      "workId": "study-wood-american-gothic",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "narrative-detail",
+        "intimate-figures"
+      ],
+      "sourceUrls": [
+        "https://www.artic.edu/artworks/129884/american-gothic",
+        "https://commons.wikimedia.org/wiki/File:Grant_Wood_-_American_Gothic_-_Google_Art_Project.jpg",
+        "https://commons.wikimedia.org/wiki/File:Grant_Wood_-_American_Gothic_-_Google_Art_Project.jpg#Licensing"
+      ],
+      "reviewedImage": "assets/study-wood-american-gothic.jpg",
+      "reviewedImageSha256": "fb2aebcd741f6043d0c3486aa112dba079f0c74bd04fe2811a23aef653b23800",
+      "reviewReason": "The close posed pair, pitchfork, clothing and house details provide relational clues without an emphatic bodily action."
+    },
+    {
+      "workId": "study-kandinsky-composition-eight",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "geometric-structure"
+      ],
+      "sourceUrls": [
+        "https://www.guggenheim.org/artwork/1924",
+        "https://commons.wikimedia.org/wiki/File:Vassily_Kandinsky,_1923_-_Composition_8,_huile_sur_toile,_140_cm_x_201_cm,_Mus%C3%A9e_Guggenheim,_New_York.jpg",
+        "https://commons.wikimedia.org/wiki/File:Vassily_Kandinsky,_1923_-_Composition_8,_huile_sur_toile,_140_cm_x_201_cm,_Mus%C3%A9e_Guggenheim,_New_York.jpg#Licensing"
+      ],
+      "reviewedImage": "assets/study-kandinsky-composition-eight.jpg",
+      "reviewedImageSha256": "e0229d7538f18f8ccf7b83918bb6a3b5ec686d7c85d0a9d26bb634d394945cfd",
+      "reviewReason": "Circles, straight diagonals and measured angular forms conspicuously organise the nonfigurative composition."
+    },
+    {
+      "workId": "add-kandinsky-composition-seven",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [],
+      "sourceUrls": [
+        "https://artsandculture.google.com/asset/composition-vii-vasily-kandinsky/CQHOKgpWcL_UPA"
+      ],
+      "reviewedImage": "assets/collection-20261115/add-kandinsky-composition-seven.jpg",
+      "reviewedImageSha256": "fa6b07c6d1d064f4f8ba8826074e7023dc4b1141fa5ccbb2246d43931ec6f491",
+      "reviewReason": "Interlaced organic and fractured marks dominate; none of these eight narrowly defined content tags was assigned in this review."
+    },
+    {
+      "workId": "add-rothko-orange-yellow",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "geometric-structure"
+      ],
+      "sourceUrls": [
+        "https://artsandculture.google.com/asset/naranja-y-amarillo-mark-rothko/eQEGSGtYwuS37A"
+      ],
+      "reviewedImage": "assets/collection-20261115/add-rothko-orange-yellow.jpg",
+      "reviewedImageSha256": "0a27cc407f58c22c3c8b62859ab2e67402cb4f069bbd3c884c47dc42b552d5c6",
+      "reviewReason": "Large rectangular colour fields organise the image; the tag describes their shape rather than an emotional response."
+    },
+    {
+      "workId": "add-herrera-cobalt-white",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "geometric-structure"
+      ],
+      "sourceUrls": [
+        "https://artsandculture.google.com/asset/cobalto-y-blanco-carmen-herrera/ZwHH7CYBUapYTA?hl=en",
+        "https://www.cifo.org/mac-exhibitions/the-forms-of-silence%3A-carmen-herrera%2C-abstract-works-1948%E2%80%931987-"
+      ],
+      "reviewedImage": "assets/collection-20261115/add-herrera-cobalt-white.jpg",
+      "reviewedImageSha256": "9d1e40540498f75c82df482e4235ded618a890cd9b45e4e6fa523740fbdad1b7",
+      "reviewReason": "Clean blue and white angular planes establish the visible geometric structure."
+    },
+    {
+      "workId": "add-pollock-convergence",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [],
+      "sourceUrls": [
+        "https://artsandculture.google.com/asset/convergence-jackson-pollock/rgFoAwFLiZvHqQ"
+      ],
+      "reviewedImage": "assets/collection-20261115/add-pollock-convergence.jpg",
+      "reviewedImageSha256": "f7d52ee6c5f988f5d529813ef786113ac07b0f9dec2ff053defe1ba0ad5eb6dc",
+      "reviewReason": "Interlaced irregular marks dominate; none of these eight narrowly defined content tags was assigned in this review."
+    },
+    {
+      "workId": "mondrian-composition",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "geometric-structure"
+      ],
+      "sourceUrls": [
+        "https://clevelandart.org/art/1967.215"
+      ],
+      "reviewedImage": "assets/art/mondrian-composition.jpg",
+      "reviewedImageSha256": "79f82c7e28afc064bd19199dd6883d90d3bb42af26cd61517b6cd28e27dbe58e",
+      "reviewReason": "Straight black divisions and rectangular colour fields visibly organise the surface."
+    },
+    {
+      "workId": "add-malevich-football-player",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "geometric-structure"
+      ],
+      "sourceUrls": [
+        "https://artsandculture.google.com/asset/painterly-realism-of-a-football-player-–-color-masses-in-the-4th-dimension-kazimir-malevich-russian-born-ukraine-1878–1935/HAFbsVPXhzyLMg"
+      ],
+      "reviewedImage": "assets/collection-20261115/add-malevich-football-player.jpg",
+      "reviewedImageSha256": "2a22b3b1a7c2a2bac126b6b5a6956e40f0149ea59fba17db526eca648116d392",
+      "reviewReason": "Clearly shaped rectilinear colour forms and diagonals organise the nonfigurative surface."
+    },
+    {
+      "workId": "add-af-klint-dove-two",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "geometric-structure"
+      ],
+      "sourceUrls": [
+        "https://artsandculture.google.com/asset/dove-no-2-hilma-af-klint/4AHL2EWDvLy_QA"
+      ],
+      "reviewedImage": "assets/collection-20261115/add-af-klint-dove-two.jpg",
+      "reviewedImageSha256": "0c26493af64119e5448780a21f8254e73c8ea6c1afb5c6ab8be234b5e00fd979",
+      "reviewReason": "Concentric circular forms and measured coloured divisions give the image an explicit geometric organisation."
+    },
+    {
+      "workId": "add-varo-harmony",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "narrative-detail",
+        "imagined-world",
+        "layered-space",
+        "visible-gesture"
+      ],
+      "sourceUrls": [
+        "https://artsandculture.google.com/asset/harmony-suggestive-self-portrait-remedios-varo/NQGzTK03j7FCXQ"
+      ],
+      "reviewedImage": "assets/collection-20261115/add-varo-harmony.jpg",
+      "reviewedImageSha256": "0ff47718783cbef27d86ecffc5a2e8569454b09ae4ac5e571ad582bb9694f897",
+      "reviewReason": "An active figure, unusual apparatus and figures emerging from walls occupy a room with several readable spatial stages."
+    },
+    {
+      "workId": "add-varo-weaving-space-time",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "narrative-detail",
+        "imagined-world",
+        "dramatic-light",
+        "layered-space",
+        "geometric-structure"
+      ],
+      "sourceUrls": [
+        "https://artsandculture.google.com/asset/weaving-of-space-and-time-varo-remedios/hAE0BR_fo345yQ"
+      ],
+      "reviewedImage": "assets/collection-20261115/add-varo-weaving-space-time.jpg",
+      "reviewedImageSha256": "116ad4fd831d8e0f1af461af6e5c5098778b0cff0093ff0c2c6b15d590496b64",
+      "reviewReason": "A regular enclosing mesh, uncanny central formation and illuminated interior combine physical impossibility with a layered room."
+    },
+    {
+      "workId": "add-carrington-dagobert",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "narrative-detail",
+        "imagined-world",
+        "layered-space",
+        "visible-gesture",
+        "landscape"
+      ],
+      "sourceUrls": [
+        "https://artsandculture.google.com/asset/the-distractions-of-dagobert-leonora-carrington/nwHUtTzhhjJVUA"
+      ],
+      "reviewedImage": "assets/collection-20261115/add-carrington-dagobert.jpg",
+      "reviewedImageSha256": "462ae7d6b5fa20dd04ff819d5edd9bd9627f31e4792775d3c4618a04c35fa65f",
+      "reviewReason": "Many unusual bodies and incidents occupy separate architectural and terrain zones, with repeated visible bodily actions."
+    },
+    {
+      "workId": "add-siqueiros-madre-nina",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "visible-gesture",
+        "intimate-figures"
+      ],
+      "sourceUrls": [
+        "https://artsandculture.google.com/asset/madre-niña-david-alfaro-siqueiros/8wHleA2u_UfCpA"
+      ],
+      "reviewedImage": "assets/collection-20261115/add-siqueiros-madre-nina.jpg",
+      "reviewedImageSha256": "64941c24e5e2ab7b23f23bd9f863b7e37cf2576a61dc6c44c1cf56375329262a",
+      "reviewReason": "The compact foreground adult and child are joined through a visible carrying or supporting action."
+    },
+    {
+      "workId": "add-rivera-zapatista-landscape",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "narrative-detail",
+        "geometric-structure"
+      ],
+      "sourceUrls": [
+        "https://artsandculture.google.com/asset/zapata-style-landscape/IAEHxJWnGTosTg"
+      ],
+      "reviewedImage": "assets/collection-20261115/add-rivera-zapatista-landscape.jpg",
+      "reviewedImageSha256": "1fcb724563125125b085d2eb355f79dc2be65c5b26b2a8cb3ae3091fdf93bce3",
+      "reviewReason": "Angular planes organise recognisable hat, weapon and fabric clues; the small distant mountain strip does not dominate the setting."
+    },
+    {
+      "workId": "add-gerzso-water-mansion",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "geometric-structure"
+      ],
+      "sourceUrls": [
+        "https://artsandculture.google.com/asset/mansión-del-agua-water-mansion-günther-gerzso/dAESFVnSqAY2Mg"
+      ],
+      "reviewedImage": "assets/collection-20261115/add-gerzso-water-mansion.jpg",
+      "reviewedImageSha256": "04bd6fe76ec1748de9354d18a5ec24a7666d8d5ba642b91057243da8f9eb72fd",
+      "reviewReason": "Sharp-edged coloured planes establish geometric structure without a clearly readable physical room or terrain."
+    },
+    {
+      "workId": "velasco-valley-mexico",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "layered-space",
+        "landscape"
+      ],
+      "sourceUrls": [
+        "https://www.munal.gob.mx/munal/exposicion-velasco.html",
+        "https://commons.wikimedia.org/wiki/File:Jos%C3%A9_Mar%C3%ADa_Velasco_-_The_Valley_of_Mexico_from_the_Santa_Isabel_Mountain_Range_-_Google_Art_Project.jpg",
+        "https://commons.wikimedia.org/wiki/File:Jos%C3%A9_Mar%C3%ADa_Velasco_-_The_Valley_of_Mexico_from_the_Santa_Isabel_Mountain_Range_-_Google_Art_Project.jpg#Licensing"
+      ],
+      "reviewedImage": "assets/art/velasco-valley-mexico.jpg",
+      "reviewedImageSha256": "a309aae69806aa1dfb6fb00e2df38946638a11fef6e7d08a2146127f24e1e534",
+      "reviewReason": "Near terrain, the broad valley, water and distant mountain ranges organise a succession of natural spatial stages."
+    },
+    {
+      "workId": "opening-cma-141639",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "dramatic-light",
+        "layered-space",
+        "landscape"
+      ],
+      "sourceUrls": [
+        "https://clevelandart.org/art/1965.233",
+        "https://openaccess-api.clevelandart.org/api/artworks/141639",
+        "https://creativecommons.org/publicdomain/zero/1.0/"
+      ],
+      "reviewedImage": "assets/opening-cma-141639.jpg",
+      "reviewedImageSha256": "07161ed412b9cc000370ca24a18d200171f480f46eb83d52919f391978de6114",
+      "reviewReason": "An illuminated horizon contrasts with dark foreground silhouettes, while water and successive mountain zones organise the view."
+    },
+    {
+      "workId": "monet-water-lilies",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "landscape"
+      ],
+      "sourceUrls": [
+        "https://clevelandart.org/art/1960.81"
+      ],
+      "reviewedImage": "assets/art/monet-water-lilies.jpg",
+      "reviewedImageSha256": "4c20ffad9fe2dadf335e825bce3d0983d9b65193fb23097dce659d4505fd8c2b",
+      "reviewReason": "Water, floating vegetation and reflections occupy the composition without clearly separated foreground and distant spatial stages."
+    },
+    {
+      "workId": "study-fan-kuan-travelers",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "narrative-detail",
+        "layered-space",
+        "landscape"
+      ],
+      "sourceUrls": [
+        "https://digitalarchive.npm.gov.tw/Collection/Detail/1195?dep=P",
+        "https://commons.wikimedia.org/wiki/File:Fan_Kuan_-_Travelers_Among_Mountains_and_Streams_-_Google_Art_Project.jpg",
+        "https://commons.wikimedia.org/wiki/File:Fan_Kuan_-_Travelers_Among_Mountains_and_Streams_-_Google_Art_Project.jpg#Licensing"
+      ],
+      "reviewedImage": "assets/study-fan-kuan-travelers.jpg",
+      "reviewedImageSha256": "311a404d2eca86d58fabc504a286eeedd13ec2e854cd48d0debd8f51700c125c",
+      "reviewReason": "A small travelling group supplies a local incident beneath successive rock, tree and mountain zones."
+    },
+    {
+      "workId": "hokusai-mount-fuji",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "landscape"
+      ],
+      "sourceUrls": [
+        "https://clevelandart.org/art/1930.189"
+      ],
+      "reviewedImage": "assets/art/hokusai-mount-fuji.jpg",
+      "reviewedImageSha256": "b0f546cc1972fb8e7ef84d21eb7d30805de189297a22a248b1ecaf11c5b5468d",
+      "reviewReason": "The recognisable mountain and surrounding bands of natural setting organise the print."
+    },
+    {
+      "workId": "add-varo-sympathy",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "narrative-detail",
+        "imagined-world",
+        "layered-space",
+        "visible-gesture",
+        "intimate-figures"
+      ],
+      "sourceUrls": [
+        "https://artsandculture.google.com/asset/sympathy-cat’s-rage-remedios-varo/NwHUlMjuByR0-Q"
+      ],
+      "reviewedImage": "assets/collection-20261115/add-varo-sympathy.jpg",
+      "reviewedImageSha256": "eae7718a11226481ea7bb70c62fe1b2bb8670ef39cf941ba72fbcb5217ed59af",
+      "reviewReason": "The close figure and cat interact through uncanny connecting filaments within a room with readable depth."
+    },
+    {
+      "workId": "study-matisse-dance",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "visible-gesture",
+        "intimate-figures"
+      ],
+      "sourceUrls": [
+        "https://www.hermitagemuseum.org/explore/buildings/rooms/room_1890",
+        "https://commons.wikimedia.org/wiki/File:Matissedance.jpg",
+        "https://commons.wikimedia.org/wiki/File:Matissedance.jpg#Licensing"
+      ],
+      "reviewedImage": "assets/study-matisse-dance.jpg",
+      "reviewedImageSha256": "530397d5ce409b5420a0e7715222e57f7497fb8839eff7f2d3bce911a36fa0d9",
+      "reviewReason": "The large compact linked group is defined by extended arms, joined hands and bodily action."
+    },
+    {
+      "workId": "opening-cma-92937",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "dramatic-light",
+        "visible-gesture",
+        "intimate-figures"
+      ],
+      "sourceUrls": [
+        "https://clevelandart.org/art/1922.1133",
+        "https://openaccess-api.clevelandart.org/api/artworks/92937",
+        "https://creativecommons.org/publicdomain/zero/1.0/"
+      ],
+      "reviewedImage": "assets/opening-cma-92937.jpg",
+      "reviewedImageSha256": "1184dde55a9c69ccb545cc6887a0286fd73c15d7c80d178a183017b22073fb23",
+      "reviewReason": "Selective light picks out the two closely framed boxers and their striking bodily actions against the darker crowd."
+    },
+    {
+      "workId": "opening-cma-142792",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "visible-gesture",
+        "intimate-figures"
+      ],
+      "sourceUrls": [
+        "https://clevelandart.org/art/1966.49",
+        "https://openaccess-api.clevelandart.org/api/artworks/142792",
+        "https://creativecommons.org/publicdomain/zero/1.0/"
+      ],
+      "reviewedImage": "assets/opening-cma-142792.jpg",
+      "reviewedImageSha256": "6926d891bfed2d82e144d7f205a6280b8402dfcb020d0834dc5381018ed85ccf",
+      "reviewReason": "Large closely framed wrestlers organise the scene through their grappling bodies and limbs."
+    },
+    {
+      "workId": "add-izquierdo-sorrowful-friday",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "narrative-detail",
+        "layered-space"
+      ],
+      "sourceUrls": [
+        "https://artsandculture.google.com/asset/sorrowful-friday-maría-izquierdo/NwHhuKquXf4aAQ"
+      ],
+      "reviewedImage": "assets/collection-20261115/add-izquierdo-sorrowful-friday.jpg",
+      "reviewedImageSha256": "f8d699ba0e3e9a1fdf0fa12c8160d00e7e88b9351cf082ec50894038d205cbd6",
+      "reviewReason": "A central framed head, altar objects and curtains create separate symbolic clues and shallow spatial compartments."
+    },
+    {
+      "workId": "opening-cma-169545",
+      "version": "curatorial-facets-v1",
+      "reviewed": true,
+      "tags": [
+        "narrative-detail",
+        "layered-space",
+        "geometric-structure"
+      ],
+      "sourceUrls": [
+        "https://clevelandart.org/art/2011.37",
+        "https://openaccess-api.clevelandart.org/api/artworks/169545",
+        "https://creativecommons.org/publicdomain/zero/1.0/"
+      ],
+      "reviewedImage": "assets/opening-cma-169545.jpg",
+      "reviewedImageSha256": "f8f1b5d27f72a5adabe37773e283dd8d28831e3aff57ed3e563b5a799eb6c619",
+      "reviewReason": "A regular cabinet grid divides recessed compartments containing books and distinct objects with many small visual clues."
+    }
+  ]
+}

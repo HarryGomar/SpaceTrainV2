@@ -51,6 +51,10 @@ body:has(.journey-question) { overflow: hidden; }
 .journey-question .spectrum-input .spectrum-labels { padding-top: 10px; }
 .journey-question .spectrum-input .fine-controls { margin-top: 8px; }
 .journey-question .spectrum-labels { font-size: 11px; }
+.overall-appeal-labels { display: grid; grid-template-columns: 1fr 1fr 1fr; }
+.overall-appeal-labels > span:nth-child(2) { text-align: center; color: #898175; }
+.overall-appeal-labels > span:last-child { text-align: right; }
+.appeal-quarter { position: absolute; bottom: -3px; width: 1px; height: 7px; background: #bcb5aa; pointer-events: none; }
 
 /* Matching uses the same bounded task area before and after checking. */
 .journey-question.deep-question .matching-input { position: relative; display: grid; grid-template-rows: minmax(0,1fr) minmax(0,1fr) 82px; gap: 12px; width: 100%; max-width: 1180px; height: 100%; min-height: 0; min-width: 0; margin: 0 auto; align-self: stretch; }
@@ -74,7 +78,7 @@ body:has(.journey-question) { overflow: hidden; }
 .journey-question .matching-input .matched-art { display: block; width: 100%; height: 100%; min-height: 0; min-width: 0; }
 .journey-question .matching-input .matched-art > .art-visual { display: block; width: 100%; height: 100%; min-height: 0; }
 .journey-question .matching-input .drop-placeholder { display: grid; align-self: stretch; place-items: center; min-height: 0; padding: 5px; font-size: 10px; }
-.journey-question .matching-input .match-label { width: 100%; height: 100%; min-height: 0; margin: 0; padding: 3px 6px; border: 0; border-radius: 0; font-size: 11px; line-height: 1.3; white-space: normal; overflow-wrap: anywhere; background: none; }
+.journey-question .matching-input .match-label { width: 100%; height: 100%; min-height: 0; margin: 0; padding: 3px 6px; border: 0; border-radius: 0; font-size: 15px; line-height: 1.3; white-space: normal; overflow-wrap: anywhere; background: none; }
 .journey-question .matching-input .match-feedback { min-width: 0; margin: 0; font-size: 9px; line-height: 1.3; overflow-wrap: anywhere; }
 .journey-question.deep-question .matching-input > .unsure-target { display: grid; grid-template-rows: 22px minmax(0,1fr); gap: 4px; height: 100%; min-height: 0; min-width: 0; margin: 0; padding: 0; }
 .journey-question .matching-input .unsure-target > button { min-height: 0; padding: 0; margin: 0; font-size: 10px; line-height: 22px; }
@@ -88,15 +92,20 @@ body:has(.journey-question) { overflow: hidden; }
 .journey-question .matching-input.revealed .unsure-target > button { display: none; }
 .journey-question.deep-question .matching-input.revealed:has(.match-review-grid) { grid-template-rows: minmax(0,1fr); gap: 0; }
 .journey-question .match-review-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); grid-template-rows: minmax(0,1fr); gap: clamp(20px,3vw,48px); height: 100%; min-height: 0; min-width: 0; }
-.journey-question .match-review-work { display: grid; grid-template-rows: minmax(0,1fr) 74px; gap: 12px; height: 100%; min-height: 0; min-width: 0; margin: 0; }
+.journey-question .match-review-work { display: grid; grid-template-rows: minmax(0,1fr) 110px; gap: 12px; height: 100%; min-height: 0; min-width: 0; margin: 0; }
 .journey-question .match-review-painting { height: 100%; min-height: 0; min-width: 0; }
 .journey-question .match-review-grid .matched-art { cursor: default; }
 .journey-question .match-review-grid .drag-caption { display: none; }
 .journey-question .match-review-grid .art-visual::after { opacity: 0; }
 .journey-question .match-review-grid .drag-art[aria-pressed=true] .art-visual > img { filter: none; }
 .journey-question .match-review-work figcaption { display: flex; flex-direction: column; gap: 7px; min-height: 0; margin: 0; padding: 0; text-align: center; overflow-wrap: anywhere; }
-.journey-question .match-review-answer { font-size: 14px; font-weight: 400; line-height: 1.35; color: var(--ink); }
-.journey-question .match-review-status { display: block; font-size: 10px; line-height: 1.4; color: var(--soft); }
+.journey-question .match-review-answer { font-size: 18px; font-weight: 400; line-height: 1.35; color: var(--ink); }
+.journey-question .match-review-status { display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 12px; line-height: 1.4; color: var(--soft); }
+.match-review-status svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+.match-review-work[data-match-status=correct] .match-review-status { color: #4e6d94; }
+.match-review-work[data-match-status=missed] .match-review-status { color: #a05c43; }
+.match-review-guess { font-size: 11px; line-height: 1.4; color: var(--soft); }
+.match-answer-prefix { font-size: .75em; color: var(--soft); }
 
 /* Agreement tasks use the actual statement as the question. */
 .journey-question[data-kind=statements] > .question-head { display: none; }
@@ -215,7 +224,7 @@ body:has(.journey-question) { overflow: hidden; }
   .journey-question.deep-question .matching-input > .match-targets { grid-template-columns: repeat(2,minmax(0,1fr)); grid-template-rows: repeat(2,minmax(0,1fr)); gap: 8px 18px; }
   .journey-question .matching-input .match-target { grid-template-rows: minmax(0,1fr) 36px; gap: 3px; }
   .journey-question.deep-question .matching-input .match-painting { padding: 6px; gap: 3px; }
-  .journey-question .matching-input .match-label { padding: 2px 3px; font-size: 10px; line-height: 1.25; }
+  .journey-question .matching-input .match-label { padding: 2px 3px; font-size: 13px; line-height: 1.25; }
   .journey-question .matching-input .match-feedback { font-size: 8px; line-height: 1.3; }
   .journey-question .matching-input .drop-placeholder { font-size: 9px; }
   .journey-question .matching-input .unsure-works { gap: 10px; }
@@ -223,10 +232,10 @@ body:has(.journey-question) { overflow: hidden; }
   .journey-question.deep-question .matching-input.revealed { grid-template-rows: minmax(0,1fr) 130px; }
   .journey-question.deep-question .matching-input.revealed:has(.unsure-works:empty) { grid-template-rows: minmax(0,1fr) 0; }
   .journey-question .match-review-grid { grid-template-columns: repeat(2,minmax(0,1fr)); grid-template-rows: repeat(2,minmax(0,1fr)); gap: 18px; }
-  .journey-question .match-review-work { grid-template-rows: minmax(0,1fr) 70px; gap: 8px; }
+  .journey-question .match-review-work { grid-template-rows: minmax(0,1fr) 92px; gap: 8px; }
   .journey-question .match-review-work figcaption { gap: 5px; }
-  .journey-question .match-review-answer { font-size: 12px; line-height: 1.35; }
-  .journey-question .match-review-status { font-size: 9px; }
+  .journey-question .match-review-answer { font-size: 14px; line-height: 1.35; }
+  .journey-question .match-review-status { font-size: 11px; }
   .journey-question[data-kind=statements] { grid-template-rows: 44px 0 minmax(0,1fr) 60px; }
   .journey-question .deep-statement { padding-bottom: 9vh; }
   .journey-question .deep-statement h2 { font-size: 28px; margin-bottom: 42px; }

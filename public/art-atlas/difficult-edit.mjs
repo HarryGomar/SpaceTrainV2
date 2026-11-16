@@ -1,15 +1,36 @@
 import { buildRounds, validAnswer } from './engine.mjs';
 import { isGallery, validGallery, WALLS, roomOf, roomName } from './gallery-model.mjs';
 
-export const DIFFICULT_EDIT_PROTOCOL='difficult-edit-v1';
+export const DIFFICULT_EDIT_PROTOCOL='difficult-edit-v2';
+export const LEGACY_DIFFICULT_EDIT_PROTOCOL='difficult-edit-v1';
 const CHOICES=['initial','alternative','equal'];
 const unique=ids=>[...new Set(ids)];
 const title=w=>w.shortTitle||w.title;
 const ownObject=value=>!!value&&typeof value==='object'&&!Array.isArray(value);
 const hash=text=>[...text].reduce((n,c)=>(Math.imul(n,31)+c.charCodeAt(0))>>>0,2166136261);
-const workById=(works,id)=>works.find(w=>w.id===id);
+const workById=(works,id)=>works.find(w=>w?.id===id);
 const sameSet=(a,b)=>a.length===b.length&&a.every(id=>b.includes(id));
-export const isDifficultEdit=record=>record?.kind==='difficult-edit'&&record.version===1&&record.protocol===DIFFICULT_EDIT_PROTOCOL;
+export const isLegacyDifficultEdit=record=>record?.kind==='difficult-edit'&&record.version===1&&record.protocol===LEGACY_DIFFICULT_EDIT_PROTOCOL;
+export const isDifficultEdit=record=>isLegacyDifficultEdit(record)||record?.kind==='difficult-edit'&&record.version===2&&record.protocol===DIFFICULT_EDIT_PROTOCOL;
+
+const preferenceFamilies=new Set(['individual-choice','feature-check','unconditional-preference','adaptive-preference']);
+const sameArtworkIdentity=(a,b)=>!!a&&!!b&&['id','title','artist','image','sourceUrl'].every(key=>typeof a[key]==='string'&&a[key].trim()&&a[key]===b[key]);
+function capturedPreferences(works,context,sources) {
+  if(!ownObject(context)||typeof context.roundId!=='string'||!context.roundId||!Number.isInteger(context.index)||context.index<0||!Array.isArray(sources))return [];
+  const counts=new Map(),indices=new Map();for(const source of sources){if(typeof source?.round?.id==='string')counts.set(source.round.id,(counts.get(source.round.id)||0)+1);if(Number.isInteger(source?.index))indices.set(source.index,(indices.get(source.index)||0)+1);}
+  return sources.filter(source=>{
+    const r=source?.round,a=source?.answer;
+    if(!ownObject(r)||typeof r.id!=='string'||!r.id.trim()||r.id===context.roundId||counts.get(r.id)!==1||!Number.isInteger(source.index)||indices.get(source.index)!==1||source.index<0||source.index>=context.index||r.unavailable||r.kind!=='spectrum'||r.criterion!=='preference'||typeof r.title!=='string'||!r.title.trim()||typeof r.hint!=='string'||r.evidence?.construct!=='preference'||!preferenceFamilies.has(r.evidence.family)||r.evidence.unconditional===false||r.evidence.repeatOf||['repeat','probe','challenge','counterexample','recontextualization'].includes(r.evidence.role)||r.brief||r.evidence.brief||r.anchorWorks?.length||r.anchorIds?.length)return false;
+    if(!Array.isArray(r.works)||r.works.length<2||new Set(r.works.map(w=>w?.id)).size!==r.works.length||r.works.some(w=>{const known=works.filter(candidate=>candidate?.id===w?.id);return known.length!==1||!sameArtworkIdentity(w,known[0]);}))return false;
+    try{return validAnswer(r,a);}catch{return false;}
+  }).sort((a,b)=>a.index-b.index).map(source=>structuredClone({round:source.round,answer:source.answer,index:source.index}));
+}
+function preferenceCapture(works,options,offeredWorks) {
+  const catalogue=options.preferenceCatalogue===undefined?works:options.preferenceCatalogue;
+  if(!Array.isArray(catalogue)||offeredWorks.some(w=>{const known=catalogue.filter(candidate=>candidate?.id===w.id);return known.length!==1||!sameArtworkIdentity(w,known[0]);}))return {preferenceContext:null,preferenceSources:[]};
+  const sources=capturedPreferences(catalogue,options.preferenceContext,options.preferenceSources);
+  return {preferenceContext:sources.length?structuredClone(options.preferenceContext):null,preferenceSources:sources};
+}
 
 function preference(works,answers) {
   if(!ownObject(answers))return null;
@@ -46,8 +67,8 @@ function sourceSnapshot(works,ids) {
 export function createDifficultEditRecord(works,baselineAnswers={},records=[],options={}) {
   if(!Array.isArray(works)||works.length<4||new Set(works.map(w=>w?.id)).size!==works.length||works.some(w=>!w?.id||!w.image||!w.sourceUrl||!w.title||!w.artist))throw Error('Four distinct, sourced works are needed for this edit.');
   const captured=structuredClone(ownObject(baselineAnswers)?baselineAnswers:{}),bound=wallSource(works,records,options)||catalogueSource(works,captured),now=Number.isFinite(options.now)?options.now:Date.now();
-  const id=options.id||'difficult-edit-'+now+'-'+Math.random().toString(36).slice(2,8);
-  return {kind:'difficult-edit',version:1,protocol:DIFFICULT_EDIT_PROTOCOL,id,createdAt:now,offeredIds:[...bound.ids],presentedIds:[],artworkSources:sourceSnapshot(works,bound.ids),baselineAnswers:captured,source:structuredClone(bound.source),phase:'edit',removedId:null,alternativeRemovedId:null,comparisonBasis:null,compareChoice:null,comparisonOrder:hash(id)%2?['alternative','initial']:['initial','alternative'],labelExposureIds:[]};
+  const id=options.id||'difficult-edit-'+now+'-'+Math.random().toString(36).slice(2,8),artworkSources=sourceSnapshot(works,bound.ids);
+  return {kind:'difficult-edit',version:2,protocol:DIFFICULT_EDIT_PROTOCOL,id,createdAt:now,offeredIds:[...bound.ids],presentedIds:[],artworkSources,baselineAnswers:captured,source:structuredClone(bound.source),phase:'edit',removedId:null,labelExposureIds:[],confirmed:false,...preferenceCapture(works,options,artworkSources)};
 }
 function alternativeFor(record,works) {
   if(!record.offeredIds.includes(record.removedId))return null;
@@ -61,49 +82,81 @@ export function difficultEditWalls(record) {
 }
 export function difficultEditIds(record) {
   const walls=difficultEditWalls(record);
+  if(!isLegacyDifficultEdit(record))return walls.initial;
   return record.compareChoice==='alternative'?walls.alternative:record.compareChoice==='equal'?unique([...walls.initial,...walls.alternative]):walls.initial;
 }
 export function validDifficultEditDraft(record,works) {
   if(!isDifficultEdit(record)||typeof record.id!=='string'||!record.id||!Number.isFinite(record.createdAt)||!Array.isArray(works)||!Array.isArray(record.offeredIds)||record.offeredIds.length!==4||new Set(record.offeredIds).size!==4)return false;
-  if(record.offeredIds.some(id=>!workById(works,id))||!Array.isArray(record.presentedIds)||new Set(record.presentedIds).size!==record.presentedIds.length||record.presentedIds.some(id=>!record.offeredIds.includes(id)))return false;
+  if(record.offeredIds.some(id=>typeof id!=='string'||works.filter(w=>w?.id===id).length!==1)||!Array.isArray(record.presentedIds)||new Set(record.presentedIds).size!==record.presentedIds.length||record.presentedIds.some(id=>!record.offeredIds.includes(id)))return false;
   if(!ownObject(record.baselineAnswers)||!ownObject(record.source)||!['gallery-room','catalogue-set'].includes(record.source.kind)||!Array.isArray(record.source.roomWorkIds)||new Set(record.source.roomWorkIds).size!==record.source.roomWorkIds.length||record.source.roomWorkIds.some(id=>!workById(works,id))||!record.offeredIds.every(id=>record.source.roomWorkIds.includes(id)))return false;
   if(record.source.kind==='gallery-room') {
     if(typeof record.source.recordId!=='string'||!record.source.recordId||record.source.protocol!=='open-gallery-v1'||typeof record.source.roomName!=='string'||record.source.roomName.length>100||!ownObject(record.source.placements)||!['whole-room','first-four-in-wall-order'].includes(record.source.selectionRule))return false;
     if(record.source.roomWorkIds.some(id=>{const p=record.source.placements[id],wall=WALLS.find(w=>w.id===p?.wallId);return !wall||wall.roomId!==record.source.roomId||!Number.isFinite(p.t)||p.t<0||p.t>1;}))return false;
   } else if(!['landscape-comparison','prior-quartet-and-catalogue'].includes(record.source.basis)||!sameSet(record.source.roomWorkIds,record.offeredIds))return false;
   if(!Array.isArray(record.artworkSources)||record.artworkSources.length!==4||new Set(record.artworkSources.map(w=>w?.id)).size!==4||record.artworkSources.some(s=>{const w=workById(works,s?.id);return !w||!record.offeredIds.includes(s.id)||typeof s.title!=='string'||typeof s.shortTitle!=='string'||typeof s.artist!=='string'||s.image!==w.image||s.sourceUrl!==w.sourceUrl;}))return false;
-  if(!['edit','compare'].includes(record.phase)||record.removedId!==null&&!record.offeredIds.includes(record.removedId)||!Array.isArray(record.comparisonOrder)||!sameSet(record.comparisonOrder,['initial','alternative'])||new Set(record.comparisonOrder).size!==2||record.comparisonOrder.length!==2||!Array.isArray(record.labelExposureIds)||record.labelExposureIds.some(id=>!record.offeredIds.includes(id)))return false;
+  if(record.removedId!==null&&!record.offeredIds.includes(record.removedId)||!Array.isArray(record.labelExposureIds)||record.labelExposureIds.some(id=>!record.offeredIds.includes(id)))return false;
+  if(!isLegacyDifficultEdit(record))return record.phase==='edit'&&!['alternativeRemovedId','comparisonBasis','compareChoice','comparisonOrder'].some(key=>Object.hasOwn(record,key))&&(record.confirmed===undefined||typeof record.confirmed==='boolean')&&(record.finishedAt===undefined||Number.isFinite(record.finishedAt))&&Array.isArray(record.preferenceSources)&&(record.preferenceContext===null||ownObject(record.preferenceContext));
+  if(!['edit','compare'].includes(record.phase)||!Array.isArray(record.comparisonOrder)||!sameSet(record.comparisonOrder,['initial','alternative'])||new Set(record.comparisonOrder).size!==2||record.comparisonOrder.length!==2)return false;
   if(record.phase==='edit')return record.alternativeRemovedId===null&&record.comparisonBasis===null&&record.compareChoice===null;
   const expected=alternativeFor(record,works);
   return !!expected&&record.alternativeRemovedId===expected.id&&record.comparisonBasis===expected.basis&&(record.compareChoice===null||CHOICES.includes(record.compareChoice));
 }
 export function validDifficultEdit(record,works,finished=true) {
-  return validDifficultEditDraft(record,works)&&record.phase==='compare'&&record.offeredIds.every(id=>record.presentedIds.includes(id))&&CHOICES.includes(record.compareChoice)&&(!finished||record.confirmed===true&&Number.isFinite(record.finishedAt));
+  if(!validDifficultEditDraft(record,works)||!record.offeredIds.every(id=>record.presentedIds.includes(id)))return false;
+  const decided=isLegacyDifficultEdit(record)?record.phase==='compare'&&CHOICES.includes(record.compareChoice):record.phase==='edit'&&record.offeredIds.includes(record.removedId);
+  return decided&&(!finished||record.confirmed===true&&Number.isFinite(record.finishedAt));
+}
+/** Only an active unconfirmed legacy edit can opt into the single-decision task. */
+export function upgradeActiveDifficultEditRecord(record,works,{active=false,now=Date.now(),...options}={}) {
+  const unchanged={changed:false,record};
+  if(!active||!isLegacyDifficultEdit(record)||!validDifficultEditDraft(record,works)||record.phase!=='edit'||record.confirmed!==undefined&&record.confirmed!==false||Object.hasOwn(record,'finishedAt')||!Number.isFinite(now))return unchanged;
+  const next=structuredClone(record);Object.assign(next,{version:2,protocol:DIFFICULT_EDIT_PROTOCOL,confirmed:false,...preferenceCapture(works,options,record.artworkSources)});
+  for(const key of ['alternativeRemovedId','comparisonBasis','compareChoice','comparisonOrder'])delete next[key];
+  return {changed:true,record:next,archive:{reason:'difficult-edit-single-decision',revisedAt:now,record:structuredClone(record)}};
 }
 export function setDifficultEditRemoval(record,id,works) {
   if(!validDifficultEditDraft(record,works)||id!==null&&!record.offeredIds.includes(id))return record;
   if(record.removedId===id)return record;
-  const next=structuredClone(record);Object.assign(next,{removedId:id,phase:'edit',alternativeRemovedId:null,comparisonBasis:null,compareChoice:null,confirmed:false});delete next.finishedAt;return next;
+  const next=structuredClone(record);Object.assign(next,{removedId:id,phase:'edit',confirmed:false});if(isLegacyDifficultEdit(record))Object.assign(next,{alternativeRemovedId:null,comparisonBasis:null,compareChoice:null});delete next.finishedAt;return next;
 }
 export function startDifficultEditComparison(record,works) {
-  if(!validDifficultEditDraft(record,works)||!record.removedId||!record.offeredIds.every(id=>record.presentedIds.includes(id)))return record;
+  if(!isLegacyDifficultEdit(record)||!validDifficultEditDraft(record,works)||!record.removedId||!record.offeredIds.every(id=>record.presentedIds.includes(id)))return record;
   const alternative=alternativeFor(record,works),next=structuredClone(record);Object.assign(next,{phase:'compare',alternativeRemovedId:alternative.id,comparisonBasis:alternative.basis,compareChoice:null,confirmed:false});delete next.finishedAt;return next;
 }
 export function chooseDifficultEditComparison(record,choice,works) {
-  if(!validDifficultEditDraft(record,works)||record.phase!=='compare'||!CHOICES.includes(choice))return record;
+  if(!isLegacyDifficultEdit(record)||!validDifficultEditDraft(record,works)||record.phase!=='compare'||!CHOICES.includes(choice))return record;
   if(record.compareChoice===choice)return record;
   const next=structuredClone(record);next.compareChoice=choice;next.confirmed=false;delete next.finishedAt;return next;
 }
 export function resetDifficultEditComparison(record,works) {
-  if(!validDifficultEditDraft(record,works))return record;const next=structuredClone(record);Object.assign(next,{phase:'edit',alternativeRemovedId:null,comparisonBasis:null,compareChoice:null,confirmed:false});delete next.finishedAt;return next;
+  if(!isLegacyDifficultEdit(record)||!validDifficultEditDraft(record,works))return record;const next=structuredClone(record);Object.assign(next,{phase:'edit',alternativeRemovedId:null,comparisonBasis:null,compareChoice:null,confirmed:false});delete next.finishedAt;return next;
 }
 
 const evidence=(record,label,detail,workIds)=>({roundId:'scenario:'+record.id,label,detail,workIds:unique(workIds)});
 function finding(record,key,titleText,text,support,options={}) {
   return {id:'difficult-edit-'+record.id+'-'+key,title:titleText,text,kind:'curation',priority:8,support,counter:[],alternatives:[],...options,evidence:unique([...support,...(options.counter||[])].flatMap(e=>e.workIds))};
 }
+function singleEditReading(works,record) {
+  const kept=difficultEditWalls(record).initial,removed=record.removedId,name=id=>title(workById(works,id));
+  const decision=evidence(record,'Three-work edit',`Kept ${kept.map(name).join('; ')}. Put ${name(removed)} in storage.`,record.offeredIds);
+  const limits=['This is a selection for this four-work wall. Leaving a work out does not record an absolute dislike.','The images share a display size rather than their original physical scale.','One edit supplies one decision; its three retained works are not independent replications.'];
+  const ledger=finding(record,'decision','Three kept; one left out.',`You kept ${kept.map(name).join('; ')} and left ${name(removed)} outside this wall.`,[decision],{priority:2,readingBasis:'decision-ledger',pattern:false,alternatives:limits});
+  const sources=capturedPreferences(works,record.preferenceContext,record.preferenceSources);
+  const pairs=kept.flatMap(id=>{
+    const source=sources.filter(s=>s.round.works.some(w=>w.id===removed)&&s.round.works.some(w=>w.id===id)).at(-1);
+    if(!source)return [];
+    return [{keptId:id,source,gap:source.answer.positions[removed]-source.answer.positions[id]}];
+  });
+  const opposing=pairs.filter(pair=>pair.gap>=15).sort((a,b)=>b.source.index-a.source.index||b.gap-a.gap),sample=opposing[0];
+  if(!sample)return [ledger];
+  const previous=pair=>({roundId:pair.source.round.id,label:'Earlier individual preference',prompt:pair.source.round.title,detail:`${name(removed)}: ${pair.source.answer.positions[removed]}; ${name(pair.keptId)}: ${pair.source.answer.positions[pair.keptId]} on the earlier preference scale.`,workIds:[removed,pair.keptId],sourceWorkIds:pair.source.round.works.map(w=>w.id)});
+  const aligned=pairs.filter(pair=>pair.gap<=-15);
+  const connection=finding(record,'preference','A higher-rated work stayed outside this wall.',`You previously placed ${name(removed)} above ${name(sample.keptId)}. This edit kept ${name(sample.keptId)} and left ${name(removed)} out.${aligned.length?' Other kept works also agreed with their earlier pair order.':''}`,[previous(sample),decision],{priority:11,readingBasis:'matched-earlier-preference',counter:aligned.slice(0,2).map(previous),alternatives:[...limits,'Only the latest eligible earlier response for each exact pair is used. The other offered works, instructions, attention and timing may differ.','The earlier complete question and answer were frozen before this exercise. These two responses do not establish why the edit changed or a general consistency score.','The 15-point earlier gap is a display threshold, not a confidence estimate.'],comparisons:[{kind:'categorical-contrast',workIds:[removed,sample.keptId],sourceRoundIds:[sample.source.round.id,'scenario:'+record.id],notes:{[removed]:[{role:'earlier-preference',tone:'preference',text:'Earlier preference: '+sample.source.answer.positions[removed]+' / 100'},{role:'leave',tone:'curation',text:'Left out of this wall'}],[sample.keptId]:[{role:'earlier-preference',tone:'preference',text:'Earlier preference: '+sample.source.answer.positions[sample.keptId]+' / 100'},{role:'keep',tone:'curation',text:'Kept on this wall'}]}}]});
+  return [connection,ledger];
+}
 export function analyzeDifficultEdit(works,record,previousRecords=[]) {
   if(!validDifficultEdit(record,works))return [];
+  if(!isLegacyDifficultEdit(record))return singleEditReading(works,record);
   const walls=difficultEditWalls(record),name=id=>title(workById(works,id)),list=ids=>ids.map(name).join('; '),removed=record.removedId,other=record.alternativeRemovedId;
   const editEv=evidence(record,'Initial edit',`You put ${name(removed)} in storage and kept ${list(walls.initial)}.`,record.offeredIds);
   const compareEv=evidence(record,'Two walls',`The alternative restored ${name(removed)} in the position occupied by ${name(other)}. The other two works stayed in the same positions. You chose ${record.compareChoice==='equal'?'either wall':record.compareChoice==='initial'?'the initial wall':'the alternative wall'}.`,record.offeredIds);
@@ -159,10 +212,10 @@ export function createDifficultEdit({app,getRecord,setRecord,getWorks,image,esc,
   function markup(){
     const d=record();if(!isDifficultEdit(d))return '';
     if(!valid())return '<section class="difficult-edit"><h1 id="question-title">This wall cannot be reopened.</h1><p>A referenced work or part of the saved comparison is unavailable. No replacement has been chosen.</p><button class="text-button" type="button" data-action="lab-home">← Exercises</button></section>';
-    const comparing=d.phase==='compare',source=d.source.kind==='gallery-room'?'From your '+d.source.roomName:'Four works from the collection';
-    return `<section class="difficult-edit" data-difficult-step="${d.phase}"><header class="difficult-top"><button class="text-button" type="button" data-action="lab-home">← Exercises</button><span>${esc(source)}</span><span>${comparing?'02':'01'} / 02</span></header><div class="difficult-question"><p class="eyebrow">The difficult edit</p><h1 id="question-title">${comparing?'Which wall would you keep?':'One work must go.'}</h1><p>${comparing?'Both versions keep three works. Two stay in the same positions; one changes.':'Keep three works on this wall. Drag one into storage, or tap it to put it back.'}</p></div><div class="difficult-image-status" data-difficult-image-status role="status" hidden></div>
+    const legacy=isLegacyDifficultEdit(d),comparing=legacy&&d.phase==='compare',source=d.source.kind==='gallery-room'?'From your '+d.source.roomName:'Four works from the collection';
+    return `<section class="difficult-edit" data-difficult-step="${d.phase}" data-difficult-protocol="${esc(d.protocol)}"><header class="difficult-top"><button class="text-button" type="button" data-action="lab-home">← Exercises</button><span>${esc(source)}</span><span>${legacy?(comparing?'02':'01')+' / 02':'Keep three · leave one'}</span></header><div class="difficult-question"><p class="eyebrow">The difficult edit</p><h1 id="question-title">${comparing?'Which wall would you keep?':'One work must go.'}</h1><p>${comparing?'Both versions keep three works. Two stay in the same positions; one changes.':'Keep three works on this wall. Drag one into storage, or tap it to put it back.'}</p></div><div class="difficult-image-status" data-difficult-image-status role="status" hidden></div>
       ${comparing?`<div class="difficult-comparisons">${d.comparisonOrder.map((variant,i)=>compareWall(variant,i?'B':'A')).join('')}</div><button class="difficult-equal-choice" type="button" data-action="difficult-choice" data-choice="equal" aria-pressed="${d.compareChoice==='equal'}"><span class="difficult-choice-dot" aria-hidden="true"></span>Either wall works equally well for me</button>`:`<div class="difficult-wall" data-difficult-wall>${d.offeredIds.map(id=>id===d.removedId?`<div class="difficult-empty-slot"><span>In storage</span><button class="text-button" type="button" data-action="difficult-putback">Return to the wall</button></div>`:art(id)).join('')}</div><div class="difficult-storage" data-difficult-storage><div><span class="eyebrow">Storage</span><p>${d.removedId?'This work is off the wall.':'Drop one work here.'}</p></div>${d.removedId?`<button class="difficult-stored-art" type="button" data-action="difficult-putback" data-difficult-work="${esc(d.removedId)}" aria-label="Return ${esc(title(work(d.removedId)))} to the wall">${image(work(d.removedId))}<span>${esc(title(work(d.removedId)))}</span></button>`:'<span class="difficult-storage-mark" aria-hidden="true">↓</span>'}</div>`}
-      <p class="difficult-live" data-difficult-live role="status" aria-live="polite">${comparing?(d.compareChoice==='equal'?'You left the two versions equal.':d.compareChoice?'A wall is selected. Confirm when ready.':'Choose a wall, or leave the versions equal.'):d.removedId?title(work(d.removedId))+' is in storage. You can change the edit.':'All four works are on the wall.'}</p><div class="difficult-actions"><div><button class="text-button" type="button" data-action="${comparing?'difficult-edit-again':'lab-home'}">${comparing?'← Change the edit':'Save and come back later'}</button><button class="text-button" type="button" data-action="difficult-undo">Undo</button></div><button class="primary-button" type="button" data-action="${comparing?'lab-finish':'difficult-compare'}" disabled>${comparing?'Read this decision':'Compare two versions'} →</button></div></section>`;
+      <p class="difficult-live" data-difficult-live role="status" aria-live="polite">${comparing?(d.compareChoice==='equal'?'You left the two versions equal.':d.compareChoice?'A wall is selected. Confirm when ready.':'Choose a wall, or leave the versions equal.'):d.removedId?title(work(d.removedId))+' is in storage. You can change the edit.':'All four works are on the wall.'}</p><div class="difficult-actions"><div><button class="text-button" type="button" data-action="${comparing?'difficult-edit-again':'lab-home'}">${comparing?'← Change the edit':'Save and come back later'}</button><button class="text-button" type="button" data-action="difficult-undo">Undo</button></div><button class="primary-button" type="button" data-action="${comparing||!legacy?'lab-finish':'difficult-compare'}" disabled>${comparing?'Read this decision':legacy?'Compare two versions':'Keep these three'} →</button></div></section>`;
   }
   function remove(id){if(mountedReady())update(setDifficultEditRemoval(record(),id,getWorks()));}
   function clearDrag(){if(frame)cancelAnimationFrame(frame);frame=null;drag?.ghost?.remove();drag=null;root()?.querySelectorAll('.is-dragging,.is-drag-over').forEach(el=>el.classList.remove('is-dragging','is-drag-over'));}

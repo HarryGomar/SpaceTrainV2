@@ -4,8 +4,10 @@ import fs from 'node:fs';
 import {planStimulusPanels,FIRST_PANEL_SIZES} from '../../public/art-atlas/stimulus-planner.mjs';
 import {planAdaptivePanels} from '../../public/art-atlas/adaptive-selection.mjs';
 import {buildJourneyRounds} from '../../public/art-atlas/journey-bank.mjs';
-const actual=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/artworks.json',import.meta.url),'utf8'));
+import {legacyV8Rounds} from './helpers/legacy-v8.mjs';
 const reviewedNotes=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/curation-notes.json',import.meta.url),'utf8'));
+const legacyIds=new Set([...reviewedNotes.proposedFirst18Panels.flatMap(panel=>panel.workIds),...reviewedNotes.reservePools.batch2,...reviewedNotes.reservePools.batch3]);
+const actual=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/artworks.json',import.meta.url),'utf8')).filter(work=>legacyIds.has(work.id));
 const featureKeys=['abstraction','energy','complexity','humanity','narrative','atmosphere','color'];
 function synthetic(count=99){const countries=['France','Mexico','China','India','Egypt','United States'],years=[1100,1500,1700,1820,1880,1920];return Array.from({length:count},(_,i)=>({id:'w'+String(i).padStart(3,'0'),title:'Work '+i,artist:'Artist '+i,featureSemanticVersion:'literal-action-setting-v1',sourceUrl:'https://museum.example/'+i,image:'art-'+i+'.jpg',country:countries[i%6],movement:'Tradition '+i%20,recognitionTier:i<50?'landmark':i<86?'established':'discovery',features:Object.fromEntries(featureKeys.map((f,k)=>[f,((i*(k+3)+k)%11)/10])),analysis:{yearRange:[years[i%6],years[i%6]]}}));}
 function responsesFor(plan,works,batchIndex=0,prefix='source'){
@@ -110,7 +112,7 @@ test('The planner does not mutate works, history, curation notes or preserved so
 });
 
 test('Actual all-skipped and sparse first50 histories avoid the prior final images without changing the other17 panels',()=>{
-  const first=buildJourneyRounds(actual,{}, {seed:'editorial-release-audit-0'}),before=structuredClone(first),lastIds=first[49].works.map(work=>work.id),ordinary=first.filter(round=>round.evidence.construct==='preference'&&round.evidence.panelNumber);
+  const first=legacyV8Rounds(actual),before=structuredClone(first),lastIds=first[49].works.map(work=>work.id),ordinary=first.filter(round=>round.evidence.construct==='preference'&&round.evidence.panelNumber);
   for(const [completed,badId] of [[0,'green-tara'],[8,'ethiopian-apostles']]){
     const answers=Object.fromEntries(first.map(round=>[round.id,{workIds:round.works.map(work=>work.id),skipped:true}]));
     for(const round of ordinary.slice(0,completed))answers[round.id]={workIds:round.works.map(work=>work.id),criterion:'preference',positions:Object.fromEntries(round.works.map(work=>[work.id,Math.round(work.features.energy*100)])),confirmed:true};
@@ -143,4 +145,14 @@ test('An insufficient unavoided catalogue records boundary fallback instead of a
   const works=synthetic(4),last={id:'all-four-shown',kind:'context',works},adaptivePlan={panels:[{workIds:works.slice(0,2).map(work=>work.id),construct:'preference',role:'exploration'}]};
   const plan=planStimulusPanels({works,rounds:[last],answers:{[last.id]:{skipped:true}},batchIndex:1,panelCount:1,panelSizes:[2],adaptivePlan,curationNotes:{reservePools:{batch2:[],batch3:[]}}});
   assert.equal(plan.complete,true);assert.equal(plan.audit.boundarySpacing.status,'fallback');assert.equal(plan.audit.boundarySpacing.fallback,true);assert.equal(plan.audit.boundarySpacing.remainingOverlapIds.length,2);assert.ok(plan.audit.boundarySpacing.fallbackReason);assert.ok(plan.audit.warnings.some(row=>row.panel===1));assert.equal(new Set(plan.panels[0].workIds).size,2);assert.ok(Object.values(plan.coverage.plannedUses).every(count=>count<=2));
+});
+
+test('Fresh exploratory contrasts can yield a little descriptor separation to avoid repeatedly presented paintings',()=>{
+  const works=synthetic(24).map((work,index)=>({...work,country:'France',movement:'One tradition',recognitionTier:'established',analysis:{yearRange:[1800,1800]},features:Object.fromEntries(featureKeys.map(key=>[key,key==='abstraction'?[0,1,.2,.8][index]??.5:.5]))}));
+  const protectedPanel={workIds:works.slice(-2).map(work=>work.id),construct:'preference',role:'challenge',comparisonNovel:true,provisionalPrediction:null};
+  const adaptivePlan={panels:[protectedPanel,{workIds:works.slice(0,2).map(work=>work.id),construct:'preference',role:'exploration'}]},options={works,batchIndex:1,panelCount:2,panelSizes:[2,2],adaptivePlan,seed:'exposure-versus-contrast',curationNotes:{reservePools:{batch2:[],batch3:[]}}};
+  const before=planStimulusPanels(options);assert.deepEqual(new Set(before.panels[1].workIds),new Set([works[0].id,works[1].id]));
+  const rounds=Array.from({length:3},(_,index)=>({id:'earlier-image-'+index,kind:'context',works:works.slice(0,2),evidence:{construct:'source-note'}})),after=planStimulusPanels({...options,rounds});
+  assert.deepEqual(after.panels[0],protectedPanel);assert.ok(after.panels[1].workIds.every(id=>![works[0].id,works[1].id].includes(id)));assert.ok(after.panels[1].plannerDiagnostic.targetGap>=.3,'Exposure balancing must retain a useful known contrast');
+  assert.deepEqual(adaptivePlan.panels[0],protectedPanel);
 });

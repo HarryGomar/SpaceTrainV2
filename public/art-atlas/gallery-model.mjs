@@ -1,6 +1,7 @@
 import { analyzeGallery } from './gallery-analysis.mjs';
 import { analyzeRoomDecisions } from './room-study-analysis.mjs';
 import {museumLibraryOrder} from './curation-priority.mjs';
+import {captureMuseumPreferences} from './museum-preferences.mjs';
 
 export const GALLERY_PROTOCOL='open-gallery-v1';
 export const ROOM_STUDY='room-relations-v1';
@@ -43,7 +44,7 @@ export function gallerySlots(record){
 export function createGalleryRecord(works,baselineAnswers={},options={}) {
   const id=options.id||'gallery-'+Date.now()+'-'+Math.random().toString(36).slice(2,8),prioritised=options.presentationOrder==='landmark-first-v1',offeredIds=(prioritised?museumLibraryOrder(works):works).map(w=>w.id);let seed=[...id].reduce((s,c)=>(Math.imul(s,31)+c.charCodeAt(0))>>>0,2166136261);
   if(!prioritised)for(let i=offeredIds.length-1;i>0;i--){seed=(Math.imul(seed,1664525)+1013904223)>>>0;const j=seed%(i+1);[offeredIds[i],offeredIds[j]]=[offeredIds[j],offeredIds[i]];}
-  return {version:2,kind:'curate',protocol:GALLERY_PROTOCOL,id,createdAt:options.now||Date.now(),offeredIds,presentationOrder:prioritised?'landmark-first-v1':'seeded-shuffle-v1',presentedIds:[],placements:{},roomNames:Object.fromEntries(ROOMS.map(r=>[r.id,''])),baselineAnswers:structuredClone(baselineAnswers),labelExposureIds:[],...(options.roomStudy===false?{}:{roomStudy:ROOM_STUDY,phase:'arrange',roomStep:0,roomResponses:{}})};
+  return {version:2,kind:'curate',protocol:GALLERY_PROTOCOL,id,createdAt:options.now||Date.now(),offeredIds,presentationOrder:prioritised?'landmark-first-v1':'seeded-shuffle-v1',presentedIds:[],placements:{},roomNames:Object.fromEntries(ROOMS.map(r=>[r.id,''])),baselineAnswers:structuredClone(baselineAnswers),labelExposureIds:[],...(options.preferenceSources?{preferenceSnapshot:captureMuseumPreferences(options.preferenceCatalogue||works,options)}:{}),...(options.roomStudy===false?{}:{roomStudy:ROOM_STUDY,phase:'arrange',roomStep:0,roomResponses:{}})};
 }
 export function validRoomResponses(record,complete=false){
   const a=record.roomResponses;

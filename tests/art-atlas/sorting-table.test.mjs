@@ -39,8 +39,8 @@ test('Saved geometry survives serialization and moving an artwork cannot duplica
   const result=placeSortingWork(saved,id,[p[0],.42]);assert.ok(result.ok);assert.equal(sortingIds(result.record).length,8);assert.equal(result.record.confirmed,false);assert.equal(result.record.finishedAt,undefined);assert.deepEqual(saved.positions[id],p);
 });
 
-test('Overlap is rejected without shifting other paintings or inventing a distance',()=>{
-  const r=complete(),[a,b]=r.offeredIds;const result=placeSortingWork(r,a,r.positions[b]);assert.equal(result.ok,false);assert.equal(result.record,r);assert.deepEqual(r.positions,JSON.parse(JSON.stringify(r.positions)));
+test('Invalid coordinates and unknown works are rejected without shifting saved paintings',()=>{
+  const r=complete(),[a]=r.offeredIds;
   for(const point of [null,[.5],[.5,undefined],[0,.5],[1,.5],[NaN,.5],[.5,Infinity]]){const result=placeSortingWork(r,a,point);assert.equal(result.ok,false);assert.equal(result.record,r);}
   assert.equal(placeSortingWork(r,'unoffered',[.4,.45]).ok,false);
 });
@@ -83,6 +83,7 @@ test('Earlier tables are captured by exact ID and chronology, not array order',(
 test('Repeat comparisons preserve the same painting identities and do not substitute another pool',()=>{
   const previous=complete(actual,{id:'earlier',now:1,finishedAt:2}),r=complete(actual,{id:'current',now:10,records:[previous]});
   const changed=structuredClone(previous),other=actual.find(w=>!changed.offeredIds.includes(w.id));const id=changed.offeredIds[0];changed.offeredIds[0]=other.id;changed.positions[other.id]=changed.positions[id];delete changed.positions[id];changed.presentedIds=changed.presentedIds.map(v=>v===id?other.id:v);changed.ui.selectedId=other.id;
+  changed.stackOrder=changed.stackOrder.map(value=>value===id?other.id:value);
   assert.equal(validSorting(changed,actual),true);assert.equal(analyzeSorting(actual,r,[changed]).some(f=>f.id.endsWith('-comparison')),false);
 });
 

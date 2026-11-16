@@ -52,7 +52,7 @@ function renderSelection(focus=false){
   history.replaceState(null,'','#'+selected.id);
   if(focus)app.querySelector('[data-reading="'+selected.id+'"]').focus({preventScroll:true});
 }
-function openEvidence(){const dialog=document.querySelector('#explorer-evidence'),signals=evidenceCopy[selected.id]||[];dialog.querySelector('h2').textContent=selected.title;dialog.querySelector(':scope>div').innerHTML=`<h3>Evidence needed</h3><ul>${signals.map(text=>`<li>${esc(text)}</li>`).join('')}</ul><h3>What it can establish</h3>${selected.limits.map(text=>`<p>${esc(text)}</p>`).join('')}`;dialog.showModal();}
+function openEvidence(){const dialog=document.querySelector('#explorer-evidence'),signals=selected.requiredSignals||evidenceCopy[selected.id]||[];dialog.querySelector('h2').textContent=selected.title;dialog.querySelector(':scope>div').innerHTML=`<h3>Evidence needed</h3><ul>${signals.map(text=>`<li>${esc(text)}</li>`).join('')}</ul><h3>What it can establish</h3>${selected.limits.map(text=>`<p>${esc(text)}</p>`).join('')}`;dialog.showModal();}
 app.addEventListener('click',event=>{
   const lens=event.target.closest('[data-lens]');if(lens){selected=lenses.find(item=>item.id===lens.dataset.lens)?.readingIds.map(id=>readings.find(item=>item.id===id)).find(Boolean);if(selected)renderSelection();return;}
   const reading=event.target.closest('[data-reading]');if(reading){selected=readings.find(item=>item.id===reading.dataset.reading);renderSelection(true);return;}

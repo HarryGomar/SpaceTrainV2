@@ -60,19 +60,19 @@ test('neighbour anchor is fixed and excluded from candidate answers', () => {
   const round = neighbour();
   assert.equal(round.anchorWorks[0].id,'i');
   assert.deepEqual(sanitizeContrastDraft(round).workIds,['a','b','c','d']);
-  assert.ok(validContrastAnswer(round,answer(round,{neighbourId:'a',noGoodNeighbour:false,relationshipId:'form'})));
+  assert.ok(validContrastAnswer(round,answer(round,{neighbourId:'a',noGoodNeighbour:false,relationshipIds:['form']})));
   assert.equal(validContrastAnswer(round,answer(round,{neighbourId:'a',noGoodNeighbour:false})),false);
   assert.equal(validContrastAnswer(round,answer(round,{neighbourId:'i',noGoodNeighbour:false})),false);
   assert.equal(validContrastAnswer(round,answer(round,{neighbourId:'a',noGoodNeighbour:true})),false);
   assert.ok(validContrastAnswer(round,answer(round,{neighbourId:null,noGoodNeighbour:true})));
-  assert.equal(validContrastAnswer(round,answer(round,{neighbourId:'a',noGoodNeighbour:false,relationshipId:'invented'})),false);
+  assert.equal(validContrastAnswer(round,answer(round,{neighbourId:'a',noGoodNeighbour:false,relationshipIds:['invented']})),false);
 });
 
 test('no-good-neighbour clears a prior choice and its reported connection', () => {
-  const round = neighbour(), next = handleContrastAction(round,answer(round,{neighbourId:'a',noGoodNeighbour:false,relationshipId:'colour'}),'contrast-none');
-  assert.equal(next.neighbourId,null); assert.equal(next.noGoodNeighbour,true); assert.equal(next.relationshipId,null);
-  const changed = handleContrastAction(round,answer(round,{neighbourId:'a',noGoodNeighbour:false,relationshipId:'colour'}),'contrast-pick',{workId:'b'});
-  assert.equal(changed.neighbourId,'b'); assert.equal(changed.relationshipId,null);
+  const round = neighbour(), next = handleContrastAction(round,answer(round,{neighbourId:'a',noGoodNeighbour:false,relationshipIds:['colour']}),'contrast-none');
+  assert.equal(next.neighbourId,null); assert.equal(next.noGoodNeighbour,true); assert.deepEqual(next.relationshipIds,[]);
+  const changed = handleContrastAction(round,answer(round,{neighbourId:'a',noGoodNeighbour:false,relationshipIds:['colour']}),'contrast-pick',{workId:'b'});
+  assert.equal(changed.neighbourId,'b'); assert.deepEqual(changed.relationshipIds,[]);
   assert.equal(validContrastAnswer(round,{...changed,confirmed:true}),false);
 });
 
@@ -183,7 +183,7 @@ test('returning to the same six-work set cannot inflate support or erase an oppo
 
 test('neighbour reading retains the fixed painting, exact brief and reported connection', () => {
   const pref = preference('before',['a','b']), round = neighbour();
-  const findings = buildContrastReadings({works,rounds:[pref,round],answers:{before:prefAnswer(pref,{a:25,b:80}),neighbour:answer(round,{neighbourId:'a',noGoodNeighbour:false,relationshipId:'form'})}});
+  const findings = buildContrastReadings({works,rounds:[pref,round],answers:{before:prefAnswer(pref,{a:25,b:80}),neighbour:answer(round,{neighbourId:'a',noGoodNeighbour:false,relationshipIds:['form']})}});
   assert.equal(findings.length,1); assert.equal(findings[0].id,'contrast-neighbour');
   assert.ok(findings[0].support[1].workIds.includes('i'));
   assert.equal(findings[0].support[1].prompt,'The exact task brief');
@@ -193,7 +193,7 @@ test('neighbour reading retains the fixed painting, exact brief and reported con
 
 test('a neighbour can differ from one earlier preference while retaining another', () => {
   const pref = preference('before',['a','b','c','d']), round = neighbour();
-  const findings = buildContrastReadings({works,rounds:[pref,round],answers:{before:prefAnswer(pref,{a:50,b:90,c:10,d:30}),neighbour:answer(round,{neighbourId:'a',noGoodNeighbour:false,relationshipId:'form'})}});
+  const findings = buildContrastReadings({works,rounds:[pref,round],answers:{before:prefAnswer(pref,{a:50,b:90,c:10,d:30}),neighbour:answer(round,{neighbourId:'a',noGoodNeighbour:false,relationshipIds:['form']})}});
   assert.equal(findings.length,1); assert.equal(findings[0].supportingSetCount,1); assert.equal(findings[0].counterSetCount,1);
   assert.ok(findings[0].support.some(item => item.workIds.includes('b')));
   assert.ok(findings[0].counter.some(item => item.workIds.includes('c')));
@@ -201,7 +201,7 @@ test('a neighbour can differ from one earlier preference while retaining another
 
 test('an isolated categorical choice makes no manufactured taste finding', () => {
   const round = neighbour();
-  assert.deepEqual(buildContrastReadings({works,rounds:[round],answers:{neighbour:answer(round,{neighbourId:'a',noGoodNeighbour:false,relationshipId:'form'})}}),[]);
+  assert.deepEqual(buildContrastReadings({works,rounds:[round],answers:{neighbour:answer(round,{neighbourId:'a',noGoodNeighbour:false,relationshipIds:['form']})}}),[]);
   const keepRound = keep();
   assert.deepEqual(buildContrastReadings({works,rounds:[keepRound],answers:{keep:answer(keepRound,{keepId:'a',leaveId:'b'})}}),[]);
 });

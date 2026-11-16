@@ -21,12 +21,15 @@ function history(works=artworks(), count=12) {
 const pairKey=(a,b)=>JSON.stringify([a,b].sort());
 const allPairs=ids=>ids.flatMap((a,i)=>ids.slice(i+1).map(b=>pairKey(a,b)));
 
-test('Later exploration retains landmark anchors even after their greater prior exposure',()=>{
+test('Later exploration uses underexposed works before familiar landmark anchors',()=>{
   const works=artworks(120).map((work,index)=>({...work,recognitionTier:index<40?'landmark':index<80?'established':'discovery'}));
   const rounds=Array.from({length:5},(_,i)=>({id:'exposure-'+i,kind:'match',works:works.slice(0,40)}));
   const plan=planAdaptivePanels({works,rounds,answers:{},batchIndex:4,seed:'known-anchors'}),byId=new Map(works.map(work=>[work.id,work]));
   assert.equal(plan.panels.length,18);assert.ok(plan.panels.every(panel=>panel.role==='exploration'));
-  for(const panel of plan.panels){assert.equal(panel.workIds.filter(id=>byId.get(id).recognitionTier==='landmark').length,panel.subtype==='new-comparison'?1:2);assert.ok(panel.workIds.filter(id=>byId.get(id).recognitionTier==='discovery').length<=1);}
+  for(const panel of plan.panels.filter(panel=>!panel.subtype)){
+    assert.ok(panel.workIds.every(id=>byId.get(id).recognitionTier!=='landmark'),'Five earlier presentations cannot be bypassed by recognition-tier eligibility');
+    assert.equal(panel.selectionPolicy,'underused-before-recognition-v1');
+  }
   assert.ok(Math.max(...Object.values(plan.coverage.plannedUses))<=2);
   assert.equal(new Set(plan.panels.flatMap(panel=>panel.workIds)).size,plan.panels.reduce((total,panel)=>total+panel.workIds.length,0));
 });

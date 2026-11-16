@@ -16,10 +16,11 @@ const digest = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
 const normalize = text => String(text || '').normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]/g, '');
 const identity = work => normalize(work.artist) + ':' + normalize(work.title);
 
-test('The reviewed expansion has distinct objects and no normalized identity or source collision with the original354', () => {
+test('The reviewed expansion has distinct objects and no normalized identity or source collision with other study and decorative works', () => {
   assert.equal(additions.length, 57);
   assert.equal(ids.size, additions.length);
-  assert.equal(study.length, 99);
+  assert.equal(study.length, 107);
+  assert.equal(study.filter(work => !work.image.startsWith('assets/classics-20261115/')).length, 99);
   assert.equal(opening.length, 255);
   const oldIdentities = new Set(previous.map(identity));
   const oldSources = new Set(previous.map(work => String(work.sourceId)));

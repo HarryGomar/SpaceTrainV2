@@ -1,88 +1,50 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import fs from 'node:fs';
-import {buildJourneyRounds,createJourneyStimulusPlan,JOURNEY_REVISION} from '../../public/art-atlas/journey-bank.mjs';
+import {buildJourneyRounds,journeyCurationNotes,JOURNEY_REVISION} from '../../public/art-atlas/journey-bank.mjs';
 import {validAnswer} from '../../public/art-atlas/engine.mjs';
 import {sanitizeContrastDraft,validContrastAnswer} from '../../public/art-atlas/contrast-rounds.mjs';
 import {buildContrastReadings} from '../../public/art-atlas/contrast-readings.mjs';
+import {auditTrajectory,works,ordinary,questionIds} from './helpers/repetition-audit.mjs';
+import {legacyV8Rounds} from './helpers/legacy-v8.mjs';
+const ids=round=>round.works.map(work=>work.id),same=(a,b)=>assert.deepEqual([...a].sort(),[...b].sort());
+let cached;const fixture=()=>cached||=auditTrajectory('editorial-release-audit');
 
-const works=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/artworks.json',import.meta.url),'utf8'));
-const notes=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/curation-notes.json',import.meta.url),'utf8'));
-const ids=round=>round.works.map(work=>work.id);
-const ordinary=round=>round.kind==='spectrum'&&round.criterion==='preference'&&round.evidence?.construct==='preference';
-const answerFor=round=>({workIds:ids(round),criterion:'preference',positions:Object.fromEntries(round.works.map(work=>[work.id,Math.round(work.features.energy*100)])),confirmed:true});
-
-function fixture(){
-  const history=[],answers={},blocks=[],plans=[];let reservationPlan;
-  for(let batchIndex=0;batchIndex<3;batchIndex++){
-    const seed='editorial-release-audit-'+batchIndex;
-    const plan=createJourneyStimulusPlan({works,rounds:history,answers,batchIndex,seed,reservationPlan});reservationPlan=plan.reservations;
-    const block=buildJourneyRounds(works,answers,{offset:batchIndex*50,batchIndex,seed,history,panels:plan,reservationPlan});
-    for(const round of block)if(ordinary(round)){const answer=answerFor(round);assert.equal(validAnswer(round,answer),true);answers[round.id]=answer;}
-    plans.push(plan);blocks.push(block);history.push(...block);
+test('Fresh first150 retains72/46/46 and every claimed ordinary baseline names a real earlier exact pair',()=>{
+  const {rounds:history,answers,blocks}=fixture(),notes=journeyCurationNotes(works);assert.deepEqual(blocks.map(block=>block.plan.coverage.firstRatingWorkIds.length),[72,46,46]);
+  for(const panel of notes.proposedFirst18Panels)same(ids(blocks[0].rounds.find(round=>ordinary(round)&&round.evidence.panelNumber===panel.panel)),panel.workIds);
+  for(const round of history.filter(round=>round.kind==='contrast')){
+    const link=round.evidence.baselineLinkPlan;assert.equal(link.numericRankingsInferred,false);
+    for(const pair of link.pairs){const source=history.find(item=>item.id===pair.sourceRoundId);assert(source);assert(ordinary(source));assert(validAnswer(source,answers[source.id]));assert(history.indexOf(source)<history.indexOf(round));assert(pair.workIds.every(id=>ids(source).includes(id)&&ids(round).includes(id)));assert(link.sourceRoundIds.includes(source.id));}
+    if(round.evidence.baselineFallback){assert.equal(link.linkedPairCount,0);assert.match(round.evidence.baselineFallbackReason,/standalone categorical/);}
   }
-  return{history,answers,blocks,plans};
-}
+  for(const kind of ['neighbour','keep-leave','same-subject']){const round=blocks[0].rounds.find(round=>round.contrastKind===kind);assert(round.evidence.baselineLinkPlan.linkedPairCount>0,kind+' needs a real first-block comparison opportunity');assert.equal(round.evidence.baselineFallback,false);}
+  assert.equal(blocks[0].rounds[26].evidence.baselineLinkPlan.linkedPairCount,6);
+});
 
-test('The real first150 plans deliberately provide genuine ordinary pair baselines without changing72/42/42 ratings',()=>{
-  const {history,answers,blocks,plans}=fixture();
-  assert.deepEqual(plans.map(plan=>plan.coverage.firstRatingWorkIds.length),[72,42,42]);
-  for(const panel of notes.proposedFirst18Panels){const round=blocks[0].find(round=>ordinary(round)&&round.evidence.panelNumber===panel.panel);assert.deepEqual([...ids(round)].sort(),[...panel.workIds].sort());}
-  const expected=[['journey-019','neighbour-great-wave','journey-005'],['journey-027','keep-six-landmarks-a','journey-001'],['journey-042','subject-adults-children','journey-007'],['journey-092','subject-mountains','journey-049'],['journey-142','subject-waves','journey-099']];
-  for(const [roundId,contentId,sourceId] of expected){
-    const round=history.find(row=>row.id===roundId),source=history.find(row=>row.id===sourceId),link=round.evidence.baselineLinkPlan;
-    assert.equal(round.contentId,contentId);assert.equal(ordinary(source),true);assert.equal(validAnswer(source,answers[source.id]),true);
-    assert.ok(history.indexOf(source)<history.indexOf(round));assert.equal(round.evidence.baselineFallback,false);assert.ok(link.sourceRoundIds.includes(sourceId));
-    assert.ok(link.pairs.some(pair=>pair.sourceRoundId===sourceId&&pair.workIds.every(id=>ids(source).includes(id)&&ids(round).includes(id))));assert.equal(link.numericRankingsInferred,false);
+test('Two clarity/interpretation maps revisit their own earlier appeal sets without the former isolated label question',()=>{
+  const rounds=buildJourneyRounds(works,{}, {seed:'appraisal-linkage'}),maps=rounds.filter(round=>round.kind==='grid'&&round.axis==='reading');assert.equal(maps.length,2);assert.deepEqual(maps.map(round=>round.evidence.panelNumber),[9,8]);assert.equal(rounds.some(round=>round.evidence.construct==='interpretive-openness'),false);
+  for(const map of maps){const source=rounds.find(round=>ordinary(round)&&round.evidence.panelNumber===map.evidence.panelNumber);same(ids(map),ids(source));assert(map.evidence.priorMeasureRoundIds.includes(source.id));assert(rounds.indexOf(source)<rounds.indexOf(map));}
+  const historical=legacyV8Rounds(works).find(round=>round.evidence.construct==='interpretive-openness');assert(historical);const rebuilt=buildJourneyRounds(works,{}, {history:[historical]});assert.deepEqual(rebuilt.find(round=>round.id===historical.id),historical);
+});
+
+test('Captured historical34 and49 stay exact where the fresh schedule now uses other instruments',()=>{
+  const old=legacyV8Rounds(works),openness=old.find(round=>round.evidence.construct==='interpretive-openness'),panel12=old.find(round=>ordinary(round)&&round.evidence.panelNumber===12),old34={...structuredClone(openness),id:'journey-034',works:structuredClone(panel12.works),title:'The openness wording already shown.',evidence:{...openness.evidence,panelNumber:12,journeyRevision:'art-profile-50-v6'}},old49=structuredClone(old[48]);
+  old49.hint='The bridge instruction already shown.';const history=[old34,old49],before=structuredClone(history),rebuilt=buildJourneyRounds(works,{}, {history,seed:'preserved-linkage'});assert.deepEqual(rebuilt[33],old34);assert.deepEqual(rebuilt[48],old49);assert.deepEqual(history,before);assert.equal(rebuilt[0].evidence.journeyRevision,JOURNEY_REVISION);assert(old49.evidence.bridgeComparison);
+});
+
+test('Captured closing049 and099 source snapshots survive changed later planning and answers',()=>{
+  const {rounds:history,answers,blocks}=fixture(),saved49=structuredClone(blocks[0].rounds[48]),saved99=structuredClone(blocks[1].rounds[48]),retained=[...blocks[0].rounds,saved99],before=structuredClone(retained);
+  const second=buildJourneyRounds(works,answers,{offset:50,batchIndex:1,seed:'changed-refresh-seed',history:retained,panels:blocks[1].plan,reservationPlan:blocks[1].plan.reservations});assert.deepEqual(second[48],saved99);assert.deepEqual(retained,before);assert.deepEqual(buildJourneyRounds(works,answers,{history:[saved49]})[48],saved49);
+  assert.equal(saved49.evidence.finalRefinement.binding,'bound');assert.equal(saved99.evidence.finalRefinement.binding,'bound');for(const round of [saved49,saved99])for(const id of round.evidence.finalRefinement.sourceRoundIds)assert(Number(id.slice(8))<Number(round.id.slice(8)));assert.deepEqual(history[48],saved49);assert.deepEqual(history[98],saved99);
+});
+
+test('Actual fresh contrast content can reach three conditional readings, while missing source responses cannot',()=>{
+  const rounds=buildJourneyRounds(works,{}, {seed:'editorial-release-audit-0'}),answers={};for(const round of rounds.filter(ordinary))answers[round.id]={workIds:ids(round),criterion:'preference',positions:Object.fromEntries(ids(round).map(id=>[id,50])),confirmed:true};
+  const sourceIds=[];
+  for(const kind of ['neighbour','keep-leave','same-subject']){
+    const round=rounds.find(round=>round.contrastKind===kind),pair=round.evidence.baselineLinkPlan.pairs[0];assert(pair,kind+' requires the recorded baseline opportunity');const [chosen,other]=pair.workIds;sourceIds.push(pair.sourceRoundId);answers[pair.sourceRoundId].positions[chosen]=20;answers[pair.sourceRoundId].positions[other]=80;
+    const choice=kind==='neighbour'?{neighbourId:chosen,noGoodNeighbour:false,relationshipIds:[round.relationshipOptions[0].id]}:kind==='keep-leave'?{keepId:chosen,leaveId:other}:{preferredId:chosen,noPreference:false};answers[round.id]={...sanitizeContrastDraft(round),...choice,confirmed:true};assert(validContrastAnswer(round,answers[round.id]));
   }
-  assert.equal(blocks[0][26].evidence.baselineLinkPlan.linkedPairCount,6);
-  assert.equal(blocks[0][41].evidence.baselineLinkPlan.plannedPairCount,1);assert.equal(blocks[0][41].evidence.baselineLinkPlan.completedPairCount,0);
-  assert.equal(blocks[1][41].evidence.baselineLinkPlan.completedPairCount,1);assert.equal(blocks[2][41].evidence.baselineLinkPlan.completedPairCount,1);
-  for(const block of blocks){const bridge=block[48],preceding=history.slice(0,history.indexOf(bridge)).filter(ordinary);assert.ok(bridge.works.every(work=>preceding.some(source=>ids(source).includes(work.id))));assert.equal(bridge.evidence.role,'probe');assert.equal(bridge.evidence.panelNumber,undefined);assert.equal(bridge.brief,undefined);assert.equal(bridge.anchorWorks,undefined);}
-  // An unused factual neighbour set can still lack a source pair. That is
-  // explicit standalone data, never a manufactured link or ranking.
-  const unlinked=blocks[2][18];assert.equal(unlinked.evidence.baselineFallback,true);assert.equal(unlinked.evidence.baselineLinkPlan.linkedPairCount,0);assert.match(unlinked.evidence.baselineFallbackReason,/standalone categorical/);
-});
-
-test('Openness uses an already preferred panel with no duplicate two-axis reading map',()=>{
-  const rounds=buildJourneyRounds(works,{}, {seed:'appraisal-linkage'}),appraisal=rounds.find(round=>round.evidence.construct==='interpretive-openness'),source=rounds[13];
-  assert.equal(appraisal.evidence.construct,'interpretive-openness');assert.equal(appraisal.evidence.panelNumber,8);assert.equal(source.evidence.construct,'preference');
-  assert.deepEqual([...ids(appraisal)].sort(),[...ids(source)].sort());assert.ok(appraisal.evidence.priorMeasureRoundIds.includes(source.id));
-  const readingMaps=rounds.filter(round=>round.kind==='grid'&&round.axis==='reading');
-  assert.ok(readingMaps.every(round=>JSON.stringify([...ids(round)].sort())!==JSON.stringify([...ids(appraisal)].sort())));
-  assert.equal(appraisal.title,'How much does each painting leave open?');assert.equal(appraisal.scale.left,'One clear reading');
-});
-
-test('Captured old34 and49 remain exact even when the new unshown schedule would choose other sources',()=>{
-  const rounds=buildJourneyRounds(works,{}, {seed:'frozen-linkage'}),panel12=rounds.find(round=>ordinary(round)&&round.evidence.panelNumber===12),panel17=rounds.find(round=>ordinary(round)&&round.evidence.panelNumber===17),panel18=rounds.find(round=>ordinary(round)&&round.evidence.panelNumber===18);
-  const old34={...structuredClone(rounds.find(round=>round.evidence.construct==='interpretive-openness')),id:'journey-034',works:structuredClone(panel12.works),title:'The openness wording already shown.',evidence:{...rounds[33].evidence,panelNumber:12,journeyRevision:'art-profile-50-v6'}};
-  const old49={...structuredClone(rounds[48]),works:[structuredClone(panel17.works[0]),structuredClone(panel18.works[0])],hint:'The bridge instruction already shown.',evidence:{...rounds[48].evidence,journeyRevision:'art-profile-50-v6'}};
-  delete old49.evidence.subjectBaselinePreparation;delete old49.evidence.preparesContrastContentId;
-  const history=[old34,old49],before=structuredClone(history),rebuilt=buildJourneyRounds(works,{}, {seed:'frozen-linkage',history});
-  assert.deepEqual(rebuilt[33],old34);assert.deepEqual(rebuilt[48],old49);assert.deepEqual(history,before);assert.equal(JOURNEY_REVISION,'art-profile-50-v8');
-});
-
-test('Prepared049 and099 snapshots remain exact when later planning has more completed source data',()=>{
-  const {history,answers,blocks,plans}=fixture(),saved49=structuredClone(blocks[0][48]),saved99=structuredClone(blocks[1][48]);
-  const retained=[...blocks[0],saved99],before=structuredClone(retained);
-  const second=buildJourneyRounds(works,answers,{offset:50,batchIndex:1,seed:'different-refresh-seed',history:retained,panels:plans[1],reservationPlan:plans[1].reservations});
-  assert.deepEqual(second[48],saved99);assert.deepEqual(retained,before);
-  const first=buildJourneyRounds(works,answers,{seed:'another-refresh-seed',history:[saved49]});assert.deepEqual(first[48],saved49);
-  assert.equal(saved49.evidence.preparesContrastContentId,'subject-mountains');assert.equal(saved99.evidence.preparesContrastContentId,'subject-waves');
-  assert.deepEqual(history[48],saved49);assert.deepEqual(history[98],saved99);
-});
-
-test('The actual first-block content can reach all three conditional cross-readings, and missing sources cannot',()=>{
-  const rounds=buildJourneyRounds(works,{}, {seed:'editorial-release-audit-0'}),answers={};
-  for(const round of rounds)if(ordinary(round))answers[round.id]={...answerFor(round),positions:Object.fromEntries(ids(round).map(id=>[id,50]))};
-  // Deliberate synthetic reversals exercise the complete content→response→reading
-  // path. They are not forecasts of what a participant will choose.
-  for(const [roundId,high,low] of [['journey-005','hokusai-mount-fuji','japanese-waves'],['journey-001','van-gogh-starry-night','study-hokusai-great-wave'],['journey-007','study-cassatt-child-bath','cassatt-omnibus']]){answers[roundId].positions[high]=80;answers[roundId].positions[low]=20;}
-  for(const [index,choice] of [[18,{neighbourId:'japanese-waves',noGoodNeighbour:false,relationshipId:'subject'}],[26,{keepId:'study-hokusai-great-wave',leaveId:'van-gogh-starry-night'}],[41,{preferredId:'cassatt-omnibus',noPreference:false}]]){
-    const round=rounds[index];answers[round.id]={...sanitizeContrastDraft(round),...choice,confirmed:true};assert.equal(validContrastAnswer(round,answers[round.id]),true);
-  }
-  const targetIds=['contrast-keep-leave','contrast-neighbour','contrast-subject-reversal'],readings=buildContrastReadings({works,rounds,answers});
-  for(const id of targetIds)assert.ok(readings.some(reading=>reading.id===id),id);
-  for(const id of ['journey-001','journey-005','journey-007'])delete answers[id];
-  assert.ok(buildContrastReadings({works,rounds,answers}).every(reading=>!targetIds.includes(reading.id)));
+  const expected=['contrast-keep-leave','contrast-neighbour','contrast-subject-reversal'],readings=buildContrastReadings({works,rounds,answers});for(const id of expected)assert(readings.some(reading=>reading.id===id),id);
+  for(const id of sourceIds)delete answers[id];assert(buildContrastReadings({works,rounds,answers}).every(reading=>!expected.includes(reading.id)));
 });

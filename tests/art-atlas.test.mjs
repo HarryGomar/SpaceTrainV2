@@ -27,10 +27,10 @@ test('All four Art Atlas entry pages resolve their local files under the route',
   }
 });
 
-test('The published study and opening keep all411 unique artwork records and local images',()=>{
+test('The published study and opening keep all419 unique artwork records and local images',()=>{
   const study=JSON.parse(read('artworks.json')),opening=JSON.parse(read('opening-artworks.json')),all=[...study,...opening];
-  assert.equal(study.length,156);assert.equal(opening.length,255);assert.equal(new Set(all.map(work=>work.id)).size,411);
-  assert.equal(new Set(all.map(work=>work.image)).size,411);
+  assert.equal(study.length,164);assert.equal(opening.length,255);assert.equal(new Set(all.map(work=>work.id)).size,419);
+  assert.equal(new Set(all.map(work=>work.image)).size,419);
   for(const work of all){
     const file=new URL(work.image,root);assert.ok(file.pathname.startsWith(root.pathname),work.id);
     const bytes=fs.readFileSync(file);assert.equal(bytes[0],255,work.id);assert.equal(bytes[1],216,work.id);

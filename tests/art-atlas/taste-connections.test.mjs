@@ -68,8 +68,16 @@ test('Malformed, unconfirmed, unknown or duplicate record identities are rejecte
   const a=museum();for(const mutate of [record=>record.confirmed=false,record=>record.finishedAt=NaN,record=>record.placements.w0=null,record=>record.presentedIds.push('unknown'),record=>record.protocol='another-protocol']){const record=structuredClone(a);mutate(record);assert.equal(build([record]).coverage.validArrangementRecords,0);}assert.equal(build([a,structuredClone(a)]).coverage.validArrangementRecords,0);assert.doesNotThrow(()=>build([null,{},'broken']));
 });
 
-test('All visual lists and displayed groups are capped while source counts remain explicit',()=>{
-  const result=build([museum(),sorting('one',3),sorting('two',5),museum('later',7)]);for(const field of ['groups','links','counterlinks','responseMaps','crossTaskPatterns','omissions'])assert.ok(result[field].length<=6);for(const group of result.groups){assert.ok(group.workIds.length<=6);assert.ok(group.totalWorkCount>=group.workIds.length);for(const item of [...group.support,...group.counter])assert.ok(item.workIds.every(id=>works.some(work=>work.id===id)));}
+test('Analysis retains links beyond a six-item preview while thumbnail limits preserve full group evidence',()=>{
+  const result=build([museum(),sorting('one',3),sorting('two',5),museum('later',7)]);assert.ok(result.links.length>6);assert.equal(result.groups.length,result.coverage.groupCountBeforeDisplayCap);assert.ok(result.crossTaskPatterns.some(item=>item.sourceIds.includes('scenario:museum')&&item.sourceIds.includes('scenario:one')));assert.ok(result.crossTaskPatterns.some(item=>item.sourceIds.includes('scenario:later')&&item.sourceIds.includes('scenario:two')));for(const group of result.groups){assert.ok(group.workIds.length<=6);assert.equal(group.totalWorkCount,group.allWorkIds.length);for(const item of [...group.support,...group.counter])assert.ok(item.workIds.every(id=>works.some(work=>work.id===id)));}
+});
+
+test('Contextual preference-looking values never enter a matched response map',()=>{
+  const f=responseFixture();for(const mutate of [r=>r.evidence.unconditional=false,r=>r.brief='For a different purpose',r=>r.evidence.brief='For a different purpose']){const pref=structuredClone(f.pref);mutate(pref);assert.deepEqual(build([],{rounds:[pref,f.curious],answers:f.answers}).responseMaps,[]);}
+});
+
+test('A later valid exact-set preference is retained as its own source without averaging old responses',()=>{
+  const f=responseFixture(),later={...f.pref,id:'later',works:[...f.pref.works].reverse(),evidence:{...f.pref.evidence,role:'repeat',repeatOf:'pref'}},answer={...f.answers.pref,workIds:['w2','w1','w0'],positions:{w0:0,w1:50,w2:100}},result=build([],{rounds:[f.pref,f.curious,later],answers:{...f.answers,later:answer}});assert.deepEqual(result.responseMaps[0].sourceIds,['later','curious']);assert.equal(result.responseMaps[0].points.find(point=>point.workId==='w0').x,0);
 });
 
 test('The current real catalogue can be used without imputing metadata or inventing a cluster',()=>{

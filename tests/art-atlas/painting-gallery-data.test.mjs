@@ -2,20 +2,36 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {buildPaintingGallery,filterPaintingGallery,nextGalleryContext,captureGalleryPreview,GALLERY_CONTEXT_SCOPE} from '../../public/art-atlas/painting-gallery-data.mjs';
+import {journeyCurationNotes,createJourneyStimulusPlan,buildJourneyRounds} from '../../public/art-atlas/journey-bank.mjs';
 const works=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/artworks.json',import.meta.url),'utf8')),notes=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/curation-notes.json',import.meta.url),'utf8'));
+const legacyWorks=works.filter(work=>!work.image.startsWith('assets/classics-20261115/'));
 const view=(gallery,id)=>gallery.views.find(view=>view.id===id),items=view=>view.groups.flatMap(group=>group.items);
 function oldSession(){
   const catalogue=structuredClone(works.slice(0,4));catalogue[0].title='An earlier saved title';catalogue[0].artist='Earlier Artist';catalogue[0].date='An earlier recorded date';
   const round={id:'journey-001',kind:'spectrum',criterion:'preference',title:'The actual earlier question.',hint:'The actual earlier instruction.',scale:{left:'Less preferred',right:'More preferred'},workIds:catalogue.map(work=>work.id),anchorIds:[],evidence:{construct:'preference',family:'individual-choice',role:'discovery',journeyRevision:'art-profile-50-v2',panelNumber:1}},answer={workIds:[...round.workIds],criterion:'preference',positions:Object.fromEntries(round.workIds.map((id,index)=>[id,[0,25,70,100][index]])),confirmed:true};
   return {manifest:{protocol:'art-profile-50-v1',catalogue},shown:{[round.id]:round},answers:{[round.id]:answer}};
 }
-test('The first18 groups reproduce the exact72 reviewed works and keep the42/42 future pools ungrouped',()=>{
-  const gallery=buildPaintingGallery({works,notes}),first=view(gallery,'first'),next=view(gallery,'next'),later=view(gallery,'later');assert.deepEqual(gallery.coverage,{catalogue:156,first:72,next:42,later:42,plannedSetCount:18});assert.equal(first.groups.length,18);assert.equal(first.itemCount,72);
+test('An explicit historical156-work proposal retains its exact72 reviewed works and42/42 future pools',()=>{
+  const gallery=buildPaintingGallery({works:legacyWorks,notes}),first=view(gallery,'first'),next=view(gallery,'next'),later=view(gallery,'later');assert.deepEqual(gallery.coverage,{catalogue:156,first:72,next:42,later:42,plannedSetCount:18});assert.equal(first.groups.length,18);assert.equal(first.itemCount,72);
   for(const [index,group] of first.groups.entries()){assert.deepEqual(group.workIds,notes.proposedFirst18Panels[index].workIds);assert.equal(group.title,notes.proposedFirst18Panels[index].galleryTitle||notes.proposedFirst18Panels[index].title||notes.proposedFirst18Panels[index].targetContrast);assert.equal(group.kind,'planned-comparison');}
   assert.equal(next.groups.length,1);assert.equal(later.groups.length,1);assert.equal(next.groups[0].kind,'reserve-pool');assert.equal(later.groups[0].kind,'reserve-pool');assert.deepEqual(next.groups[0].workIds,notes.reservePools.batch2);assert.deepEqual(later.groups[0].workIds,notes.reservePools.batch3);assert.equal(new Set([...items(first),...items(next),...items(later)].map(item=>item.workId)).size,156);assert.equal(gallery.views.some(view=>view.id==='answered'),false);
 });
-test('All156 gallery entries retain actual local reproductions and institution source metadata',()=>{
-  const all=view(buildPaintingGallery({works,notes}),'all');assert.equal(all.workCount,156);assert.equal(new Set(items(all).map(item=>item.workId)).size,156);for(const item of items(all)){const original=works.find(work=>work.id===item.workId);assert.deepEqual(item.work,original);assert.ok(fs.existsSync(new URL('../../public/art-atlas/'+item.work.image,import.meta.url)),item.workId);assert.ok(/^https?:/.test(item.work.sourceUrl));}
+test('All164 gallery entries retain actual local reproductions and institution source metadata',()=>{
+  const all=view(buildPaintingGallery({works,notes}),'all');assert.equal(all.workCount,164);assert.equal(new Set(items(all).map(item=>item.workId)).size,164);for(const item of items(all)){const original=works.find(work=>work.id===item.workId);assert.deepEqual(item.work,original);assert.ok(fs.existsSync(new URL('../../public/art-atlas/'+item.work.image,import.meta.url)),item.workId);assert.ok(/^https?:/.test(item.work.sourceUrl));}
+});
+
+test('The current gallery proposal matches actual fresh v10 main panels and includes all8 new classics',()=>{
+  const currentNotes=journeyCurationNotes(works),gallery=buildPaintingGallery({works,notes:currentNotes}),first=view(gallery,'first');
+  assert.deepEqual(gallery.coverage,{catalogue:164,first:72,next:46,later:46,plannedSetCount:18});
+  const panels=createJourneyStimulusPlan({works,seed:'fresh-gallery-v10'}),rounds=buildJourneyRounds(works,{}, {seed:'fresh-gallery-v10',panels});
+  const actual=rounds.filter(round=>round.kind==='spectrum'&&round.criterion==='preference'&&round.evidence?.role==='discovery'&&Number.isInteger(round.evidence?.panelNumber)).sort((a,b)=>a.evidence.panelNumber-b.evidence.panelNumber);
+  assert.equal(actual.length,18);
+  for(const [index,group] of first.groups.entries())assert.deepEqual([...group.workIds].sort(),actual[index].works.map(work=>work.id).sort(),'Panel '+group.number);
+  const firstIds=new Set(first.groups.flatMap(group=>group.workIds));
+  for(const work of works.filter(work=>work.image.startsWith('assets/classics-20261115/')))assert(firstIds.has(work.id),work.id);
+  assert.deepEqual(view(gallery,'next').groups[0].workIds,currentNotes.reservePools.batch2);
+  assert.deepEqual(view(gallery,'later').groups[0].workIds,currentNotes.reservePools.batch3);
+  assert.equal(new Set([...items(first),...items(view(gallery,'next')),...items(view(gallery,'later'))].map(item=>item.workId)).size,164);
 });
 test('Search combines accent-insensitive terms across actual artwork metadata and preserves set identities',()=>{
   const all=view(buildPaintingGallery({works,notes}),'all'),before=structuredClone(all),cezanne=filterPaintingGallery(all,'CÉZANNE'),monet=filterPaintingGallery(all,'claude monet'),mexico=filterPaintingGallery(all,'Mexico'),missing=filterPaintingGallery(all,'no such title 912345');assert.ok(items(cezanne).some(item=>item.workId==='cezanne-mountain'));assert.ok(items(monet).length>1);assert.ok(items(monet).every(item=>item.work.artist.includes('Monet')));assert.ok(items(mexico).some(item=>item.work.country==='Mexico'));assert.equal(missing.workCount,0);assert.equal(missing.groups.length,0);assert.deepEqual(all,before);

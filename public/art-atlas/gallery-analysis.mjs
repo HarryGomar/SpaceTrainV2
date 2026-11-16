@@ -1,5 +1,6 @@
 import {isReviewedVisualDescriptor} from './visual-descriptor-semantics.mjs';
 import { buildRounds, validAnswer } from './engine.mjs';
+import {museumPreferenceFindings} from './museum-preferences.mjs';
 
 const PROTOCOL='open-gallery-v1';
 const mean=values=>values.length?values.reduce((sum,value)=>sum+value,0)/values.length:null;
@@ -203,5 +204,5 @@ export function analyzeGallery(works,record,walls,previousRecords=[]) {
   if(!findings.length)findings.push(finding(record,'grouping-open','The grouping rule remains open.',info.ids.length<6||info.groups.filter(g=>g.ids.length>=2).length<2?'There are not yet enough works grouped across galleries to compare a recurring rule. Keep these placements as a record and try more works in at least two galleries.':'No measured feature clearly distinguishes these gallery groups from alternative assignments of the same works. Your room names and the paintings themselves remain evidence beyond these descriptors.',[evidence(record,'Works currently hung, grouped by gallery.',info.ids)],{priority:3,alternatives:['An unresolved model does not mean the arrangement lacks coherence. It may depend on relationships these descriptors do not capture.','Palette, dates, movement labels and the visual annotations are possible descriptions, not causes established by this exercise.']}));
   const neighbor=neighborFinding(works,record,info,metrics),revisit=retainedGroups(record,info,previous,walls,works),omission=omissionFinding(works,record,info);
   if(neighbor)findings.push(neighbor);if(revisit)findings.push(revisit);if(omission)findings.push(omission);
-  return findings;
+  return [...findings,...museumPreferenceFindings(works,record)];
 }

@@ -11,6 +11,8 @@ import {setDifficultEditRemoval,startDifficultEditComparison,chooseDifficultEdit
 import {AXES} from '../../public/art-atlas/engine.mjs';
 import {buildResponseAtlas} from '../../public/art-atlas/response-atlas-data.mjs';
 import {planAdaptivePanels} from '../../public/art-atlas/adaptive-selection.mjs';
+import {legacyV8Rounds} from './helpers/legacy-v8.mjs';
+import {isFinalRefinementRound} from '../../public/art-atlas/final-refinement.mjs';
 const works=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/artworks.json',import.meta.url),'utf8'));
 const workIds=r=>r.works.map(w=>w.id);
 const preferencePanels=rounds=>rounds.filter(r=>r.evidence.construct==='preference'&&Number.isInteger(r.evidence.panelNumber));
@@ -18,15 +20,16 @@ const preferencePanels=rounds=>rounds.filter(r=>r.evidence.construct==='preferen
 test('One 50-round sequence includes comparisons, maps, statements, matching, notes and four arrangement rounds',()=>{
   const rounds=buildJourneyRounds(works);
   assert.equal(rounds.length,50);assert.equal(new Set(rounds.map(r=>r.id)).size,50);
-  assert.deepEqual(rounds.flatMap((r,i)=>r.kind==='exercise'?[[i+1,r.exerciseKind]]:[]),[[8,'sorting'],[22,'difficult-edit'],[36,'curate'],[46,'sorting']]);
+  assert.deepEqual(rounds.flatMap((r,i)=>r.kind==='exercise'?[[i+1,r.exerciseKind]]:[]),[[8,'sorting'],[22,'difficult-edit'],[32,'sorting'],[36,'curate']]);
   assert.deepEqual(new Set(rounds.map(r=>r.kind)),new Set(['spectrum','grid','choice-grid','contrast','statements','match','context','exercise']));
-  assert.equal(rounds.filter(r=>r.kind==='choice-grid').length,5);
-  assert.equal(rounds.filter(r=>r.kind==='grid').length,6);
+  assert.equal(rounds.filter(r=>r.kind==='choice-grid').length,6);
+  assert.equal(rounds.filter(r=>r.kind==='grid').length,7);
   assert.deepEqual(rounds.flatMap((r,i)=>r.kind==='contrast'?[[i+1,r.contrastKind]]:[]),[[15,'chronology'],[19,'neighbour'],[27,'keep-leave'],[42,'same-subject']]);
   assert.deepEqual(rounds.filter(r=>r.kind==='match').map(r=>r.field),['artist','movement']);
   assert.ok(rounds.every(r=>restoreStudyRound(snapshotStudyRound(r),works)));
-  assert.equal(rounds[45].evidence.repeatOf,rounds[7].id);
-  assert.deepEqual(new Set(workIds(rounds[7])),new Set(workIds(rounds[45])));
+  assert.equal(rounds[31].evidence.repeatOf,rounds[7].id);
+  assert.deepEqual(new Set(workIds(rounds[7])),new Set(workIds(rounds[31])));
+  assert(rounds.slice(45).every(round=>isFinalRefinementRound(round)&&round.unavailable));
 });
 
 test('The fresh opening uses its curated landmarks and a different varied familiarity set, without overriding supplied panels',()=>{
@@ -130,7 +133,7 @@ test('The journey spaces cross-task returns and has no repeated ordinary prefere
   assert.equal(preference.length,18);
   assert.equal(new Set(preference.map(signature)).size,18);
   assert.ok(preference.every(r=>r.evidence.role==='discovery'&&!r.evidence.repeatOf));
-  for(let i=1;i<rounds.length;i++)assert.notEqual(signature(rounds[i]),signature(rounds[i-1]),'consecutive rounds reuse a complete artwork set');
+  for(let i=1;i<rounds.length;i++)if(!rounds[i].unavailable&&!rounds[i-1].unavailable)assert.notEqual(signature(rounds[i]),signature(rounds[i-1]),'consecutive shown questions reuse a complete artwork set');
   for(const [index,round] of rounds.entries()){
     if(!round.evidence.panelNumber)continue;
     const linked=rounds.filter(other=>other.evidence.setId===round.evidence.setId&&other.id!==round.id);
@@ -158,7 +161,7 @@ test('The expanded collection appears across small preference panels without ove
 
 test('Concrete appraisals and the one prospective claim retain distinct meanings',()=>{
   const rounds=buildJourneyRounds(works),appraisals=rounds.filter(r=>r.evidence.family==='looking-appraisal');
-  assert.deepEqual(appraisals.map(r=>r.evidence.construct),['perceived-visual-density','interpretive-openness','importance-of-figures','reported-unexpectedness','attention-to-making']);
+  assert.deepEqual(appraisals.map(r=>r.evidence.construct),['attention-to-making']);
   assert.ok(appraisals.every(r=>r.scale.left&&r.scale.right&&r.evidence.questionTarget&&!r.evidence.heldOut));
   assert.deepEqual(new Set(rounds.filter(r=>r.kind==='grid').map(r=>r.axis)),new Set(['achievement','reading','returnResponse']));
   for(const round of rounds.filter(r=>r.kind==='grid'))assert.deepEqual(round.axisDefinition,AXES[round.axis]);
@@ -177,7 +180,7 @@ test('Concrete appraisals and the one prospective claim retain distinct meanings
 });
 
 test('Familiarity and later keep grids share exact identities without limiting or ranking the new selections',()=>{
-  const rounds=buildJourneyRounds(works),grids=rounds.filter(r=>r.kind==='choice-grid');
+  const rounds=buildJourneyRounds(works),grids=rounds.filter(r=>r.kind==='choice-grid'&&!isFinalRefinementRound(r));
   assert.deepEqual(grids.map(r=>[r.id,r.selectionMode]),[['journey-002','familiarity'],['journey-003','shortlist'],['journey-009','shortlist'],['journey-011','familiarity'],['journey-023','shortlist']]);
   for(const round of grids){assert.equal(round.works.length,12);assert.equal(new Set(workIds(round)).size,12);assert.equal(round.evidence.family,'selection-grid');assert.notEqual(round.evidence.construct,'preference');assert.equal(round.criterion,undefined);assert.equal(round.bankRoundId,undefined);}
   for(const [beforeId,afterId] of [['journey-002','journey-009'],['journey-011','journey-023']]){
@@ -200,7 +203,7 @@ test('Every new map names its own construct and revisits its exact preference pa
 
 test('The curated72 plan binds reviewed briefs and reserves without manufacturing metadata for a saved different set',()=>{
   const selection=createJourneyStimulusPlan({works}),rounds=buildJourneyRounds(works),panels=preferencePanels(rounds).sort((a,b)=>a.evidence.panelNumber-b.evidence.panelNumber),bound=bindJourneyStimulusPlan(selection,rounds);
-  assert.equal(bound.bindingStatus,'exact-curated-plan');assert.equal(bound.boundMainWorkCount,72);assert.deepEqual(bound.reservations.batch2,selection.reservations.batch2);assert.equal(bound.reservations.batch2.length,42);assert.equal(bound.reservations.batch3.length,42);
+  assert.equal(bound.bindingStatus,'exact-curated-plan');assert.equal(bound.boundMainWorkCount,72);assert.deepEqual(bound.reservations.batch2,selection.reservations.batch2);assert.equal(bound.reservations.batch2.length,46);assert.equal(bound.reservations.batch3.length,46);
   assert.equal(new Set([...bound.boundMainWorkIds,...bound.reservations.batch2,...bound.reservations.batch3]).size,works.length);
   for(const [index,panel] of panels.entries()){
     const proposed=selection.panels[index];assert.deepEqual(new Set(workIds(panel)),new Set(proposed.workIds));assert.deepEqual(panel.evidence.plannerDiagnostic,proposed.plannerDiagnostic);assert.deepEqual(panel.evidence.editorialBrief,proposed.editorialBrief);assert.equal(panel.evidence.stimulusPlannerRevision,selection.revision);
@@ -211,8 +214,8 @@ test('The curated72 plan binds reviewed briefs and reserves without manufacturin
   assert.deepEqual(revised.find(round=>round.id===saved.id),saved);assert.deepEqual(new Set(workIds(map)),new Set(workIds(saved)));assert.equal(map.evidence.panelBindingMismatch,true);assert.equal(map.evidence.plannerDiagnostic,undefined);assert.equal(map.evidence.editorialBrief,undefined);assert.equal(map.evidence.adaptiveSelection,undefined);assert.equal(rebound.bindingStatus,'saved-or-fallback-bindings');assert.equal(rebound.firstPlan,null);assert.ok(rebound.proposalMismatchPanels.includes(panelNumber));assert.equal(rebound.boundMainWorkCount,new Set(preferencePanels(revised).flatMap(workIds)).size);
 });
 
-test('Round47 is a delayed exact quartet return under the source prompt, with conservative intervening exposure',()=>{
-  const rounds=buildJourneyRounds(works),repeat=rounds[46],source=rounds.find(round=>round.id===repeat.evidence.repeatOf);assert.ok(source);assert.equal(repeat.kind,'spectrum');assert.equal(repeat.evidence.role,'repeat');assert.equal(repeat.evidence.lateExactReturn,true);assert.notEqual(source.id,rounds[0].id);assert.equal(source.works.length,4);assert.equal(source.evidence.role,'discovery');assert.equal(source.evidence.unconditional===false,false);
+test('Historicalv8 round47 retains its delayed exact quartet instrument and evidence',()=>{
+  const rounds=legacyV8Rounds(works),repeat=rounds[46],source=rounds.find(round=>round.id===repeat.evidence.repeatOf);assert.ok(source);assert.equal(repeat.kind,'spectrum');assert.equal(repeat.evidence.role,'repeat');assert.equal(repeat.evidence.lateExactReturn,true);assert.notEqual(source.id,rounds[0].id);assert.equal(source.works.length,4);assert.equal(source.evidence.role,'discovery');assert.equal(source.evidence.unconditional===false,false);
   assert.deepEqual(workIds(repeat),[...workIds(source)].reverse());assert.equal(repeat.title,source.title);assert.equal(repeat.hint,source.hint);assert.deepEqual(repeat.scale,source.scale);assert.equal(repeat.evidence.sourceSetId,source.evidence.setId);assert.equal(repeat.evidence.dependencyGroup,source.evidence.setId);assert.deepEqual(repeat.evidence.priorMeasureRoundIds,[source.id]);assert.equal(repeat.evidence.panelNumber,undefined);
   const sourceIds=new Set(workIds(source));let last=-1;
   for(const [index,round] of rounds.slice(0,46).entries())if(round.kind!=='statements'&&[...round.works,...(round.anchorWorks||[])].some(work=>sourceIds.has(work.id)))last=index;
@@ -221,14 +224,12 @@ test('Round47 is a delayed exact quartet return under the source prompt, with co
   assert.ok(validStudyAnswer(source,answers[source.id]));assert.ok(validStudyAnswer(repeat,answers[repeat.id]));assert.equal(analyzeStudy(works,[source,repeat],answers).repeatsCompared,1);assert.equal(analyzeStudy(works,[source,repeat],{[repeat.id]:answers[repeat.id]}).repeatsCompared,0);assert.equal(analyzeStudy(works,[source,repeat],{...answers,[repeat.id]:{...answers[repeat.id],confirmed:false}}).repeatsCompared,0);
 });
 
-test('Round47 keeps its shortlist fallback when no nonopening quartet is eligible and preserves an already shown v3 grid',()=>{
-  const first=buildJourneyRounds(works),panels=preferencePanels(first).sort((a,b)=>a.evidence.panelNumber-b.evidence.panelNumber).map((round,index)=>({workIds:index?workIds(round).slice(0,3):workIds(round),construct:'preference',role:'exploration'})),fallback=buildJourneyRounds(works,{}, {panels})[46];
-  assert.equal(fallback.kind,'choice-grid');assert.equal(fallback.selectionMode,'shortlist');assert.equal(fallback.evidence.repeatOf,undefined);assert.equal(fallback.evidence.lateReturnFallback.minimumRounds,8);
-  const saved={...structuredClone(fallback),title:'The v3 shortlist actually shown.',evidence:{...fallback.evidence,journeyRevision:'art-profile-50-v3'}};delete saved.evidence.lateReturnFallback;const before=structuredClone(saved),restored=buildJourneyRounds(works,{}, {history:[saved]});assert.deepEqual(restored[46],before);assert.deepEqual(saved,before);
+test('An already shown v3 shortlist remains exact wherev10 now defers a closing comparison',()=>{
+  const old=legacyV8Rounds(works)[8],saved={...structuredClone(old),id:'journey-047',title:'The v3 shortlist actually shown.',evidence:{...old.evidence,journeyRevision:'art-profile-50-v3'}},before=structuredClone(saved),restored=buildJourneyRounds(works,{}, {history:[saved]});assert.deepEqual(restored[46],before);assert.deepEqual(saved,before);
 });
 
 test('The extra comparison links two earlier panels as a probe rather than a nineteenth discovery set',()=>{
-  const rounds=buildJourneyRounds(works),preference=rounds.filter(r=>r.evidence.construct==='preference'),bridge=preference.find(r=>r.evidence.bridgeComparison);
+  const rounds=legacyV8Rounds(works),preference=rounds.filter(r=>r.evidence.construct==='preference'),bridge=preference.find(r=>r.evidence.bridgeComparison);
   assert.equal(preference.length,20);assert.equal(preferencePanels(rounds).length,18);assert.equal(bridge.id,'journey-049');assert.equal(bridge.evidence.role,'probe');assert.equal(bridge.evidence.panelNumber,undefined);assert.equal(bridge.works.length,2);
   assert.equal(bridge.evidence.heldOut,undefined);assert.equal(bridge.evidence.provisionalPrediction,undefined);
   const earlier=preferencePanels(rounds),parents=bridge.works.map(work=>earlier.find(r=>workIds(r).includes(work.id)));assert.ok(parents.every(Boolean));assert.notEqual(parents[0].id,parents[1].id);
@@ -238,14 +239,14 @@ test('The extra comparison links two earlier panels as a probe rather than a nin
 
 test('Source backlinks identify real instruments without importing unrelated predictions',()=>{
   const source=new Map(buildStudyRounds(works,200).map(r=>[r.id,r]));
-  const rounds=buildJourneyRounds(works),normal=rounds.filter(r=>r.kind!=='exercise'),banked=normal.filter(r=>r.bankRoundId),newInstruments=normal.filter(r=>!r.bankRoundId);
+  const rounds=buildJourneyRounds(works),normal=rounds.filter(r=>r.kind!=='exercise'&&!isFinalRefinementRound(r)),banked=normal.filter(r=>r.bankRoundId),newInstruments=normal.filter(r=>!r.bankRoundId);
   assert.equal(new Set(banked.map(r=>r.bankRoundId)).size,banked.length);
   for(const round of normal){
     assert.equal(round.evidence.journeyRevision,JOURNEY_REVISION);
     for(const key of ['heldOut','provisionalPrediction','trainingRoundIds','comparisonNovel','contrastKey'])assert.equal(round.evidence[key],undefined);
   }
   for(const round of banked){assert.ok(source.has(round.bankRoundId));assert.equal(source.get(round.bankRoundId).kind,round.kind);assert.equal(round.evidence.sourceBankRoundId,round.bankRoundId);assert.equal(round.evidence.sourceBinding,'journey-selected-works');}
-  assert.equal(newInstruments.length,18);assert.equal(banked.length,28);
+  assert.equal(newInstruments.length+banked.length,41);assert.equal(banked.length,22);assert.equal(newInstruments.length,19);
   for(const round of newInstruments){assert.ok(['grid','choice-grid','contrast','context'].includes(round.kind));assert.equal(round.evidence.newInstrument,true);assert.ok(round.evidence.instrumentRevision);assert.equal(round.evidence.sourceBankRoundId,undefined);assert.equal(round.evidence.sourceBinding,undefined);assert.ok(round.evidence.sourceUrls.length);for(const url of round.evidence.sourceUrls)assert.equal(new URL(url).protocol,'https:');assert.ok(round.evidence.limits.length);}
 });
 
@@ -284,8 +285,8 @@ test('A further batch has new presentation and panel IDs with correctly offset s
   assert.equal(second.length,50);assert.equal(second[0].id,'journey-051');assert.equal(second.at(-1).id,'journey-100');
   assert.ok(second.every(r=>!first.some(earlier=>earlier.id===r.id)));
   assert.ok(second.filter(r=>r.evidence.panelNumber).every(r=>!first.some(earlier=>earlier.evidence.setId===r.evidence.setId)));
-  assert.deepEqual(second.flatMap((r,i)=>r.kind==='exercise'?[[i+51,r.exerciseKind]]:[]),[[58,'sorting'],[72,'difficult-edit'],[86,'curate'],[96,'sorting']]);
-  assert.equal(second[45].evidence.repeatOf,second[7].id);
+  assert.deepEqual(second.flatMap((r,i)=>r.kind==='exercise'?[[i+51,r.exerciseKind]]:[]),[[58,'sorting'],[72,'difficult-edit'],[82,'sorting'],[86,'curate']]);
+  assert.equal(second[31].evidence.repeatOf,second[7].id);
   assert.equal(second[30].evidence.contextRoundId,second[34].id);assert.equal(second[34].evidence.claimRoundId,second[30].id);
   assert.notEqual(second[34].works[0].id,first[34].works[0].id);
   assert.equal(second[34].evidence.storyPreviouslyShown,false);

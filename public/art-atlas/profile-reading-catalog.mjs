@@ -1,6 +1,6 @@
 // Evidence-led reading families, not personality types.
 // All artwork examples are illustrative and never findings about the visitor.
-export const PROFILE_READING_CATALOG_VERSION=3;
+export const PROFILE_READING_CATALOG_VERSION=4;
 export const PROFILE_READING_CATALOG_SCOPE=Object.freeze({
   "subject": "Patterns in art choices and arrangements",
   "exampleMode": "illustrative",
@@ -36,6 +36,9 @@ export const PROFILE_READING_LENSES=Object.freeze([
       "density-and-activity",
       "depicted-action",
       "setting-and-atmosphere",
+      "chosen-work-connections",
+      "range-in-positive-choices",
+      "reported-density",
       "shared-subjects"
     ]
   },
@@ -46,6 +49,9 @@ export const PROFILE_READING_LENSES=Object.freeze([
     "readingIds": [
       "admiration-and-appeal",
       "tension-and-return",
+      "attention-to-making",
+      "people-and-reaction",
+      "unexpectedness-and-preference",
       "curiosity-without-preference",
       "attention-without-preference",
       "tension-and-preference",
@@ -72,6 +78,7 @@ export const PROFILE_READING_LENSES=Object.freeze([
       "exact-preference-repeat",
       "selection-changes",
       "prospective-feature-check",
+      "favourites-and-ratings",
       "purpose-changes-choice",
       "comparison-company"
     ]
@@ -103,10 +110,10 @@ export const PROFILE_READING_LENSES=Object.freeze([
   }
 ]);
 
-const portrait=(resultPath,match={})=>({module:'taste-portrait',file:'dist/taste-portrait.mjs',export:'buildTastePortrait',resultPath,match});
-const connections=(resultPath,match={})=>({module:'taste-connections',file:'dist/taste-connections.mjs',export:'buildTasteConnections',resultPath,match});
-const refined=match=>({module:'reading-patterns-v2',file:'dist/reading-patterns-v2.mjs',export:'buildRefinedReadings',resultPath:'$',resultType:'array',match});
-const contrast=match=>({module:'contrast-readings',file:'dist/contrast-readings.mjs',export:'buildContrastReadings',resultPath:'$',resultType:'array',match});
+const portrait=(resultPath,match={})=>({module:'taste-portrait',file:'public/art-atlas/taste-portrait.mjs',export:'buildTastePortrait',resultPath,match});
+const connections=(resultPath,match={})=>({module:'taste-connections',file:'public/art-atlas/taste-connections.mjs',export:'buildTasteConnections',resultPath,match});
+const refined=match=>({module:'reading-patterns-v2',file:'public/art-atlas/reading-patterns-v2.mjs',export:'buildRefinedReadings',resultPath:'$',resultType:'array',match});
+const contrast=match=>({module:'contrast-readings',file:'public/art-atlas/contrast-readings.mjs',export:'buildContrastReadings',resultPath:'$',resultType:'array',match});
 const example=(text,workIds)=>({text,workIds,illustrative:true});
 
 export const PROFILE_READING_CATALOG=Object.freeze([
@@ -115,7 +122,7 @@ export const PROFILE_READING_CATALOG=Object.freeze([
     description:"Whether work centred on people recurs in preference comparisons, and where other subjects win instead.",
     example:example("Mona Lisa and Girl with a Pearl Earring led separate comparisons with Black Square and The Great Wave. A later choice of The Great Wave over Mona Lisa challenged a simple rule about figures.",["study-leonardo-mona-lisa","study-vermeer-pearl","study-malevich-black-square","study-hokusai-great-wave"]),
     requiredSignals:["At least two completed preference groups using four different paintings.","Reviewed descriptions of human presence with clear differences between the compared works.","Supporting and opposing choices, with repeated sets counted separately."],
-    sources:[portrait("observations",{"id":"taste-pattern-humanity","feature":"humanity"})],
+    sources:[portrait("patternCandidates",{"id":"taste-pattern-humanity","feature":"humanity"})],
     implementationNote:"Humanity describes the prominence of human presence. It is not a count of people and does not include animals merely because they are figurative subjects.",
     limits:["Human figures, narrative, emotion and style can vary together. The comparisons do not isolate which feature caused a choice."]
   },
@@ -124,8 +131,8 @@ export const PROFILE_READING_CATALOG=Object.freeze([
     description:"A recurring preference direction across more representational or more abstract paintings, with exceptions retained.",
     example:example("The Birth of Venus came ahead of Black Square, and Girl with a Pearl Earring ahead of Composition 8. Those separate comparisons share a direction towards representation.",["study-botticelli-birth-venus","study-malevich-black-square","study-vermeer-pearl","study-kandinsky-composition-eight"]),
     requiredSignals:["Validated unconditional preference spectra with clear pair gaps.","Known abstraction annotations with contrasts of at least 0.3.","At least two distinct supporting sets using at least four different paintings."],
-    sources:[portrait("observations",{"id":"taste-pattern-abstraction","feature":"abstraction"})],
-    implementationNote:"The feature analyzer returns its leading qualifying association. Either direction is possible; other aligned descriptors and opposing choices remain visible.",
+    sources:[portrait("patternCandidates",{"id":"taste-pattern-abstraction","feature":"abstraction"})],
+    implementationNote:"Every qualifying feature candidate remains available, with supporting, opposing and mixed set counts. Candidates sharing the same supporting pairs can share one displayed observation; neither their pair counts nor display priority are confidence.",
     limits:["This describes image annotations accompanying choices. Subject, colour and other differences are not held constant."]
   },
   {
@@ -133,7 +140,7 @@ export const PROFILE_READING_CATALOG=Object.freeze([
     description:"A recurring direction towards more intense or more restrained colour in separate preference sets.",
     example:example("The Kiss came ahead of Mona Lisa, and The Starry Night ahead of La Catrina. More intense annotated colour accompanies both choices; it is not the only difference.",["klimt-kiss","study-leonardo-mona-lisa","van-gogh-starry-night","study-posada-catrina"]),
     requiredSignals:["Validated unconditional preference spectra.","Known features.color values and clear contrasts.","The same recurring-set and four-work requirements used for other visual associations."],
-    sources:[portrait("observations",{"id":"taste-pattern-color","feature":"color"})],
+    sources:[portrait("patternCandidates",{"id":"taste-pattern-color","feature":"color"})],
     implementationNote:"The current feature is colour intensity. This does not identify a favourite hue, palette or colour harmony.",
     limits:["Digital reproductions and coarse editorial descriptors limit the colour comparison. A hue-specific profile needs a different analysis."]
   },
@@ -142,8 +149,8 @@ export const PROFILE_READING_CATALOG=Object.freeze([
     description:"Whether denser compositions or greater visual activity accompany repeated choices, with the two descriptions kept separate.",
     example:example("The Garden of Earthly Delights came ahead of Girl with a Pearl Earring, and The Night Watch ahead of Black Square. Denser compositions connect these choices; other comparisons can challenge that description.",["bosch-garden-delights","study-vermeer-pearl","study-rembrandt-night-watch","study-malevich-black-square"]),
     requiredSignals:["Distinct validated preference sets with clear pair orders.","Known features.complexity or features.energy values.","At least two supporting sets and four different works for the selected feature."],
-    sources:[portrait("observations",{"idIn":["taste-pattern-complexity","taste-pattern-energy"]})],
-    implementationNote:"Complexity and energy are tested separately. Only a qualifying leading feature is returned; they are not combined into a single score.",
+    sources:[portrait("patternCandidates",{"idIn":["taste-pattern-complexity","taste-pattern-energy"]})],
+    implementationNote:"Complexity and energy are tested separately; all qualified candidates retain their own balance. Positive overall choices at both ends qualify a one-ended direction rather than being hidden by it. No density identity or combined score is assigned.",
     limits:["Visual density, depicted action and felt tension are different measurements. They can vary together without explaining one another."]
   },
   {
@@ -151,7 +158,7 @@ export const PROFILE_READING_CATALOG=Object.freeze([
     description:"Whether scenes with more depicted action recur among your choices.",
     example:example("The Night Watch led a comparison with Girl with a Pearl Earring; The School of Athens led another with Black Square. Depicted action is one possible connection, alongside other differences.",["study-rembrandt-night-watch","study-vermeer-pearl","study-raphael-school-athens","study-malevich-black-square"]),
     requiredSignals:["Several preference comparisons using different paintings.","Known descriptions of depicted action.","At least two supporting groups and four different works, with exceptions retained."],
-    sources:[portrait("observations",{"id":"taste-pattern-narrative","feature":"narrative"})],
+    sources:[portrait("patternCandidates",{"id":"taste-pattern-narrative","feature":"narrative"})],
     implementationNote:"The narrative annotation is depicted action, not symbolism, a viewer’s life story or general narrative preference.",
     limits:["A dramatic subject and a busy composition can overlap. One comparison cannot distinguish them."]
   },
@@ -160,7 +167,7 @@ export const PROFILE_READING_CATALOG=Object.freeze([
     description:"Whether work with a stronger emphasis on its setting recurs in your choices.",
     example:example("The Starry Night led a comparison with Black Square, and Early Spring led another with Composition 8. A stronger emphasis on setting connects those choices, despite their different colours and methods.",["van-gogh-starry-night","study-malevich-black-square","study-guo-xi-early-spring","study-kandinsky-composition-eight"]),
     requiredSignals:["At least two completed preference groups using four different paintings.","Reviewed descriptions of emphasis on setting, with clear contrasts.","Supporting choices and the comparisons that go against that direction."],
-    sources:[portrait("observations",{"id":"taste-pattern-atmosphere","feature":"atmosphere"})],
+    sources:[portrait("patternCandidates",{"id":"taste-pattern-atmosphere","feature":"atmosphere"})],
     implementationNote:"This annotation describes emphasis on setting in the reproduction. It does not measure how atmospheric the viewer feels.",
     limits:["Atmosphere is an editorial image description. It is not a measured emotional response."]
   },
@@ -175,20 +182,20 @@ export const PROFILE_READING_CATALOG=Object.freeze([
   },
   {
     id:"admiration-and-appeal",lensId:"different-reactions",title:"Admiration",status:"implemented",availability:"current",
-    description:"Where personal appeal separates from admiration for how a work was made.",
+    description:"Where appeal and admiration accompany one another, and which paintings separate them.",
     example:example("The Night Watch received more admiration for its making; Black Square was more for this viewer. A second pair can test whether the same split recurs.",["study-rembrandt-night-watch","study-malevich-black-square"]),
-    requiredSignals:["A completed achievement map with personal appeal and admiration recorded separately.","Either a map appeal gap of at least 15 points opposite an admiration gap of at least 20, or an earlier exact-set unconditional preference gap of at least 15 opposite that admiration gap.","The earlier preference must precede the map when used. Exact artwork identities, endpoint definitions and opposing comparisons are retained."],
-    sources:[refined({"id":"refined-achievement","module":"making-and-taste"}),portrait("observations",{"id":"refined-achievement"})],
-    implementationNote:"buildRefinedReadings returns refined-achievement in its root array; buildTastePortrait also includes it in observations. A qualifying earlier preference/admiration reversal takes priority over the map-only route. Grid appeal is not added as an ordinary preference answer. Repeated work sets count once.",
+    requiredSignals:["A completed achievement map with its original personal-appeal and admiration axes.","An aligned recurring reading needs two distinct artwork sets and at least four different works, with clear local appeal/preference orders and admiration differences. Opposing pairs, including those in supportive sets, remain visible.","A local split can be shown from a clear map difference or a genuine earlier exact-set preference. The earlier preference must precede the map; a grid appeal coordinate is not another unconditional preference answer."],
+    sources:[portrait("observations",{"idIn":["response-making","refined-achievement"]}),refined({"id":"refined-achievement","module":"making-and-taste"})],
+    implementationNote:"The response-making reading combines alignment with exact exceptions and counts each actual artwork set once per direction. A set can support both. The older local split remains available when the recurring positive reading does not qualify.",
     limits:["Admiration is the viewer's judgment, not objective skill, effort or artistic value.","A single set supports a local comparison. Distinct sets and counterexamples are needed before describing recurrence.","Subject, method, reproduction and personal associations can all contribute to the split."]
   },
   {
     id:"tension-and-return",lensId:"different-reactions",title:"Wanting to return",status:"implemented",availability:"current",
-    description:"A wish to return can favour an unsettling work, including one that was not the stronger ordinary preference.",
+    description:"Comforting and unsettling paintings can both invite a return; the works that do not are kept alongside that pattern.",
     example:example("Mona Lisa was preferred overall, but The Scream received the stronger wish to return despite being placed as more unsettling.",["study-leonardo-mona-lisa","study-munch-scream"]),
-    requiredSignals:["A completed returnResponse map with felt tension and wish to return.","A stronger wish to return to a work placed as clearly more unsettling.","A separate exact-set preference answer if the reading also compares return intention with preference."],
-    sources:[refined({"id":"refined-return","module":"tension-and-return"}),portrait("observations",{"id":"refined-return"})],
-    implementationNote:"buildRefinedReadings returns refined-return. It requires the new returnResponse axis and tension-and-return construct. A preference difference is added only when an actual matched ordinary preference exists.",
+    requiredSignals:["A completed returnResponse map with the exact felt-tension and wish-to-return meanings.","A two-sided return reading needs at least two different comforting works and two different unsettling works with a stronger wish to return, spanning at least two artwork sets. Same-work repeats cannot supply that range.","A local unsettling-return comparison remains available. A preference difference is added only with a separate genuine matched preference response."],
+    sources:[portrait("observations",{"idIn":["response-return-range","refined-return"]}),refined({"id":"refined-return","module":"tension-and-return"})],
+    implementationNote:"The broader reading preserves both tension ends and once-is-enough counterexamples. Every original map remains available separately; old activation or pleasantness axes are not renamed.",
     limits:["Wish to return is an intention reported here; no later visit or viewing behaviour has been observed.","Comforting/unsettling is this instrument's felt-tension coordinate. Old pleasantness, activation or attention coordinates are not interchangeable.","This does not establish a general preference for discomfort. Counterexamples and reused-set dependencies remain part of the reading."]
   },
   {
@@ -232,8 +239,8 @@ export const PROFILE_READING_CATALOG=Object.freeze([
     description:"How preference relates to a clear scene and to the meanings it leaves open.",
     example:example("Las Meninas was preferred to Girl with a Pearl Earring. Both scenes were marked clear, while Las Meninas was given more possible readings.",["velazquez-las-meninas","study-vermeer-pearl"]),
     requiredSignals:["A completed reading map with scene clarity and interpretive openness.","A separate completed preference comparison for exactly the same artwork set.","Clear coordinate contrasts that distinguish openness within clear scenes, openness with less clarity, or clarity with fewer readings."],
-    sources:[refined({"id":"refined-reading","module":"scene-and-meaning"}),portrait("observations",{"id":"refined-reading"})],
-    implementationNote:"The reading-patterns-v2 root array returns refined-reading with an explicit patternVariant. This uses axis reading and construct scene-and-meaning; older meaning, connection and one-dimensional openness answers are not recoded.",
+    sources:[refined({"id":"refined-reading","module":"scene-and-meaning"}),portrait("observations",{"idIn":["response-reading","refined-reading"]})],
+    implementationNote:"The positive connection requires several different positively rated/favourite works across map sets, or explicitly labelled exact-set local leaders for a legacy reading. Clear scenes and possible readings remain separate coordinates. Older meaning, connection and one-dimensional openness answers are never recoded.",
     limits:["Scene clarity and possible meanings are personal reports, not tests of correct interpretation.","The relationship does not establish that symbolism caused a preference or measure intelligence or tolerance for ambiguity.","Repeated maps of the same works do not add distinct-set support; preference and appraisal order can affect the comparison."]
   },
   {
@@ -264,12 +271,12 @@ export const PROFILE_READING_CATALOG=Object.freeze([
     limits:["Suggested meaning is not symbol recognition or interpretive correctness. The two modules retain different explicit thresholds."]
   },
   {
-    id:"openness-and-preference",lensId:"meaning-and-context",title:"Open interpretation",status:"planned",availability:"planned",
+    id:"openness-and-preference",lensId:"meaning-and-context",title:"Open interpretation",status:"implemented",availability:"legacy",
     description:"Compare preference with how many possible readings a painting seems to allow.",
     example:example("Hunters in the Snow and The Birth of Venus received similar preference positions, while Hunters in the Snow was placed as leaving more possible interpretations open.",["study-bruegel-hunters-snow","study-botticelli-birth-venus"]),
     requiredSignals:["A preference spectrum.","The interpretive-openness looking appraisal for the same exact works.","Explicit handling of near ties, reported understanding and meaning-grid answers as separate signals."],
-    sources:[],
-    implementationNote:"This proposed family concerns the earlier one-dimensional interpretive-openness appraisal. The implemented Scene & interpretation family uses the new reading map and a separate matched preference task.",
+    sources:[portrait("lookingAppraisals.responses",{"construct":"interpretive-openness"}),portrait("observations",{"module":"looking-appraisals","construct":"interpretive-openness"})],
+    implementationNote:"Retained one-dimensional openness answers remain literal reports. A recognised frozen scale and actual matched preference can supply an aligned or opposing relationship. This earlier instrument is distinct from the current reading map.",
     limits:["Multiple possible meanings, uncertainty and difficulty understanding are different. No tolerance-for-ambiguity trait follows."]
   },
   {
@@ -292,11 +299,11 @@ export const PROFILE_READING_CATALOG=Object.freeze([
   },
   {
     id:"prospective-feature-check",lensId:"revisiting-choices",title:"Testing a pattern",status:"implemented",availability:"current",
-    description:"A frozen feature-based prediction meets a later matched, reversed or near-tied preference.",
+    description:"Earlier provisional explanations meet a new comparison, including a rival explanation or an unresolved near tie.",
     example:example("Earlier choices suggested denser compositions. A new direct pair then favoured Girl with a Pearl Earring over The Night Watch, going against that provisional explanation.",["study-vermeer-pearl","study-rembrandt-night-watch"]),
-    requiredSignals:["A two-work unconditional adaptive challenge, labelled probe.","A frozen provisional hypothesis, prediction, source answers and feature values.","At least three distinct earlier sets and four named artists; a verified new comparison across earlier presentation records."],
-    sources:[portrait("prospectiveChecks",{}),portrait("observations",{"idPrefix":"taste-prospective-"})],
-    implementationNote:"prospectiveComparisons revalidates the captured training evidence, feature direction, pair novelty and thresholds. Unknown exercise exposure suppresses the claim.",
+    requiredSignals:["A complete valid two-work adaptive challenge or four-work closing comparison, explicitly bound before its outcome.","A captured provisional explanation and prediction supported by at least three distinct earlier artwork sets and four named artists, with complete frozen answers and known feature values under one measurement scope.","Rival predictions must actually oppose the primary direction. A claimed new pair must pass earlier actual presentation checks, including opened favourites pages and museum exposure. Missing page/exercise metadata cannot prove novelty.","Pairs within one four-work response remain dependent. A pair without verified new-pair status can supply a labelled descriptive recheck rather than independent validation."],
+    sources:[portrait("prospectiveChecks",{}),portrait("closingRefinement.checks",{}),portrait("observations",{"module":"closing-checks"}),portrait("observations",{"idPrefix":"taste-prospective-"})],
+    implementationNote:"Both readers validate captured earlier definitions and values rather than refitting explanations after the outcome. Four-work closing answers can compare a primary description with its rival. Matched, reversed and near-tied outcomes stay distinct; no accuracy percentage is calculated.",
     limits:["The paintings may already be familiar. One tested pair neither isolates a cause nor supplies an accuracy percentage or confidence level."]
   },
   {
@@ -341,7 +348,7 @@ export const PROFILE_READING_CATALOG=Object.freeze([
     example:example("Early Spring and Travelers Among Mountains formed a close pair. Sampled colour, recorded dates and style labels were checked against the other close and separated pairs.",["study-guo-xi-early-spring","study-fan-kuan-travelers"]),
     requiredSignals:["A valid finished curatorial record.","Known sampled palettes, bounded date ranges, movement labels or reviewed visual descriptors.","The relevant sorting or gallery analyzer's qualifying within-group and alternative-arrangement comparisons."],
     sources:[portrait("curatorialObservations",{"idPattern":"^(gallery-.+-(grouping|local|neighbors)-|sorting-.+-descriptor-)"})],
-    implementationNote:"taste-portrait delegates to analyzeScenarios, then retains up to three curatorial findings. The underlying gallery and sorting analyzers supply the descriptor checks.",
+    implementationNote:"The portrait delegates to the validated gallery and sorting analyzers and retains every qualifying curatorial finding, sorted by priority. A visual preview does not remove later source findings.",
     limits:["A grouping description is not a proven organising rule. Convenience, coinciding descriptors, source quality and unmeasured associations can fit the same layout."]
   },
   {
@@ -359,16 +366,16 @@ export const PROFILE_READING_CATALOG=Object.freeze([
     example:example("Dance and The Scream sat close together on the sorting table, then went into different museum rooms. The changed task provides a different setting for the pair.",["study-matisse-dance","study-munch-scream"]),
     requiredSignals:["A valid sorting record and a valid museum record containing the same pair.","A sorting near relation and different museum room memberships.","Source records and the distinct instruments retained."],
     sources:[connections("crossTaskPatterns",{"kind":"cross-task-placement"})],
-    implementationNote:"The current comparison uses the latest valid table and museum records and explicitly sets comparable:false.",
+    implementationNote:"Every valid shared-pair table/museum comparison remains available with its exact source records and comparable:false. Different instruments are not used to manufacture a consistency score.",
     limits:["A room can serve a curatorial purpose unrelated to table similarity. These are different tasks, not conflicting values on a shared axis."]
   },
   {
     id:"works-left-out",lensId:"curating-and-grouping",title:"What you leave out",status:"implemented",availability:"current",
     description:"Presented works left unhung, and stronger comparisons when a previously preferred work loses a place in a chosen wall.",
     example:example("The Starry Night had the higher individual rating. The final wall comparison kept The Great Wave and left The Starry Night in storage.",["van-gogh-starry-night","study-hokusai-great-wave"]),
-    requiredSignals:["Actual presentation records and the completed arrangement, not merely an offered tray.","For an individual-preference comparison, a captured valid earlier rating of the exact pair.","For a difficult edit, the explicit final choice between equal-sized three-work walls."],
-    sources:[connections("omissions",{}),portrait("curatorialObservations",{"idPattern":"^(gallery-.+-omission|difficult-edit-.+-preference)$"})],
-    implementationNote:"Connections reports observed museum omissions. The stronger preference/fit comparison comes through the delegated gallery or difficult-edit finding when a real baseline exists.",
+    requiredSignals:["Actual presentation records and the completed arrangement, not merely an offered tray.","For an individual-preference comparison, a captured valid earlier rating of the exact pair.","New difficult edits use one intentional keep-three/leave-one decision. Older completed two-wall comparisons retain their own original questions and answers."],
+    sources:[connections("omissions",{}),portrait("curatorialObservations",{"idPattern":"^(gallery-.+-omission|difficult-edit-.+-(preference|decision))$"})],
+    implementationNote:"Observed omissions remain a ledger until real independent earlier preference supports a connection. New single edits cannot create a supposed consistency insight by asking the same removal twice.",
     limits:["An omission can reflect fit, redundancy or space. It does not establish dislike, and unseen offered paintings remain unknown."]
   },
   {
@@ -384,9 +391,9 @@ export const PROFILE_READING_CATALOG=Object.freeze([
     id:"artist-and-tradition-routes",lensId:"finding-more",title:"Artists & traditions",status:"implemented",availability:"current",
     description:"Sourced routes from preferred works, with stronger recurring comparisons distinguished from one-work starting points.",
     example:example("The Starry Night and Sunflowers led different comparisons. That supports comparing more Van Gogh; it does not establish a preference for every Post-Impressionist painting.",["van-gogh-starry-night","study-van-gogh-sunflowers"]),
-    requiredSignals:["Preferred seeds backed by clear discovery preference comparisons.","Usable artist or movement metadata, or finite bounded dates.","Tradition/date routes require at least two distinct contrast sets and two works; an artist route can start from one work with that limit stated."],
+    requiredSignals:["Explicit favourites, positive responses on the exact overall-appeal instrument, or clearly labelled legacy within-set leaders.","Usable artist or movement metadata, or finite bounded dates.","Tradition/date routes need several positively chosen works or two distinct supporting comparison sets. Artist routes can start from one work, with that limit stated. Opposing sets and lower choices are retained."],
     sources:[portrait("discovery.artists",{}),portrait("discovery.traditions",{}),portrait("discovery.eras",{})],
-    implementationNote:"Artist, tradition and era routes keep different evidence requirements. Century bins are chronological and are not assumed to be shared styles.",
+    implementationNote:"Routes are ranked by actual positive/favourite work evidence rather than catalogue order. Supporting and opposing distinct-set counts can overlap. A low-rated work by the same artist remains counterevidence even when it was never a preferred seed; century bins are chronology, not shared style.",
     limits:["A preferred work does not establish a preference for an artist's whole output, a culture or a historical period."]
   },
   {
@@ -404,8 +411,71 @@ export const PROFILE_READING_CATALOG=Object.freeze([
     example:example("The Great Wave links one preferred work to The Metropolitan Museum of Art. Girl with a Pearl Earring supplies a different collection route to the Mauritshuis.",["study-hokusai-great-wave","study-vermeer-pearl"]),
     requiredSignals:["A preferred artwork with traceable support.","Its sourced institution metadata, or a supported artist connection in the editorial museum list.","A direct collection or institution URL."],
     sources:[portrait("discovery.museums",{})],
-    implementationNote:"The module uses both the editorial museum list and institutions named by new sourced catalogue entries. It is a collection route rather than a global museum ranking.",
+    implementationNote:"Both sourced catalogue institutions and the editorial list remain available. Direct holding concentration ranks explicit favourites before other positive works, then artist-only connections. No first-three institutional cutoff hides later supported routes; this remains a collection connection rather than a ranking of every museum.",
     limits:["Collection ownership does not establish current display. Opening times, location, travel suitability and access are not inferred from the profile."]
+  },
+  {
+    id:"chosen-work-connections",lensId:"visual-patterns",title:"Connections among chosen works",status:"implemented",availability:"current",
+    description:"Specific reviewed connections among positively chosen paintings, across differences in artist, date and composition.",
+    example:example("Hope, The Garden of Earthly Delights and Las Meninas offer narrative clues in very different compositions. A connection can include these works while retaining lower-rated paintings with similar clues.",["add-watts-hope","bosch-garden-delights","velazquez-las-meninas"]),
+    requiredSignals:["At least three different positively chosen works across two artwork sets, or a qualified explicit favourites selection. Legacy relative placements cannot supply positive overall ratings.","Each used work needs its own captured facet review, exact reviewed reproduction, source record and checksum. Missing or mismatched reviews stay unknown.","Connections can combine narrative detail with imagined worlds, dramatic light with near-view figures, or landscape with layered space. Lower-rated works sharing those descriptions and positive choices outside them remain visible.","A named summary needs a connection shared by explicit favourites or a descriptive concentration compared with known lower-rated works. Simply offering many landscapes does not create a landscape identity."],
+    sources:[portrait("facets.observations",{"module":"curatorial-themes"}),portrait("themes",{"basis":"reviewed-facets-of-positive-choices"})],
+    implementationNote:"Facet descriptions concern the artworks. They are not generated from the user's answers, and the current sidecar cannot annotate an older frozen catalogue retroactively. A connection can remain an observation without qualifying to name a profile.",
+    limits:["The offered mix can make a subject common among positive choices. Known higher/lower-rated work counts and unknown coverage remain part of the evidence.","An unassigned tag is an editorial non-assignment, not proof that a painting has no meaning or emotion. Shared descriptions do not establish why it appealed."]
+  },
+  {
+    id:"range-in-positive-choices",lensId:"visual-patterns",title:"Range within your choices",status:"implemented",availability:"current",
+    description:"A positive set can include both spare and dense paintings, qualifying a one-direction explanation.",
+    example:example("Both Hope and The Garden of Earthly Delights belong among the positively chosen works. Their different densities prevent reducing that whole set to a preference for simple compositions.",["add-watts-hope","bosch-garden-delights"]),
+    requiredSignals:["Explicit favourites or ratings at least 65 on the exact overall-appeal instrument, not high placements on a legacy relative spectrum.","At least two different positively chosen sparse works and two dense works, using known descriptors. They must span different sets or belong to one explicit favourites selection.","The visible contrasting paintings must match the examples actually named. Repeated works do not add positive artworks."],
+    sources:[portrait("observations",{"id":"facet-density-range","module":"choice-range"})],
+    implementationNote:"This qualifies a simple density explanation and stays available beside richer connections. It never names the profile or supplies an archetype; all-high answers cannot acquire an identity from this breadth alone.",
+    limits:["The density annotation is provisional. Enjoying both ends does not prove that detail never matters, or identify another cause of liking."]
+  },
+  {
+    id:"reported-density",lensId:"visual-patterns",title:"Reported visual detail",status:"implemented",availability:"legacy",
+    description:"Earlier ratings of how much there was to take in, kept separate from editorial density and from preference.",
+    example:example("The Garden of Earthly Delights was placed as having more to take in than Hope. A separate preference response determines whether those two orders agree.",["bosch-garden-delights","add-watts-hope"]),
+    requiredSignals:["A complete retained looking-appraisal answer under its original visual-density question and scale.","A genuine earlier exact-set preference if a relationship is shown. Original reported numbers remain inspectable even without that source.","A density headline needs three non-overlapping supporting sets and at least four named artists. Repeats and overlapping sets cannot manufacture that threshold."],
+    sources:[portrait("lookingAppraisals.responses",{"construct":"perceived-visual-density"}),portrait("observations",{"module":"looking-appraisals","construct":"perceived-visual-density"})],
+    implementationNote:"Current v10 no longer asks this one-off question. Earlier saved answers remain literal reports; they are not renamed as making, scene clarity or a measured objective property.",
+    limits:["A person's reported visual detail and an editorial image annotation are different evidence. Neither alone reveals why a work was liked."]
+  },
+  {
+    id:"attention-to-making",lensId:"different-reactions",title:"Looking at the making",status:"implemented",availability:"current",
+    description:"Attention to paint, marks, lines and composition beside a separately recorded preference.",
+    example:example("The viewer paid more attention to the making of Composition 8 while preferring The Starry Night. The making response remains a separate appraisal.",["study-kandinsky-composition-eight","van-gogh-starry-night"]),
+    requiredSignals:["A complete attention-to-making looking appraisal under the exact recorded question and scale.","An earlier valid preference for the same actual set if the reading connects the two answers.","Clear paired differences for a local relationship, or qualified recurring sets with opposing choices retained. A flat appraisal is only a direct report."],
+    sources:[portrait("lookingAppraisals.responses",{"construct":"attention-to-making"}),portrait("observations",{"module":"looking-appraisals","construct":"attention-to-making"})],
+    implementationNote:"The current journey retains this appraisal. Attention to making is distinct from the achievement map's admiration judgment, and from viewing time or eye tracking.",
+    limits:["Looking closely at marks does not establish craftsmanship, effort or admiration. It is not automatically another preference answer."]
+  },
+  {
+    id:"people-and-reaction",lensId:"different-reactions",title:"People & your reaction",status:"implemented",availability:"legacy",
+    description:"Earlier reports of how much the figures mattered to a reaction, under their original wording.",
+    example:example("The people mattered more in the response to The Banjo Lesson than in a response to The Great Wave. Those reports are kept beside, rather than substituted for, preference.",["study-tanner-banjo-lesson","study-hokusai-great-wave"]),
+    requiredSignals:["A complete retained importance-of-figures appraisal, with the original question, scale and exact paintings.","A matched earlier preference if a qualified relationship is generated. Unrecognised older wording stays a direct report rather than silently acquiring a newer interpretation.","Supporting and opposing choices, with no figures-present versus figures-important substitution."],
+    sources:[portrait("lookingAppraisals.responses",{"construct":"importance-of-figures"}),portrait("observations",{"module":"looking-appraisals","construct":"importance-of-figures"})],
+    implementationNote:"This earlier one-off instrument is not generated by fresh v10. The editorial humanity descriptor measures a different thing and cannot overwrite its answers.",
+    limits:["Importance to a reaction, number of people, and human presence are distinct. A single answer cannot establish a preference for figurative art."]
+  },
+  {
+    id:"unexpectedness-and-preference",lensId:"different-reactions",title:"Unexpectedness & preference",status:"implemented",availability:"legacy",
+    description:"Earlier surprise ratings can agree with preference or follow a different order.",
+    example:example("The Sleeping Gypsy was more unexpected, while The Kiss was preferred in the separate comparison. Surprise was a reported reaction, not an inferred appetite for novelty.",["study-rousseau-sleeping-gypsy","klimt-kiss"]),
+    requiredSignals:["A retained reported-unexpectedness looking appraisal under its original scale.","An actual earlier preference for the exact same artwork set to connect their orders.","A qualified local reversal or recurring direction; otherwise the direct response remains available without a headline."],
+    sources:[portrait("lookingAppraisals.responses",{"construct":"reported-unexpectedness"}),portrait("observations",{"module":"looking-appraisals","construct":"reported-unexpectedness"})],
+    implementationNote:"The current journey no longer asks this one-off question. Old surprise ratings remain distinct from familiarity grids, new-pair exposure and interpretation maps.",
+    limits:["Unexpected is not the same as unfamiliar. No novelty-seeking trait or population rarity follows."]
+  },
+  {
+    id:"favourites-and-ratings",lensId:"revisiting-choices",title:"Favourites & earlier ratings",status:"implemented",availability:"current",
+    description:"An explicit, unranked favourites selection can refine what the earlier overall ratings suggested.",
+    example:example("Hope was explicitly selected as a favourite while a higher-rated alternative stayed outside that selection. Both original decisions remain visible.",["add-watts-hope","study-leonardo-mona-lisa"]),
+    requiredSignals:["A confirmed overall-favourites shortlist with the actual offered identities and its five-choice capacity. Generic keep grids and collection saves do not qualify.","For new paged questions, valid opened-page records. An unvisited page is not a non-selection and cannot revoke an earlier favourite.","A refinement comparison additionally needs captured earlier values on the exact overall-appeal scale, their actual earlier source definitions and a clear difference. Only actually presented unselected alternatives can supply it."],
+    sources:[portrait("heroWorks",{"basis":"overall-favourites"}),portrait("closingRefinement.favouriteRefinements",{})],
+    implementationNote:"Explicit favourites take priority in the visual selection; their offered order is only display order. They are not ranked among themselves. Without them, comparable overall ratings may supply highest-rated examples; legacy local leaders stay labelled separately.",
+    limits:["Not selected as a favourite does not mean disliked. An explicit None does not invent favourites.","A categorical favourite and a continuous rating are different decisions. A difference is not a false answer or proof that taste changed."]
   },
   {
     id:"recognition-and-preference",lensId:"finding-more",title:"Artist & style recognition",status:"planned",availability:"planned",

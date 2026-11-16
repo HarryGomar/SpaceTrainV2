@@ -1,0 +1,219 @@
+[
+  {
+    "id": "add-caravaggio-judith-barberini",
+    "title": "Judith Beheading Holofernes",
+    "artist": "Caravaggio",
+    "date": "c. 1599",
+    "yearRange": [
+      1599,
+      1599
+    ],
+    "dateApproximate": true,
+    "movement": "Italian Baroque",
+    "country": "Italy",
+    "museum": "Gallerie Nazionali Barberini Corsini, Palazzo Barberini",
+    "sourceUrl": "https://barberinicorsini.org/wp-content/uploads/2021/11/2021_12_Barberini_Giuditta_CartellaStampa.pdf",
+    "commonsTitle": "File:Judith Beheading Holofernes-Caravaggio (c.1598-9).jpg",
+    "alt": "Judith draws a sword across a man's neck while an older woman waits beside them against a dark ground and red curtain.",
+    "note": "The Palazzo Barberini painting shows Judith, Holofernes and an older attendant. The museum's catalogue dates it about 1599.",
+    "features": {
+      "abstraction": 0.05,
+      "energy": 0.8,
+      "complexity": 0.65,
+      "humanity": 1,
+      "narrative": 1,
+      "atmosphere": 0.15,
+      "color": 0.5
+    },
+    "featureReviewReason": "A compact naturalistic group performs a visible attack. Strong gestures and selective light dominate, while dark ground and drapery provide little setting."
+  },
+  {
+    "id": "add-caravaggio-supper-emmaus-1601",
+    "title": "The Supper at Emmaus",
+    "artist": "Caravaggio",
+    "date": "1601",
+    "yearRange": [
+      1601,
+      1601
+    ],
+    "movement": "Italian Baroque",
+    "country": "Italy",
+    "museum": "The National Gallery, London",
+    "sourceUrl": "https://www.nationalgallery.org.uk/paintings/michelangelo-merisi-da-caravaggio-the-supper-at-emmaus",
+    "commonsTitle": "File:1602-3 Caravaggio,Supper at Emmaus National Gallery, London.jpg",
+    "alt": "Four men gather at a table of food, with one seated man extending both arms and another pushing back from his chair.",
+    "note": "Caravaggio painted this London version in 1601 and another version in Milan in 1606. The London museum record supplies the date used here.",
+    "features": {
+      "abstraction": 0.05,
+      "energy": 0.6,
+      "complexity": 0.75,
+      "humanity": 1,
+      "narrative": 0.6,
+      "atmosphere": 0.35,
+      "color": 0.55
+    },
+    "featureReviewReason": "Naturalistic figures gesture around a table crowded with food and objects. The plain rear wall limits setting despite the strong light and bodily movement."
+  },
+  {
+    "id": "add-caravaggio-taking-christ",
+    "title": "The Taking of Christ",
+    "artist": "Caravaggio",
+    "date": "1602",
+    "yearRange": [
+      1602,
+      1602
+    ],
+    "movement": "Italian Baroque",
+    "country": "Italy",
+    "museum": "National Gallery of Ireland, on loan from the Jesuit Community, Leeson Street",
+    "sourceUrl": "https://onlinecollection.nationalgallery.ie/objects/2882/the-taking-of-christ",
+    "commonsTitle": "File:The Taking of Christ-Caravaggio (c.1602).jpg",
+    "alt": "A tightly packed group surrounds Christ, with a kissing figure, armoured soldiers, raised hands and a lantern against darkness.",
+    "note": "The National Gallery of Ireland identifies this as the 1602 painting on indefinite loan from the Jesuit Community in Dublin.",
+    "features": {
+      "abstraction": 0.05,
+      "energy": 0.8,
+      "complexity": 0.75,
+      "humanity": 1,
+      "narrative": 0.85,
+      "atmosphere": 0.05,
+      "color": 0.5
+    },
+    "featureReviewReason": "Interlocked foreground bodies, grasping hands and a lantern dominate. The compressed scene provides almost no surrounding place."
+  },
+  {
+    "id": "add-bruegel-triumph-death",
+    "title": "The Triumph of Death",
+    "artist": "Pieter Bruegel the Elder",
+    "date": "1562–63",
+    "yearRange": [
+      1562,
+      1563
+    ],
+    "movement": "Northern Renaissance",
+    "country": "Flanders",
+    "museum": "Museo Nacional del Prado",
+    "sourceUrl": "https://www.museodelprado.es/en/the-collection/art-work/the-triumph-of-death/d3d82b0b-9bf2-4082-ab04-66ed53196ccc",
+    "commonsTitle": "File:The Triumph of Death by Pieter Bruegel the Elder.jpg",
+    "alt": "An army of skeletons overwhelms people across a crowded landscape of fires, bodies, carts and distant ships.",
+    "note": "Bruegel distributes many encounters across one broad landscape. This is the Prado painting by Pieter Bruegel the Elder, rather than a later version by his sons.",
+    "features": {
+      "abstraction": 0.1,
+      "energy": 0.9,
+      "complexity": 1,
+      "humanity": 0.9,
+      "narrative": 1,
+      "atmosphere": 0.95,
+      "color": 0.4
+    },
+    "featureReviewReason": "Many small physical encounters and objects fill a deep landscape. Density and visible action are scored separately from any viewer feeling about the subject."
+  },
+  {
+    "id": "add-velazquez-spinners",
+    "title": "The Spinners, or The Fable of Arachne",
+    "artist": "Diego Velázquez",
+    "date": "1655–60",
+    "yearRange": [
+      1655,
+      1660
+    ],
+    "movement": "Baroque",
+    "country": "Spain",
+    "museum": "Museo Nacional del Prado",
+    "sourceUrl": "https://www.museodelprado.es/en/the-collection/art-work/the-spinners-or-the-fable-of-arachne/3d8e510d-2acf-4efb-af0c-8ffd665acd8d",
+    "commonsTitle": "File:Velázquez - La Fábula de Aracne o Las Hilanderas (Museo del Prado, 1657-58).jpg",
+    "alt": "Women work with wool and a spinning wheel in a shadowed foreground while another group stands before a tapestry in a brighter rear space.",
+    "note": "Foreground work and a second scene occupy different spatial stages. The canvas has later edge additions; the selected reproduction is retained consistently without a new crop.",
+    "features": {
+      "abstraction": 0.05,
+      "energy": 0.55,
+      "complexity": 0.8,
+      "humanity": 1,
+      "narrative": 0.6,
+      "atmosphere": 0.85,
+      "color": 0.4
+    },
+    "featureReviewReason": "Visible work in the foreground and a smaller rear scene occupy separate spatial stages within a detailed room."
+  },
+  {
+    "id": "add-van-eyck-arnolfini",
+    "title": "The Arnolfini Portrait",
+    "artist": "Jan van Eyck",
+    "date": "1434",
+    "yearRange": [
+      1434,
+      1434
+    ],
+    "movement": "Early Netherlandish painting",
+    "country": "Flanders",
+    "museum": "The National Gallery, London",
+    "sourceUrl": "https://www.nationalgallery.org.uk/paintings/jan-van-eyck-the-arnolfini-portrait",
+    "commonsTitle": "File:Van Eyck - Arnolfini Portrait.jpg",
+    "alt": "A richly dressed pair stand in a furnished room with a small dog, chandelier, red bed and a round mirror reflecting the doorway.",
+    "note": "The painting's mirror reflects additional figures beyond the pictured couple. The National Gallery cautions that the woman's gathered dress is not evidence of pregnancy.",
+    "features": {
+      "abstraction": 0.05,
+      "energy": 0.15,
+      "complexity": 0.75,
+      "humanity": 0.95,
+      "narrative": 0.1,
+      "atmosphere": 0.75,
+      "color": 0.65
+    },
+    "featureReviewReason": "The pair hold restrained poses, while the mirror, furnishings, dog and other objects create dense detail within a coherent room."
+  },
+  {
+    "id": "add-renoir-boating-party",
+    "title": "Luncheon of the Boating Party",
+    "artist": "Pierre-Auguste Renoir",
+    "date": "1880–81",
+    "yearRange": [
+      1880,
+      1881
+    ],
+    "movement": "Impressionism",
+    "country": "France",
+    "museum": "The Phillips Collection",
+    "sourceUrl": "https://www.phillipscollection.org/collection/luncheon-boating-party",
+    "commonsTitle": "File:Pierre-Auguste Renoir - Luncheon of the Boating Party - Google Art Project.jpg",
+    "alt": "A group eat, drink and talk around a crowded table beneath a striped awning beside a riverside railing.",
+    "note": "Renoir combines a social gathering, table objects and a riverside setting. The Phillips Collection dates the painting between 1880 and 1881.",
+    "features": {
+      "abstraction": 0.1,
+      "energy": 0.6,
+      "complexity": 0.95,
+      "humanity": 1,
+      "narrative": 0.5,
+      "atmosphere": 0.7,
+      "color": 0.7
+    },
+    "featureReviewReason": "Numerous people drink, converse and gesture around table objects within a bright riverside social setting."
+  },
+  {
+    "id": "add-marc-animal-destinies",
+    "title": "Animal Destinies (Tierschicksale)",
+    "artist": "Franz Marc",
+    "date": "1913",
+    "yearRange": [
+      1913,
+      1913
+    ],
+    "movement": "Der Blaue Reiter / Expressionism",
+    "country": "Germany",
+    "museum": "Kunstmuseum Basel",
+    "sourceUrl": "https://kunstmuseumbasel.ch/de/museum/blog/2020/5",
+    "commonsTitle": "File:Franz Marc 026.jpg",
+    "alt": "Animals and trees overlap within sharp red, blue, green and brown planes that fracture the surrounding forest.",
+    "note": "The work is also known in English as Fate of the Animals. Its fragmented forms retain recognisable animals and trees rather than becoming fully nonfigurative.",
+    "features": {
+      "abstraction": 0.65,
+      "energy": 0.9,
+      "complexity": 0.9,
+      "humanity": 0,
+      "narrative": 0.65,
+      "atmosphere": 0.85,
+      "color": 0.8
+    },
+    "featureReviewReason": "Angular saturated planes fracture recognisable animals and trees. Animal movement and the forest remain visible; no human figures are depicted."
+  }
+]

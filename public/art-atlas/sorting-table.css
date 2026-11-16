@@ -18,9 +18,14 @@
 .sorting-position > .sorting-placement, .sorting-position .art-visual, .sorting-position img, .sorting-snapshot > .sorting-placement .art-visual, .sorting-snapshot > .sorting-placement img { width: 100%; height: 100%; object-fit: contain; }
 .sorting-placement { padding: 0; border: 0; background: none; touch-action: none; cursor: grab; }
 .sorting-snapshot > .sorting-placement { cursor: zoom-in; }
-.sorting-preview { z-index: 4; opacity: .38; pointer-events: none; }
+.sorting-preview { z-index: 110; opacity: 1; pointer-events: none; filter: drop-shadow(0 4px 5px #302d2925); }
 .sorting-preview img { width: 100%; height: 100%; object-fit: contain; }
 .sorting-preview-invalid { opacity: .18; outline: 1px dashed #a26e58; outline-offset: 4px; }
+.sorting-placement.is-dragging { opacity: 0; }
+.sorting-source.is-dragging,.sorting-focused-art.is-dragging { opacity: .35; }
+.sorting-is-dragging,.sorting-is-dragging * { cursor: grabbing; }
+.sorting-drag-ghost { position: fixed; z-index: 160; pointer-events: none; transform: translate(-50%,-50%); filter: drop-shadow(0 4px 5px #302d2925); }
+.sorting-drag-ghost img { width: 100%; height: 100%; object-fit: contain; }
 .sorting-tray { display: grid; grid-template-columns: 260px minmax(0,1fr); gap: 35px; align-items: center; margin: 28px 0; }
 .sorting-selected { display: grid; grid-template-columns: 115px minmax(0,1fr); gap: 17px; align-items: center; min-width: 0; }
 .sorting-focused-art { min-width: 0; width: 115px; height: 145px; padding: 0; border: 0; background: none; touch-action: none; cursor: grab; }
