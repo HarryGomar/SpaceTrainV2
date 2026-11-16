@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {createArtField,updateFieldPointer,interactFieldPoint,FIELD_MOTION} from '../../public/art-atlas/art-field.mjs';
+import {createArtField,updateFieldPointer,interactFieldPoint,fieldClearing,FIELD_MOTION} from '../../public/art-atlas/art-field.mjs';
 import {canonicalOpeningPool,createOpeningSeed,orderOpeningPool} from '../../public/art-atlas/opening-pool.mjs';
 
 const studyWorks=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/artworks.json',import.meta.url),'utf8'));
@@ -22,15 +22,37 @@ test('The painting field is deterministic, uses the whole catalogue and has actu
   assert.ok(Math.max(...depth)-Math.min(...depth)>2);
   assert.ok(field.paintings.every(p=>p.position.every(Number.isFinite)&&p.edge>0));
   const mobile=createArtField({mobile:true,workCount:fullCollection.length});
-  assert.equal(mobile.paintings.length,480);
-  assert.deepEqual(mobile.paintings,field.paintings,'Resize does not randomly rearrange the paintings');
+  assert.equal(mobile.paintings.length,96);
+  const desktopByWork=new Map(field.paintings.map(p=>[p.workIndex,p]));
+  for(const item of mobile.paintings){const original=desktopByWork.get(item.workIndex);assert.deepEqual(item.position,original.position,'Resize preserves each painting position and depth');assert.equal(item.angle,original.angle);assert.equal(item.seed,original.seed);assert.equal(item.edge,original.edge*.36);}
   assert.ok(mobile.particles.length<field.particles.length);
-  assert.equal(new Set(mobile.paintings.map(p=>p.workIndex)).size,480);
+  assert.equal(new Set(mobile.paintings.map(p=>p.workIndex)).size,96);
   for(const workCount of [0,1,12,59,96,99,125,255,320,354,480]){
     const sample=createArtField({workCount});
     assert.equal(sample.paintings.length,workCount);
     assert.deepEqual(sample.paintings.map(p=>p.workIndex).sort((a,b)=>a-b),Array.from({length:workCount},(_,i)=>i));
   }
+});
+
+test('Phone layers keep the visit identities, smaller edges and a spread of depths without changing desktop geometry',()=>{
+  const desktop=createArtField({workCount:480,seed:3456}),mobile=createArtField({mobile:true,workCount:480,seed:3456});
+  assert.deepEqual(mobile,createArtField({mobile:true,workCount:480,seed:3456}));
+  assert.deepEqual(desktop,createArtField({workCount:480,seed:3456}),'Switching to phone does not mutate the desktop layout');
+  assert.equal(mobile.paintings.length,96);
+  assert.equal(mobile.paintings.filter(item=>item.hero).length,10);
+  for(let index=0;index<10;index++)assert.ok(mobile.paintings.some(item=>item.workIndex===index),'The balanced opening foreground remains available');
+  assert.ok(Math.max(...mobile.paintings.map(item=>item.workIndex))>470,'Deeper layers sample the entire seeded pool');
+  assert.ok(Math.max(...mobile.paintings.map(item=>item.position[2]))-Math.min(...mobile.paintings.map(item=>item.position[2]))>2);
+  const largestEdge=Math.max(...mobile.paintings.map(item=>item.edge*844/2*3.6/(3.6-item.position[2])));
+  assert.ok(largestEdge<105,'Foreground paintings remain below desktop-scale edges on a 390×844 phone');
+  for(const workCount of [0,1,12,59,96])assert.equal(createArtField({mobile:true,workCount}).paintings.length,workCount,'Small collections are not unnecessarily thinned');
+});
+
+test('Phone clearing protects the title and Start area while retaining paintings and points around it',()=>{
+  for(const point of [[0,0],[.48,0],[-.48,0],[0,.3],[0,-.3]])assert.equal(fieldClearing(point,true),0);
+  assert.ok(fieldClearing([0,.6],true)>.95,'Top and bottom layers remain visible');
+  assert.ok(fieldClearing([.9,.2],true)>.6,'Side layers remain present outside the protected centre');
+  assert.ok(fieldClearing([.5,0],false)>fieldClearing([.5,0],true),'Desktop clearing keeps its existing tighter centre');
 });
 
 test('A visit seed gives a repeatable order and geometry,while different visits change both',()=>{

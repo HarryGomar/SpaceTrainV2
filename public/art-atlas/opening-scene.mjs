@@ -1,4 +1,4 @@
-import {createArtField,updateFieldPointer,interactFieldPoint} from './art-field.mjs';
+import {createArtField,updateFieldPointer,interactFieldPoint,fieldClearing} from './art-field.mjs';
 import {createOpeningRenderer} from './opening-renderer.mjs';
 import {canonicalOpeningPool,createOpeningSeed,orderOpeningPool} from './opening-pool.mjs';
 
@@ -30,7 +30,7 @@ export function createOpeningScene({app,getWorks,seed}){
   const ctx=canvas.getContext('2d');if(!ctx)return null;let field,sources=[],packed=null;
   return {type:'canvas2d',setField(f,s){field=f;sources=s;},setAtlas(canvas){packed=canvas;},resize(){},destroy(){field=null;sources=[];packed=null;},draw({time,pointer,width:w,height:h}){
    ctx.setTransform(canvas.width/w,0,0,canvas.height/h,0,0);ctx.fillStyle=PAPER;ctx.fillRect(0,0,w,h);
-   function project(item){const p=item.position,d=3.6/(3.6-p[2]),[x,y]=interactFieldPoint([p[0]*d,p[1]*d],pointer,{aspect:w/h,z:p[2]});return {x:(x+1)*w/2+Math.sin(time*.04+item.seed)*2,y:(1-y)*h/2+Math.cos(time*.036+item.seed)*2,d,alpha:Math.min(1,Math.max(0,(Math.hypot(x*1.65,y*2.6)-.34)/.36))};}
+   function project(item){const p=item.position,d=3.6/(3.6-p[2]),[x,y]=interactFieldPoint([p[0]*d,p[1]*d],pointer,{aspect:w/h,z:p[2]});return {x:(x+1)*w/2+Math.sin(time*.04+item.seed)*2,y:(1-y)*h/2+Math.cos(time*.036+item.seed)*2,d,alpha:fieldClearing([x,y],field.mobile)};}
    for(const item of field.particles.filter((_,i)=>i%9===0)){const p=project(item);ctx.globalAlpha=.18*p.alpha;ctx.fillStyle='#8c8173';ctx.fillRect(p.x,p.y,1.1,1.1);}
    for(const item of field.paintings){const source=sources[item.workIndex%sources.length];if(!source?.loaded||!packed)continue;const p=project(item),edge=item.edge*h/2*p.d,iw=source.ratio>1?edge:edge*source.ratio,ih=source.ratio>1?edge/source.ratio:edge;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(item.angle);ctx.globalAlpha=Math.max(.05,Math.min(.8,(item.position[2]+2.9)/3.5*.83))*p.alpha;ctx.filter='saturate(.75)';ctx.drawImage(packed,...source.pixelRect,-iw/2,-ih/2,iw,ih);ctx.restore();}ctx.globalAlpha=1;
   }};

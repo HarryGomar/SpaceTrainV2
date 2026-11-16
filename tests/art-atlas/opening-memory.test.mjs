@@ -4,11 +4,11 @@ import {JSDOM} from 'jsdom';
 import {createOpeningScene} from '../../public/art-atlas/opening-scene.mjs';
 
 const markup='<section class="opening-screen"><canvas data-art-scene></canvas><button data-scene-motion></button></section>';
-function fixture({paused=true,autoLoad=true,count=3}={}){
-  const dom=new JSDOM('<main>'+markup+'</main>',{url:'https://example.org/art-atlas/',pretendToBeVisual:true}),window=dom.window,app=window.document.querySelector('main'),images=[],canvases=[],contexts=new Map(),frames=new Map();let frameId=0;
-  const media={matches:paused,addEventListener(){},removeEventListener(){}};window.matchMedia=()=>media;window.ResizeObserver=class{observe(){}disconnect(){}};
+function fixture({paused=true,autoLoad=true,count=3,width=900,height=650}={}){
+  const dom=new JSDOM('<main>'+markup+'</main>',{url:'https://example.org/art-atlas/',pretendToBeVisual:true}),window=dom.window,app=window.document.querySelector('main'),images=[],canvases=[],contexts=new Map(),frames=new Map(),resizes=new Set(),viewport={width,height};let frameId=0;
+  const media={matches:paused,addEventListener(){},removeEventListener(){}};window.matchMedia=()=>media;window.ResizeObserver=class{constructor(callback){this.callback=callback;}observe(){resizes.add(this.callback);}disconnect(){resizes.delete(this.callback);}};
   window.requestAnimationFrame=fn=>{frames.set(++frameId,fn);return frameId;};window.cancelAnimationFrame=id=>frames.delete(id);
-  window.HTMLCanvasElement.prototype.getBoundingClientRect=function(){return {x:0,y:0,left:0,top:0,width:900,height:650,right:900,bottom:650};};
+  window.HTMLCanvasElement.prototype.getBoundingClientRect=function(){return {x:0,y:0,left:0,top:0,...viewport,right:viewport.width,bottom:viewport.height};};
   window.HTMLCanvasElement.prototype.getContext=function(type){if(!canvases.includes(this))canvases.push(this);if(type!=='2d')return null;if(!contexts.has(this))contexts.set(this,{draws:[],setTransform(){},fillRect(){},save(){},restore(){},translate(){},rotate(){},drawImage(...args){this.draws.push(args);}});return contexts.get(this);};
   window.Image=class{
     constructor(){this.naturalWidth=600;this.naturalHeight=450;this.removed=false;images.push(this);}
@@ -18,7 +18,7 @@ function fixture({paused=true,autoLoad=true,count=3}={}){
   };
   const works=Array.from({length:count},(_,i)=>({id:'w'+i,title:'Artwork '+i,artist:'Artist '+i,image:'assets/w'+i+'.jpg',sourceUrl:'https://museum.example/'+i,studyEligible:true,country:i%2?'Mexico':'France',recognitionTier:'landmark'})),scene=createOpeningScene({app,getWorks:()=>works,seed:12345});
   const flush=async()=>{await new Promise(resolve=>setImmediate(resolve));};
-  return {dom,window,app,scene,images,canvases,contexts,frames,flush,close(){scene.destroy();dom.window.close();}};
+  return {dom,window,app,scene,images,canvases,contexts,frames,flush,resize(width,height){Object.assign(viewport,{width,height});for(const callback of resizes)callback();},close(){scene.destroy();dom.window.close();}};
 }
 
 test('Canvas fallback draws packed crops and releases temporary image handlers and sources after packing',async()=>{
@@ -39,4 +39,14 @@ test('An image failure releases its source too, and other packed paintings remai
 
 test('A 480-image opening retains one 4096 atlas, without 480 decoded source URLs',async()=>{
   const f=fixture({count:480});try{await f.flush();const canvas=f.app.querySelector('[data-art-scene]'),draws=f.contexts.get(canvas).draws;assert.equal(canvas.dataset.sceneImages,'480');assert.equal(canvas.dataset.scenePaintings,'480');assert.equal(new Set(draws.map(args=>args[0])).size,1);assert.equal(draws[0][0].width,4096);assert.ok(f.images.every(img=>img.removed));}finally{f.close();}
+});
+
+test('Phone controller renders 96 smaller layers and resize restores desktop without reloading or changing the visit',async()=>{
+  const f=fixture({count:480,width:390,height:844});try{
+    await f.flush();const canvas=f.app.querySelector('[data-art-scene]'),seed=canvas.dataset.sceneSeed,draws=f.contexts.get(canvas).draws;
+    assert.equal(canvas.dataset.scenePaintings,'96');assert.equal(canvas.dataset.scenePoints,'9600');assert.equal(canvas.dataset.sceneImages,'480');
+    assert.ok(Math.max(...draws.map(args=>Math.max(args[7],args[8])))<105,'Actual fallback painting dimensions fit the phone treatment');
+    f.resize(1440,900);assert.equal(canvas.dataset.scenePaintings,'480');assert.equal(canvas.dataset.scenePoints,'26000');assert.equal(canvas.dataset.sceneSeed,seed);
+    f.resize(390,844);assert.equal(canvas.dataset.scenePaintings,'96');assert.equal(canvas.dataset.sceneSeed,seed);assert.equal(f.images.length,480,'Resizing reuses the same packed collection');assert.equal(f.frames.size,0,'Reduced motion remains static through both resizes');
+  }finally{f.close();}
 });

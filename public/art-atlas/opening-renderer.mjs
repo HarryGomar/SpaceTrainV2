@@ -1,4 +1,4 @@
-import {FIELD_MOTION} from './art-field.mjs';
+import {FIELD_MOTION,PHONE_FIELD} from './art-field.mjs';
 
 const COMMON=`
 uniform float u_time;
@@ -6,6 +6,7 @@ uniform vec2 u_pointer;
 uniform float u_energy;
 uniform float u_aspect;
 uniform vec2 u_resolution;
+uniform float u_mobile;
 float hash(vec3 p){p=fract(p*.3183099+vec3(.1,.2,.3));p*=17.;return fract(p.x*p.y*p.z*(p.x+p.y+p.z));}
 float noise(vec3 p){vec3 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(mix(hash(i),hash(i+vec3(1,0,0)),f.x),mix(hash(i+vec3(0,1,0)),hash(i+vec3(1,1,0)),f.x),f.y),mix(mix(hash(i+vec3(0,0,1)),hash(i+vec3(1,0,1)),f.x),mix(hash(i+vec3(0,1,1)),hash(i+vec3(1,1,1)),f.x),f.y),f.z);}
 vec3 flow(vec3 base,float seed){
@@ -27,7 +28,7 @@ vec2 interact(vec2 p,float z,float seed){
  vec2 direction=delta/(distance+${FIELD_MOTION.directionSoftness});
  return p+direction*${FIELD_MOTION.repulsion}*envelope*mix(.45,.9,depth)/vec2(u_aspect,1.);
 }
-float clearing(vec2 p){return smoothstep(.34,.70,length(p*vec2(1.65,2.6)));}
+float clearing(vec2 p){return u_mobile>.5?smoothstep(${PHONE_FIELD.clearingInner},${PHONE_FIELD.clearingOuter},length(p*vec2(${PHONE_FIELD.clearingX},${PHONE_FIELD.clearingY}))):smoothstep(.34,.70,length(p*vec2(1.65,2.6)));}
 `;
 const ART_VERTEX=`#version 300 es
 precision highp float;
@@ -75,7 +76,7 @@ void main(){float radius=length(gl_PointCoord-.5);if(radius>.5)discard;vec4 c=te
 `;
 
 function shader(gl,type,source){const s=gl.createShader(type);gl.shaderSource(s,source);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)){const error=gl.getShaderInfoLog(s);gl.deleteShader(s);throw Error(error);}return s;}
-function program(gl,vertex,fragment){const v=shader(gl,gl.VERTEX_SHADER,vertex),f=shader(gl,gl.FRAGMENT_SHADER,fragment),p=gl.createProgram();gl.attachShader(p,v);gl.attachShader(p,f);gl.linkProgram(p);gl.deleteShader(v);gl.deleteShader(f);if(!gl.getProgramParameter(p,gl.LINK_STATUS)){const error=gl.getProgramInfoLog(p);gl.deleteProgram(p);throw Error(error);}return {p,uniforms:Object.fromEntries(['u_time','u_pointer','u_energy','u_aspect','u_resolution','u_atlas'].map(k=>[k,gl.getUniformLocation(p,k)]))};}
+function program(gl,vertex,fragment){const v=shader(gl,gl.VERTEX_SHADER,vertex),f=shader(gl,gl.FRAGMENT_SHADER,fragment),p=gl.createProgram();gl.attachShader(p,v);gl.attachShader(p,f);gl.linkProgram(p);gl.deleteShader(v);gl.deleteShader(f);if(!gl.getProgramParameter(p,gl.LINK_STATUS)){const error=gl.getProgramInfoLog(p);gl.deleteProgram(p);throw Error(error);}return {p,uniforms:Object.fromEntries(['u_time','u_pointer','u_energy','u_aspect','u_resolution','u_atlas','u_mobile'].map(k=>[k,gl.getUniformLocation(p,k)]))};}
 function mesh(gl,data,stride,attributes){const vao=gl.createVertexArray(),buffer=gl.createBuffer();gl.bindVertexArray(vao);gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(data),gl.STATIC_DRAW);for(const [location,size,offset] of attributes){gl.enableVertexAttribArray(location);gl.vertexAttribPointer(location,size,gl.FLOAT,false,stride*4,offset*4);}gl.bindVertexArray(null);return {vao,buffer,count:data.length/stride};}
 
 export function createOpeningRenderer(canvas){
@@ -84,13 +85,14 @@ export function createOpeningRenderer(canvas){
   const surface=canvas.ownerDocument.createElement('canvas');
   const gl=surface.getContext('webgl2',{alpha:true,antialias:true,depth:false,stencil:false,powerPreference:'low-power'});if(!gl)return null;
   const output=canvas.getContext('2d',{alpha:false});if(!output)return null;
-  let art,dots,artMesh,dotMesh,texture;
+  let art,dots,artMesh,dotMesh,texture,mobile=false;
   try{art=program(gl,ART_VERTEX,ART_FRAGMENT);dots=program(gl,DOT_VERTEX,DOT_FRAGMENT);texture=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,texture);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,1,1,0,gl.RGBA,gl.UNSIGNED_BYTE,new Uint8Array([160,150,135,255]));}catch(error){canvas.dataset.sceneError=String(error.message).slice(0,180);return null;}
   gl.enable(gl.BLEND);gl.blendFuncSeparate(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA,gl.ONE,gl.ONE_MINUS_SRC_ALPHA);gl.disable(gl.DEPTH_TEST);
   function releaseMesh(m){if(m){gl.deleteBuffer(m.buffer);gl.deleteVertexArray(m.vao);}}
   return {
     type:'webgl2',
     setField(field,sources){
+      mobile=field.mobile===true;
       releaseMesh(artMesh);releaseMesh(dotMesh);
       const vertices=[],points=[],corners=[[-.5,-.5],[.5,-.5],[-.5,.5],[-.5,.5],[.5,-.5],[.5,.5]];
       for(const item of field.paintings){const source=sources[item.workIndex%sources.length];if(!source?.loaded)continue;const ratio=source.ratio,w=ratio>1?item.edge:item.edge*ratio,h=ratio>1?item.edge/ratio:item.edge;for(const q of corners)vertices.push(...item.position,w,h,item.angle,item.seed,...source.uv,...q);}
@@ -101,7 +103,7 @@ export function createOpeningRenderer(canvas){
     resize(){surface.width=canvas.width;surface.height=canvas.height;gl.viewport(0,0,surface.width,surface.height);},
     draw({time,pointer,width,height}){
       gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,texture);
-      for(const [object,m,mode] of [[dots,dotMesh,gl.POINTS],[art,artMesh,gl.TRIANGLES]]){if(!m?.count)continue;gl.useProgram(object.p);const u=object.uniforms;gl.uniform1f(u.u_time,time);gl.uniform2f(u.u_pointer,pointer.x,pointer.y);gl.uniform1f(u.u_energy,pointer.energy);gl.uniform1f(u.u_aspect,width/Math.max(height,1));gl.uniform2f(u.u_resolution,canvas.width,canvas.height);gl.uniform1i(u.u_atlas,0);gl.bindVertexArray(m.vao);gl.drawArrays(mode,0,m.count);}gl.bindVertexArray(null);
+      for(const [object,m,mode] of [[dots,dotMesh,gl.POINTS],[art,artMesh,gl.TRIANGLES]]){if(!m?.count)continue;gl.useProgram(object.p);const u=object.uniforms;gl.uniform1f(u.u_time,time);gl.uniform2f(u.u_pointer,pointer.x,pointer.y);gl.uniform1f(u.u_energy,pointer.energy);gl.uniform1f(u.u_aspect,width/Math.max(height,1));gl.uniform1f(u.u_mobile,mobile?1:0);gl.uniform2f(u.u_resolution,canvas.width,canvas.height);gl.uniform1i(u.u_atlas,0);gl.bindVertexArray(m.vao);gl.drawArrays(mode,0,m.count);}gl.bindVertexArray(null);
       output.fillStyle='#f5f4f1';output.fillRect(0,0,canvas.width,canvas.height);output.drawImage(surface,0,0);
     },
     destroy(){releaseMesh(artMesh);releaseMesh(dotMesh);gl.deleteTexture(texture);gl.deleteProgram(art.p);gl.deleteProgram(dots.p);artMesh=null;dotMesh=null;surface.width=1;surface.height=1;gl.getExtension('WEBGL_lose_context')?.loseContext();}

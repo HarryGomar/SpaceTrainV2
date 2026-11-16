@@ -1,6 +1,13 @@
 export function fieldRandom(seed=9317){let value=seed>>>0;return()=>{value=(Math.imul(value,1664525)+1013904223)>>>0;return value/4294967296;};}
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 export const FIELD_MOTION=Object.freeze({pointerFollow:4.8,presenceRise:3.6,presenceFall:4.1,presence:.9,radiusSquared:.34,repulsion:.26,directionSoftness:.14,parallaxX:.034,parallaxY:.025});
+export const PHONE_FIELD=Object.freeze({paintingLimit:96,foregroundCount:10,edgeScale:.36,clearingInner:.9,clearingOuter:1.4,clearingX:1.35,clearingY:2.6});
+
+export function fieldClearing([x,y],mobile=false){
+  if(!mobile)return clamp((Math.hypot(x*1.65,y*2.6)-.34)/.36,0,1);
+  const t=clamp((Math.hypot(x*PHONE_FIELD.clearingX,y*PHONE_FIELD.clearingY)-PHONE_FIELD.clearingInner)/(PHONE_FIELD.clearingOuter-PHONE_FIELD.clearingInner),0,1);
+  return t*t*(3-2*t);
+}
 
 export function createArtField({mobile=false,workCount=1,seed=9317}={}){
   const random=fieldRandom(seed),normal=()=>Math.sqrt(-2*Math.log(Math.max(.0001,random())))*Math.cos(random()*Math.PI*2),count=Number.isFinite(workCount)?Math.max(0,Math.floor(workCount)):0,heroCount=Math.min(14,count),rotation=random()*Math.PI*2;
@@ -9,13 +16,24 @@ export function createArtField({mobile=false,workCount=1,seed=9317}={}){
     const radius=hero?.94+random()*.12:clamp(.91+normal()*.19,.5,1.42);
     return [Math.cos(angle)*radius*1.06,Math.sin(angle)*radius*.94,hero?.2+random()*.5:clamp(normal()*.7-.48,-2.3,.85)];
   }
-  const paintings=Array.from({length:count},(_,index)=>{
+  let paintings=Array.from({length:count},(_,index)=>{
     const hero=index<heroCount,near=!hero&&index<Math.max(heroCount,Math.floor(count*.16)),far=index>=Math.max(heroCount,Math.floor(count*.68)),xyz=position(index,hero);
     if(far)xyz[2]-=.65;
     return {position:xyz,edge:hero?.35+random()*.17:near?.19+random()*.12:far?.04+random()*.07:.07+random()*.11,angle:(random()-.5)*(hero?.07:.18),seed:random()*1000,workIndex:index,hero};
   }).sort((a,b)=>a.position[2]-b.position[2]);
+  if(mobile){
+    // A phone keeps a fixed subset of the same visit, rather than reshuffling
+    // the scene on resize. The first ten retain the balanced foreground pool.
+    if(count>PHONE_FIELD.paintingLimit){
+      const foreground=Math.min(PHONE_FIELD.foregroundCount,heroCount),selected=new Set(Array.from({length:foreground},(_,index)=>index)),remaining=PHONE_FIELD.paintingLimit-foreground,background=count-heroCount;
+      for(let index=0;index<Math.min(remaining,background);index++)selected.add(heroCount+Math.floor(index*background/remaining));
+      for(let index=foreground;selected.size<PHONE_FIELD.paintingLimit&&index<count;index++)selected.add(index);
+      paintings=paintings.filter(item=>selected.has(item.workIndex));
+    }
+    paintings=paintings.map(item=>({...item,edge:item.edge*PHONE_FIELD.edgeScale}));
+  }
   const particles=Array.from({length:count?(mobile?9600:26000):0},(_,index)=>({position:position(index),size:.55+random()*1.5,seed:random()*1000,workIndex:Math.floor(random()*count),sample:[.1+random()*.8,.1+random()*.8]}));
-  return {paintings,particles};
+  return {paintings,particles,mobile};
 }
 
 export function updateFieldPointer(pointer,{x,y,time,active=true},dt=1/60){
