@@ -1,5 +1,7 @@
 # Art Atlas: explanation refinement, v14
 
+The v15 correction restores the painting-first familiarity grid and removes per-painting attribution questionnaires. Familiarity is again a simple selection with None and Not sure; unselected paintings stay unknown. Unfinished v14 tasks retain their original definition and draft in the instrument history before switching. Completed v14 reports retain their original meaning. The analytical improvements below remain, but the mandatory three-state familiarity and certainty controls described here are superseded.
+
 Date: 2026-11-16. Baseline verified against local HEAD and the production deployment: `463b3fad9de70949f73a6921a0540ab6e1abed5d`.
 
 This release follows the agreed direction: substantial explanations supported by exact choices and exceptions, with less resolved categories visible as questions to refine. Existing response exports remain private. No personal answers are included here or in the regression fixtures.

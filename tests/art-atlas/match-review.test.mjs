@@ -33,16 +33,12 @@ test('Unconfirmed matching keeps its original source tray and drop controls',t=>
   const round=rounds.find(round=>round.kind==='match'),draft={workIds:round.works.map(work=>work.id),field:round.field,guesses:{},confirmed:false},{input}=exercise(t,round,draft),markup=input.markup();assert.ok(markup.includes('class="match-targets"'));assert.ok(markup.includes('class="unsure-works"'));assert.equal((markup.match(/<img /g)||[]).length,4);assert.doesNotMatch(markup,/match-review-grid/);
 });
 
-test('Attribution certainty controls survive painting and are cleared when a label is reassigned',()=>{
+test('Artist matching needs no per-painting questionnaire and does not fabricate certainty',()=>{
   const dom=new JSDOM('<main></main>'),oldWindow=globalThis.window,oldDocument=globalThis.document;
   globalThis.window=dom.window;globalThis.document=dom.window.document;
   try{
-    const app=document.querySelector('main'),round=rounds.find(round=>round.kind==='match'),draft={workIds:round.works.map(work=>work.id),field:round.field,guesses:Object.fromEntries(round.works.map(work=>[work.id,correctOption(round,work)])),certainty:{},confirmed:false};let saves=0;
-    const input=createInteractions({app,getRound:()=>round,getDraft:()=>draft,ready:()=>true,image:work=>`<img data-artwork="${work.id}">`,esc:escape,workById:id=>round.works.find(work=>work.id===id),saveDraft(){saves++;},sync(){}});
-    app.innerHTML=input.markup();input.attach();assert.equal(validAnswer(round,{...draft,confirmed:true}),false);
-    for(const work of round.works){const control=app.querySelector(`[data-action="match-certainty"][data-work="${work.id}"][data-value="guessed"]`);assert.ok(control);input.click('match-certainty',control,{});}
-    assert.equal(saves,4);assert.equal(app.querySelectorAll('.match-certainty [aria-pressed="true"]').length,4);assert.ok(validAnswer(round,{...draft,confirmed:true}));
-    const [first,second]=round.works;input.click('select-art',{dataset:{work:first.id}},{});input.click('place-match',{dataset:{option:draft.guesses[second.id]}},{});
-    assert.equal(draft.certainty[first.id],undefined);assert.equal(draft.certainty[second.id],undefined);assert.equal(Object.keys(draft.certainty).length,2);assert.equal(validAnswer(round,{...draft,confirmed:true}),false);
+    const app=document.querySelector('main'),round=rounds.find(round=>round.kind==='match'),draft={workIds:round.works.map(work=>work.id),field:round.field,guesses:Object.fromEntries(round.works.map(work=>[work.id,correctOption(round,work)])),confirmed:false};
+    const input=createInteractions({app,getRound:()=>round,getDraft:()=>draft,ready:()=>true,image:work=>'<img data-artwork="'+work.id+'">',esc:escape,workById:id=>round.works.find(work=>work.id===id),saveDraft(){},sync(){}});
+    app.innerHTML=input.markup();input.attach();assert.equal(app.querySelectorAll('fieldset').length,0);assert.equal(app.querySelectorAll('.match-label').length,4);assert.ok(validAnswer(round,{...draft,confirmed:true}));assert.equal(draft.certainty,undefined);
   }finally{if(oldWindow===undefined)delete globalThis.window;else globalThis.window=oldWindow;if(oldDocument===undefined)delete globalThis.document;else globalThis.document=oldDocument;dom.window.close();}
 });

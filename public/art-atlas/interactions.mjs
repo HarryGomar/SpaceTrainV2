@@ -166,8 +166,7 @@ export function createInteractions({ app, getRound, getDraft, ready, image, esc,
     }
     const painting = id => {
       const result = results.find(item => item.workId === id);
-      const certainty=isRecognitionWithCertainty(r)&&!d.confirmed&&d.guesses[id]!=='unsure'?`<fieldset class="match-certainty"><legend>How did you choose?</legend>${[['recognised','Recognised it'],['inferred','Worked it out'],['guessed','Guessed']].map(([value,label])=>`<button type="button" data-action="match-certainty" data-work="${esc(id)}" data-value="${value}" aria-pressed="${d.certainty?.[id]===value}">${label}</button>`).join('')}</fieldset>`:'';
-      return `${source(workById(id), 'matched-art')}${certainty}${d.confirmed ? `<p class="match-feedback ${result.status}">${result.status === 'correct' ? 'Matched' : (result.status === 'unsure' ? 'Answer: ' : 'Correct: ') + esc(result.label)}</p>` : ''}`;
+      return `${source(workById(id), 'matched-art')}${d.confirmed ? `<p class="match-feedback ${result.status}">${result.status === 'correct' ? 'Matched' : (result.status === 'unsure' ? 'Answer: ' : 'Correct: ') + esc(result.label)}</p>` : ''}`;
     };
     for (const target of app.querySelectorAll('[data-option-art]')) {
       const id = Object.keys(d.guesses).find(id => d.guesses[id] === target.dataset.optionArt);

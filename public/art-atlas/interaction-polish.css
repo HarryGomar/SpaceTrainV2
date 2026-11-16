@@ -75,5 +75,3 @@
  .embedded-exercise #gallery-status{font-size:9px;line-height:1.5;max-width:350px}
  .embedded-exercise .gallery-bottom-actions{height:42px;align-items:center}
 }
-
-.match-certainty{border:0;margin:.6rem 0;padding:0;display:flex;flex-wrap:wrap;gap:.35rem}.match-certainty legend{font-size:.75rem;margin-bottom:.4rem;color:#756c5c}.match-certainty button{border:1px solid #d8d1c5;border-radius:4px;padding:.4rem .55rem;background:transparent;color:inherit;font:inherit;font-size:.75rem}.match-certainty button[aria-pressed="true"]{background:#e6dfd1;border-color:#8c8069}

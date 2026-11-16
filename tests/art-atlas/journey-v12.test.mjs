@@ -51,17 +51,26 @@ test('Completed comparison blocks continue at 51/100 and 101/150 rather than req
   });
 });
 
-test('Explicit familiarity controls save all three responses and enable the next question only when complete',async()=>{
+test('Familiarity uses one painting selection, with none and uncertainty separate from unselected works',async()=>{
   await browser(async(app,dom)=>{
     Object.defineProperty(dom.window.HTMLImageElement.prototype,'complete',{configurable:true,get:()=>true});
     Object.defineProperty(dom.window.HTMLImageElement.prototype,'naturalWidth',{configurable:true,get:()=>600});
     const data=prepareJourneySession(null,foundation,100),first=sessionJourneyRounds(data)[0];data.startedAt=100;data.index=1;data.screen='question';data.shown[first.id]=snapshotStudyRound(first);data.answers[first.id]=ordered(first);
     localStorage.setItem('art-profile-journey-v1',JSON.stringify(data));const study=makeStudy(app);await study.restore();study.render();
-    const round=study.exportData().rounds.find(round=>round.id==='journey-002');assert.equal(round.evidence.familiarityProtocol,'prior-encounter-v2');assert.equal(app.querySelector('[data-action="deep-next"]').disabled,true);
-    for(const [index,id]of round.workIds.slice(0,2).entries())study.handle('deep-familiarity',{dataset:{work:id,value:index===0?'seen':'unsure'}});
-    study.handle('deep-familiarity-rest');
-    assert.equal(app.querySelector('[data-action="deep-next"]').disabled,false);study.handle('deep-next');
-    const saved=study.exportData().answers['journey-002'];assert.equal(saved.familiarity[round.workIds[0]],'seen');assert.equal(saved.familiarity[round.workIds[1]],'unsure');assert.equal(saved.familiarity[round.workIds[2]],'new');assert.deepEqual(saved.selectedIds,[round.workIds[0]]);assert.equal(saved.confirmed,true);assert.equal(study.exportData().index,2);await study.clear();
+    const round=study.exportData().rounds.find(round=>round.id==='journey-002');assert.equal(round.evidence.familiarityProtocol,'prior-encounter-selection-v3');assert.equal(app.querySelectorAll('.discovery-work').length,12);assert.equal(app.querySelectorAll('fieldset').length,0);assert.equal(app.querySelector('[data-action="deep-next"]').disabled,true);
+    study.handle('deep-grid-pick',{dataset:{work:round.workIds[0]}});assert.equal(app.querySelector('[data-action="deep-next"]').disabled,false);study.handle('deep-next');
+    const saved=study.exportData().answers['journey-002'];assert.deepEqual(saved.selectedIds,[round.workIds[0]]);assert.equal(saved.familiarity,undefined);assert.equal(saved.confirmed,true);assert.equal(study.exportData().index,2);await study.clear();
+  });
+});
+
+test('An unfinished v14 familiarity screen retains its original draft before switching to gallery selection',async()=>{
+  await browser(async(app,dom)=>{
+    Object.defineProperty(dom.window.HTMLImageElement.prototype,'complete',{configurable:true,get:()=>true});Object.defineProperty(dom.window.HTMLImageElement.prototype,'naturalWidth',{configurable:true,get:()=>600});
+    const data=prepareJourneySession(null,foundation,100);data.startedAt=100;data.index=1;data.screen='question';data.manifest.journeyRevision='art-profile-50-v14';
+    const old=structuredClone(data.plan[1]);old.evidence.familiarityProtocol='prior-encounter-v2';old.hint='For each painting, choose Seen before, New to me or Not sure.';data.plan[1]=old;data.shown[old.id]=structuredClone(old);
+    const original={workIds:old.workIds,selectionMode:'familiarity',familiarity:{[old.workIds[0]]:'seen',[old.workIds[1]]:'new',[old.workIds[2]]:'unsure'},selectedIds:[old.workIds[0]],explicitNone:false,unsure:false,confirmed:false};data.answers[old.id]=original;
+    localStorage.setItem('art-profile-journey-v1',JSON.stringify(data));const study=makeStudy(app);await study.restore();study.render();const exported=study.exportData(),revision=exported.instrumentRevisions.find(item=>item.roundId===old.id&&item.reason.includes('gallery selection'));
+    assert.deepEqual(revision.question,old);assert.deepEqual(revision.answer,original);assert.deepEqual(exported.answers[old.id].selectedIds,original.selectedIds);assert.equal(exported.rounds.find(round=>round.id===old.id).evidence.familiarityProtocol,'prior-encounter-selection-v3');assert.equal(app.querySelectorAll('fieldset').length,0);await study.clear();
   });
 });
 

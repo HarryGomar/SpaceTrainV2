@@ -14,17 +14,16 @@ import {CONTINUOUS_PROTOCOL,withContinuousPreference,isContinuousPreferenceRound
 import {withContextChange} from './context-change.mjs';
 import {buildOrdinalClosingRounds,buildOrdinalRefinementRound} from './ordinal-refinement.mjs';
 import {buildFinalRefinementRounds} from './final-refinement.mjs';
-import {choiceGridExposure,FAMILIARITY_PROTOCOL} from './discovery-grid.mjs';
+import {choiceGridExposure,FAMILIARITY_SELECTION_PROTOCOL} from './discovery-grid.mjs';
 import {isStudyEligibleArtwork} from './study-eligibility.mjs';
 import {CURATION_SEQUENCE,hasRegionalCuration,allowedInCurationStage,isWesternAmericasWork} from './curation-sequence.mjs';
 import {isReviewedVisualDescriptor} from './visual-descriptor-semantics.mjs';
 import {routeCollection} from './collection-routing.mjs';
 import {PANEL_OBJECTIVES} from './curation-panel-objectives.mjs';
 import {buildDiagnosticRound} from './explanation-followups.mjs';
-import {RECOGNITION_PROTOCOL} from './recognition-evidence.mjs';
 
 export const JOURNEY_PROTOCOL='art-profile-50-v1';
-export const JOURNEY_REVISION='art-profile-50-v14';
+export const JOURNEY_REVISION='art-profile-50-v15';
 export const JOURNEY_VARIETY_POLICY='specific-question-variety-v2';
 export const JOURNEY_LENGTH=50;
 export const JOURNEY_MAX_LENGTH=JOURNEY_BLOCK_LIMIT*JOURNEY_LENGTH;
@@ -249,7 +248,7 @@ export function buildJourneyRounds(works,answers={},options={}){
     if(!sourceIndex||Number(sourceIndex[1])<=offset)registerSpecificQuestion(round,sourceIndex?Number(sourceIndex[1])-1:null);
     if(sourceIndex&&Number(sourceIndex[1])<=offset&&round.kind!=='statements')round.works.forEach(work=>lastSeen.set(work.id,Math.max(lastSeen.get(work.id)??-Infinity,Number(sourceIndex[1])-1)));
     const legacyPanel=/^panel-(\d+)$/.exec(round.evidence?.setId||''),number=round.evidence?.panelNumber||(legacyPanel?Number(legacyPanel[1]):null),sourceBatch=round.evidence?.batchIndex??Math.floor((Number(sourceIndex?.[1]||1)-1)/JOURNEY_LENGTH);
-    if((['art-profile-50-v2','art-profile-50-v3','art-profile-50-v4','art-profile-50-v5','art-profile-50-v6','art-profile-50-v7','art-profile-50-v8','art-profile-50-v9','art-profile-50-v10','art-profile-50-v11','art-profile-50-v12','art-profile-50-v13',JOURNEY_REVISION].includes(round.evidence?.journeyRevision)||legacyPanel)&&sourceBatch===batchIndex&&Number.isInteger(number)&&number>=1&&number<=18&&round.works.every(work=>pool.some(item=>item.id===work.id))&&!panels.has(number)){
+    if((['art-profile-50-v2','art-profile-50-v3','art-profile-50-v4','art-profile-50-v5','art-profile-50-v6','art-profile-50-v7','art-profile-50-v8','art-profile-50-v9','art-profile-50-v10','art-profile-50-v11','art-profile-50-v12','art-profile-50-v13','art-profile-50-v14',JOURNEY_REVISION].includes(round.evidence?.journeyRevision)||legacyPanel)&&sourceBatch===batchIndex&&Number.isInteger(number)&&number>=1&&number<=18&&round.works.every(work=>pool.some(item=>item.id===work.id))&&!panels.has(number)){
       panels.set(number,round.works.map(work=>pool.find(item=>item.id===work.id)));
       if(round.evidence?.setId)panelSetIds.set(number,round.evidence.setId);
       round.works.forEach(work=>panelUses.set(work.id,(panelUses.get(work.id)||0)+1));
@@ -369,7 +368,7 @@ export function buildJourneyRounds(works,answers={},options={}){
       const available=activityPool.filter(work=>work[field]&&(field!=='artist'||work.artistKnown!==false&&!/unknown|unidentified|anonymous|workshop|circle/i.test(work.artist))),linked=available.filter(work=>earlierAppeal.has(work.id)),eligible=tasteLinked&&new Set(linked.map(work=>work[field])).size>=4?linked:available;
       const avoid=avoidFor(index),audit={independentNeighbourRoundIds:avoid.roundIds},chosen=selectWorks(eligible,4,{uses:recognitionUses,lastSeen,index:globalIndex,seed:selectionSeed,mode:'match',distinctField:field,plannedUses:plannedSpecificUses,plannedLastSeen:plannedSpecificLastSeen,avoidIds:avoid.ids,audit});
       round={kind:'match',field,title:field==='artist'?'Match the paintings to the artists.':'Match the paintings to a style or tradition.',hint:'Move each painting to a label. Use Not sure when you do not know.',works:chosen,options:[...chosen].reverse().map((work,i)=>({id:field+'-'+i,label:work[field]}))};
-      evidence={construct:field==='artist'?'recognition-artist':'recognition-movement',family:'cued-recognition',role:'check',varietyPolicy:JOURNEY_VARIETY_POLICY,varietySelection:audit,...(preferenceProtocol===CONTINUOUS_PROTOCOL?{instrumentRevision:RECOGNITION_PROTOCOL,selectionMethod:tasteLinked?'taste-linked-artist-check':'cued-label-check'}:{}),limits:[...template.evidence.limits]};
+      evidence={construct:field==='artist'?'recognition-artist':'recognition-movement',family:'cued-recognition',role:'check',varietyPolicy:JOURNEY_VARIETY_POLICY,varietySelection:audit,...(preferenceProtocol===CONTINUOUS_PROTOCOL?{instrumentRevision:'cued-attribution-v2',selectionMethod:tasteLinked?'taste-linked-artist-check':'cued-label-check'}:{}),limits:[...template.evidence.limits]};
     }else if(spec.task==='context'||spec.task==='symbolism'){
       template=templateFor(item=>item.kind==='context');
       round={kind:'context',contextMode:'preference-before-after-v1',title:'Look, then read.',hint:'Rate how much you like the painting before reading its story, then rate it again.',works:[noteWork]};
@@ -390,8 +389,8 @@ export function buildJourneyRounds(works,answers={},options={}){
     const paired=spec.panel?schedule.flatMap((item,i)=>item.panel===spec.panel&&i!==index?[at(i)]:[]):[];
     const earlier=sequence.filter(item=>spec.panel&&item.evidence.setId===setId).map(item=>item.id);
     if(preferenceProtocol===CONTINUOUS_PROTOCOL&&round.kind==='choice-grid'&&round.selectionMode==='familiarity'){
-      round={...round,title:'Which paintings had you seen before today?',hint:'For each painting, choose Seen before, New to me or Not sure. Think about before Art Atlas.'};
-      evidence={...evidence,familiarityProtocol:FAMILIARITY_PROTOCOL};
+      round={...round,title:'Which paintings had you seen before today?',hint:'Select any you had seen before Art Atlas. Tap again to undo.'};
+      evidence={...evidence,familiarityProtocol:FAMILIARITY_SELECTION_PROTOCOL};
     }
     const priorIds=ids(round.works).filter(workId=>lastSeen.has(workId));
     const adaptiveSelection=metadataPanel?Object.fromEntries(['focus','provisionalHypothesis','provisionalPrediction','holdoutUnit','comparisonNovel','artworksMayBeFamiliar','delay','dependencyGroup'].filter(key=>metadataPanel[key]!==undefined).map(key=>[key,structuredClone(metadataPanel[key])])):null;
