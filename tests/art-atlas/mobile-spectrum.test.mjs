@@ -4,6 +4,7 @@ import {JSDOM} from 'jsdom';
 import {createInteractions} from '../../public/art-atlas/interactions.mjs';
 import {withOverallAppeal} from '../../public/art-atlas/appeal-scale.mjs';
 import {validAnswer} from '../../public/art-atlas/engine.mjs';
+import {renderOpening} from '../../public/art-atlas/experience-view.mjs';
 
 function fixture({width=390,count=4,positions={},ready=true}={}){
   const dom=new JSDOM('<!doctype html><main id="app"></main>',{pretendToBeVisual:true}),previous={};
@@ -81,4 +82,10 @@ test('A phone painting can be dragged onto the shared line and advances only aft
     assert.equal(f.app.querySelector('.focus-art').dataset.work,'painting-1');
     assert.equal(f.app.querySelectorAll('.spectrum-token').length,1);assert.equal(f.dom.window.document.querySelector('.art-drag-ghost'),null);
   }finally{f.close();}
+});
+
+
+test('A started quiz has an accessible restart action before any answer is confirmed',()=>{
+  const fresh=new JSDOM(renderOpening()),started=new JSDOM(renderOpening({started:true,profileAvailable:false}));
+  try{assert.equal(fresh.window.document.querySelector('[data-action=deep-retake]'),null);const restart=started.window.document.querySelector('[data-action=deep-retake]');assert.equal(restart.getAttribute('aria-label'),'Start a new quiz');assert.equal(started.window.document.querySelector('.opening-start').textContent,'Continue');assert.equal(started.window.document.querySelector('[data-action=deep-reading]'),null);}finally{fresh.window.close();started.window.close();}
 });
