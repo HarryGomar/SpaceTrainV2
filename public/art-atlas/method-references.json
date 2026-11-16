@@ -1,0 +1,58 @@
+{
+  "reviewedOn": "2026-11-16",
+  "scope": "Research informing the comparison-first quiz design. These studies do not validate Art Atlas or its profile families.",
+  "references": [
+    {
+      "title": "Just Sort It! A Simple and Effective Approach to Active Preference Learning",
+      "authors": "Lucas Maystre and Matthias Grossglauser",
+      "year": 2017,
+      "url": "https://proceedings.mlr.press/v70/maystre17a.html",
+      "researchSetting": "Adaptive pair comparisons and ranking under probabilistic comparison models.",
+      "findingUsed": "Choosing comparisons strategically can recover rankings with fewer comparisons than indiscriminate sampling.",
+      "application": "Use a small number of cross-group comparisons to resolve uncertain relationships among previously seen paintings. Keep the identities, original questions and order evidence attached to each comparison.",
+      "boundary": "The paper does not establish a uniquely correct art preference model, explain psychological causes, or validate our current selection heuristic. Separate groups cannot supply a global observed ranking until comparison paths connect them."
+    },
+    {
+      "title": "Time after time, the best–worst scaling method is more reliable than ranking",
+      "authors": "Garston Liang, Mackenzie Glover and Guy E. Hawkins",
+      "year": 2026,
+      "url": "https://link.springer.com/article/10.3758/s13428-026-03167-x",
+      "researchSetting": "Three experiments comparing ranking and best–worst choices for life values.",
+      "findingUsed": "Best–worst choices produced stronger test–retest reliability than rankings in the studied setting.",
+      "application": "Small sets and easy extreme choices motivate reducing demands for absolute 0–100 judgements. Separate explicit favourite and dislike selections from the relative ordering of a group.",
+      "boundary": "Our granular line with optional ties is not a balanced best–worst scaling experiment. The study did not test paintings. We cannot claim its reliability estimates, treat a set winner as liked, or treat a set loser as disliked."
+    },
+    {
+      "title": "How Stable Are Human Aesthetic Preferences Across the Lifespan?",
+      "authors": "Cameron Pugach, Helmut Leder and Daniel J. Graham",
+      "year": 2017,
+      "url": "https://www.frontiersin.org/journals/human-neuroscience/articles/10.3389/fnhum.2017.00289/full",
+      "researchSetting": "Repeated rank-order judgements of paintings and other visual stimuli over two weeks.",
+      "findingUsed": "Art preferences showed changes between sessions. Stability cannot be assumed from a single response.",
+      "application": "Repeat a few exact comparisons after a delay and show changes as observed choices, without interpreting them as personal unreliability. Keep repeat responses separate from independent evidence for a pattern.",
+      "boundary": "A changed order does not identify its cause. Context, attention, familiarity and changing responses remain possible explanations. Within-session repeats do not establish long-term stability."
+    },
+    {
+      "title": "Ratings or pairwise comparisons? An experimental study on scale usability",
+      "authors": "Malgorzata Karpinska-Krakowiak",
+      "year": 2018,
+      "url": "https://czasopisma.uni.opole.pl/index.php/ees/article/view/95",
+      "researchSetting": "Ratings and pair comparisons of physical object dimensions against known measurements.",
+      "findingUsed": "Both approaches could represent the measured physical characteristics in this experiment.",
+      "application": "Keep directly reported responses as useful evidence, while making the task and scale explicit. Do not assume that comparison tasks universally dominate rating tasks.",
+      "boundary": "The stimuli had measurable physical dimensions. There is no corresponding objective ground-truth score for how much someone should like a painting."
+    }
+  ],
+  "implementationRules": [
+    "For the new relative comparison instrument, point placement supplies order and exact ties. Point gaps are not confidence, intensity of liking, or cross-group utility.",
+    "Earlier overall-rating and legacy comparison records keep their original instrument identity and are never silently converted.",
+    "Explicit favourites and dislikes, admiration, symbolic interpretation, recognition, emotional responses and curatorial grouping remain separate observations.",
+    "A proposed pattern needs contrasts, independent works and counterexamples. Shared artist, period or movement is not a psychological explanation.",
+    "A held-out prediction must be recorded before the answer and assessed without training on that answer. Repeats and adaptive checks are not extra independent discovery sets."
+  ],
+  "evaluationRequired": [
+    "Pilot the relative line against direct pair choices using completion effort, exact-repeat agreement and held-out choice accuracy.",
+    "Measure whether profile explanations remain useful when artwork identity and correlated qualities are controlled.",
+    "Record support and failures. Do not publish population rarity, personality scores or calibrated confidence without appropriate validation data."
+  ]
+}

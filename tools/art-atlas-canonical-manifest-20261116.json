@@ -1,0 +1,42 @@
+{
+  "version": "canonical-collection-20261116-v1",
+  "scope": "Public source inventory for 24 canonical additions. These are editorial stimulus priorities, not visitor preferences.",
+  "workIds": [
+    "canon-caravaggio-calling-matthew",
+    "canon-caravaggio-entombment",
+    "canon-caravaggio-bacchus",
+    "canon-caravaggio-medusa",
+    "canon-leonardo-last-supper",
+    "canon-michelangelo-creation-adam",
+    "canon-bosch-temptations-lisbon",
+    "canon-bruegel-tower-babel",
+    "canon-bruegel-netherlandish-proverbs",
+    "canon-goya-third-may",
+    "canon-velazquez-breda",
+    "canon-rembrandt-prodigal-son",
+    "canon-holbein-dead-christ",
+    "canon-durer-melencolia",
+    "canon-delacroix-sardanapalus",
+    "canon-ingres-odalisque",
+    "canon-bocklin-isle-dead",
+    "canon-siqueiros-echo-scream",
+    "canon-siqueiros-collective-suicide",
+    "canon-varo-creation-birds",
+    "canon-kahlo-two-fridas",
+    "canon-tamayo-dualidad",
+    "canon-varo-call",
+    "canon-varo-escape"
+  ],
+  "westernClassics": 17,
+  "mexicanContext": 7,
+  "sourceLimitedIds": [
+    "canon-varo-creation-birds",
+    "canon-kahlo-two-fridas",
+    "canon-varo-escape"
+  ],
+  "unimportedIds": [
+    "canon-varo-embroidering-mantle",
+    "canon-varo-celestial-pabulum",
+    "canon-kahlo-broken-column"
+  ]
+}

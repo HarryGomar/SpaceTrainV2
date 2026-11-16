@@ -34,3 +34,16 @@ test('Existing qualified connections remain available without replacing them wit
   const result=composeTasteSummary({themes:[theme],observations:[{id:'worlds',module:'curatorial-themes',text:'A shared quality across these choices. Here is the evidence.'},{id:'neighbour',module:'taste-and-neighbours',priority:999}],legacyBasis:'qualified-positive-patterns'});
   assert.equal(result.title,theme.title);assert.equal(result.text,'A shared quality across these choices.');assert.equal(result.basis,'qualified-positive-patterns');
 });
+
+const boundary=()=>({id:'boundary-source',status:'explicit-choice-contrast',summaryEligible:true,measurementScope:'explicit-favourite-dislike-choices',direction:1,title:'Detail with an encounter',text:'These explicit choices share fine detail but differ in their human exchanges.',highWorkIds:['f1','f2','f3'],lowWorkIds:['d1','d2','d3'],displayWorkIds:['f1','d1'],supportPairs:[{},{},{}],coverage:{favouriteArtists:3,dislikeArtists:3,distinctDiscoverySets:3},support:[{roundId:'fav',workIds:['f1','f2','f3']},{roundId:'dis',workIds:['d1','d2','d3']}]});
+test('A qualified explicit boundary supplies the summary before a broad-axis fallback',()=>{
+  const item=boundary(),axis={key:'colour',status:'leaning',direction:1,eligibleSetCount:5,supportingSetCount:5,opposingSetCount:0,summary:'Stronger colour.'},result=composeTasteSummary({tasteBoundaries:{findings:[item]},axesProfile:{axes:[axis]}});
+  assert.equal(result.title,item.title);assert.equal(result.text,item.text);assert.deepEqual(result.findingIds,[item.id]);assert.equal(result.basis,'explicit-choice-contrast');assert.deepEqual(result.workIds,item.highWorkIds);
+});
+test('A stronger qualified ordinal quality keeps its heading and retains the supported conditional source',()=>{
+  const item=boundary(),pattern={id:'story',qualityKey:'scenes-within-scenes',channel:'ordinal-choice',status:'qualified',summaryEligible:true,direction:1},result=composeTasteSummary({tastePatterns:{patterns:[pattern],readingSummary:{title:'Stories within scenes',text:'A comparison pattern.',patternIds:['story'],workIds:['f1','f2']}},tasteBoundaries:{findings:[item]},observations:[{id:'neighbour',module:'taste-and-neighbours',priority:999}]});
+  assert.equal(result.title,'Stories within scenes');assert.match(result.text,/comparisons repeatedly favour/);assert.doesNotMatch(result.text,/overall ratings|neighbour/);assert.deepEqual(result.findingIds,['story',item.id]);
+});
+test('Descriptive, withheld or insufficient explicit boundaries cannot become the profile title',()=>{
+  for(const change of [{status:'descriptive'},{summaryEligible:false},{coverage:{favouriteArtists:2,dislikeArtists:3,distinctDiscoverySets:3}}]){const result=composeTasteSummary({tasteBoundaries:{findings:[{...boundary(),...change}]},observations:[{id:'neighbour',module:'taste-and-neighbours',priority:999}]});assert.equal(result.title,'Art profile');assert.deepEqual(result.findingIds,[]);}
+});

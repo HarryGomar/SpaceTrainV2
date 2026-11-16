@@ -1,8 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {buildJourneyRounds,JOURNEY_REVISION,JOURNEY_VARIETY_POLICY} from '../../public/art-atlas/journey-bank.mjs';
+import {buildJourneyRounds as buildCurrentJourneyRounds,JOURNEY_REVISION,JOURNEY_VARIETY_POLICY} from '../../public/art-atlas/journey-bank.mjs';
 import {recognitionTier} from '../../public/art-atlas/curation-priority.mjs';
 import {auditTrajectory,questionIds,ordinary,works} from './helpers/repetition-audit.mjs';
+
+import {APPEAL_PROTOCOL} from '../../public/art-atlas/appeal-scale.mjs';
+// This regression route deliberately preserves the earlier overall instrument.
+// Fresh comparison-first scheduling is covered separately by journey-v12.
+const buildJourneyRounds=(works,answers={},options={})=>buildCurrentJourneyRounds(works,answers,{...options,preferenceProtocol:APPEAL_PROTOCOL});
 
 const same=(a,b)=>assert.deepEqual([...a].sort(),[...b].sort());
 const baselineBySeed={

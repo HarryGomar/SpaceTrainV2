@@ -21,7 +21,7 @@
     "material-detail",
     "open-expanse"
   ],
-  "reviewedCount": 463,
+  "reviewedCount": 487,
   "limits": [
     "These are nonexclusive editorial descriptions of particular reproductions, reviewed by an assistant. They are not independent human validation, scientific scores or measurements of a viewer's feelings.",
     "Only an explicit reviewed absent status supplies a negative observation. A missing review, mismatched source, unknown status or insufficient reproduction remains unknown.",
@@ -2682,13 +2682,6 @@
       "verification": "sha256-of-current-local-preview",
       "verifiedAt": "2026-11-16T06:18:44.662Z"
     },
-    "[\"https://cyfrowe.mnw.pl/pl/zbiory/962339\",\"assets/collection-matejko-stanczyk.jpg\"]": {
-      "sourceUrl": "https://cyfrowe.mnw.pl/pl/zbiory/962339",
-      "image": "assets/collection-matejko-stanczyk.jpg",
-      "previewSha256": "4632ce3b0016db122aaa60502c6979c069bbacf9a8d91999f841d41dcbc1ac24",
-      "verification": "sha256-of-current-local-preview",
-      "verifiedAt": "2026-11-16T06:18:44.662Z"
-    },
     "[\"https://www.museodelprado.es/en/the-collection/art-work/the-sense-of-sight/494fd4d5-16d2-4857-811b-e0b2a0eb7fc7\",\"assets/collection-brueghel-sight.jpg\"]": {
       "sourceUrl": "https://www.museodelprado.es/en/the-collection/art-work/the-sense-of-sight/494fd4d5-16d2-4857-811b-e0b2a0eb7fc7",
       "image": "assets/collection-brueghel-sight.jpg",
@@ -2982,6 +2975,196 @@
       "previewSha256": "beb32322d6b3bc7ad3b31e498d2785e20dd60b8f451d19613eb35b432863b7e3",
       "verification": "sha256-of-current-local-preview",
       "verifiedAt": "2026-11-16T06:18:44.662Z"
+    },
+    "[\"https://saintlouis-rome.net/horaires-visite-opening-hours/caravage/\",\"assets/canonical-20261116/canon-caravaggio-calling-matthew.jpg\"]": {
+      "sourceUrl": "https://saintlouis-rome.net/horaires-visite-opening-hours/caravage/",
+      "image": "assets/canonical-20261116/canon-caravaggio-calling-matthew.jpg",
+      "previewSha256": "a822f5f257f1a2c93feba4498c645380f8c0aae47ebcd69a7a44073f0ea1114e",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://www.museivaticani.va/content/museivaticani/en/collezioni/musei/la-pinacoteca/sala-xii---secolo-xvii/caravaggio--deposizione-dalla-croce.html\",\"assets/canonical-20261116/canon-caravaggio-entombment.jpg\"]": {
+      "sourceUrl": "https://www.museivaticani.va/content/museivaticani/en/collezioni/musei/la-pinacoteca/sala-xii---secolo-xvii/caravaggio--deposizione-dalla-croce.html",
+      "image": "assets/canonical-20261116/canon-caravaggio-entombment.jpg",
+      "previewSha256": "3e368846e3adf1a0794cc0a902e99eaba222b92d08255b165665ff6072b13592",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://www.uffizi.it/en/artworks/caravaggio-bacchus\",\"assets/canonical-20261116/canon-caravaggio-bacchus.jpg\"]": {
+      "sourceUrl": "https://www.uffizi.it/en/artworks/caravaggio-bacchus",
+      "image": "assets/canonical-20261116/canon-caravaggio-bacchus.jpg",
+      "previewSha256": "14642389a1d6ed10e7bc6c3d5f0af21b7a7946b41871095f5f963a3c1658d8fb",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://www.catalogo.beniculturali.it/detail/HistoricOrArtisticProperty/0900289175\",\"assets/canonical-20261116/canon-caravaggio-medusa.jpg\"]": {
+      "sourceUrl": "https://www.catalogo.beniculturali.it/detail/HistoricOrArtisticProperty/0900289175",
+      "image": "assets/canonical-20261116/canon-caravaggio-medusa.jpg",
+      "previewSha256": "37799da2c0de8cc3b14d62a260ac4de76730e22bc3176e9440aa6c3d551638f5",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://cenacolovinciano.org/en/museum/the-works/the-last-supper-leonardo-da-vinci-1452-1519/\",\"assets/canonical-20261116/canon-leonardo-last-supper.jpg\"]": {
+      "sourceUrl": "https://cenacolovinciano.org/en/museum/the-works/the-last-supper-leonardo-da-vinci-1452-1519/",
+      "image": "assets/canonical-20261116/canon-leonardo-last-supper.jpg",
+      "previewSha256": "27bd14cdd089b7a584dd1524be8a879d7b5da0571c17721c5879c93a61943b7a",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://www.museivaticani.va/content/museivaticani/en/collezioni/musei/cappella-sistina/volta/storie-centrali/creazione-di-adamo.html\",\"assets/canonical-20261116/canon-michelangelo-creation-adam.jpg\"]": {
+      "sourceUrl": "https://www.museivaticani.va/content/museivaticani/en/collezioni/musei/cappella-sistina/volta/storie-centrali/creazione-di-adamo.html",
+      "image": "assets/canonical-20261116/canon-michelangelo-creation-adam.jpg",
+      "previewSha256": "9ff394db664c19dd6b825033fa437145a216b3be9b2503654b2874ec98ef4b74",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://raiz.museusemonumentos.pt/DetalhesObra/Index/247559?tipo=OBJ\",\"assets/canonical-20261116/canon-bosch-temptations-lisbon.jpg\"]": {
+      "sourceUrl": "https://raiz.museusemonumentos.pt/DetalhesObra/Index/247559?tipo=OBJ",
+      "image": "assets/canonical-20261116/canon-bosch-temptations-lisbon.jpg",
+      "previewSha256": "d115285003975d904c4d309f22f3732dfeb98e0893ff42aec40efbf8dbac2566",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://www.khm.at/en/visit/only-in-vienna\",\"assets/canonical-20261116/canon-bruegel-tower-babel.jpg\"]": {
+      "sourceUrl": "https://www.khm.at/en/visit/only-in-vienna",
+      "image": "assets/canonical-20261116/canon-bruegel-tower-babel.jpg",
+      "previewSha256": "0590694d2b186122cfaa48e8e6b2da10a21f04c1809ad61dc1d664b1d0b54667",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://search.smb.museum/object/obj-867614\",\"assets/canonical-20261116/canon-bruegel-netherlandish-proverbs.jpg\"]": {
+      "sourceUrl": "https://search.smb.museum/object/obj-867614",
+      "image": "assets/canonical-20261116/canon-bruegel-netherlandish-proverbs.jpg",
+      "previewSha256": "0f08af15c258463f0d9e5a29406edb7b739a5db37e6c818798bb6d0c0e7b0696",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://www.museodelprado.es/coleccion/obra-de-arte/el-3-de-mayo-en-madrid-o-los-fusilamientos/5e177409-2993-4240-97fb-847a02c6496c\",\"assets/canonical-20261116/canon-goya-third-may.jpg\"]": {
+      "sourceUrl": "https://www.museodelprado.es/coleccion/obra-de-arte/el-3-de-mayo-en-madrid-o-los-fusilamientos/5e177409-2993-4240-97fb-847a02c6496c",
+      "image": "assets/canonical-20261116/canon-goya-third-may.jpg",
+      "previewSha256": "471111641346c3259e8c9f0936a78bef337037250b2e8d9485d8158c060b549a",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://www.museodelprado.es/coleccion/obra-de-arte/las-lanzas-o-la-rendicion-de-breda/0cc7577a-51d9-44fd-b4d5-4dba8d9cb13a\",\"assets/canonical-20261116/canon-velazquez-breda.jpg\"]": {
+      "sourceUrl": "https://www.museodelprado.es/coleccion/obra-de-arte/las-lanzas-o-la-rendicion-de-breda/0cc7577a-51d9-44fd-b4d5-4dba8d9cb13a",
+      "image": "assets/canonical-20261116/canon-velazquez-breda.jpg",
+      "previewSha256": "ba3a4f3e59b8411826307d5bc04476bd0355dc6ed2382d05646e674fa067db25",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://www.hermitagemuseum.org/digital-collection/43413?lng=en\",\"assets/canonical-20261116/canon-rembrandt-prodigal-son.jpg\"]": {
+      "sourceUrl": "https://www.hermitagemuseum.org/digital-collection/43413?lng=en",
+      "image": "assets/canonical-20261116/canon-rembrandt-prodigal-son.jpg",
+      "previewSha256": "c40edb3ad2fc565d0e5084b56b3312693e008a7dbe167903ea2701ad5ea63aeb",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://kunstmuseumbasel.ch/de/ausstellungen/2021/holbein-und-dostojewski/wandtexte\",\"assets/canonical-20261116/canon-holbein-dead-christ.jpg\"]": {
+      "sourceUrl": "https://kunstmuseumbasel.ch/de/ausstellungen/2021/holbein-und-dostojewski/wandtexte",
+      "image": "assets/canonical-20261116/canon-holbein-dead-christ.jpg",
+      "previewSha256": "09b6f67205c71cde93206a1f4e44c4f3e8403df53a0d497e8b8171ffde738fa4",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://www.metmuseum.org/art/collection/search/336228\",\"assets/canonical-20261116/canon-durer-melencolia.jpg\"]": {
+      "sourceUrl": "https://www.metmuseum.org/art/collection/search/336228",
+      "image": "assets/canonical-20261116/canon-durer-melencolia.jpg",
+      "previewSha256": "31d99698e2a42167d87e9f365308079fd3f75fec14c68a3b2b17eb7645242e3f",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://collections.louvre.fr/ark:/53355/cl010065757\",\"assets/canonical-20261116/canon-delacroix-sardanapalus.jpg\"]": {
+      "sourceUrl": "https://collections.louvre.fr/ark:/53355/cl010065757",
+      "image": "assets/canonical-20261116/canon-delacroix-sardanapalus.jpg",
+      "previewSha256": "d0879258415e908d62d45bd7c71a94ff5f78bf55522b2e8608d6c199eaedeb22",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://collections.louvre.fr/ark:/53355/cl010065566\",\"assets/canonical-20261116/canon-ingres-odalisque.jpg\"]": {
+      "sourceUrl": "https://collections.louvre.fr/ark:/53355/cl010065566",
+      "image": "assets/canonical-20261116/canon-ingres-odalisque.jpg",
+      "previewSha256": "cd7c6f2a607dccd4c56e91d346d1b46adaa628f1ce9523470b130851303c450a",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://kunstmuseumbasel.ch/de/sammlung/schwerpunkte\",\"assets/canonical-20261116/canon-bocklin-isle-dead.jpg\"]": {
+      "sourceUrl": "https://kunstmuseumbasel.ch/de/sammlung/schwerpunkte",
+      "image": "assets/canonical-20261116/canon-bocklin-isle-dead.jpg",
+      "previewSha256": "d75205ac37594e571dfb557e4cac1fd253273752e1a61219d2690f0e1ef10c09",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://www.moma.org/collection/works/80144\",\"assets/canonical-20261116/canon-siqueiros-echo-scream.jpg\"]": {
+      "sourceUrl": "https://www.moma.org/collection/works/80144",
+      "image": "assets/canonical-20261116/canon-siqueiros-echo-scream.jpg",
+      "previewSha256": "709904c1ab23a507b432b19eb3dea72dcee35ec146c34d392ac9a404adc3929a",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://www.moma.org/collection/works/79146\",\"assets/canonical-20261116/canon-siqueiros-collective-suicide.jpg\"]": {
+      "sourceUrl": "https://www.moma.org/collection/works/79146",
+      "image": "assets/canonical-20261116/canon-siqueiros-collective-suicide.jpg",
+      "previewSha256": "3ebc3a2978d3f790088792beeb8ab93f8449b8c53fc9f2a1b394368f7360cddb",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://gallerywendinorris.com/news/16-hyperallergic-remedios-varo-in-a-sphere-of/\",\"assets/canonical-20261116/canon-varo-creation-birds.jpg\"]": {
+      "sourceUrl": "https://gallerywendinorris.com/news/16-hyperallergic-remedios-varo-in-a-sphere-of/",
+      "image": "assets/canonical-20261116/canon-varo-creation-birds.jpg",
+      "previewSha256": "2239f06fb98e33f0a66aa78edd97d254422a5db612ac02dcdc2b8e349d67fc7d",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://artsandculture.google.com/asset/the-two-fridas-frida-kahlo/zAHG4EZ1WrwVYg\",\"assets/canonical-20261116/canon-kahlo-two-fridas.jpg\"]": {
+      "sourceUrl": "https://artsandculture.google.com/asset/the-two-fridas-frida-kahlo/zAHG4EZ1WrwVYg",
+      "image": "assets/canonical-20261116/canon-kahlo-two-fridas.jpg",
+      "previewSha256": "461e7a44e4d7911df801ab016d9c83b9a89d33fd57f4d525f1f596119f982181",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://www.inah.gob.mx/boletines/el-museo-nacional-de-antropologia-celebra-60-aniversario-con-brios-fortalecidos-en-su-mision-divulgativa\",\"assets/canonical-20261116/canon-tamayo-dualidad.jpg\"]": {
+      "sourceUrl": "https://www.inah.gob.mx/boletines/el-museo-nacional-de-antropologia-celebra-60-aniversario-con-brios-fortalecidos-en-su-mision-divulgativa",
+      "image": "assets/canonical-20261116/canon-tamayo-dualidad.jpg",
+      "previewSha256": "823aa487d0b39aa324cc63d3fd864750100079757da41428c881499907de6bf7",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://nmwa.org/art/collection/la-llamada-call/\",\"assets/canonical-20261116/canon-varo-call.jpg\"]": {
+      "sourceUrl": "https://nmwa.org/art/collection/la-llamada-call/",
+      "image": "assets/canonical-20261116/canon-varo-call.jpg",
+      "previewSha256": "2f93baf3ca2ae199fe51e2fbecc2e9bb34416b68f861bb327732a2f7911828d3",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://gallerywendinorris.com/news/20-hyperallergic-remedios-varos-strange-and-mysterious-universes-in-varos-work-there-is-often-a-sense/\",\"assets/canonical-20261116/canon-varo-escape.jpg\"]": {
+      "sourceUrl": "https://gallerywendinorris.com/news/20-hyperallergic-remedios-varos-strange-and-mysterious-universes-in-varos-work-there-is-often-a-sense/",
+      "image": "assets/canonical-20261116/canon-varo-escape.jpg",
+      "previewSha256": "d82a8bcee6368c8f9cc0bff2770f854843dd3ed32b841e6d443a4baadc3e712d",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://artsandculture.google.com/asset/sta%C5%84czyk-jan-matejko/4AHFtRqeObzoRw\",\"assets/collection-matejko-stanczyk.jpg\"]": {
+      "sourceUrl": "https://artsandculture.google.com/asset/sta%C5%84czyk-jan-matejko/4AHFtRqeObzoRw",
+      "image": "assets/collection-matejko-stanczyk.jpg",
+      "previewSha256": "4632ce3b0016db122aaa60502c6979c069bbacf9a8d91999f841d41dcbc1ac24",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T06:18:44.662Z",
+      "sourceIdentityCorrection": {
+        "version": "source-correction-20261116-v1",
+        "workId": "matejko-stanczyk",
+        "previousSourceUrl": "https://cyfrowe.mnw.pl/pl/zbiory/962339",
+        "sourceUrl": "https://artsandculture.google.com/asset/sta%C5%84czyk-jan-matejko/4AHFtRqeObzoRw",
+        "reason": "The previous museum URL identifies a 1876 wood engraving by Jan Styfi after Matejko. Its prototype field identifies the actual 1862 painting as MP433MNW. The museum-provided Google Arts & Culture object identifies the displayed colour painting as 1862, oil on canvas, inventory MP433. No print date or print medium is transferred to the painting.",
+        "evidenceUrls": [
+          "https://cyfrowe.mnw.pl/pl/zbiory/962339",
+          "https://artsandculture.google.com/asset/sta%C5%84czyk-jan-matejko/4AHFtRqeObzoRw"
+        ],
+        "imageUnchanged": "assets/collection-matejko-stanczyk.jpg",
+        "previewSha256": "4632ce3b0016db122aaa60502c6979c069bbacf9a8d91999f841d41dcbc1ac24",
+        "dateUnchanged": "1862",
+        "scope": "Current catalogue and current review/media bindings only. Previously saved participant manifests and exports are not rewritten."
+      }
     }
   },
   "reviews": {
@@ -49353,7 +49536,7 @@
       "reviewed": true,
       "reviewerType": "assistant-visual-review",
       "sourceIdentity": {
-        "sourceUrl": "https://cyfrowe.mnw.pl/pl/zbiory/962339",
+        "sourceUrl": "https://artsandculture.google.com/asset/sta%C5%84czyk-jan-matejko/4AHFtRqeObzoRw",
         "image": "assets/collection-matejko-stanczyk.jpg",
         "previewSha256": "4632ce3b0016db122aaa60502c6979c069bbacf9a8d91999f841d41dcbc1ac24"
       },
@@ -49369,7 +49552,8 @@
       },
       "sourceUrls": [
         "https://cyfrowe.mnw.pl/pl/zbiory/962339",
-        "https://commons.wikimedia.org/wiki/File:Jan_Matejko,_Sta%C5%84czyk.jpg"
+        "https://commons.wikimedia.org/wiki/File:Jan_Matejko,_Sta%C5%84czyk.jpg",
+        "https://artsandculture.google.com/asset/sta%C5%84czyk-jan-matejko/4AHFtRqeObzoRw"
       ],
       "contactNumber": 26,
       "reviewMethod": "Assistant inspected the resolved actual local reproduction through a numbered whole-work contact sheet and checked all sixteen criteria. Unlisted checklist criteria were explicitly assessed absent; unresolved details were recorded unknown. No artist or movement defaults were used. This is editorial image review, not independent human validation.",
@@ -49457,7 +49641,22 @@
         }
       },
       "sourcedContext": [],
-      "contextStatus": "not-documented-in-this-review"
+      "contextStatus": "not-documented-in-this-review",
+      "sourceIdentityCorrection": {
+        "version": "source-correction-20261116-v1",
+        "workId": "matejko-stanczyk",
+        "previousSourceUrl": "https://cyfrowe.mnw.pl/pl/zbiory/962339",
+        "sourceUrl": "https://artsandculture.google.com/asset/sta%C5%84czyk-jan-matejko/4AHFtRqeObzoRw",
+        "reason": "The previous museum URL identifies a 1876 wood engraving by Jan Styfi after Matejko. Its prototype field identifies the actual 1862 painting as MP433MNW. The museum-provided Google Arts & Culture object identifies the displayed colour painting as 1862, oil on canvas, inventory MP433. No print date or print medium is transferred to the painting.",
+        "evidenceUrls": [
+          "https://cyfrowe.mnw.pl/pl/zbiory/962339",
+          "https://artsandculture.google.com/asset/sta%C5%84czyk-jan-matejko/4AHFtRqeObzoRw"
+        ],
+        "imageUnchanged": "assets/collection-matejko-stanczyk.jpg",
+        "previewSha256": "4632ce3b0016db122aaa60502c6979c069bbacf9a8d91999f841d41dcbc1ac24",
+        "dateUnchanged": "1862",
+        "scope": "Current catalogue and current review/media bindings only. Previously saved participant manifests and exports are not rewritten."
+      }
     },
     "brueghel-sight": {
       "version": "artwork-attributes-v1",
@@ -54086,6 +54285,2721 @@
         "open-expanse": {
           "status": "absent",
           "reason": "Large relatively uninterrupted open fields do not occupy a substantial part of the composition.",
+          "evidenceKind": "visual-review"
+        }
+      },
+      "sourcedContext": [],
+      "contextStatus": "not-documented-in-this-review"
+    },
+    "canon-caravaggio-calling-matthew": {
+      "version": "artwork-attributes-v1",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://saintlouis-rome.net/horaires-visite-opening-hours/caravage/",
+        "image": "assets/canonical-20261116/canon-caravaggio-calling-matthew.jpg",
+        "previewSha256": "a822f5f257f1a2c93feba4498c645380f8c0aae47ebcd69a7a44073f0ea1114e"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-caravaggio-calling-matthew-large.jpg",
+        "sha256": "61b7bebffca7b80ffdd1652d567c738a149e009aa7a487c913ce4bbc046b0d74",
+        "width": 2024,
+        "height": 1916,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://saintlouis-rome.net/horaires-visite-opening-hours/caravage/",
+        "https://commons.wikimedia.org/wiki/File:Michelangelo_Caravaggio_040.jpg",
+        "https://commons.wikimedia.org/wiki/File:Michelangelo_Caravaggio_040.jpg#Licensing"
+      ],
+      "reviewMethod": "Assistant inspected this actual local reproduction and explicitly considered all sixteen operational criteria. Positive and uncertain criteria have individual visible reasons; all remaining criteria were assessed absent. No artist/movement defaults or independent human validation are claimed.",
+      "reviewScope": "Displayed complete work or individually named composition only.",
+      "attributes": {
+        "narrative-detail": {
+          "status": "present",
+          "reason": "Money, table objects, divided groups and different pointing hands offer clues beyond a single focal pose.",
+          "evidenceKind": "visual-review"
+        },
+        "imagined-world": {
+          "status": "absent",
+          "reason": "No visibly impossible body, object or setting is depicted under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "dramatic-light": {
+          "status": "present",
+          "reason": "A sharply selected band of illumination crosses deep shadow and lights the figures unevenly.",
+          "evidenceKind": "visual-review"
+        },
+        "layered-space": {
+          "status": "present",
+          "reason": "The near table and seated group stand before a separate wall, window and arriving figures.",
+          "evidenceKind": "visual-review"
+        },
+        "geometric-structure": {
+          "status": "absent",
+          "reason": "Regular geometric shapes, a grid or clearly divided colour fields are not a dominant organising feature.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-gesture": {
+          "status": "present",
+          "reason": "Several arms point and reach while heads and torsos turn toward the arriving group.",
+          "evidenceKind": "visual-review"
+        },
+        "intimate-figures": {
+          "status": "present",
+          "reason": "The nearby grouped bodies occupy much of the lower composition.",
+          "evidenceKind": "visual-review"
+        },
+        "landscape": {
+          "status": "absent",
+          "reason": "Recognisable terrain, water or vegetation does not substantially organise the composition.",
+          "evidenceKind": "visual-review"
+        },
+        "expressive-distortion": {
+          "status": "absent",
+          "reason": "Recognisable forms are not conspicuously elongated, fragmented or altered in proportion under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "precise-rendering": {
+          "status": "present",
+          "reason": "Faces, fingers, cloth edges and small table objects have controlled differentiated contours.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-paint-marks": {
+          "status": "unknown",
+          "reason": "Fine paint handling cannot be separated confidently from reproduction grain at the whole-work review scale.",
+          "evidenceKind": "visual-review"
+        },
+        "pattern-rhythm": {
+          "status": "absent",
+          "reason": "A conspicuous repeated motif or directional rhythm does not organise this view.",
+          "evidenceKind": "visual-review"
+        },
+        "human-relationships": {
+          "status": "present",
+          "reason": "Pointing hands and directed gazes connect the two groups visibly.",
+          "evidenceKind": "visual-review"
+        },
+        "theatrical-staging": {
+          "status": "present",
+          "reason": "The frontal table encounter and entering figures are arranged beneath a window as a conspicuous presented scene.",
+          "evidenceKind": "visual-review"
+        },
+        "material-detail": {
+          "status": "present",
+          "reason": "Skin, folded cloth, hats and small reflective objects receive different local descriptions.",
+          "evidenceKind": "visual-review"
+        },
+        "open-expanse": {
+          "status": "present",
+          "reason": "A broad relatively uninterrupted shadowed wall remains above the figures.",
+          "evidenceKind": "visual-review"
+        }
+      },
+      "sourcedContext": [],
+      "contextStatus": "not-documented-in-this-review"
+    },
+    "canon-caravaggio-entombment": {
+      "version": "artwork-attributes-v1",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://www.museivaticani.va/content/museivaticani/en/collezioni/musei/la-pinacoteca/sala-xii---secolo-xvii/caravaggio--deposizione-dalla-croce.html",
+        "image": "assets/canonical-20261116/canon-caravaggio-entombment.jpg",
+        "previewSha256": "3e368846e3adf1a0794cc0a902e99eaba222b92d08255b165665ff6072b13592"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-caravaggio-entombment-large.jpg",
+        "sha256": "be37099fb63aa572e76495b497d5c8877ad273b916f54dee1643ce38789dd49e",
+        "width": 2154,
+        "height": 3200,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://www.museivaticani.va/content/museivaticani/en/collezioni/musei/la-pinacoteca/sala-xii---secolo-xvii/caravaggio--deposizione-dalla-croce.html",
+        "https://www.vaticannews.va/en/vatican-city/news/2021-03/vatican-museums-art-prayer-faith-lent-consolation-pope-9.html",
+        "https://commons.wikimedia.org/wiki/File:The_Entombment_of_Christ-Caravaggio_(c.1602-3).jpg",
+        "https://commons.wikimedia.org/wiki/File:The_Entombment_of_Christ-Caravaggio_(c.1602-3).jpg#Licensing"
+      ],
+      "reviewMethod": "Assistant inspected this actual local reproduction and explicitly considered all sixteen operational criteria. Positive and uncertain criteria have individual visible reasons; all remaining criteria were assessed absent. No artist/movement defaults or independent human validation are claimed.",
+      "reviewScope": "Displayed complete work or individually named composition only.",
+      "attributes": {
+        "narrative-detail": {
+          "status": "present",
+          "reason": "Shroud, wounds, supporting hands and several different mourning gestures give secondary incident clues.",
+          "evidenceKind": "visual-review"
+        },
+        "imagined-world": {
+          "status": "absent",
+          "reason": "No visibly impossible body, object or setting is depicted under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "dramatic-light": {
+          "status": "present",
+          "reason": "Selected faces, arms and pale flesh stand in strong illumination against deep darkness.",
+          "evidenceKind": "visual-review"
+        },
+        "layered-space": {
+          "status": "unknown",
+          "reason": "The bodies overlap strongly, but a separate deep physical setting is not unambiguous.",
+          "evidenceKind": "visual-review"
+        },
+        "geometric-structure": {
+          "status": "absent",
+          "reason": "Regular geometric shapes, a grid or clearly divided colour fields are not a dominant organising feature.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-gesture": {
+          "status": "present",
+          "reason": "Living arms support and lower the body while another figure thrusts both arms upward.",
+          "evidenceKind": "visual-review"
+        },
+        "intimate-figures": {
+          "status": "present",
+          "reason": "A compact near-view group and the carried body fill most of the image.",
+          "evidenceKind": "visual-review"
+        },
+        "landscape": {
+          "status": "absent",
+          "reason": "Recognisable terrain, water or vegetation does not substantially organise the composition.",
+          "evidenceKind": "visual-review"
+        },
+        "expressive-distortion": {
+          "status": "absent",
+          "reason": "Recognisable forms are not conspicuously elongated, fragmented or altered in proportion under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "precise-rendering": {
+          "status": "present",
+          "reason": "Controlled anatomical contours and differentiated hand and fabric details remain clear.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-paint-marks": {
+          "status": "unknown",
+          "reason": "The whole-image view does not resolve fine paint marks confidently.",
+          "evidenceKind": "visual-review"
+        },
+        "pattern-rhythm": {
+          "status": "present",
+          "reason": "Recurring extended arms and folded cloth produce a conspicuous descending rhythm.",
+          "evidenceKind": "visual-review"
+        },
+        "human-relationships": {
+          "status": "present",
+          "reason": "The carriers visibly coordinate their holds around the dead body.",
+          "evidenceKind": "visual-review"
+        },
+        "theatrical-staging": {
+          "status": "present",
+          "reason": "The projecting stone and emphatically presented body form a stage-like foreground display.",
+          "evidenceKind": "visual-review"
+        },
+        "material-detail": {
+          "status": "present",
+          "reason": "Skin, shroud folds and stone edges have differentiated surface descriptions.",
+          "evidenceKind": "visual-review"
+        },
+        "open-expanse": {
+          "status": "absent",
+          "reason": "Large relatively uninterrupted open fields do not occupy a substantial part of the composition.",
+          "evidenceKind": "visual-review"
+        }
+      },
+      "sourcedContext": [
+        {
+          "kind": "documented-subject-context",
+          "claim": "The Vatican identifies the represented moment as placing the body on the anointing stone, rather than lowering it into an open tomb.",
+          "sourcePublisher": "Vatican Museums",
+          "sourceUrl": "https://www.museivaticani.va/content/museivaticani/en/collezioni/musei/la-pinacoteca/sala-xii---secolo-xvii/caravaggio--deposizione-dalla-croce.html",
+          "sourceLocator": "Interpretive or technical discussion accompanying the linked exact institutional object or named mural record.",
+          "evidenceKind": "primary-source-context"
+        }
+      ],
+      "contextStatus": "documented-context-available"
+    },
+    "canon-caravaggio-bacchus": {
+      "version": "artwork-attributes-v1",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://www.uffizi.it/en/artworks/caravaggio-bacchus",
+        "image": "assets/canonical-20261116/canon-caravaggio-bacchus.jpg",
+        "previewSha256": "14642389a1d6ed10e7bc6c3d5f0af21b7a7946b41871095f5f963a3c1658d8fb"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-caravaggio-bacchus-large.jpg",
+        "sha256": "57b01e60032ae7d0b4ae1455885dc63510be87f5b4eae365da5605aafb7cd259",
+        "width": 2788,
+        "height": 3200,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://www.uffizi.it/en/artworks/caravaggio-bacchus",
+        "https://commons.wikimedia.org/wiki/File:Bacchus-Caravaggio_(1598).jpg",
+        "https://commons.wikimedia.org/wiki/File:Bacchus-Caravaggio_(1598).jpg#Licensing"
+      ],
+      "reviewMethod": "Assistant inspected this actual local reproduction and explicitly considered all sixteen operational criteria. Positive and uncertain criteria have individual visible reasons; all remaining criteria were assessed absent. No artist/movement defaults or independent human validation are claimed.",
+      "reviewScope": "Displayed complete work or individually named composition only.",
+      "attributes": {
+        "narrative-detail": {
+          "status": "present",
+          "reason": "Fruit, wine glass, bottle, leaf crown and held ribbon offer several object clues beyond the pose.",
+          "evidenceKind": "visual-review"
+        },
+        "imagined-world": {
+          "status": "absent",
+          "reason": "No visibly impossible body, object or setting is depicted under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "dramatic-light": {
+          "status": "present",
+          "reason": "The face, chest and hand are selectively illuminated against a much darker surround.",
+          "evidenceKind": "visual-review"
+        },
+        "layered-space": {
+          "status": "absent",
+          "reason": "Distinct physical stages, frames or recessed compartments do not organise the view.",
+          "evidenceKind": "visual-review"
+        },
+        "geometric-structure": {
+          "status": "absent",
+          "reason": "Regular geometric shapes, a grid or clearly divided colour fields are not a dominant organising feature.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-gesture": {
+          "status": "present",
+          "reason": "The extended hand quietly presents the glass.",
+          "evidenceKind": "visual-review"
+        },
+        "intimate-figures": {
+          "status": "present",
+          "reason": "The nearby half-length figure occupies most of the view.",
+          "evidenceKind": "visual-review"
+        },
+        "landscape": {
+          "status": "absent",
+          "reason": "Recognisable terrain, water or vegetation does not substantially organise the composition.",
+          "evidenceKind": "visual-review"
+        },
+        "expressive-distortion": {
+          "status": "absent",
+          "reason": "Recognisable forms are not conspicuously elongated, fragmented or altered in proportion under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "precise-rendering": {
+          "status": "present",
+          "reason": "Fruit edges, fingers, leaves and the glass have finely controlled details.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-paint-marks": {
+          "status": "unknown",
+          "reason": "The reproduction shows grain but does not resolve fine brush marks confidently.",
+          "evidenceKind": "visual-review"
+        },
+        "pattern-rhythm": {
+          "status": "present",
+          "reason": "Repeated rounded fruit and recurring leaves make a conspicuous foreground and crown rhythm.",
+          "evidenceKind": "visual-review"
+        },
+        "human-relationships": {
+          "status": "absent",
+          "reason": "No emphasised visible exchange or coordinated action connects two depicted people.",
+          "evidenceKind": "visual-review"
+        },
+        "theatrical-staging": {
+          "status": "present",
+          "reason": "Draped fabric and a frontal table display frame the posed figure and its objects.",
+          "evidenceKind": "visual-review"
+        },
+        "material-detail": {
+          "status": "present",
+          "reason": "Glass, fruit skins, leaves, cloth and bare skin receive different local descriptions.",
+          "evidenceKind": "visual-review"
+        },
+        "open-expanse": {
+          "status": "absent",
+          "reason": "Large relatively uninterrupted open fields do not occupy a substantial part of the composition.",
+          "evidenceKind": "visual-review"
+        }
+      },
+      "sourcedContext": [],
+      "contextStatus": "not-documented-in-this-review"
+    },
+    "canon-caravaggio-medusa": {
+      "version": "artwork-attributes-v1",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://www.catalogo.beniculturali.it/detail/HistoricOrArtisticProperty/0900289175",
+        "image": "assets/canonical-20261116/canon-caravaggio-medusa.jpg",
+        "previewSha256": "37799da2c0de8cc3b14d62a260ac4de76730e22bc3176e9440aa6c3d551638f5"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-caravaggio-medusa-large.jpg",
+        "sha256": "5cbe3d8563ffb81b4a1029e6c07995569fe14a981fdfcf6b44570ab1e9595d07",
+        "width": 3196,
+        "height": 3200,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://www.catalogo.beniculturali.it/detail/HistoricOrArtisticProperty/0900289175",
+        "https://www.uffizi.it/mostre-virtuali/sguardi-dal-mondo",
+        "https://commons.wikimedia.org/wiki/File:Caravaggio_-_Medusa_Uffizi_-_High_quality.jpg",
+        "https://creativecommons.org/publicdomain/zero/1.0/"
+      ],
+      "reviewMethod": "Assistant inspected this actual local reproduction and explicitly considered all sixteen operational criteria. Positive and uncertain criteria have individual visible reasons; all remaining criteria were assessed absent. No artist/movement defaults or independent human validation are claimed.",
+      "reviewScope": "Displayed complete work or individually named composition only.",
+      "attributes": {
+        "narrative-detail": {
+          "status": "absent",
+          "reason": "The blood and snakes describe the one focal severed head; separate secondary incidents are not clearly emphasised.",
+          "evidenceKind": "visual-review"
+        },
+        "imagined-world": {
+          "status": "present",
+          "reason": "Snakes replace human hair on an uncannily animate severed head.",
+          "evidenceKind": "visual-review"
+        },
+        "dramatic-light": {
+          "status": "present",
+          "reason": "The face is strongly illuminated while the surrounding snakes fall into deep shadow.",
+          "evidenceKind": "visual-review"
+        },
+        "layered-space": {
+          "status": "absent",
+          "reason": "Distinct physical stages, frames or recessed compartments do not organise the view.",
+          "evidenceKind": "visual-review"
+        },
+        "geometric-structure": {
+          "status": "present",
+          "reason": "The round green field and circular shield boundary strongly organise the composition.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-gesture": {
+          "status": "present",
+          "reason": "The mouth opens widely and multiple snake bodies visibly lift and curl.",
+          "evidenceKind": "visual-review"
+        },
+        "intimate-figures": {
+          "status": "present",
+          "reason": "The near-view human head occupies a substantial central area.",
+          "evidenceKind": "visual-review"
+        },
+        "landscape": {
+          "status": "absent",
+          "reason": "Recognisable terrain, water or vegetation does not substantially organise the composition.",
+          "evidenceKind": "visual-review"
+        },
+        "expressive-distortion": {
+          "status": "absent",
+          "reason": "Recognisable forms are not conspicuously elongated, fragmented or altered in proportion under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "precise-rendering": {
+          "status": "present",
+          "reason": "Eyes, teeth, blood strands and snake contours are sharply differentiated.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-paint-marks": {
+          "status": "unknown",
+          "reason": "Photographic detail does not establish whether fine paint marks themselves are conspicuous.",
+          "evidenceKind": "visual-review"
+        },
+        "pattern-rhythm": {
+          "status": "present",
+          "reason": "Recurring coils and raised snake heads form a conspicuous radial rhythm.",
+          "evidenceKind": "visual-review"
+        },
+        "human-relationships": {
+          "status": "absent",
+          "reason": "No emphasised visible exchange or coordinated action connects two depicted people.",
+          "evidenceKind": "visual-review"
+        },
+        "theatrical-staging": {
+          "status": "absent",
+          "reason": "Curtains, stage-like framing or an emphatic arranged display do not organise the scene.",
+          "evidenceKind": "visual-review"
+        },
+        "material-detail": {
+          "status": "present",
+          "reason": "Facial flesh, wet-looking blood and snake skins receive differentiated local description.",
+          "evidenceKind": "visual-review"
+        },
+        "open-expanse": {
+          "status": "absent",
+          "reason": "Large relatively uninterrupted open fields do not occupy a substantial part of the composition.",
+          "evidenceKind": "visual-review"
+        }
+      },
+      "sourcedContext": [],
+      "contextStatus": "not-documented-in-this-review"
+    },
+    "canon-leonardo-last-supper": {
+      "version": "artwork-attributes-v1",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://cenacolovinciano.org/en/museum/the-works/the-last-supper-leonardo-da-vinci-1452-1519/",
+        "image": "assets/canonical-20261116/canon-leonardo-last-supper.jpg",
+        "previewSha256": "27bd14cdd089b7a584dd1524be8a879d7b5da0571c17721c5879c93a61943b7a"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-leonardo-last-supper-large.jpg",
+        "sha256": "41b042964875dc1eb986f1f2223a4b94332968c4bef5d687eee5e34f975c104e",
+        "width": 3200,
+        "height": 1740,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://cenacolovinciano.org/en/museum/the-works/the-last-supper-leonardo-da-vinci-1452-1519/",
+        "https://commons.wikimedia.org/wiki/File:Leonardo_da_Vinci_-_The_Last_Supper_high_res.jpg",
+        "https://commons.wikimedia.org/wiki/File:Leonardo_da_Vinci_-_The_Last_Supper_high_res.jpg#Licensing"
+      ],
+      "reviewMethod": "Assistant inspected this actual local reproduction and explicitly considered all sixteen operational criteria. Positive and uncertain criteria have individual visible reasons; all remaining criteria were assessed absent. No artist/movement defaults or independent human validation are claimed.",
+      "reviewScope": "Displayed complete work or individually named composition only.",
+      "attributes": {
+        "narrative-detail": {
+          "status": "present",
+          "reason": "Table objects and several distinct clusters of hand and face exchanges create separate local incidents.",
+          "evidenceKind": "visual-review"
+        },
+        "imagined-world": {
+          "status": "absent",
+          "reason": "No visibly impossible body, object or setting is depicted under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "dramatic-light": {
+          "status": "absent",
+          "reason": "Selective illumination against deep shadow does not organise this reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "layered-space": {
+          "status": "present",
+          "reason": "The foreground table, side walls, ceiling and rear windows establish distinct spatial stages.",
+          "evidenceKind": "visual-review"
+        },
+        "geometric-structure": {
+          "status": "present",
+          "reason": "Repeated rectangles, ceiling divisions and straight wall boundaries organise the room.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-gesture": {
+          "status": "present",
+          "reason": "Numerous figures extend arms, raise hands and lean toward one another.",
+          "evidenceKind": "visual-review"
+        },
+        "intimate-figures": {
+          "status": "absent",
+          "reason": "A close human figure or compact foreground bodily group does not occupy a substantial part of this view.",
+          "evidenceKind": "visual-review"
+        },
+        "landscape": {
+          "status": "absent",
+          "reason": "Recognisable terrain, water or vegetation does not substantially organise the composition.",
+          "evidenceKind": "visual-review"
+        },
+        "expressive-distortion": {
+          "status": "absent",
+          "reason": "Recognisable forms are not conspicuously elongated, fragmented or altered in proportion under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "precise-rendering": {
+          "status": "unknown",
+          "reason": "Fading and surface loss prevent a confident whole-work judgement of fine original rendering.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-paint-marks": {
+          "status": "unknown",
+          "reason": "Surface damage cannot be treated as visible brushwork.",
+          "evidenceKind": "visual-review"
+        },
+        "pattern-rhythm": {
+          "status": "present",
+          "reason": "Repeated ceiling compartments, wall panels and grouped figures create conspicuous rhythm.",
+          "evidenceKind": "visual-review"
+        },
+        "human-relationships": {
+          "status": "present",
+          "reason": "Visible hand gestures and directed gazes connect people in several local exchanges.",
+          "evidenceKind": "visual-review"
+        },
+        "theatrical-staging": {
+          "status": "present",
+          "reason": "The long frontal table and centred deep room present the group as an emphatic arranged encounter.",
+          "evidenceKind": "visual-review"
+        },
+        "material-detail": {
+          "status": "unknown",
+          "reason": "Faded details limit confidence in the differentiation of depicted materials.",
+          "evidenceKind": "visual-review"
+        },
+        "open-expanse": {
+          "status": "absent",
+          "reason": "Large relatively uninterrupted open fields do not occupy a substantial part of the composition.",
+          "evidenceKind": "visual-review"
+        }
+      },
+      "sourcedContext": [
+        {
+          "kind": "documented-technique-context",
+          "claim": "The museum explains that Leonardo worked on dry plaster rather than using the traditional wet-fresco technique.",
+          "sourcePublisher": "Museo del Cenacolo Vinciano",
+          "sourceUrl": "https://cenacolovinciano.org/en/museum/the-works/the-last-supper-leonardo-da-vinci-1452-1519/",
+          "sourceLocator": "Interpretive or technical discussion accompanying the linked exact institutional object or named mural record.",
+          "evidenceKind": "primary-source-context"
+        }
+      ],
+      "contextStatus": "documented-context-available"
+    },
+    "canon-michelangelo-creation-adam": {
+      "version": "artwork-attributes-v1",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://www.museivaticani.va/content/museivaticani/en/collezioni/musei/cappella-sistina/volta/storie-centrali/creazione-di-adamo.html",
+        "image": "assets/canonical-20261116/canon-michelangelo-creation-adam.jpg",
+        "previewSha256": "9ff394db664c19dd6b825033fa437145a216b3be9b2503654b2874ec98ef4b74"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-michelangelo-creation-adam-large.jpg",
+        "sha256": "1ad0a688955b6e51358b990433dd3090e3b2ebe1890ae6a8ac172e3ebe2cf2ac",
+        "width": 3200,
+        "height": 1452,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://www.museivaticani.va/content/museivaticani/en/collezioni/musei/cappella-sistina/volta/storie-centrali/creazione-di-adamo.html",
+        "https://commons.wikimedia.org/wiki/File:Michelangelo_-_Creation_of_Adam_(cropped).jpg",
+        "https://commons.wikimedia.org/wiki/File:Michelangelo_-_Creation_of_Adam_(cropped).jpg#Licensing"
+      ],
+      "reviewMethod": "Assistant inspected this actual local reproduction and explicitly considered all sixteen operational criteria. Positive and uncertain criteria have individual visible reasons; all remaining criteria were assessed absent. No artist/movement defaults or independent human validation are claimed.",
+      "reviewScope": "Named central scene in this border-trimmed reproduction only; not the whole Sistine ceiling.",
+      "attributes": {
+        "narrative-detail": {
+          "status": "absent",
+          "reason": "The reaching bodies and accompanying figures form one focal encounter; no independent secondary incident or separate object clue is emphasised.",
+          "evidenceKind": "visual-review"
+        },
+        "imagined-world": {
+          "status": "present",
+          "reason": "A bodily group is suspended in a floating cloak without physical support.",
+          "evidenceKind": "visual-review"
+        },
+        "dramatic-light": {
+          "status": "absent",
+          "reason": "Selective illumination against deep shadow does not organise this reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "layered-space": {
+          "status": "absent",
+          "reason": "Distinct physical stages, frames or recessed compartments do not organise the view.",
+          "evidenceKind": "visual-review"
+        },
+        "geometric-structure": {
+          "status": "absent",
+          "reason": "Regular geometric shapes, a grid or clearly divided colour fields are not a dominant organising feature.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-gesture": {
+          "status": "present",
+          "reason": "The two main arms extend toward one another and smaller bodies hold or support the floating group.",
+          "evidenceKind": "visual-review"
+        },
+        "intimate-figures": {
+          "status": "present",
+          "reason": "Large close human bodies occupy most of the displayed scene.",
+          "evidenceKind": "visual-review"
+        },
+        "landscape": {
+          "status": "absent",
+          "reason": "Recognisable terrain, water or vegetation does not substantially organise the composition.",
+          "evidenceKind": "visual-review"
+        },
+        "expressive-distortion": {
+          "status": "absent",
+          "reason": "Recognisable forms are not conspicuously elongated, fragmented or altered in proportion under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "precise-rendering": {
+          "status": "present",
+          "reason": "Anatomical contours, fingers and folds are sharply controlled and differentiated.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-paint-marks": {
+          "status": "unknown",
+          "reason": "Surface cracking and reproduction texture do not establish fine original brush marks.",
+          "evidenceKind": "visual-review"
+        },
+        "pattern-rhythm": {
+          "status": "absent",
+          "reason": "A conspicuous repeated motif or directional rhythm does not organise this view.",
+          "evidenceKind": "visual-review"
+        },
+        "human-relationships": {
+          "status": "present",
+          "reason": "Directed hands and gazes create an emphatic visible exchange between the main figures.",
+          "evidenceKind": "visual-review"
+        },
+        "theatrical-staging": {
+          "status": "absent",
+          "reason": "Curtains, stage-like framing or an emphatic arranged display do not organise the scene.",
+          "evidenceKind": "visual-review"
+        },
+        "material-detail": {
+          "status": "present",
+          "reason": "Flesh, drapery and the rocky support have differentiated local descriptions.",
+          "evidenceKind": "visual-review"
+        },
+        "open-expanse": {
+          "status": "present",
+          "reason": "A broad light field leaves substantial open space between and around the two groups.",
+          "evidenceKind": "visual-review"
+        }
+      },
+      "sourcedContext": [],
+      "contextStatus": "not-documented-in-this-review"
+    },
+    "canon-bosch-temptations-lisbon": {
+      "version": "artwork-attributes-v1",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://raiz.museusemonumentos.pt/DetalhesObra/Index/247559?tipo=OBJ",
+        "image": "assets/canonical-20261116/canon-bosch-temptations-lisbon.jpg",
+        "previewSha256": "d115285003975d904c4d309f22f3732dfeb98e0893ff42aec40efbf8dbac2566"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-bosch-temptations-lisbon-large.jpg",
+        "sha256": "8fe23f62786d6932be0aa9a8c46e2e603e4a624e0ec725076dff0506528601c7",
+        "width": 3200,
+        "height": 1873,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://raiz.museusemonumentos.pt/DetalhesObra/Index/247559?tipo=OBJ",
+        "https://commons.wikimedia.org/wiki/File:The_Temptation_of_Saint_Anthony,_ca._1495-1515.jpg",
+        "https://commons.wikimedia.org/wiki/File:The_Temptation_of_Saint_Anthony,_ca._1495-1515.jpg#Licensing"
+      ],
+      "reviewMethod": "Assistant inspected this actual local reproduction and explicitly considered all sixteen operational criteria. Positive and uncertain criteria have individual visible reasons; all remaining criteria were assessed absent. No artist/movement defaults or independent human validation are claimed.",
+      "reviewScope": "Displayed complete work or individually named composition only.",
+      "attributes": {
+        "narrative-detail": {
+          "status": "present",
+          "reason": "Many small acts, carried bodies, strange vessels and separate encounters provide independent local incidents.",
+          "evidenceKind": "visual-review"
+        },
+        "imagined-world": {
+          "status": "present",
+          "reason": "Human-animal hybrids, unsupported flying creatures and impossible bodily constructions are visible.",
+          "evidenceKind": "visual-review"
+        },
+        "dramatic-light": {
+          "status": "present",
+          "reason": "A glowing burning settlement and illuminated passages contrast with deep night and dark recesses.",
+          "evidenceKind": "visual-review"
+        },
+        "layered-space": {
+          "status": "present",
+          "reason": "Bridge, cave-like openings, foreground groups, ruined temple and distant landscape create many distinct spatial stages.",
+          "evidenceKind": "visual-review"
+        },
+        "geometric-structure": {
+          "status": "absent",
+          "reason": "Regular geometric shapes, a grid or clearly divided colour fields are not a dominant organising feature.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-gesture": {
+          "status": "present",
+          "reason": "Numerous small bodies carry, climb, fly and reach around objects or other figures.",
+          "evidenceKind": "visual-review"
+        },
+        "intimate-figures": {
+          "status": "absent",
+          "reason": "A close human figure or compact foreground bodily group does not occupy a substantial part of this view.",
+          "evidenceKind": "visual-review"
+        },
+        "landscape": {
+          "status": "present",
+          "reason": "Terrain, water, vegetation and extensive horizons organise all three panels.",
+          "evidenceKind": "visual-review"
+        },
+        "expressive-distortion": {
+          "status": "present",
+          "reason": "Recognisable bodies and objects are conspicuously hybridised, bent or altered in shape.",
+          "evidenceKind": "visual-review"
+        },
+        "precise-rendering": {
+          "status": "present",
+          "reason": "Small creature contours, buildings and objects are finely differentiated.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-paint-marks": {
+          "status": "unknown",
+          "reason": "Fine original brush marks are unresolved at the whole-triptych review scale.",
+          "evidenceKind": "visual-review"
+        },
+        "pattern-rhythm": {
+          "status": "absent",
+          "reason": "A conspicuous repeated motif or directional rhythm does not organise this view.",
+          "evidenceKind": "visual-review"
+        },
+        "human-relationships": {
+          "status": "present",
+          "reason": "Several pairs carry, support, approach or handle one another visibly.",
+          "evidenceKind": "visual-review"
+        },
+        "theatrical-staging": {
+          "status": "absent",
+          "reason": "Curtains, stage-like framing or an emphatic arranged display do not organise the scene.",
+          "evidenceKind": "visual-review"
+        },
+        "material-detail": {
+          "status": "unknown",
+          "reason": "Small detailed contours do not establish finely differentiated material textures confidently at this scale.",
+          "evidenceKind": "visual-review"
+        },
+        "open-expanse": {
+          "status": "absent",
+          "reason": "Large relatively uninterrupted open fields do not occupy a substantial part of the composition.",
+          "evidenceKind": "visual-review"
+        }
+      },
+      "sourcedContext": [],
+      "contextStatus": "not-documented-in-this-review"
+    },
+    "canon-bruegel-tower-babel": {
+      "version": "artwork-attributes-v1",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://www.khm.at/en/visit/only-in-vienna",
+        "image": "assets/canonical-20261116/canon-bruegel-tower-babel.jpg",
+        "previewSha256": "0590694d2b186122cfaa48e8e6b2da10a21f04c1809ad61dc1d664b1d0b54667"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-bruegel-tower-babel-large.jpg",
+        "sha256": "5f508d503faf3aba54594dde02f584b53cbfca33c9e592d84e4a766fd9e0fa36",
+        "width": 3200,
+        "height": 2342,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://www.khm.at/en/visit/only-in-vienna",
+        "https://press.khm.at/fileadmin/content/KHM/Presse/2018/Bruegel/PT_Bruegel_E.pdf",
+        "https://commons.wikimedia.org/wiki/File:Pieter_Bruegel_the_Elder_-_The_Tower_of_Babel_(Vienna)_-_Google_Art_Project.jpg",
+        "https://commons.wikimedia.org/wiki/File:Pieter_Bruegel_the_Elder_-_The_Tower_of_Babel_(Vienna)_-_Google_Art_Project.jpg#Licensing"
+      ],
+      "reviewMethod": "Assistant inspected this actual local reproduction and explicitly considered all sixteen operational criteria. Positive and uncertain criteria have individual visible reasons; all remaining criteria were assessed absent. No artist/movement defaults or independent human validation are claimed.",
+      "reviewScope": "Displayed complete work or individually named composition only.",
+      "attributes": {
+        "narrative-detail": {
+          "status": "present",
+          "reason": "Builders, material handling, a foreground procession and harbour activities supply numerous separate local incidents.",
+          "evidenceKind": "visual-review"
+        },
+        "imagined-world": {
+          "status": "absent",
+          "reason": "No visibly impossible body, object or setting is depicted under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "dramatic-light": {
+          "status": "absent",
+          "reason": "Selective illumination against deep shadow does not organise this reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "layered-space": {
+          "status": "present",
+          "reason": "Foreground people and ground, tower levels, distant town and harbour establish successive spatial stages.",
+          "evidenceKind": "visual-review"
+        },
+        "geometric-structure": {
+          "status": "present",
+          "reason": "Regular circular tiers and repeated arched compartments strongly structure the tower.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-gesture": {
+          "status": "present",
+          "reason": "Small people kneel, carry materials and reach around the construction.",
+          "evidenceKind": "visual-review"
+        },
+        "intimate-figures": {
+          "status": "absent",
+          "reason": "A close human figure or compact foreground bodily group does not occupy a substantial part of this view.",
+          "evidenceKind": "visual-review"
+        },
+        "landscape": {
+          "status": "present",
+          "reason": "Water, terrain and a broad surrounding horizon substantially organise the view.",
+          "evidenceKind": "visual-review"
+        },
+        "expressive-distortion": {
+          "status": "absent",
+          "reason": "Recognisable forms are not conspicuously elongated, fragmented or altered in proportion under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "precise-rendering": {
+          "status": "present",
+          "reason": "Tiny arches, windows, scaffolds and figures have finely differentiated contours.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-paint-marks": {
+          "status": "unknown",
+          "reason": "Fine brush marks are not confidently distinguished from age and reproduction texture.",
+          "evidenceKind": "visual-review"
+        },
+        "pattern-rhythm": {
+          "status": "present",
+          "reason": "Many repeated arcades, floors and scaffold divisions create a conspicuous rhythm.",
+          "evidenceKind": "visual-review"
+        },
+        "human-relationships": {
+          "status": "present",
+          "reason": "Foreground people address one another and workers coordinate around carried objects.",
+          "evidenceKind": "visual-review"
+        },
+        "theatrical-staging": {
+          "status": "absent",
+          "reason": "Curtains, stage-like framing or an emphatic arranged display do not organise the scene.",
+          "evidenceKind": "visual-review"
+        },
+        "material-detail": {
+          "status": "present",
+          "reason": "Stonework, wood structures, ground and vessels receive different detailed treatment.",
+          "evidenceKind": "visual-review"
+        },
+        "open-expanse": {
+          "status": "present",
+          "reason": "Broad sky and relatively open water remain around the tower.",
+          "evidenceKind": "visual-review"
+        }
+      },
+      "sourcedContext": [],
+      "contextStatus": "not-documented-in-this-review"
+    },
+    "canon-bruegel-netherlandish-proverbs": {
+      "version": "artwork-attributes-v1",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://search.smb.museum/object/obj-867614",
+        "image": "assets/canonical-20261116/canon-bruegel-netherlandish-proverbs.jpg",
+        "previewSha256": "0f08af15c258463f0d9e5a29406edb7b739a5db37e6c818798bb6d0c0e7b0696"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-bruegel-netherlandish-proverbs-large.jpg",
+        "sha256": "a09961194e17bc73c64ae66b4acc93e1b2420cc39fc25c03095e24248115356f",
+        "width": 3200,
+        "height": 2266,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://search.smb.museum/object/obj-867614",
+        "https://commons.wikimedia.org/wiki/File:Pieter_Brueghel_the_Elder_-_The_Dutch_Proverbs_-_Google_Art_Project.jpg",
+        "https://commons.wikimedia.org/wiki/File:Pieter_Brueghel_the_Elder_-_The_Dutch_Proverbs_-_Google_Art_Project.jpg#Licensing"
+      ],
+      "reviewMethod": "Assistant inspected this actual local reproduction and explicitly considered all sixteen operational criteria. Positive and uncertain criteria have individual visible reasons; all remaining criteria were assessed absent. No artist/movement defaults or independent human validation are claimed.",
+      "reviewScope": "Displayed complete work or individually named composition only.",
+      "attributes": {
+        "narrative-detail": {
+          "status": "present",
+          "reason": "Dozens of separate bodily acts and object encounters create independent local story clues.",
+          "evidenceKind": "visual-review"
+        },
+        "imagined-world": {
+          "status": "unknown",
+          "reason": "Some small motifs may be impossible or enacted props; this whole-image review does not establish every referent confidently.",
+          "evidenceKind": "visual-review"
+        },
+        "dramatic-light": {
+          "status": "absent",
+          "reason": "Selective illumination against deep shadow does not organise this reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "layered-space": {
+          "status": "present",
+          "reason": "Roof and room openings, foreground square, bridge, fields and distant sea establish many spatial stages.",
+          "evidenceKind": "visual-review"
+        },
+        "geometric-structure": {
+          "status": "absent",
+          "reason": "Regular geometric shapes, a grid or clearly divided colour fields are not a dominant organising feature.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-gesture": {
+          "status": "present",
+          "reason": "Numerous small figures visibly bend, climb, pull, strike or handle objects.",
+          "evidenceKind": "visual-review"
+        },
+        "intimate-figures": {
+          "status": "absent",
+          "reason": "A close human figure or compact foreground bodily group does not occupy a substantial part of this view.",
+          "evidenceKind": "visual-review"
+        },
+        "landscape": {
+          "status": "present",
+          "reason": "Fields, trees and distant water form substantial parts of the surrounding village terrain.",
+          "evidenceKind": "visual-review"
+        },
+        "expressive-distortion": {
+          "status": "absent",
+          "reason": "Recognisable forms are not conspicuously elongated, fragmented or altered in proportion under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "precise-rendering": {
+          "status": "present",
+          "reason": "Small tools, animals, figures and building details are sharply differentiated.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-paint-marks": {
+          "status": "unknown",
+          "reason": "Fine paint marks cannot be distinguished confidently from reproduction texture.",
+          "evidenceKind": "visual-review"
+        },
+        "pattern-rhythm": {
+          "status": "present",
+          "reason": "Repeated roof tiles, window divisions and patterned architectural rows establish conspicuous local rhythms.",
+          "evidenceKind": "visual-review"
+        },
+        "human-relationships": {
+          "status": "present",
+          "reason": "Many pairs visibly pull against, guide, restrain or address one another.",
+          "evidenceKind": "visual-review"
+        },
+        "theatrical-staging": {
+          "status": "absent",
+          "reason": "Curtains, stage-like framing or an emphatic arranged display do not organise the scene.",
+          "evidenceKind": "visual-review"
+        },
+        "material-detail": {
+          "status": "present",
+          "reason": "Thatch, plaster, brick, cloth and small objects receive differentiated fine descriptions.",
+          "evidenceKind": "visual-review"
+        },
+        "open-expanse": {
+          "status": "absent",
+          "reason": "Large relatively uninterrupted open fields do not occupy a substantial part of the composition.",
+          "evidenceKind": "visual-review"
+        }
+      },
+      "sourcedContext": [
+        {
+          "kind": "documented-symbolism",
+          "claim": "The Berlin collection record identifies more than 100 sayings enacted by individual figures and explains the old upside-down-world title.",
+          "sourcePublisher": "Staatliche Museen zu Berlin",
+          "sourceUrl": "https://search.smb.museum/object/obj-867614",
+          "sourceLocator": "Interpretive or technical discussion accompanying the linked exact institutional object or named mural record.",
+          "evidenceKind": "primary-source-context"
+        }
+      ],
+      "contextStatus": "documented-context-available"
+    },
+    "canon-goya-third-may": {
+      "version": "artwork-attributes-v1",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://www.museodelprado.es/coleccion/obra-de-arte/el-3-de-mayo-en-madrid-o-los-fusilamientos/5e177409-2993-4240-97fb-847a02c6496c",
+        "image": "assets/canonical-20261116/canon-goya-third-may.jpg",
+        "previewSha256": "471111641346c3259e8c9f0936a78bef337037250b2e8d9485d8158c060b549a"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-goya-third-may-large.jpg",
+        "sha256": "2c7d260f2dff1acb876ab3bccb467c89618e8f825cc6ed207a922a63c218b984",
+        "width": 3200,
+        "height": 2468,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://www.museodelprado.es/coleccion/obra-de-arte/el-3-de-mayo-en-madrid-o-los-fusilamientos/5e177409-2993-4240-97fb-847a02c6496c",
+        "https://commons.wikimedia.org/wiki/File:El_Tres_de_Mayo,_by_Francisco_de_Goya,_from_Prado_in_Google_Earth.jpg",
+        "https://commons.wikimedia.org/wiki/File:El_Tres_de_Mayo,_by_Francisco_de_Goya,_from_Prado_in_Google_Earth.jpg#Licensing"
+      ],
+      "reviewMethod": "Assistant inspected this actual local reproduction and explicitly considered all sixteen operational criteria. Positive and uncertain criteria have individual visible reasons; all remaining criteria were assessed absent. No artist/movement defaults or independent human validation are claimed.",
+      "reviewScope": "Displayed complete work or individually named composition only.",
+      "attributes": {
+        "narrative-detail": {
+          "status": "present",
+          "reason": "Lantern, weapons, praying hands, blood and differently responding figures give several incident clues.",
+          "evidenceKind": "visual-review"
+        },
+        "imagined-world": {
+          "status": "absent",
+          "reason": "No visibly impossible body, object or setting is depicted under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "dramatic-light": {
+          "status": "present",
+          "reason": "The white shirt and nearby faces stand in sharp selected light against deep night and shadow.",
+          "evidenceKind": "visual-review"
+        },
+        "layered-space": {
+          "status": "present",
+          "reason": "Near bodies, facing groups and the distant city occupy separate spatial stages.",
+          "evidenceKind": "visual-review"
+        },
+        "geometric-structure": {
+          "status": "absent",
+          "reason": "Regular geometric shapes, a grid or clearly divided colour fields are not a dominant organising feature.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-gesture": {
+          "status": "present",
+          "reason": "Arms rise, rifles are aimed, hands cover faces and bodies kneel.",
+          "evidenceKind": "visual-review"
+        },
+        "intimate-figures": {
+          "status": "present",
+          "reason": "The close foreground bodily groups occupy a substantial part of the composition.",
+          "evidenceKind": "visual-review"
+        },
+        "landscape": {
+          "status": "present",
+          "reason": "The sloping ground and dark outdoor terrain substantially organise the scene.",
+          "evidenceKind": "visual-review"
+        },
+        "expressive-distortion": {
+          "status": "absent",
+          "reason": "Recognisable forms are not conspicuously elongated, fragmented or altered in proportion under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "precise-rendering": {
+          "status": "absent",
+          "reason": "Sharply controlled contours or finely differentiated detail do not dominate the visible treatment.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-paint-marks": {
+          "status": "present",
+          "reason": "Broad rough passages and distinct painterly touches remain conspicuous in ground and clothing.",
+          "evidenceKind": "visual-review"
+        },
+        "pattern-rhythm": {
+          "status": "present",
+          "reason": "Repeated soldier backs and nearly parallel rifles form a strong directional rhythm.",
+          "evidenceKind": "visual-review"
+        },
+        "human-relationships": {
+          "status": "present",
+          "reason": "The two groups visibly confront each other and several victims make local gestures toward companions.",
+          "evidenceKind": "visual-review"
+        },
+        "theatrical-staging": {
+          "status": "absent",
+          "reason": "Curtains, stage-like framing or an emphatic arranged display do not organise the scene.",
+          "evidenceKind": "visual-review"
+        },
+        "material-detail": {
+          "status": "unknown",
+          "reason": "Several materials are suggested, but finely differentiated surface texture is not dominant at the reviewed scale.",
+          "evidenceKind": "visual-review"
+        },
+        "open-expanse": {
+          "status": "absent",
+          "reason": "Large relatively uninterrupted open fields do not occupy a substantial part of the composition.",
+          "evidenceKind": "visual-review"
+        }
+      },
+      "sourcedContext": [],
+      "contextStatus": "not-documented-in-this-review"
+    },
+    "canon-velazquez-breda": {
+      "version": "artwork-attributes-v1",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://www.museodelprado.es/coleccion/obra-de-arte/las-lanzas-o-la-rendicion-de-breda/0cc7577a-51d9-44fd-b4d5-4dba8d9cb13a",
+        "image": "assets/canonical-20261116/canon-velazquez-breda.jpg",
+        "previewSha256": "ba3a4f3e59b8411826307d5bc04476bd0355dc6ed2382d05646e674fa067db25"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-velazquez-breda-large.jpg",
+        "sha256": "a722cfa43f1a15950cdea8fd57f8458626c368d22f10ee3ce15ae6a8d1790ded",
+        "width": 3051,
+        "height": 2516,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://www.museodelprado.es/coleccion/obra-de-arte/las-lanzas-o-la-rendicion-de-breda/0cc7577a-51d9-44fd-b4d5-4dba8d9cb13a",
+        "https://commons.wikimedia.org/wiki/File:Velazquez-The_Surrender_of_Breda.jpg",
+        "https://commons.wikimedia.org/wiki/File:Velazquez-The_Surrender_of_Breda.jpg#Licensing"
+      ],
+      "reviewMethod": "Assistant inspected this actual local reproduction and explicitly considered all sixteen operational criteria. Positive and uncertain criteria have individual visible reasons; all remaining criteria were assessed absent. No artist/movement defaults or independent human validation are claimed.",
+      "reviewScope": "Displayed complete work or individually named composition only.",
+      "attributes": {
+        "narrative-detail": {
+          "status": "present",
+          "reason": "Key, hats, horses, varied onlookers and distant smoke provide secondary incident and object clues.",
+          "evidenceKind": "visual-review"
+        },
+        "imagined-world": {
+          "status": "absent",
+          "reason": "No visibly impossible body, object or setting is depicted under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "dramatic-light": {
+          "status": "absent",
+          "reason": "Selective illumination against deep shadow does not organise this reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "layered-space": {
+          "status": "present",
+          "reason": "Foreground horses and people stand before troop ranks, open terrain and a distant horizon.",
+          "evidenceKind": "visual-review"
+        },
+        "geometric-structure": {
+          "status": "present",
+          "reason": "The long closely spaced upright lances create salient straight divisions across the right side.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-gesture": {
+          "status": "present",
+          "reason": "The central figures reach toward one another around the small key.",
+          "evidenceKind": "visual-review"
+        },
+        "intimate-figures": {
+          "status": "absent",
+          "reason": "A close human figure or compact foreground bodily group does not occupy a substantial part of this view.",
+          "evidenceKind": "visual-review"
+        },
+        "landscape": {
+          "status": "present",
+          "reason": "Extensive terrain and a distant horizon substantially organise the background.",
+          "evidenceKind": "visual-review"
+        },
+        "expressive-distortion": {
+          "status": "absent",
+          "reason": "Recognisable forms are not conspicuously elongated, fragmented or altered in proportion under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "precise-rendering": {
+          "status": "present",
+          "reason": "Cloth, weapons, horse fittings and faces have finely differentiated details.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-paint-marks": {
+          "status": "unknown",
+          "reason": "Fine paint handling is not confidently separated from reproduction texture at whole-work scale.",
+          "evidenceKind": "visual-review"
+        },
+        "pattern-rhythm": {
+          "status": "present",
+          "reason": "Repeated lances and ranks of figures create strong vertical and horizontal rhythm.",
+          "evidenceKind": "visual-review"
+        },
+        "human-relationships": {
+          "status": "present",
+          "reason": "The key exchange and a hand on the other man's shoulder create an explicit interpersonal encounter.",
+          "evidenceKind": "visual-review"
+        },
+        "theatrical-staging": {
+          "status": "present",
+          "reason": "The opposing groups and central exchange form an emphatically presented public encounter.",
+          "evidenceKind": "visual-review"
+        },
+        "material-detail": {
+          "status": "present",
+          "reason": "Metal, embroidered cloth, leather and horse coats receive different local descriptions.",
+          "evidenceKind": "visual-review"
+        },
+        "open-expanse": {
+          "status": "absent",
+          "reason": "Large relatively uninterrupted open fields do not occupy a substantial part of the composition.",
+          "evidenceKind": "visual-review"
+        }
+      },
+      "sourcedContext": [],
+      "contextStatus": "not-documented-in-this-review"
+    },
+    "canon-rembrandt-prodigal-son": {
+      "version": "artwork-attributes-v1",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://www.hermitagemuseum.org/digital-collection/43413?lng=en",
+        "image": "assets/canonical-20261116/canon-rembrandt-prodigal-son.jpg",
+        "previewSha256": "c40edb3ad2fc565d0e5084b56b3312693e008a7dbe167903ea2701ad5ea63aeb"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-rembrandt-prodigal-son-large.jpg",
+        "sha256": "65b51cce887028f8086ee43dcaf8a3817d8abf769aa9e742488367e777a10838",
+        "width": 2452,
+        "height": 3200,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://www.hermitagemuseum.org/digital-collection/43413?lng=en",
+        "https://hermitagemuseum.org/uploads/files/publications/d41d8cd98f00b204e9800998ecf8427e1731921599.pdf",
+        "https://commons.wikimedia.org/wiki/File:Rembrandt_Harmensz_van_Rijn_-_Return_of_the_Prodigal_Son_-_Google_Art_Project.jpg",
+        "https://commons.wikimedia.org/wiki/File:Rembrandt_Harmensz_van_Rijn_-_Return_of_the_Prodigal_Son_-_Google_Art_Project.jpg#Licensing"
+      ],
+      "reviewMethod": "Assistant inspected this actual local reproduction and explicitly considered all sixteen operational criteria. Positive and uncertain criteria have individual visible reasons; all remaining criteria were assessed absent. No artist/movement defaults or independent human validation are claimed.",
+      "reviewScope": "Displayed complete work or individually named composition only.",
+      "attributes": {
+        "narrative-detail": {
+          "status": "present",
+          "reason": "Damaged footwear, worn clothing, touching hands and differently placed witnesses give clues beyond the central pose.",
+          "evidenceKind": "visual-review"
+        },
+        "imagined-world": {
+          "status": "absent",
+          "reason": "No visibly impossible body, object or setting is depicted under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "dramatic-light": {
+          "status": "present",
+          "reason": "Selected hands, heads and red cloth emerge strongly from deep shadow.",
+          "evidenceKind": "visual-review"
+        },
+        "layered-space": {
+          "status": "present",
+          "reason": "The near kneeling body and raised standing figures sit before dark recessed witnesses and architectural passages.",
+          "evidenceKind": "visual-review"
+        },
+        "geometric-structure": {
+          "status": "absent",
+          "reason": "Regular geometric shapes, a grid or clearly divided colour fields are not a dominant organising feature.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-gesture": {
+          "status": "present",
+          "reason": "Both hands visibly embrace or support the kneeling figure.",
+          "evidenceKind": "visual-review"
+        },
+        "intimate-figures": {
+          "status": "present",
+          "reason": "The nearby central bodily pair occupies a substantial portion of the image.",
+          "evidenceKind": "visual-review"
+        },
+        "landscape": {
+          "status": "absent",
+          "reason": "Recognisable terrain, water or vegetation does not substantially organise the composition.",
+          "evidenceKind": "visual-review"
+        },
+        "expressive-distortion": {
+          "status": "absent",
+          "reason": "Recognisable forms are not conspicuously elongated, fragmented or altered in proportion under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "precise-rendering": {
+          "status": "unknown",
+          "reason": "Fine rendering varies across the softly resolved reproduction and is not confidently dominant.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-paint-marks": {
+          "status": "unknown",
+          "reason": "Individual paint marks require a closer surface view than this whole-work inspection.",
+          "evidenceKind": "visual-review"
+        },
+        "pattern-rhythm": {
+          "status": "absent",
+          "reason": "A conspicuous repeated motif or directional rhythm does not organise this view.",
+          "evidenceKind": "visual-review"
+        },
+        "human-relationships": {
+          "status": "present",
+          "reason": "The older man's hands and the younger man's leaning body create an emphatic exchange of touch.",
+          "evidenceKind": "visual-review"
+        },
+        "theatrical-staging": {
+          "status": "present",
+          "reason": "A low platform and foreground pair are presented before separately positioned witnesses.",
+          "evidenceKind": "visual-review"
+        },
+        "material-detail": {
+          "status": "present",
+          "reason": "Worn cloth, bare feet and damaged footwear have distinct local descriptions.",
+          "evidenceKind": "visual-review"
+        },
+        "open-expanse": {
+          "status": "present",
+          "reason": "Broad relatively uninterrupted shadowed fields remain above and beside the central pair.",
+          "evidenceKind": "visual-review"
+        }
+      },
+      "sourcedContext": [],
+      "contextStatus": "not-documented-in-this-review"
+    },
+    "canon-holbein-dead-christ": {
+      "version": "artwork-attributes-v1",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://kunstmuseumbasel.ch/de/ausstellungen/2021/holbein-und-dostojewski/wandtexte",
+        "image": "assets/canonical-20261116/canon-holbein-dead-christ.jpg",
+        "previewSha256": "09b6f67205c71cde93206a1f4e44c4f3e8403df53a0d497e8b8171ffde738fa4"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-holbein-dead-christ-large.jpg",
+        "sha256": "799b8a7ac721125326ae7d44d9543d327c46d847451d6837b4919ee12c9968dc",
+        "width": 3200,
+        "height": 478,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://kunstmuseumbasel.ch/de/ausstellungen/2021/holbein-und-dostojewski/wandtexte",
+        "https://kunstmuseumbasel.ch/de/sammlung/schwerpunkte",
+        "https://commons.wikimedia.org/wiki/File:Holbein_%E2%80%94_Dead_Christ.jpg",
+        "https://creativecommons.org/publicdomain/zero/1.0/"
+      ],
+      "reviewMethod": "Assistant inspected this actual local reproduction and explicitly considered all sixteen operational criteria. Positive and uncertain criteria have individual visible reasons; all remaining criteria were assessed absent. No artist/movement defaults or independent human validation are claimed.",
+      "reviewScope": "Displayed complete work or individually named composition only.",
+      "attributes": {
+        "narrative-detail": {
+          "status": "absent",
+          "reason": "The wounds describe the one focal dead body rather than independent secondary incidents or separate object clues.",
+          "evidenceKind": "visual-review"
+        },
+        "imagined-world": {
+          "status": "absent",
+          "reason": "No visibly impossible body, object or setting is depicted under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "dramatic-light": {
+          "status": "present",
+          "reason": "The pale body is strongly selected against the deep shadow of the surrounding cavity.",
+          "evidenceKind": "visual-review"
+        },
+        "layered-space": {
+          "status": "absent",
+          "reason": "Distinct physical stages, frames or recessed compartments do not organise the view.",
+          "evidenceKind": "visual-review"
+        },
+        "geometric-structure": {
+          "status": "present",
+          "reason": "Long straight cavity boundaries create a dominant narrow rectangular structure.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-gesture": {
+          "status": "absent",
+          "reason": "No emphasised bodily action or active hand gesture shapes the main motif.",
+          "evidenceKind": "visual-review"
+        },
+        "intimate-figures": {
+          "status": "present",
+          "reason": "The single near-view body occupies most of the painted field.",
+          "evidenceKind": "visual-review"
+        },
+        "landscape": {
+          "status": "absent",
+          "reason": "Recognisable terrain, water or vegetation does not substantially organise the composition.",
+          "evidenceKind": "visual-review"
+        },
+        "expressive-distortion": {
+          "status": "absent",
+          "reason": "Recognisable forms are not conspicuously elongated, fragmented or altered in proportion under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "precise-rendering": {
+          "status": "present",
+          "reason": "Fingers, toes, wounds and bodily contours are sharply differentiated.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-paint-marks": {
+          "status": "unknown",
+          "reason": "Fine original paint marks cannot be resolved confidently from the reproduced surface.",
+          "evidenceKind": "visual-review"
+        },
+        "pattern-rhythm": {
+          "status": "absent",
+          "reason": "A conspicuous repeated motif or directional rhythm does not organise this view.",
+          "evidenceKind": "visual-review"
+        },
+        "human-relationships": {
+          "status": "absent",
+          "reason": "No emphasised visible exchange or coordinated action connects two depicted people.",
+          "evidenceKind": "visual-review"
+        },
+        "theatrical-staging": {
+          "status": "present",
+          "reason": "The body is emphatically displayed within a shallow framing cavity.",
+          "evidenceKind": "visual-review"
+        },
+        "material-detail": {
+          "status": "present",
+          "reason": "Skin, wounds, cloth and stone edges receive different fine descriptions.",
+          "evidenceKind": "visual-review"
+        },
+        "open-expanse": {
+          "status": "absent",
+          "reason": "Large relatively uninterrupted open fields do not occupy a substantial part of the composition.",
+          "evidenceKind": "visual-review"
+        }
+      },
+      "sourcedContext": [],
+      "contextStatus": "not-documented-in-this-review"
+    },
+    "canon-durer-melencolia": {
+      "version": "artwork-attributes-v1",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://www.metmuseum.org/art/collection/search/336228",
+        "image": "assets/canonical-20261116/canon-durer-melencolia.jpg",
+        "previewSha256": "31d99698e2a42167d87e9f365308079fd3f75fec14c68a3b2b17eb7645242e3f"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-durer-melencolia-large.jpg",
+        "sha256": "047cefc1e17470a6fb774ee1eb4e3c325452933bc83098de880c7ab0046f2739",
+        "width": 2534,
+        "height": 3200,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://www.metmuseum.org/art/collection/search/336228",
+        "https://collectionapi.metmuseum.org/public/collection/v1/objects/336228",
+        "https://www.metmuseum.org/policies/image-resources"
+      ],
+      "reviewMethod": "Assistant inspected this actual local reproduction and explicitly considered all sixteen operational criteria. Positive and uncertain criteria have individual visible reasons; all remaining criteria were assessed absent. No artist/movement defaults or independent human validation are claimed.",
+      "reviewScope": "Displayed complete work or individually named composition only.",
+      "attributes": {
+        "narrative-detail": {
+          "status": "present",
+          "reason": "Many tools, numbered square, suspended objects, dog and distant banner provide clues beyond the resting pose.",
+          "evidenceKind": "visual-review"
+        },
+        "imagined-world": {
+          "status": "present",
+          "reason": "The human-like winged figures and banner-bearing airborne creature are visibly fantastical.",
+          "evidenceKind": "visual-review"
+        },
+        "dramatic-light": {
+          "status": "absent",
+          "reason": "Selective illumination against deep shadow does not organise this reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "layered-space": {
+          "status": "present",
+          "reason": "Near tools and bodies stand before a built corner, ladder and distant sea horizon.",
+          "evidenceKind": "visual-review"
+        },
+        "geometric-structure": {
+          "status": "present",
+          "reason": "Sphere, polyhedron, numbered square and straight ladder divisions are salient geometric motifs.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-gesture": {
+          "status": "present",
+          "reason": "The small seated figure visibly handles a writing implement and tablet.",
+          "evidenceKind": "visual-review"
+        },
+        "intimate-figures": {
+          "status": "present",
+          "reason": "The close foreground winged figure occupies a substantial part of the composition.",
+          "evidenceKind": "visual-review"
+        },
+        "landscape": {
+          "status": "present",
+          "reason": "Water and distant coastal terrain establish a substantial background beyond the objects.",
+          "evidenceKind": "visual-review"
+        },
+        "expressive-distortion": {
+          "status": "absent",
+          "reason": "Recognisable forms are not conspicuously elongated, fragmented or altered in proportion under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "precise-rendering": {
+          "status": "present",
+          "reason": "Very fine controlled lines distinguish numbers, tools, hair, fur and folds.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-paint-marks": {
+          "status": "present",
+          "reason": "Conspicuous parallel and crossed engraved lines remain visible as marks rather than disappearing into smooth shading.",
+          "evidenceKind": "visual-review"
+        },
+        "pattern-rhythm": {
+          "status": "present",
+          "reason": "Ladder rungs, number-square cells, radiating lines and recurring hatch marks create strong rhythm.",
+          "evidenceKind": "visual-review"
+        },
+        "human-relationships": {
+          "status": "absent",
+          "reason": "No emphasised visible exchange or coordinated action connects two depicted people.",
+          "evidenceKind": "visual-review"
+        },
+        "theatrical-staging": {
+          "status": "absent",
+          "reason": "Curtains, stage-like framing or an emphatic arranged display do not organise the scene.",
+          "evidenceKind": "visual-review"
+        },
+        "material-detail": {
+          "status": "present",
+          "reason": "Fur, cloth, wood and stone-like surfaces have differentiated fine line descriptions.",
+          "evidenceKind": "visual-review"
+        },
+        "open-expanse": {
+          "status": "absent",
+          "reason": "Large relatively uninterrupted open fields do not occupy a substantial part of the composition.",
+          "evidenceKind": "visual-review"
+        }
+      },
+      "sourcedContext": [
+        {
+          "kind": "documented-symbolism",
+          "claim": "The Met identifies the principal winged figure as a personification of Melancholy and relates many surrounding objects to geometry. These are historical iconographic readings, not viewer traits.",
+          "sourcePublisher": "The Metropolitan Museum of Art",
+          "sourceUrl": "https://www.metmuseum.org/art/collection/search/336228",
+          "sourceLocator": "Interpretive or technical discussion accompanying the linked exact institutional object or named mural record.",
+          "evidenceKind": "primary-source-context"
+        }
+      ],
+      "contextStatus": "documented-context-available"
+    },
+    "canon-delacroix-sardanapalus": {
+      "version": "artwork-attributes-v1",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://collections.louvre.fr/ark:/53355/cl010065757",
+        "image": "assets/canonical-20261116/canon-delacroix-sardanapalus.jpg",
+        "previewSha256": "d0879258415e908d62d45bd7c71a94ff5f78bf55522b2e8608d6c199eaedeb22"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-delacroix-sardanapalus-large.jpg",
+        "sha256": "86ab40a7fd26010207ff5dfcd09554f1b30925f8a054c36997e69bee2f3a8acc",
+        "width": 3200,
+        "height": 2504,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://collections.louvre.fr/ark:/53355/cl010065757",
+        "https://commons.wikimedia.org/wiki/File:Mort_de_Sardanapale_-_Eug%C3%A8ne_Delacroix_-_Mus%C3%A9e_du_Louvre_Peintures_RF_2346.jpg",
+        "https://commons.wikimedia.org/wiki/File:Mort_de_Sardanapale_-_Eug%C3%A8ne_Delacroix_-_Mus%C3%A9e_du_Louvre_Peintures_RF_2346.jpg#Licensing"
+      ],
+      "reviewMethod": "Assistant inspected this actual local reproduction and explicitly considered all sixteen operational criteria. Positive and uncertain criteria have individual visible reasons; all remaining criteria were assessed absent. No artist/movement defaults or independent human validation are claimed.",
+      "reviewScope": "Displayed complete work or individually named composition only.",
+      "attributes": {
+        "narrative-detail": {
+          "status": "present",
+          "reason": "Different attacks, a horse, scattered possessions and the watching reclining figure create many distinct incidents.",
+          "evidenceKind": "visual-review"
+        },
+        "imagined-world": {
+          "status": "absent",
+          "reason": "No visibly impossible body, object or setting is depicted under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "dramatic-light": {
+          "status": "present",
+          "reason": "Selected pale bodies and bright cloth contrast sharply with deep surrounding shadow.",
+          "evidenceKind": "visual-review"
+        },
+        "layered-space": {
+          "status": "present",
+          "reason": "Near struggling figures, raised bed and deeper architectural passages create several physical stages.",
+          "evidenceKind": "visual-review"
+        },
+        "geometric-structure": {
+          "status": "absent",
+          "reason": "Regular geometric shapes, a grid or clearly divided colour fields are not a dominant organising feature.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-gesture": {
+          "status": "present",
+          "reason": "Bodies grip, pull, strike, raise limbs and resist throughout the scene.",
+          "evidenceKind": "visual-review"
+        },
+        "intimate-figures": {
+          "status": "present",
+          "reason": "Several close compact bodily groups occupy large foreground areas.",
+          "evidenceKind": "visual-review"
+        },
+        "landscape": {
+          "status": "absent",
+          "reason": "Recognisable terrain, water or vegetation does not substantially organise the composition.",
+          "evidenceKind": "visual-review"
+        },
+        "expressive-distortion": {
+          "status": "absent",
+          "reason": "Recognisable forms are not conspicuously elongated, fragmented or altered in proportion under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "precise-rendering": {
+          "status": "present",
+          "reason": "Many anatomical, jewellery and textile contours are carefully differentiated.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-paint-marks": {
+          "status": "unknown",
+          "reason": "Fine paint marks are not confidently separated from image texture in the whole-work view.",
+          "evidenceKind": "visual-review"
+        },
+        "pattern-rhythm": {
+          "status": "present",
+          "reason": "Recurring curved limbs and diagonal fabric folds create a conspicuous directional rhythm.",
+          "evidenceKind": "visual-review"
+        },
+        "human-relationships": {
+          "status": "present",
+          "reason": "Several pairs visibly restrain, attack or handle one another.",
+          "evidenceKind": "visual-review"
+        },
+        "theatrical-staging": {
+          "status": "present",
+          "reason": "Curtains, the raised bed and an emphatic presented action make a strongly staged encounter.",
+          "evidenceKind": "visual-review"
+        },
+        "material-detail": {
+          "status": "present",
+          "reason": "Skin, jewellery, fabric, metal objects and animal surfaces receive differentiated local description.",
+          "evidenceKind": "visual-review"
+        },
+        "open-expanse": {
+          "status": "absent",
+          "reason": "Large relatively uninterrupted open fields do not occupy a substantial part of the composition.",
+          "evidenceKind": "visual-review"
+        }
+      },
+      "sourcedContext": [],
+      "contextStatus": "not-documented-in-this-review"
+    },
+    "canon-ingres-odalisque": {
+      "version": "artwork-attributes-v1",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://collections.louvre.fr/ark:/53355/cl010065566",
+        "image": "assets/canonical-20261116/canon-ingres-odalisque.jpg",
+        "previewSha256": "cd7c6f2a607dccd4c56e91d346d1b46adaa628f1ce9523470b130851303c450a"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-ingres-odalisque-large.jpg",
+        "sha256": "ae8c3f6190e99067cd0f25c3c268be41b064907ae24ca8b4a2789ef2883d5eb9",
+        "width": 2200,
+        "height": 1225,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://collections.louvre.fr/ark:/53355/cl010065566",
+        "https://commons.wikimedia.org/wiki/File:Jean_Auguste_Dominique_Ingres,_La_Grande_Odalisque,_1814.jpg",
+        "https://commons.wikimedia.org/wiki/File:Jean_Auguste_Dominique_Ingres,_La_Grande_Odalisque,_1814.jpg#Licensing"
+      ],
+      "reviewMethod": "Assistant inspected this actual local reproduction and explicitly considered all sixteen operational criteria. Positive and uncertain criteria have individual visible reasons; all remaining criteria were assessed absent. No artist/movement defaults or independent human validation are claimed.",
+      "reviewScope": "Displayed complete work or individually named composition only.",
+      "attributes": {
+        "narrative-detail": {
+          "status": "absent",
+          "reason": "The fan, turban and jewellery function primarily as accessories to the focal pose, without a clearly distinct secondary incident.",
+          "evidenceKind": "visual-review"
+        },
+        "imagined-world": {
+          "status": "absent",
+          "reason": "No visibly impossible body, object or setting is depicted under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "dramatic-light": {
+          "status": "present",
+          "reason": "The lit skin stands distinctly against the very dark background and curtain.",
+          "evidenceKind": "visual-review"
+        },
+        "layered-space": {
+          "status": "absent",
+          "reason": "Distinct physical stages, frames or recessed compartments do not organise the view.",
+          "evidenceKind": "visual-review"
+        },
+        "geometric-structure": {
+          "status": "absent",
+          "reason": "Regular geometric shapes, a grid or clearly divided colour fields are not a dominant organising feature.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-gesture": {
+          "status": "absent",
+          "reason": "No emphasised bodily action or active hand gesture shapes the main motif.",
+          "evidenceKind": "visual-review"
+        },
+        "intimate-figures": {
+          "status": "present",
+          "reason": "The nearby reclining body occupies most of the image width.",
+          "evidenceKind": "visual-review"
+        },
+        "landscape": {
+          "status": "absent",
+          "reason": "Recognisable terrain, water or vegetation does not substantially organise the composition.",
+          "evidenceKind": "visual-review"
+        },
+        "expressive-distortion": {
+          "status": "present",
+          "reason": "The back and torso are conspicuously elongated relative to the head and limbs.",
+          "evidenceKind": "visual-review"
+        },
+        "precise-rendering": {
+          "status": "present",
+          "reason": "Skin contours, facial details, jewellery and fabric edges are sharply controlled.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-paint-marks": {
+          "status": "absent",
+          "reason": "Separate painterly strokes, dabs or drips are not conspicuous in this reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "pattern-rhythm": {
+          "status": "present",
+          "reason": "Repeated textile ornaments and feather markings create clear local pattern.",
+          "evidenceKind": "visual-review"
+        },
+        "human-relationships": {
+          "status": "absent",
+          "reason": "No emphasised visible exchange or coordinated action connects two depicted people.",
+          "evidenceKind": "visual-review"
+        },
+        "theatrical-staging": {
+          "status": "present",
+          "reason": "The curtain and arranged bed frame the figure as a posed display.",
+          "evidenceKind": "visual-review"
+        },
+        "material-detail": {
+          "status": "present",
+          "reason": "Satin-like cloth, metal, feathers and skin receive finely differentiated descriptions.",
+          "evidenceKind": "visual-review"
+        },
+        "open-expanse": {
+          "status": "absent",
+          "reason": "Large relatively uninterrupted open fields do not occupy a substantial part of the composition.",
+          "evidenceKind": "visual-review"
+        }
+      },
+      "sourcedContext": [],
+      "contextStatus": "not-documented-in-this-review"
+    },
+    "canon-bocklin-isle-dead": {
+      "version": "artwork-attributes-v1",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://kunstmuseumbasel.ch/de/sammlung/schwerpunkte",
+        "image": "assets/canonical-20261116/canon-bocklin-isle-dead.jpg",
+        "previewSha256": "d75205ac37594e571dfb557e4cac1fd253273752e1a61219d2690f0e1ef10c09"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-bocklin-isle-dead-large.jpg",
+        "sha256": "29c5e20e659ec0e694cc28f5129f8b1e6d367ed0bb6adb8be54520f4c796c40d",
+        "width": 3200,
+        "height": 2291,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://kunstmuseumbasel.ch/de/sammlung/schwerpunkte",
+        "https://commons.wikimedia.org/wiki/File:B%C3%B6cklin_-_Die_Toteninsel_(Erste_Fassung),_GKS588,_Kunstmuseum_Basel.jpg",
+        "https://commons.wikimedia.org/wiki/File:B%C3%B6cklin_-_Die_Toteninsel_(Erste_Fassung),_GKS588,_Kunstmuseum_Basel.jpg#Licensing"
+      ],
+      "reviewMethod": "Assistant inspected this actual local reproduction and explicitly considered all sixteen operational criteria. Positive and uncertain criteria have individual visible reasons; all remaining criteria were assessed absent. No artist/movement defaults or independent human validation are claimed.",
+      "reviewScope": "Displayed complete work or individually named composition only.",
+      "attributes": {
+        "narrative-detail": {
+          "status": "present",
+          "reason": "Boat, pale upright figure, rectangular cargo and dark entrances create several small object and incident clues.",
+          "evidenceKind": "visual-review"
+        },
+        "imagined-world": {
+          "status": "absent",
+          "reason": "No visibly impossible body, object or setting is depicted under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "dramatic-light": {
+          "status": "present",
+          "reason": "The pale figure and bright opening stand against dark water, trees and recesses.",
+          "evidenceKind": "visual-review"
+        },
+        "layered-space": {
+          "status": "present",
+          "reason": "Near water and boat lead to the island entrances and taller tree-filled enclosure.",
+          "evidenceKind": "visual-review"
+        },
+        "geometric-structure": {
+          "status": "absent",
+          "reason": "Regular geometric shapes, a grid or clearly divided colour fields are not a dominant organising feature.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-gesture": {
+          "status": "present",
+          "reason": "The small seated figure visibly handles an oar.",
+          "evidenceKind": "visual-review"
+        },
+        "intimate-figures": {
+          "status": "absent",
+          "reason": "A close human figure or compact foreground bodily group does not occupy a substantial part of this view.",
+          "evidenceKind": "visual-review"
+        },
+        "landscape": {
+          "status": "present",
+          "reason": "Water, rocky terrain, trees and sky dominate the composition.",
+          "evidenceKind": "visual-review"
+        },
+        "expressive-distortion": {
+          "status": "absent",
+          "reason": "Recognisable forms are not conspicuously elongated, fragmented or altered in proportion under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "precise-rendering": {
+          "status": "present",
+          "reason": "Rock faces, openings and tree contours are controlled and differentiated.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-paint-marks": {
+          "status": "unknown",
+          "reason": "Fine surface marks are not confidently resolved at whole-work scale.",
+          "evidenceKind": "visual-review"
+        },
+        "pattern-rhythm": {
+          "status": "present",
+          "reason": "Repeated tall tree forms and rectangular openings create a conspicuous vertical rhythm.",
+          "evidenceKind": "visual-review"
+        },
+        "human-relationships": {
+          "status": "absent",
+          "reason": "No emphasised visible exchange or coordinated action connects two depicted people.",
+          "evidenceKind": "visual-review"
+        },
+        "theatrical-staging": {
+          "status": "absent",
+          "reason": "Curtains, stage-like framing or an emphatic arranged display do not organise the scene.",
+          "evidenceKind": "visual-review"
+        },
+        "material-detail": {
+          "status": "absent",
+          "reason": "Finely differentiated depicted material surfaces are not a conspicuous treatment in this reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "open-expanse": {
+          "status": "present",
+          "reason": "Broad open water and dark sky leave substantial space around the island.",
+          "evidenceKind": "visual-review"
+        }
+      },
+      "sourcedContext": [],
+      "contextStatus": "not-documented-in-this-review"
+    },
+    "canon-siqueiros-echo-scream": {
+      "version": "artwork-attributes-v1",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://www.moma.org/collection/works/80144",
+        "image": "assets/canonical-20261116/canon-siqueiros-echo-scream.jpg",
+        "previewSha256": "709904c1ab23a507b432b19eb3dea72dcee35ec146c34d392ac9a404adc3929a"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-siqueiros-echo-scream-large.jpg",
+        "sha256": "27b80cf2040f599443e91a5f832298743396cb9991399a01b6552a14f2fa4d09",
+        "width": 1504,
+        "height": 2000,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://www.moma.org/collection/works/80144"
+      ],
+      "reviewMethod": "Assistant inspected this actual local reproduction and explicitly considered all sixteen operational criteria. Positive and uncertain criteria have individual visible reasons; all remaining criteria were assessed absent. No artist/movement defaults or independent human validation are claimed.",
+      "reviewScope": "Displayed complete work or individually named composition only.",
+      "attributes": {
+        "narrative-detail": {
+          "status": "present",
+          "reason": "The repeated head, small child, broken machine parts and distant structures create secondary clues.",
+          "evidenceKind": "visual-review"
+        },
+        "imagined-world": {
+          "status": "present",
+          "reason": "The enormous separate head and its relation to the child are physically uncanny.",
+          "evidenceKind": "visual-review"
+        },
+        "dramatic-light": {
+          "status": "present",
+          "reason": "The faces are strongly selected in light against dark surrounding debris.",
+          "evidenceKind": "visual-review"
+        },
+        "layered-space": {
+          "status": "present",
+          "reason": "Near debris and child stand before the huge head and distant industrial horizon.",
+          "evidenceKind": "visual-review"
+        },
+        "geometric-structure": {
+          "status": "absent",
+          "reason": "Regular geometric shapes, a grid or clearly divided colour fields are not a dominant organising feature.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-gesture": {
+          "status": "absent",
+          "reason": "No emphasised bodily action or active hand gesture shapes the main motif.",
+          "evidenceKind": "visual-review"
+        },
+        "intimate-figures": {
+          "status": "present",
+          "reason": "Large close faces occupy much of the composition.",
+          "evidenceKind": "visual-review"
+        },
+        "landscape": {
+          "status": "absent",
+          "reason": "Recognisable terrain, water or vegetation does not substantially organise the composition.",
+          "evidenceKind": "visual-review"
+        },
+        "expressive-distortion": {
+          "status": "present",
+          "reason": "The head is enlarged and facial proportions are forcefully altered.",
+          "evidenceKind": "visual-review"
+        },
+        "precise-rendering": {
+          "status": "present",
+          "reason": "Facial creases, eyelids and mechanical edges are carefully differentiated.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-paint-marks": {
+          "status": "present",
+          "reason": "Rough directional marks remain visible across parts of the debris and background.",
+          "evidenceKind": "visual-review"
+        },
+        "pattern-rhythm": {
+          "status": "present",
+          "reason": "Repeated facial forms and recurring circular machine parts create conspicuous visual echoes.",
+          "evidenceKind": "visual-review"
+        },
+        "human-relationships": {
+          "status": "absent",
+          "reason": "No emphasised visible exchange or coordinated action connects two depicted people.",
+          "evidenceKind": "visual-review"
+        },
+        "theatrical-staging": {
+          "status": "absent",
+          "reason": "Curtains, stage-like framing or an emphatic arranged display do not organise the scene.",
+          "evidenceKind": "visual-review"
+        },
+        "material-detail": {
+          "status": "present",
+          "reason": "Skin, cloth and broken mechanical surfaces receive different local treatment.",
+          "evidenceKind": "visual-review"
+        },
+        "open-expanse": {
+          "status": "absent",
+          "reason": "Large relatively uninterrupted open fields do not occupy a substantial part of the composition.",
+          "evidenceKind": "visual-review"
+        }
+      },
+      "sourcedContext": [],
+      "contextStatus": "not-documented-in-this-review"
+    },
+    "canon-siqueiros-collective-suicide": {
+      "version": "artwork-attributes-v1",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://www.moma.org/collection/works/79146",
+        "image": "assets/canonical-20261116/canon-siqueiros-collective-suicide.jpg",
+        "previewSha256": "3ebc3a2978d3f790088792beeb8ab93f8449b8c53fc9f2a1b394368f7360cddb"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-siqueiros-collective-suicide-large.jpg",
+        "sha256": "7835ef6d2ce6a1c164abf8a1f1740c62473150d660803c5753da39860025361c",
+        "width": 2000,
+        "height": 1331,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://www.moma.org/collection/works/79146"
+      ],
+      "reviewMethod": "Assistant inspected this actual local reproduction and explicitly considered all sixteen operational criteria. Positive and uncertain criteria have individual visible reasons; all remaining criteria were assessed absent. No artist/movement defaults or independent human validation are claimed.",
+      "reviewScope": "Displayed complete work or individually named composition only.",
+      "attributes": {
+        "narrative-detail": {
+          "status": "present",
+          "reason": "Separate human and mounted groups, a captive and scattered bodies create several small incident clues.",
+          "evidenceKind": "visual-review"
+        },
+        "imagined-world": {
+          "status": "absent",
+          "reason": "No visibly impossible body, object or setting is depicted under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "dramatic-light": {
+          "status": "present",
+          "reason": "The pale central terrain contrasts strongly with dark surrounding ground and sky.",
+          "evidenceKind": "visual-review"
+        },
+        "layered-space": {
+          "status": "present",
+          "reason": "Foreground ledges, separate chasm sides and distant groups establish successive physical stages.",
+          "evidenceKind": "visual-review"
+        },
+        "geometric-structure": {
+          "status": "absent",
+          "reason": "Regular geometric shapes, a grid or clearly divided colour fields are not a dominant organising feature.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-gesture": {
+          "status": "present",
+          "reason": "Small bodies fall, climb and reach along the terrain.",
+          "evidenceKind": "visual-review"
+        },
+        "intimate-figures": {
+          "status": "absent",
+          "reason": "A close human figure or compact foreground bodily group does not occupy a substantial part of this view.",
+          "evidenceKind": "visual-review"
+        },
+        "landscape": {
+          "status": "present",
+          "reason": "Rocky ground, cliffs, chasm and sky dominate the surrounding place.",
+          "evidenceKind": "visual-review"
+        },
+        "expressive-distortion": {
+          "status": "unknown",
+          "reason": "Some terrain is highly transformed, but the referents are too uncertain to distinguish distortion from irregular natural form confidently.",
+          "evidenceKind": "visual-review"
+        },
+        "precise-rendering": {
+          "status": "unknown",
+          "reason": "Fine contours in the tiny figures do not establish a consistently dominant precise treatment across the entire reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-paint-marks": {
+          "status": "present",
+          "reason": "Poured-looking swirls, irregular accumulations and directional marks remain conspicuous as paint treatment.",
+          "evidenceKind": "visual-review"
+        },
+        "pattern-rhythm": {
+          "status": "present",
+          "reason": "Small repeated mounted figures and aligned human groups create local rhythms.",
+          "evidenceKind": "visual-review"
+        },
+        "human-relationships": {
+          "status": "present",
+          "reason": "Small figures confront and direct other bodies in coordinated groups.",
+          "evidenceKind": "visual-review"
+        },
+        "theatrical-staging": {
+          "status": "absent",
+          "reason": "Curtains, stage-like framing or an emphatic arranged display do not organise the scene.",
+          "evidenceKind": "visual-review"
+        },
+        "material-detail": {
+          "status": "unknown",
+          "reason": "Fine differentiated depicted material surfaces cannot be confidently separated from actual paint texture.",
+          "evidenceKind": "visual-review"
+        },
+        "open-expanse": {
+          "status": "absent",
+          "reason": "Large relatively uninterrupted open fields do not occupy a substantial part of the composition.",
+          "evidenceKind": "visual-review"
+        }
+      },
+      "sourcedContext": [],
+      "contextStatus": "not-documented-in-this-review"
+    },
+    "canon-varo-creation-birds": {
+      "version": "artwork-attributes-v1",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://gallerywendinorris.com/news/16-hyperallergic-remedios-varo-in-a-sphere-of/",
+        "image": "assets/canonical-20261116/canon-varo-creation-birds.jpg",
+        "previewSha256": "2239f06fb98e33f0a66aa78edd97d254422a5db612ac02dcdc2b8e349d67fc7d"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-varo-creation-birds-large.jpg",
+        "sha256": "9efda2a71202ee528ccb1698cd9048b9a2d33e591a747cbf6687984c5b69900e",
+        "width": 1568,
+        "height": 1316,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": true,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://gallerywendinorris.com/news/16-hyperallergic-remedios-varo-in-a-sphere-of/",
+        "https://inba.gob.mx/prensa/17510/el-museo-de-arte-moderno-reune-tres-exposiciones-en-mujeres-en-la-modernidad",
+        "https://sic.cultura.gob.mx/documentos/682.pdf"
+      ],
+      "reviewMethod": "Assistant inspected this actual local reproduction and explicitly considered all sixteen operational criteria. Positive and uncertain criteria have individual visible reasons; all remaining criteria were assessed absent. No artist/movement defaults or independent human validation are claimed.",
+      "reviewScope": "Displayed complete work or individually named composition only.",
+      "attributes": {
+        "narrative-detail": {
+          "status": "present",
+          "reason": "Brush, prism, attached stringed instrument, apparatus and several differently placed birds create secondary clues.",
+          "evidenceKind": "visual-review"
+        },
+        "imagined-world": {
+          "status": "present",
+          "reason": "A feathered humanoid uses visibly connected devices while birds lift from the working area.",
+          "evidenceKind": "visual-review"
+        },
+        "dramatic-light": {
+          "status": "absent",
+          "reason": "Selective illumination against deep shadow does not organise this reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "layered-space": {
+          "status": "present",
+          "reason": "Foreground apparatus and table stand before separate walls, floor and window openings.",
+          "evidenceKind": "visual-review"
+        },
+        "geometric-structure": {
+          "status": "present",
+          "reason": "The repeated floor grid and clearly shaped tabletop organise much of the lower room.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-gesture": {
+          "status": "present",
+          "reason": "Hands work with a brush and triangular instrument while small birds extend their wings.",
+          "evidenceKind": "visual-review"
+        },
+        "intimate-figures": {
+          "status": "present",
+          "reason": "A nearby human-like bodily figure occupies a substantial central area.",
+          "evidenceKind": "visual-review"
+        },
+        "landscape": {
+          "status": "absent",
+          "reason": "Recognisable terrain, water or vegetation does not substantially organise the composition.",
+          "evidenceKind": "visual-review"
+        },
+        "expressive-distortion": {
+          "status": "present",
+          "reason": "A recognisable upright body has an owl-like head, feathers and conspicuously altered bodily features.",
+          "evidenceKind": "visual-review"
+        },
+        "precise-rendering": {
+          "status": "present",
+          "reason": "Strings, feather patterns, bird edges and apparatus lines are finely controlled.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-paint-marks": {
+          "status": "unknown",
+          "reason": "The fine reproduction texture does not resolve original paint marks confidently.",
+          "evidenceKind": "visual-review"
+        },
+        "pattern-rhythm": {
+          "status": "present",
+          "reason": "Floor tiles, feather motifs and recurring arched openings create conspicuous pattern.",
+          "evidenceKind": "visual-review"
+        },
+        "human-relationships": {
+          "status": "absent",
+          "reason": "No emphasised visible exchange or coordinated action connects two depicted people.",
+          "evidenceKind": "visual-review"
+        },
+        "theatrical-staging": {
+          "status": "absent",
+          "reason": "Curtains, stage-like framing or an emphatic arranged display do not organise the scene.",
+          "evidenceKind": "visual-review"
+        },
+        "material-detail": {
+          "status": "present",
+          "reason": "Feathers, wood, tools and the pale apparatus have differentiated local descriptions.",
+          "evidenceKind": "visual-review"
+        },
+        "open-expanse": {
+          "status": "absent",
+          "reason": "Large relatively uninterrupted open fields do not occupy a substantial part of the composition.",
+          "evidenceKind": "visual-review"
+        }
+      },
+      "sourcedContext": [],
+      "contextStatus": "not-documented-in-this-review"
+    },
+    "canon-kahlo-two-fridas": {
+      "version": "artwork-attributes-v1",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://artsandculture.google.com/asset/the-two-fridas-frida-kahlo/zAHG4EZ1WrwVYg",
+        "image": "assets/canonical-20261116/canon-kahlo-two-fridas.jpg",
+        "previewSha256": "461e7a44e4d7911df801ab016d9c83b9a89d33fd57f4d525f1f596119f982181"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-kahlo-two-fridas-large.jpg",
+        "sha256": "b068392b8948f24df9554bd42c50aafe4b4fa8860617ccb047f1ef1caed89d6c",
+        "width": 1196,
+        "height": 1200,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": true,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://artsandculture.google.com/asset/the-two-fridas-frida-kahlo/zAHG4EZ1WrwVYg"
+      ],
+      "reviewMethod": "Assistant inspected this actual local reproduction and explicitly considered all sixteen operational criteria. Positive and uncertain criteria have individual visible reasons; all remaining criteria were assessed absent. No artist/movement defaults or independent human validation are claimed.",
+      "reviewScope": "Displayed complete work or individually named composition only.",
+      "attributes": {
+        "narrative-detail": {
+          "status": "present",
+          "reason": "Exposed hearts, connecting vessel, scissors, miniature portrait and stained dress provide several secondary clues.",
+          "evidenceKind": "visual-review"
+        },
+        "imagined-world": {
+          "status": "present",
+          "reason": "The hearts are exposed outside otherwise intact bodies and linked by an external vessel.",
+          "evidenceKind": "visual-review"
+        },
+        "dramatic-light": {
+          "status": "absent",
+          "reason": "Selective illumination against deep shadow does not organise this reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "layered-space": {
+          "status": "absent",
+          "reason": "Distinct physical stages, frames or recessed compartments do not organise the view.",
+          "evidenceKind": "visual-review"
+        },
+        "geometric-structure": {
+          "status": "absent",
+          "reason": "Regular geometric shapes, a grid or clearly divided colour fields are not a dominant organising feature.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-gesture": {
+          "status": "present",
+          "reason": "The two figures quietly join hands and hold small objects.",
+          "evidenceKind": "visual-review"
+        },
+        "intimate-figures": {
+          "status": "present",
+          "reason": "The near-view seated pair occupies most of the reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "landscape": {
+          "status": "absent",
+          "reason": "Recognisable terrain, water or vegetation does not substantially organise the composition.",
+          "evidenceKind": "visual-review"
+        },
+        "expressive-distortion": {
+          "status": "absent",
+          "reason": "Recognisable forms are not conspicuously elongated, fragmented or altered in proportion under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "precise-rendering": {
+          "status": "present",
+          "reason": "Lace, fingers, hair, small objects and garment edges have controlled differentiated contours.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-paint-marks": {
+          "status": "present",
+          "reason": "Distinct broad directional touches remain visible in the cloudy background.",
+          "evidenceKind": "visual-review"
+        },
+        "pattern-rhythm": {
+          "status": "present",
+          "reason": "Repeated dress ornaments, lace details and mirrored seated forms establish pattern.",
+          "evidenceKind": "visual-review"
+        },
+        "human-relationships": {
+          "status": "present",
+          "reason": "The joined hands and connected bodies create an explicit visible relationship.",
+          "evidenceKind": "visual-review"
+        },
+        "theatrical-staging": {
+          "status": "absent",
+          "reason": "Curtains, stage-like framing or an emphatic arranged display do not organise the scene.",
+          "evidenceKind": "visual-review"
+        },
+        "material-detail": {
+          "status": "present",
+          "reason": "Lace, cloth, skin and anatomical objects have different local descriptions.",
+          "evidenceKind": "visual-review"
+        },
+        "open-expanse": {
+          "status": "present",
+          "reason": "The broad sky field leaves substantial open space above and beside the figures.",
+          "evidenceKind": "visual-review"
+        }
+      },
+      "sourcedContext": [
+        {
+          "kind": "documented-subject-context",
+          "claim": "The MAM record identifies the held miniature as a portrait of Diego Rivera and discusses the connected exposed hearts and contrasting dresses.",
+          "sourcePublisher": "Museo de Arte Moderno, institutional Google Arts & Culture record",
+          "sourceUrl": "https://artsandculture.google.com/asset/the-two-fridas-frida-kahlo/zAHG4EZ1WrwVYg",
+          "sourceLocator": "Interpretive or technical discussion accompanying the linked exact institutional object or named mural record.",
+          "evidenceKind": "primary-source-context"
+        }
+      ],
+      "contextStatus": "documented-context-available"
+    },
+    "canon-tamayo-dualidad": {
+      "version": "artwork-attributes-v1",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://www.inah.gob.mx/boletines/el-museo-nacional-de-antropologia-celebra-60-aniversario-con-brios-fortalecidos-en-su-mision-divulgativa",
+        "image": "assets/canonical-20261116/canon-tamayo-dualidad.jpg",
+        "previewSha256": "823aa487d0b39aa324cc63d3fd864750100079757da41428c881499907de6bf7"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-tamayo-dualidad-large.jpg",
+        "sha256": "d50cf46e44a4218922e1828c43823fcf26068641275d4c31e6eb8c6a9aedce19",
+        "width": 3200,
+        "height": 1645,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://www.inah.gob.mx/boletines/el-museo-nacional-de-antropologia-celebra-60-aniversario-con-brios-fortalecidos-en-su-mision-divulgativa",
+        "https://mna.inah.gob.mx/historia_detalle.php?id=3",
+        "https://commons.wikimedia.org/wiki/File:%E2%80%9Cdualidad%E2%80%9D_(1964),_by_rufino_tamayo_(1899-1991)_(36161059194)_(cropped).jpg",
+        "https://commons.wikimedia.org/wiki/File:%E2%80%9Cdualidad%E2%80%9D_(1964),_by_rufino_tamayo_(1899-1991)_(36161059194)_(cropped).jpg#Licensing"
+      ],
+      "reviewMethod": "Assistant inspected this actual local reproduction and explicitly considered all sixteen operational criteria. Positive and uncertain criteria have individual visible reasons; all remaining criteria were assessed absent. No artist/movement defaults or independent human validation are claimed.",
+      "reviewScope": "Complete painted mural only; photographed walls, ceiling, lights and barriers excluded.",
+      "attributes": {
+        "narrative-detail": {
+          "status": "present",
+          "reason": "Opposing animals and separate sun- and moon-like disks supply clues beyond an isolated decorative motif.",
+          "evidenceKind": "visual-review"
+        },
+        "imagined-world": {
+          "status": "present",
+          "reason": "The enormous stylised animal confrontation and serpent form are visibly uncanny.",
+          "evidenceKind": "visual-review"
+        },
+        "dramatic-light": {
+          "status": "absent",
+          "reason": "Selective illumination against deep shadow does not organise this reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "layered-space": {
+          "status": "absent",
+          "reason": "Distinct physical stages, frames or recessed compartments do not organise the view.",
+          "evidenceKind": "visual-review"
+        },
+        "geometric-structure": {
+          "status": "present",
+          "reason": "Large bounded red and blue fields, circular disks and the serpent's broad loop organise the mural.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-gesture": {
+          "status": "present",
+          "reason": "The jaguar extends its limbs and jaws toward the coiling serpent.",
+          "evidenceKind": "visual-review"
+        },
+        "intimate-figures": {
+          "status": "absent",
+          "reason": "A close human figure or compact foreground bodily group does not occupy a substantial part of this view.",
+          "evidenceKind": "visual-review"
+        },
+        "landscape": {
+          "status": "absent",
+          "reason": "Recognisable terrain, water or vegetation does not substantially organise the composition.",
+          "evidenceKind": "visual-review"
+        },
+        "expressive-distortion": {
+          "status": "present",
+          "reason": "Recognisable animal bodies are conspicuously stretched, simplified and altered in proportion.",
+          "evidenceKind": "visual-review"
+        },
+        "precise-rendering": {
+          "status": "present",
+          "reason": "Animal contours, spots and disks have controlled clearly separated edges.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-paint-marks": {
+          "status": "unknown",
+          "reason": "The complete-wall photograph does not resolve original mural paint marks confidently.",
+          "evidenceKind": "visual-review"
+        },
+        "pattern-rhythm": {
+          "status": "present",
+          "reason": "Repeated jaguar spots, scale-like motifs and circular forms create conspicuous pattern.",
+          "evidenceKind": "visual-review"
+        },
+        "human-relationships": {
+          "status": "absent",
+          "reason": "No emphasised visible exchange or coordinated action connects two depicted people.",
+          "evidenceKind": "visual-review"
+        },
+        "theatrical-staging": {
+          "status": "absent",
+          "reason": "Curtains, stage-like framing or an emphatic arranged display do not organise the scene.",
+          "evidenceKind": "visual-review"
+        },
+        "material-detail": {
+          "status": "unknown",
+          "reason": "Fine material differentiation is not sufficiently resolved in the photographed mural surface.",
+          "evidenceKind": "visual-review"
+        },
+        "open-expanse": {
+          "status": "absent",
+          "reason": "Large relatively uninterrupted open fields do not occupy a substantial part of the composition.",
+          "evidenceKind": "visual-review"
+        }
+      },
+      "sourcedContext": [
+        {
+          "kind": "documented-symbolism",
+          "claim": "INAH explains the opposed serpent and jaguar as Tamayo's interpretation of complementary opposites, and cautions against presenting a Western good-versus-evil binary as an unqualified Mesoamerican belief.",
+          "sourcePublisher": "Museo Nacional de Antropología / INAH",
+          "sourceUrl": "https://mna.inah.gob.mx/historia_detalle.php?id=3",
+          "sourceLocator": "Interpretive or technical discussion accompanying the linked exact institutional object or named mural record.",
+          "evidenceKind": "primary-source-context"
+        }
+      ],
+      "contextStatus": "documented-context-available"
+    },
+    "canon-varo-call": {
+      "version": "artwork-attributes-v1",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://nmwa.org/art/collection/la-llamada-call/",
+        "image": "assets/canonical-20261116/canon-varo-call.jpg",
+        "previewSha256": "2f93baf3ca2ae199fe51e2fbecc2e9bb34416b68f861bb327732a2f7911828d3"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-varo-call-large.jpg",
+        "sha256": "14890b408d200083dab34d4f7ca06dd0570aefb2bc74779c119a5e57be072c87",
+        "width": 2172,
+        "height": 3200,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://nmwa.org/art/collection/la-llamada-call/"
+      ],
+      "reviewMethod": "Assistant inspected this actual local reproduction and explicitly considered all sixteen operational criteria. Positive and uncertain criteria have individual visible reasons; all remaining criteria were assessed absent. No artist/movement defaults or independent human validation are claimed.",
+      "reviewScope": "Displayed complete work or individually named composition only.",
+      "attributes": {
+        "narrative-detail": {
+          "status": "present",
+          "reason": "Small held implements, a collar object, celestial hair and figures in the walls provide secondary clues.",
+          "evidenceKind": "visual-review"
+        },
+        "imagined-world": {
+          "status": "present",
+          "reason": "Faces and bodies appear fused with surrounding walls while a glowing hair-like form rises toward a celestial disk.",
+          "evidenceKind": "visual-review"
+        },
+        "dramatic-light": {
+          "status": "present",
+          "reason": "The orange figure is strongly selected in light against dark muted architectural surroundings.",
+          "evidenceKind": "visual-review"
+        },
+        "layered-space": {
+          "status": "present",
+          "reason": "Foreground steps, near floor, side recesses and distant enclosure create several physical stages.",
+          "evidenceKind": "visual-review"
+        },
+        "geometric-structure": {
+          "status": "present",
+          "reason": "Repeated triangular floor divisions and straight architectural boundaries organise the place.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-gesture": {
+          "status": "present",
+          "reason": "The figure visibly strides while quietly holding objects in its hands.",
+          "evidenceKind": "visual-review"
+        },
+        "intimate-figures": {
+          "status": "present",
+          "reason": "The near full-length figure is the substantial central bodily motif.",
+          "evidenceKind": "visual-review"
+        },
+        "landscape": {
+          "status": "absent",
+          "reason": "Recognisable terrain, water or vegetation does not substantially organise the composition.",
+          "evidenceKind": "visual-review"
+        },
+        "expressive-distortion": {
+          "status": "present",
+          "reason": "The main figure and wall-bound bodies are conspicuously elongated or transformed.",
+          "evidenceKind": "visual-review"
+        },
+        "precise-rendering": {
+          "status": "present",
+          "reason": "Fine folds, faces, implements and architectural lines have controlled edges.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-paint-marks": {
+          "status": "unknown",
+          "reason": "Fine original paint marks remain unresolved in the reproduced surface.",
+          "evidenceKind": "visual-review"
+        },
+        "pattern-rhythm": {
+          "status": "present",
+          "reason": "Repeated floor triangles, vertical ribs and recessed faces create conspicuous rhythm.",
+          "evidenceKind": "visual-review"
+        },
+        "human-relationships": {
+          "status": "absent",
+          "reason": "No emphasised visible exchange or coordinated action connects two depicted people.",
+          "evidenceKind": "visual-review"
+        },
+        "theatrical-staging": {
+          "status": "absent",
+          "reason": "Curtains, stage-like framing or an emphatic arranged display do not organise the scene.",
+          "evidenceKind": "visual-review"
+        },
+        "material-detail": {
+          "status": "present",
+          "reason": "Drapery folds and bark-like wall surfaces receive different fine local descriptions.",
+          "evidenceKind": "visual-review"
+        },
+        "open-expanse": {
+          "status": "absent",
+          "reason": "Large relatively uninterrupted open fields do not occupy a substantial part of the composition.",
+          "evidenceKind": "visual-review"
+        }
+      },
+      "sourcedContext": [],
+      "contextStatus": "not-documented-in-this-review"
+    },
+    "canon-varo-escape": {
+      "version": "artwork-attributes-v1",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://gallerywendinorris.com/news/20-hyperallergic-remedios-varos-strange-and-mysterious-universes-in-varos-work-there-is-often-a-sense/",
+        "image": "assets/canonical-20261116/canon-varo-escape.jpg",
+        "previewSha256": "d82a8bcee6368c8f9cc0bff2770f854843dd3ed32b841e6d443a4baadc3e712d"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-varo-escape-large.jpg",
+        "sha256": "1c261c73b6013d97d341a13851bfa60190d3613f89e4283624910a1325fe83a0",
+        "width": 1568,
+        "height": 1931,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": true,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://gallerywendinorris.com/news/20-hyperallergic-remedios-varos-strange-and-mysterious-universes-in-varos-work-there-is-often-a-sense/",
+        "https://www-images.lacma.org/s3fs-public/In%20Wonderland%20checklist%201.23.12_1.pdf"
+      ],
+      "reviewMethod": "Assistant inspected this actual local reproduction and explicitly considered all sixteen operational criteria. Positive and uncertain criteria have individual visible reasons; all remaining criteria were assessed absent. No artist/movement defaults or independent human validation are claimed.",
+      "reviewScope": "Displayed complete work or individually named composition only.",
+      "attributes": {
+        "narrative-detail": {
+          "status": "present",
+          "reason": "Small vessel, handled line, two differently directed figures and separate mountain passages offer secondary clues.",
+          "evidenceKind": "visual-review"
+        },
+        "imagined-world": {
+          "status": "present",
+          "reason": "The small vessel and standing figures appear unsupported among clouds rather than on water.",
+          "evidenceKind": "visual-review"
+        },
+        "dramatic-light": {
+          "status": "present",
+          "reason": "Golden illuminated passages contrast strongly with the dark surrounding sky and terrain.",
+          "evidenceKind": "visual-review"
+        },
+        "layered-space": {
+          "status": "present",
+          "reason": "The foreground vessel and bodies stand before successive cloud and mountain stages.",
+          "evidenceKind": "visual-review"
+        },
+        "geometric-structure": {
+          "status": "absent",
+          "reason": "Regular geometric shapes, a grid or clearly divided colour fields are not a dominant organising feature.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-gesture": {
+          "status": "present",
+          "reason": "A hand visibly handles the line or steering apparatus at the vessel's front.",
+          "evidenceKind": "visual-review"
+        },
+        "intimate-figures": {
+          "status": "present",
+          "reason": "The nearby compact pair occupies a substantial central area.",
+          "evidenceKind": "visual-review"
+        },
+        "landscape": {
+          "status": "present",
+          "reason": "Steep rocky mountains and distant terrain substantially organise the view.",
+          "evidenceKind": "visual-review"
+        },
+        "expressive-distortion": {
+          "status": "present",
+          "reason": "Faces, limbs and the tall bodily silhouettes are conspicuously elongated.",
+          "evidenceKind": "visual-review"
+        },
+        "precise-rendering": {
+          "status": "present",
+          "reason": "Rock striations, facial edges, cloth folds and vessel boundaries are finely controlled.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-paint-marks": {
+          "status": "unknown",
+          "reason": "Fine original paint marks cannot be separated confidently from reproduced cloud and rock texture.",
+          "evidenceKind": "visual-review"
+        },
+        "pattern-rhythm": {
+          "status": "present",
+          "reason": "Recurring vertical rock striations and cloud curls create conspicuous rhythm.",
+          "evidenceKind": "visual-review"
+        },
+        "human-relationships": {
+          "status": "unknown",
+          "reason": "Travelling together does not by itself establish an emphasised exchange between the figures; partly concealed hands leave coordination uncertain.",
+          "evidenceKind": "visual-review"
+        },
+        "theatrical-staging": {
+          "status": "absent",
+          "reason": "Curtains, stage-like framing or an emphatic arranged display do not organise the scene.",
+          "evidenceKind": "visual-review"
+        },
+        "material-detail": {
+          "status": "present",
+          "reason": "Cloth folds, rock textures and the vessel's structure have differentiated local description.",
+          "evidenceKind": "visual-review"
+        },
+        "open-expanse": {
+          "status": "present",
+          "reason": "A broad relatively uninterrupted dark sky remains around the upper bodies and mountain.",
           "evidenceKind": "visual-review"
         }
       },

@@ -1,9 +1,14 @@
 import fs from 'node:fs';
-import {buildJourneyRounds,createJourneyStimulusPlan} from '../../../public/art-atlas/journey-bank.mjs';
+import {buildJourneyRounds as buildCurrentJourneyRounds,createJourneyStimulusPlan} from '../../../public/art-atlas/journey-bank.mjs';
 import {bindFinalRefinementRound,isFinalRefinementRound} from '../../../public/art-atlas/final-refinement.mjs';
 import {choiceGridExposure} from '../../../public/art-atlas/discovery-grid.mjs';
 
 export const works=JSON.parse(fs.readFileSync(new URL('../../../public/art-atlas/artworks.json',import.meta.url),'utf8')).slice(0,164);
+import {APPEAL_PROTOCOL} from '../../../public/art-atlas/appeal-scale.mjs';
+// This regression route deliberately preserves the earlier overall instrument.
+// Fresh comparison-first scheduling is covered separately by journey-v12.
+const buildJourneyRounds=(works,answers={},options={})=>buildCurrentJourneyRounds(works,answers,{...options,preferenceProtocol:APPEAL_PROTOCOL});
+
 const notes=JSON.parse(fs.readFileSync(new URL('../../../public/art-atlas/curation-notes.json',import.meta.url),'utf8'));
 export const questionIds=round=>[...new Set([...(round.works||[]).map(work=>work.id),...(round.anchorWorks||[]).map(work=>work.id),...(round.anchorIds||[])])];
 export const isSpecific=round=>!round.unavailable&&round.kind!=='statements'&&round.evidence?.stimulusVisibility!=='not-shown'&&!(round.kind==='exercise'&&!['sorting','difficult-edit','edit'].includes(round.exerciseKind));

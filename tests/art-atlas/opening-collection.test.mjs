@@ -28,11 +28,11 @@ function jpegDimensions(bytes) {
   assert.fail('JPEG size marker missing');
 }
 
-test('463 study records and255 preserved opening records form480 canonical opening paintings', () => {
-  assert.equal(base.length, 463); assert.equal(added.length, 255); assert.equal(all.length, 480);assert.equal(sourceRecords.length,483);
-  for (const field of ['id', 'image']) assert.equal(new Set(all.map(a => a[field])).size, 480, field);
-  assert.equal(new Set(all.map(a => norm(a.title) + '|' + norm(a.artist) + '|' + norm(a.date))).size, 480, 'title + artist');
-  assert.equal(new Set(all.map(a => a.imageSourceUrl)).size, 480, 'source image URLs');
+test('487 study records and255 preserved opening records form504 canonical opening identities', () => {
+  assert.equal(base.length, 487); assert.equal(added.length, 255); assert.equal(all.length, 504);assert.equal(sourceRecords.length,507);
+  for (const field of ['id', 'image']) assert.equal(new Set(all.map(a => a[field])).size, 504, field);
+  assert.equal(new Set(all.map(a => norm(a.title) + '|' + norm(a.artist) + '|' + norm(a.date))).size, 504, 'title + artist');
+  assert.equal(new Set(all.map(a => a.imageSourceUrl)).size, 504, 'source image URLs');
   const cma = all.filter(a => /clevelandart\.org/.test(a.sourceUrl));
   assert.equal(new Set(cma.map(a => a.sourceId)).size, cma.length, 'CMA source IDs');
   assert.equal(new Set(cma.map(a => a.sourceUrl.replace('www.', '').replace(/\/$/, ''))).size, cma.length, 'CMA source URLs');
@@ -61,7 +61,7 @@ test('the preserved255 opening manifest retains its individual CC0 provenance an
   }
 });
 
-test('all483 unique local source JPEGs retain their bytes and dimensions,including the three research-only records', async () => {
+test('All507 unique local source JPEGs retain their bytes and dimensions, including three research-only records', async () => {
   const shipped = (await fs.readdir(path.join(root, 'assets'))).filter(name => /^opening-cma-\d+\.jpg$/.test(name));
   const referencedOpeningFiles = sourceRecords.map(a => path.basename(a.image)).filter(name => /^opening-cma-\d+\.jpg$/.test(name));
   assert.equal(shipped.length, 261, 'Original opening images include six retained study promotions');
@@ -81,7 +81,7 @@ test('all483 unique local source JPEGs retain their bytes and dimensions,includi
     if (a.sha256 !== undefined) assert.equal(value, a.sha256, a.id);
     assert.ok(bytes.length > 4000, a.id);
   }
-  assert.equal(hashes.size, 483);
+  assert.equal(hashes.size, 507);
 });
 
 test('six opening promotions retain their exact identity, image path and bytes in the study collection', () => {

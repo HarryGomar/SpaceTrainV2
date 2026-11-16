@@ -4,6 +4,7 @@ import {isReviewedVisualDescriptor,FEATURE_SEMANTIC_VERSION} from './visual-desc
 import {APPEAL_PROTOCOL,isOverallAppealRound} from './appeal-scale.mjs';
 import {choiceGridExposure} from './discovery-grid.mjs';
 import {isStudyEligibleArtwork} from './study-eligibility.mjs';
+import {COMPARISON_PROTOCOL,isComparisonPreferenceRound,ordinalBands} from './comparison-protocol.mjs';
 
 const FAMILIES = new Set(['individual-choice', 'feature-check', 'unconditional-preference', 'adaptive-preference']);
 const FEATURES = ['abstraction', 'energy', 'complexity', 'humanity', 'narrative', 'atmosphere', 'color'];
@@ -28,6 +29,7 @@ function roundIds(round) {
   return Array.isArray(round?.works) ? round.works.map(w => typeof w === 'string' ? w : w?.id) : Array.isArray(round?.workIds) ? [...round.workIds] : [];
 }
 export function preferenceMeasurementKey(round){
+  if(round?.evidence?.comparisonProtocol!==undefined)return isComparisonPreferenceRound(round)?COMPARISON_PROTOCOL:null;
   if(isOverallAppealRound(round))return APPEAL_PROTOCOL;
   const scale=round?.scale;
   return 'legacy-relative:'+JSON.stringify({title:round?.title||'',hint:round?.hint||'',scale:scale&&typeof scale==='object'?Object.fromEntries(Object.keys(scale).sort().map(key=>[key,scale[key]])):null});
@@ -35,17 +37,22 @@ export function preferenceMeasurementKey(round){
 function anchorIds(round) { return unique([...(Array.isArray(round.anchorIds) ? round.anchorIds : []), ...(Array.isArray(round.anchorWorks) ? round.anchorWorks : []).map(w => typeof w === 'string' ? w : w?.id)]).filter(Boolean); }
 function preferenceRecord(round, index, answers, byId) {
   const evidence = round?.evidence;
-  if (!round || round.unavailable || round.kind !== 'spectrum' || round.criterion !== 'preference' || evidence?.construct !== 'preference' || !FAMILIES.has(evidence.family) || evidence.unconditional === false || round.brief || evidence.brief || anchorIds(round).length) return null;
+  if (!round || round.unavailable || round.kind !== 'spectrum' || round.criterion !== 'preference' || evidence?.construct !== 'preference' || !FAMILIES.has(evidence.family) || evidence.unconditional === false || round.brief || evidence.brief || anchorIds(round).length || evidence.comparisonProtocol!==undefined&&!isComparisonPreferenceRound(round)) return null;
   const workIds = roundIds(round);
   if (workIds.length < 2 || workIds.length > 8 || unique(workIds).length !== workIds.length || workIds.some(id => !byId.has(id))) return null;
   if(round.workIds!==undefined&&(!Array.isArray(round.workIds)||round.workIds.join('|')!==workIds.join('|')))return null;
   const answer = answers[round.id];
   const definition = { ...round, works: workIds.map(id => byId.get(id)) };
-  if (!answer || answer.confirmed !== true || !Array.isArray(answer.workIds)||answer.workIds.join('|')!==workIds.join('|')||!answer.positions||Array.isArray(answer.positions)||Object.keys(answer.positions).length!==workIds.length||workIds.some(id=>!Number.isInteger(answer.positions[id]))||answer.roundId!==undefined&&answer.roundId!==round.id||evidence.appealProtocol===APPEAL_PROTOCOL&&!isOverallAppealRound(round)||!validAnswer(definition, answer)) return null;
+  if (!answer || answer.confirmed !== true || !Array.isArray(answer.workIds)||answer.workIds.join('|')!==workIds.join('|')||!answer.positions||Array.isArray(answer.positions)||Object.keys(answer.positions).length!==workIds.length||workIds.some(id=>!Number.isInteger(answer.positions[id]))||answer.roundId!==undefined&&answer.roundId!==round.id||evidence.appealProtocol===APPEAL_PROTOCOL&&!isOverallAppealRound(round)||evidence.comparisonProtocol===COMPARISON_PROTOCOL&&!isComparisonPreferenceRound(round)||!validAnswer(definition, answer)) return null;
   const measurementScope=preferenceMeasurementKey(round);
   return { round, index, workIds, answer, measurementScope, signature:measurementScope+'|'+setKey(workIds) };
 }
 function focusFor(record, band) {
+  if(isComparisonPreferenceRound(record.round)){
+    const groups=ordinalBands(record.round,record.answer);if(!groups||groups.allTied)return null;
+    const candidates=band==='relative-high'?groups.high:band==='relative-low'?groups.low:groups.middle;if(!candidates.length)return null;
+    const workId=[...candidates].sort()[0];return {workId,band,sourceRoundId:record.round.id,positionWithinSource:record.answer.positions[workId],sourceRankLevels:groups.levels.map(level=>[...level.workIds]),meaning:'Ordinal position in this source group only; no absolute liking or preference strength.',comparedWith:record.workIds.filter(id=>id!==workId).map(id=>({workId:id,direction:Math.sign(record.answer.positions[workId]-record.answer.positions[id])}))};
+  }
   const ordered = record.workIds.map(id => ({ id, value: record.answer.positions[id] })).sort((a, b) => a.value - b.value || a.id.localeCompare(b.id));
   const first = ordered[0], last = ordered.at(-1), range = last.value - first.value;
   if (range < 20) return null;
@@ -58,7 +65,7 @@ function focusFor(record, band) {
 }
 function promptSnapshot(record) {
   const r = record.round;
-  const evidence = Object.fromEntries(['construct','family','role','setId','batchIndex','journeyRevision','bankRevision','repeatOf','dependencyGroup','appealProtocol','measurementScope'].filter(key => r.evidence[key] !== undefined).map(key => [key, structuredClone(r.evidence[key])]));
+  const evidence = Object.fromEntries(['construct','family','role','setId','batchIndex','journeyRevision','bankRevision','repeatOf','dependencyGroup','appealProtocol','comparisonProtocol','measurementScope','positionMeaning','showNumericScale'].filter(key => r.evidence[key] !== undefined).map(key => [key, structuredClone(r.evidence[key])]));
   return {
     id: r.id, kind: 'spectrum', criterion: 'preference', title: typeof r.title==='string'?r.title:'Which do you prefer?', hint: typeof r.hint==='string'?r.hint:'Place the works from less preferred to more preferred. Equal positions are fine.',
     ...(r.scale ? { scale: structuredClone(r.scale) } : {}), workIds: [...record.workIds], evidence
@@ -75,7 +82,7 @@ function directionalHypotheses(records, byId) {
       if(literalFeature(key)&&record.workIds.some(id=>!finiteFeature(byId.get(id),key)))return [];
       const observations = pairs(record.workIds).flatMap(([a, b]) => {
         const wa = byId.get(a), wb = byId.get(b), gap = record.answer.positions[a] - record.answer.positions[b];
-        if (!finiteFeature(wa, key) || !finiteFeature(wb, key) || Math.abs(gap) < 10) return [];
+        if (!finiteFeature(wa, key) || !finiteFeature(wb, key) || Math.abs(gap) < (record.measurementScope===COMPARISON_PROTOCOL?1:10)) return [];
         const weight=record.measurementScope===APPEAL_PROTOCOL?Math.min(1,Math.abs(gap)/50):1;
         return [Math.sign(gap) * (wa.features[key] - wb.features[key]) * weight];
       });
@@ -129,7 +136,7 @@ export function planAdaptivePanels({ works, rounds = [], answers = {}, batchInde
     for (const id of presented) { exposures[id]++; lastExposure.set(id, index); }
     const groups = explicitGroups ? r.coPresentedGroups.filter(Array.isArray).map(group => unique(group).filter(id => byId.has(id))) : paged?paged.coPresentedGroups.map(group=>unique(group).filter(id=>byId.has(id))):[presented];
     for (const group of groups) for (const [a, b] of pairs(group)) seenPairs.add(pairKey(a, b));
-    const unresolved = unique([...(Array.isArray(r.exposureUnknownWorkIds) ? r.exposureUnknownWorkIds : []), ...(r.kind === 'exercise' && !explicitGroups ? presented : []),...(r.evidence?.explicitFavourites&&!paged&&!explicitPresented?roundIds(r):[])]).filter(id => byId.has(id));
+    const unresolved = unique([...(Array.isArray(r.exposureUnknownWorkIds) ? r.exposureUnknownWorkIds : []), ...(r.kind === 'exercise' && !explicitGroups ? presented : []),...((r.evidence?.explicitFavourites||r.evidence?.explicitDislikes)&&!paged&&!explicitPresented?roundIds(r):[])]).filter(id => byId.has(id));
     if (unresolved.length) { unresolved.forEach(id => unknownExposure.add(id)); unknownExposureRounds.push(r.id); }
   });
   const eligible = shown.flatMap((r, index) => { const record = preferenceRecord(r, index, answerMap, byId); return record ? [record] : []; });

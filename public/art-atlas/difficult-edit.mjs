@@ -1,5 +1,6 @@
 import { buildRounds, validAnswer } from './engine.mjs';
 import { isGallery, validGallery, WALLS, roomOf, roomName } from './gallery-model.mjs';
+import {isComparisonPreferenceRound,responseGapRequired} from './comparison-protocol.mjs';
 
 export const DIFFICULT_EDIT_PROTOCOL='difficult-edit-v2';
 export const LEGACY_DIFFICULT_EDIT_PROTOCOL='difficult-edit-v1';
@@ -10,6 +11,10 @@ const ownObject=value=>!!value&&typeof value==='object'&&!Array.isArray(value);
 const hash=text=>[...text].reduce((n,c)=>(Math.imul(n,31)+c.charCodeAt(0))>>>0,2166136261);
 const workById=(works,id)=>works.find(w=>w?.id===id);
 const sameSet=(a,b)=>a.length===b.length&&a.every(id=>b.includes(id));
+function earlierLabel(source,id){
+  const value=source.answer.positions[id];if(!isComparisonPreferenceRound(source.round))return 'Earlier preference: '+value+' / 100';
+  const values=source.round.works.map(work=>source.answer.positions[work.id]);return 'Earlier order: '+(values.filter(other=>other===value).length>1?'joint ':'')+(1+values.filter(other=>other>value).length)+' of '+values.length;
+}
 export const isLegacyDifficultEdit=record=>record?.kind==='difficult-edit'&&record.version===1&&record.protocol===LEGACY_DIFFICULT_EDIT_PROTOCOL;
 export const isDifficultEdit=record=>isLegacyDifficultEdit(record)||record?.kind==='difficult-edit'&&record.version===2&&record.protocol===DIFFICULT_EDIT_PROTOCOL;
 
@@ -21,6 +26,7 @@ function capturedPreferences(works,context,sources) {
   return sources.filter(source=>{
     const r=source?.round,a=source?.answer;
     if(!ownObject(r)||typeof r.id!=='string'||!r.id.trim()||r.id===context.roundId||counts.get(r.id)!==1||!Number.isInteger(source.index)||indices.get(source.index)!==1||source.index<0||source.index>=context.index||r.unavailable||r.kind!=='spectrum'||r.criterion!=='preference'||typeof r.title!=='string'||!r.title.trim()||typeof r.hint!=='string'||r.evidence?.construct!=='preference'||!preferenceFamilies.has(r.evidence.family)||r.evidence.unconditional===false||r.evidence.repeatOf||['repeat','probe','challenge','counterexample','recontextualization'].includes(r.evidence.role)||r.brief||r.evidence.brief||r.anchorWorks?.length||r.anchorIds?.length)return false;
+    if(r.evidence.comparisonProtocol&&!isComparisonPreferenceRound(r))return false;
     if(!Array.isArray(r.works)||r.works.length<2||new Set(r.works.map(w=>w?.id)).size!==r.works.length||r.works.some(w=>{const known=works.filter(candidate=>candidate?.id===w?.id);return known.length!==1||!sameArtworkIdentity(w,known[0]);}))return false;
     try{return validAnswer(r,a);}catch{return false;}
   }).sort((a,b)=>a.index-b.index).map(source=>structuredClone({round:source.round,answer:source.answer,index:source.index}));
@@ -147,11 +153,11 @@ function singleEditReading(works,record) {
     if(!source)return [];
     return [{keptId:id,source,gap:source.answer.positions[removed]-source.answer.positions[id]}];
   });
-  const opposing=pairs.filter(pair=>pair.gap>=15).sort((a,b)=>b.source.index-a.source.index||b.gap-a.gap),sample=opposing[0];
+  const opposing=pairs.filter(pair=>pair.gap>=responseGapRequired(pair.source.round)).sort((a,b)=>b.source.index-a.source.index||(isComparisonPreferenceRound(b.source.round)?Math.sign(b.gap):b.gap)-(isComparisonPreferenceRound(a.source.round)?Math.sign(a.gap):a.gap)),sample=opposing[0];
   if(!sample)return [ledger];
   const previous=pair=>({roundId:pair.source.round.id,label:'Earlier individual preference',prompt:pair.source.round.title,detail:`${name(removed)}: ${pair.source.answer.positions[removed]}; ${name(pair.keptId)}: ${pair.source.answer.positions[pair.keptId]} on the earlier preference scale.`,workIds:[removed,pair.keptId],sourceWorkIds:pair.source.round.works.map(w=>w.id)});
-  const aligned=pairs.filter(pair=>pair.gap<=-15);
-  const connection=finding(record,'preference','A higher-rated work stayed outside this wall.',`You previously placed ${name(removed)} above ${name(sample.keptId)}. This edit kept ${name(sample.keptId)} and left ${name(removed)} out.${aligned.length?' Other kept works also agreed with their earlier pair order.':''}`,[previous(sample),decision],{priority:11,readingBasis:'matched-earlier-preference',counter:aligned.slice(0,2).map(previous),alternatives:[...limits,'Only the latest eligible earlier response for each exact pair is used. The other offered works, instructions, attention and timing may differ.','The earlier complete question and answer were frozen before this exercise. These two responses do not establish why the edit changed or a general consistency score.','The 15-point earlier gap is a display threshold, not a confidence estimate.'],comparisons:[{kind:'categorical-contrast',workIds:[removed,sample.keptId],sourceRoundIds:[sample.source.round.id,'scenario:'+record.id],notes:{[removed]:[{role:'earlier-preference',tone:'preference',text:'Earlier preference: '+sample.source.answer.positions[removed]+' / 100'},{role:'leave',tone:'curation',text:'Left out of this wall'}],[sample.keptId]:[{role:'earlier-preference',tone:'preference',text:'Earlier preference: '+sample.source.answer.positions[sample.keptId]+' / 100'},{role:'keep',tone:'curation',text:'Kept on this wall'}]}}]});
+  const aligned=pairs.filter(pair=>pair.gap<=-responseGapRequired(pair.source.round));
+  const connection=finding(record,'preference','A higher-rated work stayed outside this wall.',`You previously placed ${name(removed)} above ${name(sample.keptId)}. This edit kept ${name(sample.keptId)} and left ${name(removed)} out.${aligned.length?' Other kept works also agreed with their earlier pair order.':''}`,[previous(sample),decision],{priority:11,readingBasis:'matched-earlier-preference',counter:aligned.slice(0,2).map(previous),alternatives:[...limits,'Only the latest eligible earlier response for each exact pair is used. The other offered works, instructions, attention and timing may differ.','The earlier complete question and answer were frozen before this exercise. These two responses do not establish why the edit changed or a general consistency score.','New relative comparisons use order and exact ties; legacy instruments retain their original gap rule. Neither supplies a confidence estimate.'],comparisons:[{kind:'categorical-contrast',workIds:[removed,sample.keptId],sourceRoundIds:[sample.source.round.id,'scenario:'+record.id],notes:{[removed]:[{role:'earlier-preference',tone:'preference',text:earlierLabel(sample.source,removed)},{role:'leave',tone:'curation',text:'Left out of this wall'}],[sample.keptId]:[{role:'earlier-preference',tone:'preference',text:earlierLabel(sample.source,sample.keptId)},{role:'keep',tone:'curation',text:'Kept on this wall'}]}}]});
   return [connection,ledger];
 }
 export function analyzeDifficultEdit(works,record,previousRecords=[]) {

@@ -11,6 +11,10 @@ function fixture(){
   return {works,round,answer,p1,p2,rounds:[p1,p2],answers:{p1:answer(p1,[100,0,80,20]),p2:answer(p2,[100,0,80,20])}};
 }
 function build(f,extra={}){return buildTastePortrait({works:f.works,rounds:f.rounds,answers:f.answers,...extra});}
+function declareFavourites(f,selectedIds=['w0','w4']){
+  const round={id:'declared-favourites',kind:'choice-grid',selectionMode:'shortlist',maxChoices:5,works:f.works.slice(0,8),evidence:{construct:'overall-favourites',explicitFavourites:true}};
+  f.rounds.push(round);f.answers[round.id]={confirmed:true,workIds:round.works.map(work=>work.id),selectionMode:'shortlist',selectedIds,explicitNone:false,unsure:false};return f;
+}
 
 test('Empty evidence yields no manufactured profile, preferences or discovery scores',()=>{
   const p=buildTastePortrait();assert.deepEqual(p.observations,[]);assert.deepEqual(p.heroWorks,[]);assert.equal(p.coverage.preferenceTasks,0);for(const items of Object.values(p.discovery))assert.deepEqual(items,[]);assert.ok(p.unavailable.some(item=>item.module==='population-rarity'));assert.ok(p.nextSteps.some(item=>item.id==='more-preference'));
@@ -19,7 +23,7 @@ test('Empty evidence yields no manufactured profile, preferences or discovery sc
 test('A recurring annotation needs two distinct preference sets and exact evidence',()=>{
   const f=fixture(),one=build(f,{rounds:[f.p1]});assert.equal(one.observations.some(item=>item.module==='patterns'),false);
   const p=build(f),pattern=p.observations.find(item=>item.module==='patterns');assert.ok(pattern);assert.equal(pattern.feature,'energy');assert.equal(pattern.direction,-1);assert.equal(pattern.supportedSetCount,2);assert.deepEqual(pattern.support.map(item=>item.roundId),['p1','p2']);assert.match(pattern.alternatives.join(' '),/not what caused/);
-  assert.equal(p.discovery.types.length,1);assert.ok(p.heroWorks.every(item=>item.support.length));
+  assert.equal(p.discovery.types.length,1);assert.deepEqual(p.heroWorks,[],'Local comparison winners are not declared favourites');
 });
 
 test('Repeating or relabelling the same set cannot supply a second discovery set',()=>{
@@ -98,7 +102,7 @@ test('A contextual reversal is reported separately from a repeated preference qu
 });
 
 test('Artist, era and tradition routes explain their particular evidence and counterexamples',()=>{
-  const f=fixture(),p=build(f);assert.ok(p.discovery.artists.find(item=>item.title==='Atlas Painter'));assert.ok(p.discovery.eras.find(item=>item.title==='1800–1899'));assert.ok(p.discovery.traditions.find(item=>item.title==='Quiet tradition'));
+  const f=declareFavourites(fixture()),p=build(f);assert.ok(p.discovery.artists.find(item=>item.title==='Atlas Painter'));assert.ok(p.discovery.eras.find(item=>item.title==='1800–1899'));assert.ok(p.discovery.traditions.find(item=>item.title==='Quiet tradition'));
   for(const type of ['artists','eras','traditions'])for(const item of p.discovery[type]){assert.ok(item.support.length);assert.ok(item.sourceUrls.length);assert.equal('score' in item,false);for(const e of item.support)assert.ok(f.rounds.some(r=>r.id===e.roundId));}
   const single=build(f,{rounds:[f.p1]});assert.deepEqual(single.discovery.eras,[]);assert.deepEqual(single.discovery.traditions,[]);assert.ok(single.discovery.artists.every(item=>item.basis==='One artwork as a starting point'));
 });
@@ -108,11 +112,11 @@ test('Broad or century-crossing dates are not silently assigned to an era',()=>{
 });
 
 test('Painting routes suggest sourced unrated works and name a concrete connection',()=>{
-  const f=fixture(),p=build(f);assert.ok(p.discovery.paintings.length);for(const item of p.discovery.paintings){assert.ok(item.workId);assert.ok(!f.rounds.some(r=>r.works.some(w=>w.id===item.workId)));assert.ok(item.support.length);assert.match(item.reason,/Compare this with/);assert.match(item.alternatives[0],/not a prediction/);assert.ok(item.sourceUrls.includes(f.works.find(w=>w.id===item.workId).sourceUrl));}
+  const f=declareFavourites(fixture()),p=build(f);assert.ok(p.discovery.paintings.length);for(const item of p.discovery.paintings){assert.ok(item.workId);assert.ok(!f.rounds.some(r=>r.works.some(w=>w.id===item.workId)));assert.ok(item.support.length);assert.match(item.reason,/Compare this with/);assert.match(item.alternatives[0],/not a prediction/);assert.ok(item.sourceUrls.includes(f.works.find(w=>w.id===item.workId).sourceUrl));}
 });
 
 test('Museum routes use institution facts and never promise a current display',()=>{
-  const f=fixture();f.works[0].artist='Claude Monet';f.works[0].museum='Cleveland Museum of Art';f.works[0].sourceUrl='https://www.clevelandart.org/art/1960.81';const p=build(f),cleveland=p.discovery.museums.find(item=>item.museumId==='cleveland'),london=p.discovery.museums.find(item=>item.museumId==='national-gallery');assert.ok(cleveland);assert.ok(london);assert.equal(cleveland.basis,'A selected work in the collection');assert.equal(london.basis,'Artist represented in the collection');for(const item of [cleveland,london]){assert.ok(item.sourceUrls.length);assert.match(item.alternatives.join(' '),/currently displayed/);assert.ok(item.support.every(e=>e.workIds.includes('w0')));}
+  const f=fixture();f.works[0].artist='Claude Monet';f.works[0].museum='Cleveland Museum of Art';f.works[0].sourceUrl='https://www.clevelandart.org/art/1960.81';declareFavourites(f);const p=build(f),cleveland=p.discovery.museums.find(item=>item.museumId==='cleveland'),london=p.discovery.museums.find(item=>item.museumId==='national-gallery');assert.ok(cleveland);assert.ok(london);assert.equal(cleveland.basis,'A selected work in the collection');assert.equal(london.basis,'Artist represented in the collection');for(const item of [cleveland,london]){assert.ok(item.sourceUrls.length);assert.match(item.alternatives.join(' '),/currently displayed/);assert.ok(item.support.every(e=>e.workIds.includes('w0')));}
 });
 
 test('Build is pure and every evidence ID resolves to an actual validated painting',()=>{
@@ -139,11 +143,11 @@ test('Valid curatorial findings are retained without becoming individual prefere
 });
 
 test('Visual reading uses actual preferred art and exact labeled scales with collapsed evidence',()=>{
-  const f=fixture(),interest=f.round('interest',[0,1,2,3],'curiosity');f.rounds.push(interest);f.answers.interest=f.answer(interest,[0,100,20,80]);const portrait=build(f),html=renderTastePortrait({portrait,works:f.works,rounds:f.rounds,answers:f.answers,image:w=>'<img data-art="'+w.id+'">',esc:value=>String(value).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('"','&quot;'),keepButtons:w=>'<span data-keep-work="'+w.id+'"></span>'});assert.match(html,/journey-reading taste-portrait/);assert.match(html,/tp-constellation/);for(const hero of portrait.heroWorks)assert.ok(html.includes('data-work="'+hero.workId+'"'));assert.match(html,/More curious about this/);assert.doesNotMatch(html,/tp-measure-track/);assert.match(html,/<strong>100<small> \/ 100/);assert.match(html,/<details class="tp-evidence">/);assert.doesNotMatch(html,/\d+(?:st|nd|rd|th) percentile|compatibility score|Your personality type/);
+  const f=declareFavourites(fixture()),interest=f.round('interest',[0,1,2,3],'curiosity');f.rounds.push(interest);f.answers.interest=f.answer(interest,[0,100,20,80]);const portrait=build(f),html=renderTastePortrait({portrait,works:f.works,rounds:f.rounds,answers:f.answers,image:w=>'<img data-art="'+w.id+'">',esc:value=>String(value).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('"','&quot;'),keepButtons:w=>'<span data-keep-work="'+w.id+'"></span>'});assert.match(html,/journey-reading taste-portrait/);assert.match(html,/tp-constellation/);for(const hero of portrait.heroWorks)assert.ok(html.includes('data-work="'+hero.workId+'"'));assert.match(html,/More curious about this/);assert.doesNotMatch(html,/tp-measure-track/);assert.match(html,/<strong>100<small> \/ 100/);assert.match(html,/<details class="tp-evidence">/);assert.doesNotMatch(html,/\d+(?:st|nd|rd|th) percentile|compatibility score|Your personality type/);
 });
 
 test('Visual empty state renders no favourite artwork, invented scale or fake archetype',()=>{
-  const portrait=buildTastePortrait(),html=renderTastePortrait({portrait,works:[],image:()=>{throw Error('No artwork should render');},esc:String});assert.doesNotMatch(html,/data-work=/);assert.doesNotMatch(html,/tp-measure-row/);assert.match(html,/completed comparisons/);
+  const portrait=buildTastePortrait(),html=renderTastePortrait({portrait,works:[],image:()=>{throw Error('No artwork should render');},esc:String});assert.doesNotMatch(html,/data-work=/);assert.doesNotMatch(html,/tp-measure-row/);assert.match(html,/More comparisons are needed/);
 });
 
 test('The visual reading retains old comparison evidence without promoting a two-set heuristic into a new taste family',()=>{
@@ -165,5 +169,5 @@ test('Preference probes remain counterexample evidence and are never recommended
 });
 
 test('Sourced catalogue institutions outside the editorial museum list remain usable',()=>{
-  const f=fixture();f.works[0].museum='Mauritshuis';f.works[0].sourceUrl='https://www.mauritshuis.nl/en/our-collection/artworks/670-girl-with-a-pearl-earring/';const route=build(f).discovery.museums.find(item=>item.title==='Mauritshuis');assert.ok(route);assert.equal(route.city,'');assert.equal(route.country,'');assert.equal(route.sourceUrl,f.works[0].sourceUrl);assert.match(route.reason,/supplied collection record/);
+  const f=fixture();f.works[0].museum='Mauritshuis';f.works[0].sourceUrl='https://www.mauritshuis.nl/en/our-collection/artworks/670-girl-with-a-pearl-earring/';declareFavourites(f);const route=build(f).discovery.museums.find(item=>item.title==='Mauritshuis');assert.ok(route);assert.equal(route.city,'');assert.equal(route.country,'');assert.equal(route.sourceUrl,f.works[0].sourceUrl);assert.match(route.reason,/supplied collection record/);
 });

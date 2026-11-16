@@ -1,6 +1,7 @@
 import { AXES, describePoint, matchResults } from './engine.mjs';
 import { updateArtworkCorners } from './artwork-corners.mjs';
 import {isOverallAppealRound} from './appeal-scale.mjs';
+import {isComparisonPreferenceRound} from './comparison-protocol.mjs';
 
 export function createInteractions({ app, getRound, getDraft, ready, image, esc, workById, saveDraft, sync }) {
   let selected = null, suppressClick = false, mobileGesture = null;
@@ -10,10 +11,18 @@ export function createInteractions({ app, getRound, getDraft, ready, image, esc,
   const placed = id => { const r = getRound(), d = getDraft(); return r.kind === 'spectrum' ? d.positions[id] !== undefined : r.kind === 'grid' ? !!d.points[id] : !!d.guesses[id]; };
   const initial = () => getRound().works.find(w => !placed(w.id))?.id || getRound().works[0].id;
   const mobileSpectrum=()=>getRound()?.kind==='spectrum'&&getRound().works.length>=3&&!!app.querySelector('.journey-question')&&window.matchMedia('(max-width:700px)').matches;
+  const ordinal=()=>isComparisonPreferenceRound(getRound());
+  function spectrumDescription(id){
+    const r=getRound(),d=getDraft(),value=d.positions[id];
+    if(!ordinal())return `${value??'not placed'} on the scale. Arrow keys adjust by one; Shift by ten.`;
+    if(value===undefined)return 'not placed. Move right for more preferred, left for less. Arrow keys fine-tune the position.';
+    const values=r.works.filter(work=>d.positions[work.id]!==undefined).map(work=>d.positions[work.id]),rank=1+values.filter(other=>other>value).length,tied=values.filter(other=>other===value).length>1;
+    return `${tied?'Joint preference':'Preference'} order ${rank} of ${values.length} placed paintings. Arrow keys fine-tune the position.`;
+  }
   function cycle(direction=1,unplacedOnly=false,from=selected){const list=getRound().works,index=list.findIndex(w=>w.id===from);for(let n=1;n<=list.length;n++){const w=list[(index+direction*n+list.length*2)%list.length];if(!unplacedOnly||!placed(w.id)){select(w.id);return;}}if(selected!==from)select(from);else{paintSelection();sync();}}
   function source(w, extra = '') {
     const r = getRound(), d = getDraft();
-    return `<button type="button" class="drag-art ${extra}" data-action="select-art" data-drag-work="${esc(w.id)}" data-work="${esc(w.id)}" aria-label="Artwork ${label(w.id)}${r.kind === 'spectrum' ? ', ' + (d.positions[w.id] ?? 'not placed') + ' on the scale. Arrow keys adjust by one; Shift by ten.' : r.kind === 'grid' ? '. Drag onto the map or use arrow keys.' : '. Select, then choose a label.'}" aria-pressed="${selected === w.id}"><span class="art-visual">${image(w)}</span><span class="drag-caption"><span>${label(w.id)}</span><span>${placed(w.id) ? 'Placed' : 'Drag to place'}</span></span>${r.kind==='spectrum'&&extra.includes('reference-art')?`<span class="reference-rating" aria-hidden="true">${d.positions[w.id]??'—'}</span>`:''}</button>`;
+    return `<button type="button" class="drag-art ${extra}" data-action="select-art" data-drag-work="${esc(w.id)}" data-work="${esc(w.id)}" aria-label="Artwork ${label(w.id)}${r.kind === 'spectrum' ? ', '+esc(spectrumDescription(w.id)) : r.kind === 'grid' ? '. Drag onto the map or use arrow keys.' : '. Select, then choose a label.'}" aria-pressed="${selected === w.id}"><span class="art-visual">${image(w)}</span><span class="drag-caption"><span>${label(w.id)}</span><span>${placed(w.id) ? 'Placed' : 'Drag to place'}</span></span>${r.kind==='spectrum'&&!ordinal()&&extra.includes('reference-art')?`<span class="reference-rating" aria-hidden="true">${d.positions[w.id]??'—'}</span>`:''}</button>`;
   }
   function overview() {
     return `<div class="work-overview" aria-label="Your artwork reference group">${getRound().works.map(w => `<div class="reference-work">${source(w, 'reference-art')}</div>`).join('')}</div>`;
@@ -58,7 +67,7 @@ export function createInteractions({ app, getRound, getDraft, ready, image, esc,
     for (const el of app.querySelectorAll('.drag-art')) {
       const id = el.dataset.dragWork, r = getRound(), d = getDraft();
       el.setAttribute('aria-pressed', String(id === selected));
-      if (r.kind === 'spectrum') el.setAttribute('aria-label', `Artwork ${label(id)}, ${d.positions[id] ?? 'not placed'} on the scale. Arrow keys adjust by one; Shift by ten.`);
+      if (r.kind === 'spectrum') el.setAttribute('aria-label', `Artwork ${label(id)}, ${spectrumDescription(id)}`);
       if (r.kind === 'grid') el.setAttribute('aria-label', `Artwork ${label(id)}, ${d.points[id] ? describePoint(r.axis,d.points[id]) + ', coordinates ' + d.points[id].join(', ') : 'not placed'}. Arrow keys adjust by one; Shift by ten.`);
     }
     for (const el of app.querySelectorAll('.reference-work')) { const id = el.querySelector('.drag-art').dataset.work; el.classList.toggle('has-placement', placed(id)); el.querySelector('.drag-art').setAttribute('data-placed',String(placed(id)));const rating=el.querySelector('.reference-rating');if(rating)rating.textContent=getDraft().positions[id]??'—'; }
@@ -67,10 +76,10 @@ export function createInteractions({ app, getRound, getDraft, ready, image, esc,
     if (next) next.disabled = !ready();
     const previous=app.querySelector('[data-action=previous-art]');if(previous)previous.disabled=!ready();
     const fine = app.querySelector('#fine-controls'), r = getRound(), d = getDraft();
-    if (fine && r.kind === 'spectrum') fine.innerHTML = `<span>${mobileSpectrum()?`Painting ${r.works.findIndex(work=>work.id===selected)+1} · ${d.positions[selected]===undefined?'Not rated':d.positions[selected]+' / 100'}`:`Artwork ${label(selected)} · ${d.positions[selected] ?? 'Not placed'}`}</span><button type="button" data-action="nudge" data-dx="-1" aria-label="Move artwork ${label(selected)} one step left" ${placed(selected) ? '' : 'disabled'}>−</button><button type="button" data-action="nudge" data-dx="1" aria-label="Move artwork ${label(selected)} one step right" ${placed(selected) ? '' : 'disabled'}>+</button>`;
+    if (fine && r.kind === 'spectrum') fine.innerHTML = `<span>${ordinal()?`Painting ${label(selected)}`:mobileSpectrum()?`Painting ${r.works.findIndex(work=>work.id===selected)+1} · ${d.positions[selected]===undefined?'Not rated':d.positions[selected]+' / 100'}`:`Artwork ${label(selected)} · ${d.positions[selected] ?? 'Not placed'}`}</span><button type="button" data-action="nudge" data-dx="-1" aria-label="Move artwork ${label(selected)} one step left" ${placed(selected) ? '' : 'disabled'}>−</button><button type="button" data-action="nudge" data-dx="1" aria-label="Move artwork ${label(selected)} one step right" ${placed(selected) ? '' : 'disabled'}>+</button>`;
     if (fine && r.kind === 'grid') fine.innerHTML = `<span>Artwork ${label(selected)} · ${placed(selected) ? esc(describePoint(r.axis, d.points[selected])) : 'Not placed'}</span>${[['←',-1,0,'left'],['↓',0,-1,'down'],['↑',0,1,'up'],['→',1,0,'right']].map(([text, dx, dy, word]) => `<button type="button" data-action="nudge" data-dx="${dx}" data-dy="${dy}" aria-label="Move artwork ${label(selected)} one step ${word}" ${placed(selected) ? '' : 'disabled'}>${text}</button>`).join('')}`;
     const range=app.querySelector('#mobile-spectrum-range');
-    if(range){const value=d.positions[selected],hasValue=value!==undefined;range.disabled=!ready();range.setAttribute('aria-label',`Rate painting ${r.works.findIndex(work=>work.id===selected)+1} of ${r.works.length}. Arrow keys adjust by one; Enter moves to the next unrated painting.`);range.setAttribute('aria-valuetext',hasValue?`${value} of 100`:'Not rated');if(!mobileGesture)range.value=String(hasValue?value:50);const output=app.querySelector('#mobile-spectrum-value');if(output)output.textContent=hasValue?`${value} / 100`:'Not rated';const controls=range.closest('.mobile-spectrum-controls');controls.dataset.rated=String(hasValue);for(const button of controls.querySelectorAll('[data-action=nudge]'))button.disabled=!ready()||!hasValue||Number(button.dataset.dx)<0&&value===0||Number(button.dataset.dx)>0&&value===100;}
+    if(range){const value=d.positions[selected],hasValue=value!==undefined;range.disabled=!ready();range.setAttribute('aria-label',`${ordinal()?'Place':'Rate'} painting ${r.works.findIndex(work=>work.id===selected)+1} of ${r.works.length}. Arrow keys adjust by one; Enter moves to the next ${ordinal()?'unplaced':'unrated'} painting.`);range.setAttribute('aria-valuetext',ordinal()?spectrumDescription(selected):hasValue?`${value} of 100`:'Not rated');if(!mobileGesture)range.value=String(hasValue?value:50);const output=app.querySelector('#mobile-spectrum-value');if(output)output.textContent=ordinal()?'':hasValue?`${value} / 100`:'Not rated';const controls=range.closest('.mobile-spectrum-controls');controls.dataset.rated=String(hasValue);for(const button of controls.querySelectorAll('[data-action=nudge]'))button.disabled=!ready()||!hasValue||Number(button.dataset.dx)<0&&value===0||Number(button.dataset.dx)>0&&value===100;}
     if (focused) [...app.querySelectorAll('[data-action=nudge]')].find(el => el.dataset.dx === focused.dx && el.dataset.dy === focused.dy)?.focus({preventScroll:true});
   }
   function status() {
@@ -94,7 +103,7 @@ export function createInteractions({ app, getRound, getDraft, ready, image, esc,
       const x = d.positions[w.id] / 100 * rail.clientWidth;
       let lane = lanes.findIndex(values => values.every(v => Math.abs(v - x) >= (mobile?44:60)));
       if (lane < 0) { lane = lanes.length; lanes.push([]); } lanes[lane].push(x);
-      return `<div class="spectrum-token" style="left:${d.positions[w.id]}%;bottom:${tokenBase + lane * laneStep}px"><span class="spectrum-stem" style="height:${tokenBase - 2 + lane * laneStep}px"></span>${source(w, 'placed-art')}<span class="position-value">${d.positions[w.id]}</span></div>`;
+      return `<div class="spectrum-token" style="left:${d.positions[w.id]}%;bottom:${tokenBase + lane * laneStep}px"><span class="spectrum-stem" style="height:${tokenBase - 2 + lane * laneStep}px"></span>${source(w, 'placed-art')}${ordinal()?'':`<span class="position-value">${d.positions[w.id]}</span>`}</div>`;
     }).join('');
     const compact=app.querySelector('.journey-question')&&window.matchMedia('(max-width:600px)').matches;
     const height=mobile?Math.max(compactPhone?116:170,lanes.length*laneStep+26):Math.max(compact?110:r.works.length>=3?215:145,lanes.length*65+35);

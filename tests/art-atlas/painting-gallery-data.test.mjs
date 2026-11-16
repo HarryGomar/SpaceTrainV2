@@ -12,7 +12,7 @@ function oldSession(){
   return {manifest:{protocol:'art-profile-50-v1',catalogue},shown:{[round.id]:round},answers:{[round.id]:answer}};
 }
 test('An explicit historical156-work proposal retains its exact72 reviewed works and42/42 future pools',()=>{
-  const gallery=buildPaintingGallery({works:legacyWorks,notes}),first=view(gallery,'first'),next=view(gallery,'next'),later=view(gallery,'later');assert.deepEqual(gallery.coverage,{catalogue:156,first:72,next:42,later:42,plannedSetCount:18});assert.equal(first.groups.length,18);assert.equal(first.itemCount,72);
+  const gallery=buildPaintingGallery({works:legacyWorks,notes}),first=view(gallery,'first'),next=view(gallery,'next'),later=view(gallery,'later');assert.deepEqual(gallery.coverage,{catalogue:156,main:156,world:0,first:72,next:42,later:42,plannedSetCount:18});assert.equal(first.groups.length,18);assert.equal(first.itemCount,72);
   for(const [index,group] of first.groups.entries()){assert.deepEqual(group.workIds,notes.proposedFirst18Panels[index].workIds);assert.equal(group.title,notes.proposedFirst18Panels[index].galleryTitle||notes.proposedFirst18Panels[index].title||notes.proposedFirst18Panels[index].targetContrast);assert.equal(group.kind,'planned-comparison');}
   assert.equal(next.groups.length,1);assert.equal(later.groups.length,1);assert.equal(next.groups[0].kind,'reserve-pool');assert.equal(later.groups[0].kind,'reserve-pool');assert.deepEqual(next.groups[0].workIds,notes.reservePools.batch2);assert.deepEqual(later.groups[0].workIds,notes.reservePools.batch3);assert.equal(new Set([...items(first),...items(next),...items(later)].map(item=>item.workId)).size,156);assert.equal(gallery.views.some(view=>view.id==='answered'),false);
 });
@@ -22,7 +22,7 @@ test('All164 gallery entries retain actual local reproductions and institution s
 
 test('The current gallery proposal matches actual fresh v10 main panels and includes all8 new classics',()=>{
   const currentNotes=journeyCurationNotes(works),gallery=buildPaintingGallery({works,notes:currentNotes}),first=view(gallery,'first');
-  assert.deepEqual(gallery.coverage,{catalogue:164,first:72,next:46,later:46,plannedSetCount:18});
+  assert.deepEqual(gallery.coverage,{catalogue:164,main:164,world:0,first:72,next:46,later:46,plannedSetCount:18});
   const panels=createJourneyStimulusPlan({works,seed:'fresh-gallery-v10'}),rounds=buildJourneyRounds(works,{}, {seed:'fresh-gallery-v10',panels});
   const actual=rounds.filter(round=>round.kind==='spectrum'&&round.criterion==='preference'&&round.evidence?.role==='discovery'&&Number.isInteger(round.evidence?.panelNumber)).sort((a,b)=>a.evidence.panelNumber-b.evidence.panelNumber);
   assert.equal(actual.length,18);
@@ -75,7 +75,7 @@ test('Absent, malformed and future gallery visits cannot become earlier match ex
 
 test('An expanded collection exposes the reserved fourth, fifth and sixth blocks without losing source identities',()=>{
   const currentNotes=journeyCurationNotes(expandedWorks),gallery=buildPaintingGallery({works:expandedWorks,notes:currentNotes});
-  assert.equal(view(gallery,'all').workCount,expandedWorks.length);
+  const main=view(gallery,'all'),world=view(gallery,'world');assert.equal(main.workCount+world.workCount,expandedWorks.length);assert.equal(main.workCount,347);assert.equal(world.workCount,140);assert.equal(new Set([...items(main),...items(world)].map(item=>item.workId)).size,expandedWorks.length);assert.equal(items(main).some(item=>items(world).some(other=>item.workId===other.workId)),false);
   for(const block of [4,5,6]){
     const reserved=currentNotes.reservePools['batch'+block]||[],actual=view(gallery,'block'+block);
     if(reserved.length)assert.deepEqual(actual.groups[0].workIds,reserved);

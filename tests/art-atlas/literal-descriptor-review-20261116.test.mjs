@@ -9,6 +9,8 @@ const root=new URL('../../',import.meta.url),site=new URL('public/art-atlas/',ro
 const read=url=>JSON.parse(fs.readFileSync(url,'utf8'));
 const works=read(new URL('artworks.json',site)),byId=new Map(works.map(work=>[work.id,work]));
 const inventory=read(new URL('tools/art-atlas-expansion-manifest-20261115.json',root));
+const canonicalInventory=read(new URL('tools/art-atlas-canonical-manifest-20261116.json',root));
+const originalFixture=works.filter(work=>!canonicalInventory.workIds.includes(work.id));
 const bindings=read(new URL('tools/literal-review-source-bindings-20261116.json',root)).entries;
 const publicLedger=read(new URL('literal-descriptor-reviews.json',site));
 const {observations,sets}=literalObservations();
@@ -16,13 +18,14 @@ const reviewedIds=Object.keys(observations),pendingIds=inventory.collection.work
 const galleryIds=inventory.required.workIds.filter(id=>!observations[id]);
 const sha=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
 
-test('Public review inventory partitions258 reviewed,202 pending and3 gallery-only without private staging files',()=>{
+test('The original463 review fixture stays intact and the current inventory has a separate canonical addition disposition',()=>{
   assert.deepEqual(Object.values(sets).map(ids=>ids.length),[164,16,78]);
   assert.equal(reviewedIds.length,258);assert.equal(pendingIds.length,202);assert.equal(galleryIds.length,3);
   assert.equal(new Set([...reviewedIds,...pendingIds,...galleryIds]).size,463);
-  assert.deepEqual([...reviewedIds,...pendingIds,...galleryIds].sort(),works.map(work=>work.id).sort());
+  assert.deepEqual([...reviewedIds,...pendingIds,...galleryIds].sort(),originalFixture.map(work=>work.id).sort());
   assert.deepEqual(Object.keys(bindings).sort(),reviewedIds.sort());
-  assert.equal(Object.keys(publicLedger.reviews).length,258);assert.equal(Object.keys(publicLedger.withheld).length,202);assert.equal(Object.keys(publicLedger.excluded).length,3);
+  assert.equal(Object.keys(publicLedger.reviews).length,258+canonicalInventory.workIds.length);assert.equal(Object.keys(publicLedger.withheld).length,202);assert.equal(Object.keys(publicLedger.excluded).length,3);
+  assert.deepEqual([...Object.keys(publicLedger.reviews),...pendingIds,...galleryIds].sort(),works.map(work=>work.id).sort());
   for(const id of galleryIds){assert.equal(byId.get(id).studyEligible,false,id);assert.deepEqual(byId.get(id).features,{},id);}
 });
 
@@ -45,7 +48,7 @@ test('Every strict review has the actual source, preview SHA and inspected repro
 });
 
 test('Reproducible strict package retains all five other drafts and keeps unresolved values explicitly unknown',()=>{
-  const output=buildLiteralDescriptorPackage({works,reviewedAt:'2026-11-16T00:00:00.000Z'});
+  const output=buildLiteralDescriptorPackage({works:originalFixture,reviewedAt:'2026-11-16T00:00:00.000Z'});
   assert.equal(output.summary.reviewed,258);assert.equal(output.summary.bulkPending,202);assert.equal(output.summary.galleryOnly,3);
   assert.equal(output.summary.first72.reviewed,72);assert.deepEqual(output.summary.first72.missing,[]);
   assert.equal(output.summary.unchangedRecords,47);assert.equal(output.summary.changedRecords,211);

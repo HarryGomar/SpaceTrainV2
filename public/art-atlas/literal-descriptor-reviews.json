@@ -46,7 +46,7 @@
     "frozen": "Never rewrite saved work or answer snapshots. Frozen v1 literal semantics are unsupported by v2 inference."
   },
   "summary": {
-    "reviewed": 258,
+    "reviewed": 282,
     "originalCore": 164,
     "requiredEligible": 16,
     "bulkReviewed": 78,
@@ -132,7 +132,10 @@
       "count": 72,
       "reviewed": 72,
       "missing": []
-    }
+    },
+    "canonicalAdded": 24,
+    "reconsideredExistingRecords": 258,
+    "existingRecordDeltaScope": "changedRecords and unchangedRecords describe the original 258 reconsidered records. The 24 newly added records have no prior catalogue values."
   },
   "reviewSets": {
     "original": [
@@ -398,6 +401,32 @@
       "extended-cma-171157",
       "extended-cma-157147",
       "extended-cma-455813"
+    ],
+    "canonical": [
+      "canon-caravaggio-calling-matthew",
+      "canon-caravaggio-entombment",
+      "canon-caravaggio-bacchus",
+      "canon-caravaggio-medusa",
+      "canon-leonardo-last-supper",
+      "canon-michelangelo-creation-adam",
+      "canon-bosch-temptations-lisbon",
+      "canon-bruegel-tower-babel",
+      "canon-bruegel-netherlandish-proverbs",
+      "canon-goya-third-may",
+      "canon-velazquez-breda",
+      "canon-rembrandt-prodigal-son",
+      "canon-holbein-dead-christ",
+      "canon-durer-melencolia",
+      "canon-delacroix-sardanapalus",
+      "canon-ingres-odalisque",
+      "canon-bocklin-isle-dead",
+      "canon-siqueiros-echo-scream",
+      "canon-siqueiros-collective-suicide",
+      "canon-varo-creation-birds",
+      "canon-kahlo-two-fridas",
+      "canon-tamayo-dualidad",
+      "canon-varo-call",
+      "canon-varo-escape"
     ]
   },
   "currentAssetReferences": {
@@ -1245,13 +1274,6 @@
       "sourceUrl": "https://clevelandart.org/art/1943.392",
       "image": "assets/collection-gauguin-call.jpg",
       "previewSha256": "3848b74e46adbd5a43b819cb1a6cb63ed2fbae7b20f8d021a9c763131b37fda5",
-      "verification": "sha256-of-current-local-preview",
-      "verifiedAt": "2026-11-16T06:49:16.402Z"
-    },
-    "[\"https://cyfrowe.mnw.pl/pl/zbiory/962339\",\"assets/collection-matejko-stanczyk.jpg\"]": {
-      "sourceUrl": "https://cyfrowe.mnw.pl/pl/zbiory/962339",
-      "image": "assets/collection-matejko-stanczyk.jpg",
-      "previewSha256": "4632ce3b0016db122aaa60502c6979c069bbacf9a8d91999f841d41dcbc1ac24",
       "verification": "sha256-of-current-local-preview",
       "verifiedAt": "2026-11-16T06:49:16.402Z"
     },
@@ -2206,6 +2228,196 @@
       "previewSha256": "ff67528603c5a6604d8bf4e983efe1ee71410591e0bb108ebd8a5697250feacf",
       "verification": "sha256-of-current-local-preview",
       "verifiedAt": "2026-11-16T06:49:16.402Z"
+    },
+    "[\"https://saintlouis-rome.net/horaires-visite-opening-hours/caravage/\",\"assets/canonical-20261116/canon-caravaggio-calling-matthew.jpg\"]": {
+      "sourceUrl": "https://saintlouis-rome.net/horaires-visite-opening-hours/caravage/",
+      "image": "assets/canonical-20261116/canon-caravaggio-calling-matthew.jpg",
+      "previewSha256": "a822f5f257f1a2c93feba4498c645380f8c0aae47ebcd69a7a44073f0ea1114e",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://www.museivaticani.va/content/museivaticani/en/collezioni/musei/la-pinacoteca/sala-xii---secolo-xvii/caravaggio--deposizione-dalla-croce.html\",\"assets/canonical-20261116/canon-caravaggio-entombment.jpg\"]": {
+      "sourceUrl": "https://www.museivaticani.va/content/museivaticani/en/collezioni/musei/la-pinacoteca/sala-xii---secolo-xvii/caravaggio--deposizione-dalla-croce.html",
+      "image": "assets/canonical-20261116/canon-caravaggio-entombment.jpg",
+      "previewSha256": "3e368846e3adf1a0794cc0a902e99eaba222b92d08255b165665ff6072b13592",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://www.uffizi.it/en/artworks/caravaggio-bacchus\",\"assets/canonical-20261116/canon-caravaggio-bacchus.jpg\"]": {
+      "sourceUrl": "https://www.uffizi.it/en/artworks/caravaggio-bacchus",
+      "image": "assets/canonical-20261116/canon-caravaggio-bacchus.jpg",
+      "previewSha256": "14642389a1d6ed10e7bc6c3d5f0af21b7a7946b41871095f5f963a3c1658d8fb",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://www.catalogo.beniculturali.it/detail/HistoricOrArtisticProperty/0900289175\",\"assets/canonical-20261116/canon-caravaggio-medusa.jpg\"]": {
+      "sourceUrl": "https://www.catalogo.beniculturali.it/detail/HistoricOrArtisticProperty/0900289175",
+      "image": "assets/canonical-20261116/canon-caravaggio-medusa.jpg",
+      "previewSha256": "37799da2c0de8cc3b14d62a260ac4de76730e22bc3176e9440aa6c3d551638f5",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://cenacolovinciano.org/en/museum/the-works/the-last-supper-leonardo-da-vinci-1452-1519/\",\"assets/canonical-20261116/canon-leonardo-last-supper.jpg\"]": {
+      "sourceUrl": "https://cenacolovinciano.org/en/museum/the-works/the-last-supper-leonardo-da-vinci-1452-1519/",
+      "image": "assets/canonical-20261116/canon-leonardo-last-supper.jpg",
+      "previewSha256": "27bd14cdd089b7a584dd1524be8a879d7b5da0571c17721c5879c93a61943b7a",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://www.museivaticani.va/content/museivaticani/en/collezioni/musei/cappella-sistina/volta/storie-centrali/creazione-di-adamo.html\",\"assets/canonical-20261116/canon-michelangelo-creation-adam.jpg\"]": {
+      "sourceUrl": "https://www.museivaticani.va/content/museivaticani/en/collezioni/musei/cappella-sistina/volta/storie-centrali/creazione-di-adamo.html",
+      "image": "assets/canonical-20261116/canon-michelangelo-creation-adam.jpg",
+      "previewSha256": "9ff394db664c19dd6b825033fa437145a216b3be9b2503654b2874ec98ef4b74",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://raiz.museusemonumentos.pt/DetalhesObra/Index/247559?tipo=OBJ\",\"assets/canonical-20261116/canon-bosch-temptations-lisbon.jpg\"]": {
+      "sourceUrl": "https://raiz.museusemonumentos.pt/DetalhesObra/Index/247559?tipo=OBJ",
+      "image": "assets/canonical-20261116/canon-bosch-temptations-lisbon.jpg",
+      "previewSha256": "d115285003975d904c4d309f22f3732dfeb98e0893ff42aec40efbf8dbac2566",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://www.khm.at/en/visit/only-in-vienna\",\"assets/canonical-20261116/canon-bruegel-tower-babel.jpg\"]": {
+      "sourceUrl": "https://www.khm.at/en/visit/only-in-vienna",
+      "image": "assets/canonical-20261116/canon-bruegel-tower-babel.jpg",
+      "previewSha256": "0590694d2b186122cfaa48e8e6b2da10a21f04c1809ad61dc1d664b1d0b54667",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://search.smb.museum/object/obj-867614\",\"assets/canonical-20261116/canon-bruegel-netherlandish-proverbs.jpg\"]": {
+      "sourceUrl": "https://search.smb.museum/object/obj-867614",
+      "image": "assets/canonical-20261116/canon-bruegel-netherlandish-proverbs.jpg",
+      "previewSha256": "0f08af15c258463f0d9e5a29406edb7b739a5db37e6c818798bb6d0c0e7b0696",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://www.museodelprado.es/coleccion/obra-de-arte/el-3-de-mayo-en-madrid-o-los-fusilamientos/5e177409-2993-4240-97fb-847a02c6496c\",\"assets/canonical-20261116/canon-goya-third-may.jpg\"]": {
+      "sourceUrl": "https://www.museodelprado.es/coleccion/obra-de-arte/el-3-de-mayo-en-madrid-o-los-fusilamientos/5e177409-2993-4240-97fb-847a02c6496c",
+      "image": "assets/canonical-20261116/canon-goya-third-may.jpg",
+      "previewSha256": "471111641346c3259e8c9f0936a78bef337037250b2e8d9485d8158c060b549a",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://www.museodelprado.es/coleccion/obra-de-arte/las-lanzas-o-la-rendicion-de-breda/0cc7577a-51d9-44fd-b4d5-4dba8d9cb13a\",\"assets/canonical-20261116/canon-velazquez-breda.jpg\"]": {
+      "sourceUrl": "https://www.museodelprado.es/coleccion/obra-de-arte/las-lanzas-o-la-rendicion-de-breda/0cc7577a-51d9-44fd-b4d5-4dba8d9cb13a",
+      "image": "assets/canonical-20261116/canon-velazquez-breda.jpg",
+      "previewSha256": "ba3a4f3e59b8411826307d5bc04476bd0355dc6ed2382d05646e674fa067db25",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://www.hermitagemuseum.org/digital-collection/43413?lng=en\",\"assets/canonical-20261116/canon-rembrandt-prodigal-son.jpg\"]": {
+      "sourceUrl": "https://www.hermitagemuseum.org/digital-collection/43413?lng=en",
+      "image": "assets/canonical-20261116/canon-rembrandt-prodigal-son.jpg",
+      "previewSha256": "c40edb3ad2fc565d0e5084b56b3312693e008a7dbe167903ea2701ad5ea63aeb",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://kunstmuseumbasel.ch/de/ausstellungen/2021/holbein-und-dostojewski/wandtexte\",\"assets/canonical-20261116/canon-holbein-dead-christ.jpg\"]": {
+      "sourceUrl": "https://kunstmuseumbasel.ch/de/ausstellungen/2021/holbein-und-dostojewski/wandtexte",
+      "image": "assets/canonical-20261116/canon-holbein-dead-christ.jpg",
+      "previewSha256": "09b6f67205c71cde93206a1f4e44c4f3e8403df53a0d497e8b8171ffde738fa4",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://www.metmuseum.org/art/collection/search/336228\",\"assets/canonical-20261116/canon-durer-melencolia.jpg\"]": {
+      "sourceUrl": "https://www.metmuseum.org/art/collection/search/336228",
+      "image": "assets/canonical-20261116/canon-durer-melencolia.jpg",
+      "previewSha256": "31d99698e2a42167d87e9f365308079fd3f75fec14c68a3b2b17eb7645242e3f",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://collections.louvre.fr/ark:/53355/cl010065757\",\"assets/canonical-20261116/canon-delacroix-sardanapalus.jpg\"]": {
+      "sourceUrl": "https://collections.louvre.fr/ark:/53355/cl010065757",
+      "image": "assets/canonical-20261116/canon-delacroix-sardanapalus.jpg",
+      "previewSha256": "d0879258415e908d62d45bd7c71a94ff5f78bf55522b2e8608d6c199eaedeb22",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://collections.louvre.fr/ark:/53355/cl010065566\",\"assets/canonical-20261116/canon-ingres-odalisque.jpg\"]": {
+      "sourceUrl": "https://collections.louvre.fr/ark:/53355/cl010065566",
+      "image": "assets/canonical-20261116/canon-ingres-odalisque.jpg",
+      "previewSha256": "cd7c6f2a607dccd4c56e91d346d1b46adaa628f1ce9523470b130851303c450a",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://kunstmuseumbasel.ch/de/sammlung/schwerpunkte\",\"assets/canonical-20261116/canon-bocklin-isle-dead.jpg\"]": {
+      "sourceUrl": "https://kunstmuseumbasel.ch/de/sammlung/schwerpunkte",
+      "image": "assets/canonical-20261116/canon-bocklin-isle-dead.jpg",
+      "previewSha256": "d75205ac37594e571dfb557e4cac1fd253273752e1a61219d2690f0e1ef10c09",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://www.moma.org/collection/works/80144\",\"assets/canonical-20261116/canon-siqueiros-echo-scream.jpg\"]": {
+      "sourceUrl": "https://www.moma.org/collection/works/80144",
+      "image": "assets/canonical-20261116/canon-siqueiros-echo-scream.jpg",
+      "previewSha256": "709904c1ab23a507b432b19eb3dea72dcee35ec146c34d392ac9a404adc3929a",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://www.moma.org/collection/works/79146\",\"assets/canonical-20261116/canon-siqueiros-collective-suicide.jpg\"]": {
+      "sourceUrl": "https://www.moma.org/collection/works/79146",
+      "image": "assets/canonical-20261116/canon-siqueiros-collective-suicide.jpg",
+      "previewSha256": "3ebc3a2978d3f790088792beeb8ab93f8449b8c53fc9f2a1b394368f7360cddb",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://gallerywendinorris.com/news/16-hyperallergic-remedios-varo-in-a-sphere-of/\",\"assets/canonical-20261116/canon-varo-creation-birds.jpg\"]": {
+      "sourceUrl": "https://gallerywendinorris.com/news/16-hyperallergic-remedios-varo-in-a-sphere-of/",
+      "image": "assets/canonical-20261116/canon-varo-creation-birds.jpg",
+      "previewSha256": "2239f06fb98e33f0a66aa78edd97d254422a5db612ac02dcdc2b8e349d67fc7d",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://artsandculture.google.com/asset/the-two-fridas-frida-kahlo/zAHG4EZ1WrwVYg\",\"assets/canonical-20261116/canon-kahlo-two-fridas.jpg\"]": {
+      "sourceUrl": "https://artsandculture.google.com/asset/the-two-fridas-frida-kahlo/zAHG4EZ1WrwVYg",
+      "image": "assets/canonical-20261116/canon-kahlo-two-fridas.jpg",
+      "previewSha256": "461e7a44e4d7911df801ab016d9c83b9a89d33fd57f4d525f1f596119f982181",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://www.inah.gob.mx/boletines/el-museo-nacional-de-antropologia-celebra-60-aniversario-con-brios-fortalecidos-en-su-mision-divulgativa\",\"assets/canonical-20261116/canon-tamayo-dualidad.jpg\"]": {
+      "sourceUrl": "https://www.inah.gob.mx/boletines/el-museo-nacional-de-antropologia-celebra-60-aniversario-con-brios-fortalecidos-en-su-mision-divulgativa",
+      "image": "assets/canonical-20261116/canon-tamayo-dualidad.jpg",
+      "previewSha256": "823aa487d0b39aa324cc63d3fd864750100079757da41428c881499907de6bf7",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://nmwa.org/art/collection/la-llamada-call/\",\"assets/canonical-20261116/canon-varo-call.jpg\"]": {
+      "sourceUrl": "https://nmwa.org/art/collection/la-llamada-call/",
+      "image": "assets/canonical-20261116/canon-varo-call.jpg",
+      "previewSha256": "2f93baf3ca2ae199fe51e2fbecc2e9bb34416b68f861bb327732a2f7911828d3",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://gallerywendinorris.com/news/20-hyperallergic-remedios-varos-strange-and-mysterious-universes-in-varos-work-there-is-often-a-sense/\",\"assets/canonical-20261116/canon-varo-escape.jpg\"]": {
+      "sourceUrl": "https://gallerywendinorris.com/news/20-hyperallergic-remedios-varos-strange-and-mysterious-universes-in-varos-work-there-is-often-a-sense/",
+      "image": "assets/canonical-20261116/canon-varo-escape.jpg",
+      "previewSha256": "d82a8bcee6368c8f9cc0bff2770f854843dd3ed32b841e6d443a4baadc3e712d",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T08:39:39.080Z"
+    },
+    "[\"https://artsandculture.google.com/asset/sta%C5%84czyk-jan-matejko/4AHFtRqeObzoRw\",\"assets/collection-matejko-stanczyk.jpg\"]": {
+      "sourceUrl": "https://artsandculture.google.com/asset/sta%C5%84czyk-jan-matejko/4AHFtRqeObzoRw",
+      "image": "assets/collection-matejko-stanczyk.jpg",
+      "previewSha256": "4632ce3b0016db122aaa60502c6979c069bbacf9a8d91999f841d41dcbc1ac24",
+      "verification": "sha256-of-current-local-preview",
+      "verifiedAt": "2026-11-16T06:49:16.402Z",
+      "sourceIdentityCorrection": {
+        "version": "source-correction-20261116-v1",
+        "workId": "matejko-stanczyk",
+        "previousSourceUrl": "https://cyfrowe.mnw.pl/pl/zbiory/962339",
+        "sourceUrl": "https://artsandculture.google.com/asset/sta%C5%84czyk-jan-matejko/4AHFtRqeObzoRw",
+        "reason": "The previous museum URL identifies a 1876 wood engraving by Jan Styfi after Matejko. Its prototype field identifies the actual 1862 painting as MP433MNW. The museum-provided Google Arts & Culture object identifies the displayed colour painting as 1862, oil on canvas, inventory MP433. No print date or print medium is transferred to the painting.",
+        "evidenceUrls": [
+          "https://cyfrowe.mnw.pl/pl/zbiory/962339",
+          "https://artsandculture.google.com/asset/sta%C5%84czyk-jan-matejko/4AHFtRqeObzoRw"
+        ],
+        "imageUnchanged": "assets/collection-matejko-stanczyk.jpg",
+        "previewSha256": "4632ce3b0016db122aaa60502c6979c069bbacf9a8d91999f841d41dcbc1ac24",
+        "dateUnchanged": "1862",
+        "scope": "Current catalogue and current review/media bindings only. Previously saved participant manifests and exports are not rewritten."
+      }
     }
   },
   "reviews": {
@@ -11002,7 +11214,7 @@
       "reviewed": true,
       "reviewerType": "assistant-visual-review",
       "sourceIdentity": {
-        "sourceUrl": "https://cyfrowe.mnw.pl/pl/zbiory/962339",
+        "sourceUrl": "https://artsandculture.google.com/asset/sta%C5%84czyk-jan-matejko/4AHFtRqeObzoRw",
         "image": "assets/collection-matejko-stanczyk.jpg",
         "previewSha256": "4632ce3b0016db122aaa60502c6979c069bbacf9a8d91999f841d41dcbc1ac24"
       },
@@ -11017,7 +11229,8 @@
         "displayScale": "Actual whole-reproduction contact sheets, maximum384 by440 display pixels; selected ambiguous bulk works additionally inspected at native larger scale. Small unresolved bodies are unknown."
       },
       "sourceUrls": [
-        "https://cyfrowe.mnw.pl/pl/zbiory/962339"
+        "https://cyfrowe.mnw.pl/pl/zbiory/962339",
+        "https://artsandculture.google.com/asset/sta%C5%84czyk-jan-matejko/4AHFtRqeObzoRw"
       ],
       "beforeFeatureSemanticVersion": "literal-action-setting-v1",
       "before": {
@@ -11068,7 +11281,22 @@
         "color"
       ],
       "reviewMethod": "Assistant directly inspected the actual local reproduction under the two literal definitions. The remaining five scores were copied unchanged and were not certified by this audit. No artist, movement, title, emotional mood, brushwork energy or quality-tag defaults supply a literal score. This is editorial review, not independent human validation.",
-      "proposedFeatureSemanticVersion": "literal-action-setting-v2"
+      "proposedFeatureSemanticVersion": "literal-action-setting-v2",
+      "sourceIdentityCorrection": {
+        "version": "source-correction-20261116-v1",
+        "workId": "matejko-stanczyk",
+        "previousSourceUrl": "https://cyfrowe.mnw.pl/pl/zbiory/962339",
+        "sourceUrl": "https://artsandculture.google.com/asset/sta%C5%84czyk-jan-matejko/4AHFtRqeObzoRw",
+        "reason": "The previous museum URL identifies a 1876 wood engraving by Jan Styfi after Matejko. Its prototype field identifies the actual 1862 painting as MP433MNW. The museum-provided Google Arts & Culture object identifies the displayed colour painting as 1862, oil on canvas, inventory MP433. No print date or print medium is transferred to the painting.",
+        "evidenceUrls": [
+          "https://cyfrowe.mnw.pl/pl/zbiory/962339",
+          "https://artsandculture.google.com/asset/sta%C5%84czyk-jan-matejko/4AHFtRqeObzoRw"
+        ],
+        "imageUnchanged": "assets/collection-matejko-stanczyk.jpg",
+        "previewSha256": "4632ce3b0016db122aaa60502c6979c069bbacf9a8d91999f841d41dcbc1ac24",
+        "dateUnchanged": "1862",
+        "scope": "Current catalogue and current review/media bindings only. Previously saved participant manifests and exports are not rewritten."
+      }
     },
     "brueghel-sight": {
       "version": "literal-action-setting-v2",
@@ -20966,6 +21194,1707 @@
         "color"
       ],
       "reviewMethod": "Assistant directly inspected the actual local reproduction under the two literal definitions. The remaining five scores were copied unchanged and were not certified by this audit. No artist, movement, title, emotional mood, brushwork energy or quality-tag defaults supply a literal score. This is editorial review, not independent human validation.",
+      "proposedFeatureSemanticVersion": "literal-action-setting-v2"
+    },
+    "canon-caravaggio-calling-matthew": {
+      "version": "literal-action-setting-v2",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://saintlouis-rome.net/horaires-visite-opening-hours/caravage/",
+        "image": "assets/canonical-20261116/canon-caravaggio-calling-matthew.jpg",
+        "previewSha256": "a822f5f257f1a2c93feba4498c645380f8c0aae47ebcd69a7a44073f0ea1114e"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-caravaggio-calling-matthew-large.jpg",
+        "sha256": "61b7bebffca7b80ffdd1652d567c738a149e009aa7a487c913ce4bbc046b0d74",
+        "width": 2024,
+        "height": 1916,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://saintlouis-rome.net/horaires-visite-opening-hours/caravage/",
+        "https://commons.wikimedia.org/wiki/File:Michelangelo_Caravaggio_040.jpg",
+        "https://commons.wikimedia.org/wiki/File:Michelangelo_Caravaggio_040.jpg#Licensing"
+      ],
+      "before": {
+        "abstraction": 0.05,
+        "energy": 0.35,
+        "complexity": 0.7,
+        "humanity": 0.85,
+        "narrative": 0.5,
+        "atmosphere": 0.5,
+        "color": 0.35
+      },
+      "after": {
+        "abstraction": 0.05,
+        "energy": 0.35,
+        "complexity": 0.7,
+        "humanity": 0.85,
+        "narrative": 0.5,
+        "atmosphere": 0.5,
+        "color": 0.35
+      },
+      "fields": {
+        "narrative": {
+          "status": "reviewed",
+          "value": 0.5,
+          "reason": "Several restrained pointing and turning gestures act within a recognisable but spare room. Dramatic light is separate from bodily force and from the amount of setting.",
+          "evidenceKind": "assistant-visual-review"
+        },
+        "atmosphere": {
+          "status": "reviewed",
+          "value": 0.5,
+          "reason": "Several restrained pointing and turning gestures act within a recognisable but spare room. Dramatic light is separate from bodily force and from the amount of setting.",
+          "evidenceKind": "assistant-visual-review"
+        }
+      },
+      "changedFeatures": [],
+      "reviewedFeatures": [
+        "narrative",
+        "atmosphere"
+      ],
+      "retainedDraftFeatures": [
+        "abstraction",
+        "energy",
+        "complexity",
+        "humanity",
+        "color"
+      ],
+      "reviewMethod": "Individual literal action/setting review for this newly added exact reproduction. No existing catalogue values or captured responses are overwritten.",
+      "proposedFeatureSemanticVersion": "literal-action-setting-v2"
+    },
+    "canon-caravaggio-entombment": {
+      "version": "literal-action-setting-v2",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://www.museivaticani.va/content/museivaticani/en/collezioni/musei/la-pinacoteca/sala-xii---secolo-xvii/caravaggio--deposizione-dalla-croce.html",
+        "image": "assets/canonical-20261116/canon-caravaggio-entombment.jpg",
+        "previewSha256": "3e368846e3adf1a0794cc0a902e99eaba222b92d08255b165665ff6072b13592"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-caravaggio-entombment-large.jpg",
+        "sha256": "be37099fb63aa572e76495b497d5c8877ad273b916f54dee1643ce38789dd49e",
+        "width": 2154,
+        "height": 3200,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://www.museivaticani.va/content/museivaticani/en/collezioni/musei/la-pinacoteca/sala-xii---secolo-xvii/caravaggio--deposizione-dalla-croce.html",
+        "https://www.vaticannews.va/en/vatican-city/news/2021-03/vatican-museums-art-prayer-faith-lent-consolation-pope-9.html",
+        "https://commons.wikimedia.org/wiki/File:The_Entombment_of_Christ-Caravaggio_(c.1602-3).jpg",
+        "https://commons.wikimedia.org/wiki/File:The_Entombment_of_Christ-Caravaggio_(c.1602-3).jpg#Licensing"
+      ],
+      "before": {
+        "abstraction": 0.05,
+        "energy": 0.7,
+        "complexity": 0.75,
+        "humanity": 1,
+        "narrative": 0.75,
+        "atmosphere": 0.25,
+        "color": 0.45
+      },
+      "after": {
+        "abstraction": 0.05,
+        "energy": 0.7,
+        "complexity": 0.75,
+        "humanity": 1,
+        "narrative": 0.75,
+        "atmosphere": 0.25,
+        "color": 0.45
+      },
+      "fields": {
+        "narrative": {
+          "status": "reviewed",
+          "value": 0.75,
+          "reason": "The living figures carry and reach with substantial effort while the dead body remains still. Slab, shroud and a little ground provide limited place against darkness.",
+          "evidenceKind": "assistant-visual-review"
+        },
+        "atmosphere": {
+          "status": "reviewed",
+          "value": 0.25,
+          "reason": "The living figures carry and reach with substantial effort while the dead body remains still. Slab, shroud and a little ground provide limited place against darkness.",
+          "evidenceKind": "assistant-visual-review"
+        }
+      },
+      "changedFeatures": [],
+      "reviewedFeatures": [
+        "narrative",
+        "atmosphere"
+      ],
+      "retainedDraftFeatures": [
+        "abstraction",
+        "energy",
+        "complexity",
+        "humanity",
+        "color"
+      ],
+      "reviewMethod": "Individual literal action/setting review for this newly added exact reproduction. No existing catalogue values or captured responses are overwritten.",
+      "proposedFeatureSemanticVersion": "literal-action-setting-v2"
+    },
+    "canon-caravaggio-bacchus": {
+      "version": "literal-action-setting-v2",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://www.uffizi.it/en/artworks/caravaggio-bacchus",
+        "image": "assets/canonical-20261116/canon-caravaggio-bacchus.jpg",
+        "previewSha256": "14642389a1d6ed10e7bc6c3d5f0af21b7a7946b41871095f5f963a3c1658d8fb"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-caravaggio-bacchus-large.jpg",
+        "sha256": "57b01e60032ae7d0b4ae1455885dc63510be87f5b4eae365da5605aafb7cd259",
+        "width": 2788,
+        "height": 3200,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://www.uffizi.it/en/artworks/caravaggio-bacchus",
+        "https://commons.wikimedia.org/wiki/File:Bacchus-Caravaggio_(1598).jpg",
+        "https://commons.wikimedia.org/wiki/File:Bacchus-Caravaggio_(1598).jpg#Licensing"
+      ],
+      "before": {
+        "abstraction": 0.05,
+        "energy": 0.2,
+        "complexity": 0.65,
+        "humanity": 0.8,
+        "narrative": 0.25,
+        "atmosphere": 0,
+        "color": 0.55
+      },
+      "after": {
+        "abstraction": 0.05,
+        "energy": 0.2,
+        "complexity": 0.65,
+        "humanity": 0.8,
+        "narrative": 0.25,
+        "atmosphere": 0,
+        "color": 0.55
+      },
+      "fields": {
+        "narrative": {
+          "status": "reviewed",
+          "value": 0.25,
+          "reason": "The hand quietly offers the wine while the body remains posed. Cloth and a table do not establish an extended environmental place.",
+          "evidenceKind": "assistant-visual-review"
+        },
+        "atmosphere": {
+          "status": "reviewed",
+          "value": 0,
+          "reason": "The hand quietly offers the wine while the body remains posed. Cloth and a table do not establish an extended environmental place.",
+          "evidenceKind": "assistant-visual-review"
+        }
+      },
+      "changedFeatures": [],
+      "reviewedFeatures": [
+        "narrative",
+        "atmosphere"
+      ],
+      "retainedDraftFeatures": [
+        "abstraction",
+        "energy",
+        "complexity",
+        "humanity",
+        "color"
+      ],
+      "reviewMethod": "Individual literal action/setting review for this newly added exact reproduction. No existing catalogue values or captured responses are overwritten.",
+      "proposedFeatureSemanticVersion": "literal-action-setting-v2"
+    },
+    "canon-caravaggio-medusa": {
+      "version": "literal-action-setting-v2",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://www.catalogo.beniculturali.it/detail/HistoricOrArtisticProperty/0900289175",
+        "image": "assets/canonical-20261116/canon-caravaggio-medusa.jpg",
+        "previewSha256": "37799da2c0de8cc3b14d62a260ac4de76730e22bc3176e9440aa6c3d551638f5"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-caravaggio-medusa-large.jpg",
+        "sha256": "5cbe3d8563ffb81b4a1029e6c07995569fe14a981fdfcf6b44570ab1e9595d07",
+        "width": 3196,
+        "height": 3200,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://www.catalogo.beniculturali.it/detail/HistoricOrArtisticProperty/0900289175",
+        "https://www.uffizi.it/mostre-virtuali/sguardi-dal-mondo",
+        "https://commons.wikimedia.org/wiki/File:Caravaggio_-_Medusa_Uffizi_-_High_quality.jpg",
+        "https://creativecommons.org/publicdomain/zero/1.0/"
+      ],
+      "before": {
+        "abstraction": 0.1,
+        "energy": 0.4,
+        "complexity": 0.65,
+        "humanity": 0.85,
+        "narrative": 0.25,
+        "atmosphere": 0,
+        "color": 0.4
+      },
+      "after": {
+        "abstraction": 0.1,
+        "energy": 0.4,
+        "complexity": 0.65,
+        "humanity": 0.85,
+        "narrative": 0.25,
+        "atmosphere": 0,
+        "color": 0.4
+      },
+      "fields": {
+        "narrative": {
+          "status": "reviewed",
+          "value": 0.25,
+          "reason": "The open mouth and articulated snake bodies give limited bodily gesture. No beheading stroke or surrounding place is depicted; the shield's photographed support is not a painted environment.",
+          "evidenceKind": "assistant-visual-review"
+        },
+        "atmosphere": {
+          "status": "reviewed",
+          "value": 0,
+          "reason": "The open mouth and articulated snake bodies give limited bodily gesture. No beheading stroke or surrounding place is depicted; the shield's photographed support is not a painted environment.",
+          "evidenceKind": "assistant-visual-review"
+        }
+      },
+      "changedFeatures": [],
+      "reviewedFeatures": [
+        "narrative",
+        "atmosphere"
+      ],
+      "retainedDraftFeatures": [
+        "abstraction",
+        "energy",
+        "complexity",
+        "humanity",
+        "color"
+      ],
+      "reviewMethod": "Individual literal action/setting review for this newly added exact reproduction. No existing catalogue values or captured responses are overwritten.",
+      "proposedFeatureSemanticVersion": "literal-action-setting-v2"
+    },
+    "canon-leonardo-last-supper": {
+      "version": "literal-action-setting-v2",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://cenacolovinciano.org/en/museum/the-works/the-last-supper-leonardo-da-vinci-1452-1519/",
+        "image": "assets/canonical-20261116/canon-leonardo-last-supper.jpg",
+        "previewSha256": "27bd14cdd089b7a584dd1524be8a879d7b5da0571c17721c5879c93a61943b7a"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-leonardo-last-supper-large.jpg",
+        "sha256": "41b042964875dc1eb986f1f2223a4b94332968c4bef5d687eee5e34f975c104e",
+        "width": 3200,
+        "height": 1740,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://cenacolovinciano.org/en/museum/the-works/the-last-supper-leonardo-da-vinci-1452-1519/",
+        "https://commons.wikimedia.org/wiki/File:Leonardo_da_Vinci_-_The_Last_Supper_high_res.jpg",
+        "https://commons.wikimedia.org/wiki/File:Leonardo_da_Vinci_-_The_Last_Supper_high_res.jpg#Licensing"
+      ],
+      "before": {
+        "abstraction": 0.05,
+        "energy": 0.4,
+        "complexity": 0.85,
+        "humanity": 0.75,
+        "narrative": 0.5,
+        "atmosphere": 1,
+        "color": 0.35
+      },
+      "after": {
+        "abstraction": 0.05,
+        "energy": 0.4,
+        "complexity": 0.85,
+        "humanity": 0.75,
+        "narrative": 0.5,
+        "atmosphere": 1,
+        "color": 0.35
+      },
+      "fields": {
+        "narrative": {
+          "status": "reviewed",
+          "value": 0.5,
+          "reason": "Many hands turn, reach and react with moderate activity. The long room, coffered ceiling and distant openings dominate the environmental construction.",
+          "evidenceKind": "assistant-visual-review"
+        },
+        "atmosphere": {
+          "status": "reviewed",
+          "value": 1,
+          "reason": "Many hands turn, reach and react with moderate activity. The long room, coffered ceiling and distant openings dominate the environmental construction.",
+          "evidenceKind": "assistant-visual-review"
+        }
+      },
+      "changedFeatures": [],
+      "reviewedFeatures": [
+        "narrative",
+        "atmosphere"
+      ],
+      "retainedDraftFeatures": [
+        "abstraction",
+        "energy",
+        "complexity",
+        "humanity",
+        "color"
+      ],
+      "reviewMethod": "Individual literal action/setting review for this newly added exact reproduction. No existing catalogue values or captured responses are overwritten.",
+      "proposedFeatureSemanticVersion": "literal-action-setting-v2"
+    },
+    "canon-michelangelo-creation-adam": {
+      "version": "literal-action-setting-v2",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://www.museivaticani.va/content/museivaticani/en/collezioni/musei/cappella-sistina/volta/storie-centrali/creazione-di-adamo.html",
+        "image": "assets/canonical-20261116/canon-michelangelo-creation-adam.jpg",
+        "previewSha256": "9ff394db664c19dd6b825033fa437145a216b3be9b2503654b2874ec98ef4b74"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-michelangelo-creation-adam-large.jpg",
+        "sha256": "1ad0a688955b6e51358b990433dd3090e3b2ebe1890ae6a8ac172e3ebe2cf2ac",
+        "width": 3200,
+        "height": 1452,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://www.museivaticani.va/content/museivaticani/en/collezioni/musei/cappella-sistina/volta/storie-centrali/creazione-di-adamo.html",
+        "https://commons.wikimedia.org/wiki/File:Michelangelo_-_Creation_of_Adam_(cropped).jpg",
+        "https://commons.wikimedia.org/wiki/File:Michelangelo_-_Creation_of_Adam_(cropped).jpg#Licensing"
+      ],
+      "before": {
+        "abstraction": 0.08,
+        "energy": 0.5,
+        "complexity": 0.6,
+        "humanity": 1,
+        "narrative": 0.5,
+        "atmosphere": 0.25,
+        "color": 0.4
+      },
+      "after": {
+        "abstraction": 0.08,
+        "energy": 0.5,
+        "complexity": 0.6,
+        "humanity": 1,
+        "narrative": 0.5,
+        "atmosphere": 0.25,
+        "color": 0.4
+      },
+      "fields": {
+        "narrative": {
+          "status": "reviewed",
+          "value": 0.5,
+          "reason": "Several bodies extend their limbs and the right-hand group is visibly unsupported in flight. A small amount of rocky ground gives limited setting against a broad light field.",
+          "evidenceKind": "assistant-visual-review"
+        },
+        "atmosphere": {
+          "status": "reviewed",
+          "value": 0.25,
+          "reason": "Several bodies extend their limbs and the right-hand group is visibly unsupported in flight. A small amount of rocky ground gives limited setting against a broad light field.",
+          "evidenceKind": "assistant-visual-review"
+        }
+      },
+      "changedFeatures": [],
+      "reviewedFeatures": [
+        "narrative",
+        "atmosphere"
+      ],
+      "retainedDraftFeatures": [
+        "abstraction",
+        "energy",
+        "complexity",
+        "humanity",
+        "color"
+      ],
+      "reviewMethod": "Individual literal action/setting review for this newly added exact reproduction. No existing catalogue values or captured responses are overwritten.",
+      "proposedFeatureSemanticVersion": "literal-action-setting-v2"
+    },
+    "canon-bosch-temptations-lisbon": {
+      "version": "literal-action-setting-v2",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://raiz.museusemonumentos.pt/DetalhesObra/Index/247559?tipo=OBJ",
+        "image": "assets/canonical-20261116/canon-bosch-temptations-lisbon.jpg",
+        "previewSha256": "d115285003975d904c4d309f22f3732dfeb98e0893ff42aec40efbf8dbac2566"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-bosch-temptations-lisbon-large.jpg",
+        "sha256": "8fe23f62786d6932be0aa9a8c46e2e603e4a624e0ec725076dff0506528601c7",
+        "width": 3200,
+        "height": 1873,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://raiz.museusemonumentos.pt/DetalhesObra/Index/247559?tipo=OBJ",
+        "https://commons.wikimedia.org/wiki/File:The_Temptation_of_Saint_Anthony,_ca._1495-1515.jpg",
+        "https://commons.wikimedia.org/wiki/File:The_Temptation_of_Saint_Anthony,_ca._1495-1515.jpg#Licensing"
+      ],
+      "before": {
+        "abstraction": 0.25,
+        "energy": 0.7,
+        "complexity": 1,
+        "humanity": 0.6,
+        "narrative": 0.75,
+        "atmosphere": 1,
+        "color": 0.6
+      },
+      "after": {
+        "abstraction": 0.25,
+        "energy": 0.7,
+        "complexity": 1,
+        "humanity": 0.6,
+        "narrative": 0.75,
+        "atmosphere": 1,
+        "color": 0.6
+      },
+      "fields": {
+        "narrative": {
+          "status": "reviewed",
+          "value": 0.75,
+          "reason": "Numerous bodies visibly carry, climb, fly, reach and interact. Extensive terrain, ruins, water and distant buildings structure all three panels.",
+          "evidenceKind": "assistant-visual-review"
+        },
+        "atmosphere": {
+          "status": "reviewed",
+          "value": 1,
+          "reason": "Numerous bodies visibly carry, climb, fly, reach and interact. Extensive terrain, ruins, water and distant buildings structure all three panels.",
+          "evidenceKind": "assistant-visual-review"
+        }
+      },
+      "changedFeatures": [],
+      "reviewedFeatures": [
+        "narrative",
+        "atmosphere"
+      ],
+      "retainedDraftFeatures": [
+        "abstraction",
+        "energy",
+        "complexity",
+        "humanity",
+        "color"
+      ],
+      "reviewMethod": "Individual literal action/setting review for this newly added exact reproduction. No existing catalogue values or captured responses are overwritten.",
+      "proposedFeatureSemanticVersion": "literal-action-setting-v2"
+    },
+    "canon-bruegel-tower-babel": {
+      "version": "literal-action-setting-v2",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://www.khm.at/en/visit/only-in-vienna",
+        "image": "assets/canonical-20261116/canon-bruegel-tower-babel.jpg",
+        "previewSha256": "0590694d2b186122cfaa48e8e6b2da10a21f04c1809ad61dc1d664b1d0b54667"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-bruegel-tower-babel-large.jpg",
+        "sha256": "5f508d503faf3aba54594dde02f584b53cbfca33c9e592d84e4a766fd9e0fa36",
+        "width": 3200,
+        "height": 2342,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://www.khm.at/en/visit/only-in-vienna",
+        "https://press.khm.at/fileadmin/content/KHM/Presse/2018/Bruegel/PT_Bruegel_E.pdf",
+        "https://commons.wikimedia.org/wiki/File:Pieter_Bruegel_the_Elder_-_The_Tower_of_Babel_(Vienna)_-_Google_Art_Project.jpg",
+        "https://commons.wikimedia.org/wiki/File:Pieter_Bruegel_the_Elder_-_The_Tower_of_Babel_(Vienna)_-_Google_Art_Project.jpg#Licensing"
+      ],
+      "before": {
+        "abstraction": 0.05,
+        "energy": 0.3,
+        "complexity": 1,
+        "humanity": 0.25,
+        "narrative": 0.5,
+        "atmosphere": 1,
+        "color": 0.55
+      },
+      "after": {
+        "abstraction": 0.05,
+        "energy": 0.3,
+        "complexity": 1,
+        "humanity": 0.25,
+        "narrative": 0.5,
+        "atmosphere": 1,
+        "color": 0.55
+      },
+      "fields": {
+        "narrative": {
+          "status": "reviewed",
+          "value": 0.5,
+          "reason": "Small workers carry, kneel and handle materials. Tower, harbour, town, terrain and sky provide an extensive environmental place.",
+          "evidenceKind": "assistant-visual-review"
+        },
+        "atmosphere": {
+          "status": "reviewed",
+          "value": 1,
+          "reason": "Small workers carry, kneel and handle materials. Tower, harbour, town, terrain and sky provide an extensive environmental place.",
+          "evidenceKind": "assistant-visual-review"
+        }
+      },
+      "changedFeatures": [],
+      "reviewedFeatures": [
+        "narrative",
+        "atmosphere"
+      ],
+      "retainedDraftFeatures": [
+        "abstraction",
+        "energy",
+        "complexity",
+        "humanity",
+        "color"
+      ],
+      "reviewMethod": "Individual literal action/setting review for this newly added exact reproduction. No existing catalogue values or captured responses are overwritten.",
+      "proposedFeatureSemanticVersion": "literal-action-setting-v2"
+    },
+    "canon-bruegel-netherlandish-proverbs": {
+      "version": "literal-action-setting-v2",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://search.smb.museum/object/obj-867614",
+        "image": "assets/canonical-20261116/canon-bruegel-netherlandish-proverbs.jpg",
+        "previewSha256": "0f08af15c258463f0d9e5a29406edb7b739a5db37e6c818798bb6d0c0e7b0696"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-bruegel-netherlandish-proverbs-large.jpg",
+        "sha256": "a09961194e17bc73c64ae66b4acc93e1b2420cc39fc25c03095e24248115356f",
+        "width": 3200,
+        "height": 2266,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://search.smb.museum/object/obj-867614",
+        "https://commons.wikimedia.org/wiki/File:Pieter_Brueghel_the_Elder_-_The_Dutch_Proverbs_-_Google_Art_Project.jpg",
+        "https://commons.wikimedia.org/wiki/File:Pieter_Brueghel_the_Elder_-_The_Dutch_Proverbs_-_Google_Art_Project.jpg#Licensing"
+      ],
+      "before": {
+        "abstraction": 0.05,
+        "energy": 0.75,
+        "complexity": 1,
+        "humanity": 0.65,
+        "narrative": 0.75,
+        "atmosphere": 1,
+        "color": 0.6
+      },
+      "after": {
+        "abstraction": 0.05,
+        "energy": 0.75,
+        "complexity": 1,
+        "humanity": 0.65,
+        "narrative": 0.75,
+        "atmosphere": 1,
+        "color": 0.6
+      },
+      "fields": {
+        "narrative": {
+          "status": "reviewed",
+          "value": 0.75,
+          "reason": "Many figures walk, grapple, reach and handle objects. Village, square, water, bridge and distant terrain make an extensive surrounding place.",
+          "evidenceKind": "assistant-visual-review"
+        },
+        "atmosphere": {
+          "status": "reviewed",
+          "value": 1,
+          "reason": "Many figures walk, grapple, reach and handle objects. Village, square, water, bridge and distant terrain make an extensive surrounding place.",
+          "evidenceKind": "assistant-visual-review"
+        }
+      },
+      "changedFeatures": [],
+      "reviewedFeatures": [
+        "narrative",
+        "atmosphere"
+      ],
+      "retainedDraftFeatures": [
+        "abstraction",
+        "energy",
+        "complexity",
+        "humanity",
+        "color"
+      ],
+      "reviewMethod": "Individual literal action/setting review for this newly added exact reproduction. No existing catalogue values or captured responses are overwritten.",
+      "proposedFeatureSemanticVersion": "literal-action-setting-v2"
+    },
+    "canon-goya-third-may": {
+      "version": "literal-action-setting-v2",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://www.museodelprado.es/coleccion/obra-de-arte/el-3-de-mayo-en-madrid-o-los-fusilamientos/5e177409-2993-4240-97fb-847a02c6496c",
+        "image": "assets/canonical-20261116/canon-goya-third-may.jpg",
+        "previewSha256": "471111641346c3259e8c9f0936a78bef337037250b2e8d9485d8158c060b549a"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-goya-third-may-large.jpg",
+        "sha256": "2c7d260f2dff1acb876ab3bccb467c89618e8f825cc6ed207a922a63c218b984",
+        "width": 3200,
+        "height": 2468,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://www.museodelprado.es/coleccion/obra-de-arte/el-3-de-mayo-en-madrid-o-los-fusilamientos/5e177409-2993-4240-97fb-847a02c6496c",
+        "https://commons.wikimedia.org/wiki/File:El_Tres_de_Mayo,_by_Francisco_de_Goya,_from_Prado_in_Google_Earth.jpg",
+        "https://commons.wikimedia.org/wiki/File:El_Tres_de_Mayo,_by_Francisco_de_Goya,_from_Prado_in_Google_Earth.jpg#Licensing"
+      ],
+      "before": {
+        "abstraction": 0.1,
+        "energy": 0.7,
+        "complexity": 0.75,
+        "humanity": 0.9,
+        "narrative": 0.5,
+        "atmosphere": 0.75,
+        "color": 0.4
+      },
+      "after": {
+        "abstraction": 0.1,
+        "energy": 0.7,
+        "complexity": 0.75,
+        "humanity": 0.9,
+        "narrative": 0.5,
+        "atmosphere": 0.75,
+        "color": 0.4
+      },
+      "fields": {
+        "narrative": {
+          "status": "reviewed",
+          "value": 0.5,
+          "reason": "Bodies raise arms, aim weapons, kneel and cover faces, with moderate visible exertion. The hillside, ground and distant buildings form substantial setting; the scene's violent meaning does not by itself make an action score of 1.",
+          "evidenceKind": "assistant-visual-review"
+        },
+        "atmosphere": {
+          "status": "reviewed",
+          "value": 0.75,
+          "reason": "Bodies raise arms, aim weapons, kneel and cover faces, with moderate visible exertion. The hillside, ground and distant buildings form substantial setting; the scene's violent meaning does not by itself make an action score of 1.",
+          "evidenceKind": "assistant-visual-review"
+        }
+      },
+      "changedFeatures": [],
+      "reviewedFeatures": [
+        "narrative",
+        "atmosphere"
+      ],
+      "retainedDraftFeatures": [
+        "abstraction",
+        "energy",
+        "complexity",
+        "humanity",
+        "color"
+      ],
+      "reviewMethod": "Individual literal action/setting review for this newly added exact reproduction. No existing catalogue values or captured responses are overwritten.",
+      "proposedFeatureSemanticVersion": "literal-action-setting-v2"
+    },
+    "canon-velazquez-breda": {
+      "version": "literal-action-setting-v2",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://www.museodelprado.es/coleccion/obra-de-arte/las-lanzas-o-la-rendicion-de-breda/0cc7577a-51d9-44fd-b4d5-4dba8d9cb13a",
+        "image": "assets/canonical-20261116/canon-velazquez-breda.jpg",
+        "previewSha256": "ba3a4f3e59b8411826307d5bc04476bd0355dc6ed2382d05646e674fa067db25"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-velazquez-breda-large.jpg",
+        "sha256": "a722cfa43f1a15950cdea8fd57f8458626c368d22f10ee3ce15ae6a8d1790ded",
+        "width": 3051,
+        "height": 2516,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://www.museodelprado.es/coleccion/obra-de-arte/las-lanzas-o-la-rendicion-de-breda/0cc7577a-51d9-44fd-b4d5-4dba8d9cb13a",
+        "https://commons.wikimedia.org/wiki/File:Velazquez-The_Surrender_of_Breda.jpg",
+        "https://commons.wikimedia.org/wiki/File:Velazquez-The_Surrender_of_Breda.jpg#Licensing"
+      ],
+      "before": {
+        "abstraction": 0.05,
+        "energy": 0.3,
+        "complexity": 0.85,
+        "humanity": 0.8,
+        "narrative": 0.25,
+        "atmosphere": 0.75,
+        "color": 0.45
+      },
+      "after": {
+        "abstraction": 0.05,
+        "energy": 0.3,
+        "complexity": 0.85,
+        "humanity": 0.8,
+        "narrative": 0.25,
+        "atmosphere": 0.75,
+        "color": 0.45
+      },
+      "fields": {
+        "narrative": {
+          "status": "reviewed",
+          "value": 0.25,
+          "reason": "The central hands and surrounding people make restrained gestures rather than fight. Deep ground, distant buildings and landscape create substantial setting.",
+          "evidenceKind": "assistant-visual-review"
+        },
+        "atmosphere": {
+          "status": "reviewed",
+          "value": 0.75,
+          "reason": "The central hands and surrounding people make restrained gestures rather than fight. Deep ground, distant buildings and landscape create substantial setting.",
+          "evidenceKind": "assistant-visual-review"
+        }
+      },
+      "changedFeatures": [],
+      "reviewedFeatures": [
+        "narrative",
+        "atmosphere"
+      ],
+      "retainedDraftFeatures": [
+        "abstraction",
+        "energy",
+        "complexity",
+        "humanity",
+        "color"
+      ],
+      "reviewMethod": "Individual literal action/setting review for this newly added exact reproduction. No existing catalogue values or captured responses are overwritten.",
+      "proposedFeatureSemanticVersion": "literal-action-setting-v2"
+    },
+    "canon-rembrandt-prodigal-son": {
+      "version": "literal-action-setting-v2",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://www.hermitagemuseum.org/digital-collection/43413?lng=en",
+        "image": "assets/canonical-20261116/canon-rembrandt-prodigal-son.jpg",
+        "previewSha256": "c40edb3ad2fc565d0e5084b56b3312693e008a7dbe167903ea2701ad5ea63aeb"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-rembrandt-prodigal-son-large.jpg",
+        "sha256": "65b51cce887028f8086ee43dcaf8a3817d8abf769aa9e742488367e777a10838",
+        "width": 2452,
+        "height": 3200,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://www.hermitagemuseum.org/digital-collection/43413?lng=en",
+        "https://hermitagemuseum.org/uploads/files/publications/d41d8cd98f00b204e9800998ecf8427e1731921599.pdf",
+        "https://commons.wikimedia.org/wiki/File:Rembrandt_Harmensz_van_Rijn_-_Return_of_the_Prodigal_Son_-_Google_Art_Project.jpg",
+        "https://commons.wikimedia.org/wiki/File:Rembrandt_Harmensz_van_Rijn_-_Return_of_the_Prodigal_Son_-_Google_Art_Project.jpg#Licensing"
+      ],
+      "before": {
+        "abstraction": 0.05,
+        "energy": 0.2,
+        "complexity": 0.6,
+        "humanity": 0.9,
+        "narrative": 0.25,
+        "atmosphere": 0.5,
+        "color": 0.3
+      },
+      "after": {
+        "abstraction": 0.05,
+        "energy": 0.2,
+        "complexity": 0.6,
+        "humanity": 0.9,
+        "narrative": 0.25,
+        "atmosphere": 0.5,
+        "color": 0.3
+      },
+      "fields": {
+        "narrative": {
+          "status": "reviewed",
+          "value": 0.25,
+          "reason": "Hands quietly touch the kneeling figure; intense feeling is not intense bodily action. Steps, floor and dim architectural recesses supply a recognisable secondary interior.",
+          "evidenceKind": "assistant-visual-review"
+        },
+        "atmosphere": {
+          "status": "reviewed",
+          "value": 0.5,
+          "reason": "Hands quietly touch the kneeling figure; intense feeling is not intense bodily action. Steps, floor and dim architectural recesses supply a recognisable secondary interior.",
+          "evidenceKind": "assistant-visual-review"
+        }
+      },
+      "changedFeatures": [],
+      "reviewedFeatures": [
+        "narrative",
+        "atmosphere"
+      ],
+      "retainedDraftFeatures": [
+        "abstraction",
+        "energy",
+        "complexity",
+        "humanity",
+        "color"
+      ],
+      "reviewMethod": "Individual literal action/setting review for this newly added exact reproduction. No existing catalogue values or captured responses are overwritten.",
+      "proposedFeatureSemanticVersion": "literal-action-setting-v2"
+    },
+    "canon-holbein-dead-christ": {
+      "version": "literal-action-setting-v2",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://kunstmuseumbasel.ch/de/ausstellungen/2021/holbein-und-dostojewski/wandtexte",
+        "image": "assets/canonical-20261116/canon-holbein-dead-christ.jpg",
+        "previewSha256": "09b6f67205c71cde93206a1f4e44c4f3e8403df53a0d497e8b8171ffde738fa4"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-holbein-dead-christ-large.jpg",
+        "sha256": "799b8a7ac721125326ae7d44d9543d327c46d847451d6837b4919ee12c9968dc",
+        "width": 3200,
+        "height": 478,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://kunstmuseumbasel.ch/de/ausstellungen/2021/holbein-und-dostojewski/wandtexte",
+        "https://kunstmuseumbasel.ch/de/sammlung/schwerpunkte",
+        "https://commons.wikimedia.org/wiki/File:Holbein_%E2%80%94_Dead_Christ.jpg",
+        "https://creativecommons.org/publicdomain/zero/1.0/"
+      ],
+      "before": {
+        "abstraction": 0.03,
+        "energy": 0.05,
+        "complexity": 0.5,
+        "humanity": 1,
+        "narrative": 0,
+        "atmosphere": 0.25,
+        "color": 0.2
+      },
+      "after": {
+        "abstraction": 0.03,
+        "energy": 0.05,
+        "complexity": 0.5,
+        "humanity": 1,
+        "narrative": 0,
+        "atmosphere": 0.25,
+        "color": 0.2
+      },
+      "fields": {
+        "narrative": {
+          "status": "reviewed",
+          "value": 0,
+          "reason": "The dead body is motionless. A shallow cavity and cloth give minimal physical place rather than a large surrounding environment.",
+          "evidenceKind": "assistant-visual-review"
+        },
+        "atmosphere": {
+          "status": "reviewed",
+          "value": 0.25,
+          "reason": "The dead body is motionless. A shallow cavity and cloth give minimal physical place rather than a large surrounding environment.",
+          "evidenceKind": "assistant-visual-review"
+        }
+      },
+      "changedFeatures": [],
+      "reviewedFeatures": [
+        "narrative",
+        "atmosphere"
+      ],
+      "retainedDraftFeatures": [
+        "abstraction",
+        "energy",
+        "complexity",
+        "humanity",
+        "color"
+      ],
+      "reviewMethod": "Individual literal action/setting review for this newly added exact reproduction. No existing catalogue values or captured responses are overwritten.",
+      "proposedFeatureSemanticVersion": "literal-action-setting-v2"
+    },
+    "canon-durer-melencolia": {
+      "version": "literal-action-setting-v2",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://www.metmuseum.org/art/collection/search/336228",
+        "image": "assets/canonical-20261116/canon-durer-melencolia.jpg",
+        "previewSha256": "31d99698e2a42167d87e9f365308079fd3f75fec14c68a3b2b17eb7645242e3f"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-durer-melencolia-large.jpg",
+        "sha256": "047cefc1e17470a6fb774ee1eb4e3c325452933bc83098de880c7ab0046f2739",
+        "width": 2534,
+        "height": 3200,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://www.metmuseum.org/art/collection/search/336228",
+        "https://collectionapi.metmuseum.org/public/collection/v1/objects/336228",
+        "https://www.metmuseum.org/policies/image-resources"
+      ],
+      "before": {
+        "abstraction": 0.1,
+        "energy": 0.25,
+        "complexity": 1,
+        "humanity": 0.7,
+        "narrative": 0.25,
+        "atmosphere": 0.75,
+        "color": 0
+      },
+      "after": {
+        "abstraction": 0.1,
+        "energy": 0.25,
+        "complexity": 1,
+        "humanity": 0.7,
+        "narrative": 0.25,
+        "atmosphere": 0.75,
+        "color": 0
+      },
+      "fields": {
+        "narrative": {
+          "status": "reviewed",
+          "value": 0.25,
+          "reason": "The smaller seated figure quietly writes while the main figure rests and holds a tool. The built corner and distant water provide substantial physical setting.",
+          "evidenceKind": "assistant-visual-review"
+        },
+        "atmosphere": {
+          "status": "reviewed",
+          "value": 0.75,
+          "reason": "The smaller seated figure quietly writes while the main figure rests and holds a tool. The built corner and distant water provide substantial physical setting.",
+          "evidenceKind": "assistant-visual-review"
+        }
+      },
+      "changedFeatures": [],
+      "reviewedFeatures": [
+        "narrative",
+        "atmosphere"
+      ],
+      "retainedDraftFeatures": [
+        "abstraction",
+        "energy",
+        "complexity",
+        "humanity",
+        "color"
+      ],
+      "reviewMethod": "Individual literal action/setting review for this newly added exact reproduction. No existing catalogue values or captured responses are overwritten.",
+      "proposedFeatureSemanticVersion": "literal-action-setting-v2"
+    },
+    "canon-delacroix-sardanapalus": {
+      "version": "literal-action-setting-v2",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://collections.louvre.fr/ark:/53355/cl010065757",
+        "image": "assets/canonical-20261116/canon-delacroix-sardanapalus.jpg",
+        "previewSha256": "d0879258415e908d62d45bd7c71a94ff5f78bf55522b2e8608d6c199eaedeb22"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-delacroix-sardanapalus-large.jpg",
+        "sha256": "86ab40a7fd26010207ff5dfcd09554f1b30925f8a054c36997e69bee2f3a8acc",
+        "width": 3200,
+        "height": 2504,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://collections.louvre.fr/ark:/53355/cl010065757",
+        "https://commons.wikimedia.org/wiki/File:Mort_de_Sardanapale_-_Eug%C3%A8ne_Delacroix_-_Mus%C3%A9e_du_Louvre_Peintures_RF_2346.jpg",
+        "https://commons.wikimedia.org/wiki/File:Mort_de_Sardanapale_-_Eug%C3%A8ne_Delacroix_-_Mus%C3%A9e_du_Louvre_Peintures_RF_2346.jpg#Licensing"
+      ],
+      "before": {
+        "abstraction": 0.1,
+        "energy": 0.9,
+        "complexity": 1,
+        "humanity": 1,
+        "narrative": 1,
+        "atmosphere": 0.5,
+        "color": 0.65
+      },
+      "after": {
+        "abstraction": 0.1,
+        "energy": 0.9,
+        "complexity": 1,
+        "humanity": 1,
+        "narrative": 1,
+        "atmosphere": 0.5,
+        "color": 0.65
+      },
+      "fields": {
+        "narrative": {
+          "status": "reviewed",
+          "value": 1,
+          "reason": "Bodies wrestle, restrain, strike and strain with intense visible action. Bed, drapery and architectural fragments supply a secondary surrounding interior.",
+          "evidenceKind": "assistant-visual-review"
+        },
+        "atmosphere": {
+          "status": "reviewed",
+          "value": 0.5,
+          "reason": "Bodies wrestle, restrain, strike and strain with intense visible action. Bed, drapery and architectural fragments supply a secondary surrounding interior.",
+          "evidenceKind": "assistant-visual-review"
+        }
+      },
+      "changedFeatures": [],
+      "reviewedFeatures": [
+        "narrative",
+        "atmosphere"
+      ],
+      "retainedDraftFeatures": [
+        "abstraction",
+        "energy",
+        "complexity",
+        "humanity",
+        "color"
+      ],
+      "reviewMethod": "Individual literal action/setting review for this newly added exact reproduction. No existing catalogue values or captured responses are overwritten.",
+      "proposedFeatureSemanticVersion": "literal-action-setting-v2"
+    },
+    "canon-ingres-odalisque": {
+      "version": "literal-action-setting-v2",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://collections.louvre.fr/ark:/53355/cl010065566",
+        "image": "assets/canonical-20261116/canon-ingres-odalisque.jpg",
+        "previewSha256": "cd7c6f2a607dccd4c56e91d346d1b46adaa628f1ce9523470b130851303c450a"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-ingres-odalisque-large.jpg",
+        "sha256": "ae8c3f6190e99067cd0f25c3c268be41b064907ae24ca8b4a2789ef2883d5eb9",
+        "width": 2200,
+        "height": 1225,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://collections.louvre.fr/ark:/53355/cl010065566",
+        "https://commons.wikimedia.org/wiki/File:Jean_Auguste_Dominique_Ingres,_La_Grande_Odalisque,_1814.jpg",
+        "https://commons.wikimedia.org/wiki/File:Jean_Auguste_Dominique_Ingres,_La_Grande_Odalisque,_1814.jpg#Licensing"
+      ],
+      "before": {
+        "abstraction": 0.05,
+        "energy": 0.1,
+        "complexity": 0.5,
+        "humanity": 1,
+        "narrative": 0,
+        "atmosphere": 0.25,
+        "color": 0.45
+      },
+      "after": {
+        "abstraction": 0.05,
+        "energy": 0.1,
+        "complexity": 0.5,
+        "humanity": 1,
+        "narrative": 0,
+        "atmosphere": 0.25,
+        "color": 0.45
+      },
+      "fields": {
+        "narrative": {
+          "status": "reviewed",
+          "value": 0,
+          "reason": "The figure rests in a posed position rather than enacting an activity. Bed and curtain give limited interior context.",
+          "evidenceKind": "assistant-visual-review"
+        },
+        "atmosphere": {
+          "status": "reviewed",
+          "value": 0.25,
+          "reason": "The figure rests in a posed position rather than enacting an activity. Bed and curtain give limited interior context.",
+          "evidenceKind": "assistant-visual-review"
+        }
+      },
+      "changedFeatures": [],
+      "reviewedFeatures": [
+        "narrative",
+        "atmosphere"
+      ],
+      "retainedDraftFeatures": [
+        "abstraction",
+        "energy",
+        "complexity",
+        "humanity",
+        "color"
+      ],
+      "reviewMethod": "Individual literal action/setting review for this newly added exact reproduction. No existing catalogue values or captured responses are overwritten.",
+      "proposedFeatureSemanticVersion": "literal-action-setting-v2"
+    },
+    "canon-bocklin-isle-dead": {
+      "version": "literal-action-setting-v2",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://kunstmuseumbasel.ch/de/sammlung/schwerpunkte",
+        "image": "assets/canonical-20261116/canon-bocklin-isle-dead.jpg",
+        "previewSha256": "d75205ac37594e571dfb557e4cac1fd253273752e1a61219d2690f0e1ef10c09"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-bocklin-isle-dead-large.jpg",
+        "sha256": "29c5e20e659ec0e694cc28f5129f8b1e6d367ed0bb6adb8be54520f4c796c40d",
+        "width": 3200,
+        "height": 2291,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://kunstmuseumbasel.ch/de/sammlung/schwerpunkte",
+        "https://commons.wikimedia.org/wiki/File:B%C3%B6cklin_-_Die_Toteninsel_(Erste_Fassung),_GKS588,_Kunstmuseum_Basel.jpg",
+        "https://commons.wikimedia.org/wiki/File:B%C3%B6cklin_-_Die_Toteninsel_(Erste_Fassung),_GKS588,_Kunstmuseum_Basel.jpg#Licensing"
+      ],
+      "before": {
+        "abstraction": 0.08,
+        "energy": 0.15,
+        "complexity": 0.65,
+        "humanity": 0.1,
+        "narrative": 0.25,
+        "atmosphere": 1,
+        "color": 0.35
+      },
+      "after": {
+        "abstraction": 0.08,
+        "energy": 0.15,
+        "complexity": 0.65,
+        "humanity": 0.1,
+        "narrative": 0.25,
+        "atmosphere": 1,
+        "color": 0.35
+      },
+      "fields": {
+        "narrative": {
+          "status": "reviewed",
+          "value": 0.25,
+          "reason": "The small rower makes a quiet handling gesture. Water, island, rocks, trees and sky dominate the surrounding place.",
+          "evidenceKind": "assistant-visual-review"
+        },
+        "atmosphere": {
+          "status": "reviewed",
+          "value": 1,
+          "reason": "The small rower makes a quiet handling gesture. Water, island, rocks, trees and sky dominate the surrounding place.",
+          "evidenceKind": "assistant-visual-review"
+        }
+      },
+      "changedFeatures": [],
+      "reviewedFeatures": [
+        "narrative",
+        "atmosphere"
+      ],
+      "retainedDraftFeatures": [
+        "abstraction",
+        "energy",
+        "complexity",
+        "humanity",
+        "color"
+      ],
+      "reviewMethod": "Individual literal action/setting review for this newly added exact reproduction. No existing catalogue values or captured responses are overwritten.",
+      "proposedFeatureSemanticVersion": "literal-action-setting-v2"
+    },
+    "canon-siqueiros-echo-scream": {
+      "version": "literal-action-setting-v2",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://www.moma.org/collection/works/80144",
+        "image": "assets/canonical-20261116/canon-siqueiros-echo-scream.jpg",
+        "previewSha256": "709904c1ab23a507b432b19eb3dea72dcee35ec146c34d392ac9a404adc3929a"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-siqueiros-echo-scream-large.jpg",
+        "sha256": "27b80cf2040f599443e91a5f832298743396cb9991399a01b6552a14f2fa4d09",
+        "width": 1504,
+        "height": 2000,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://www.moma.org/collection/works/80144"
+      ],
+      "before": {
+        "abstraction": 0.35,
+        "energy": 0.65,
+        "complexity": 0.8,
+        "humanity": 0.85,
+        "narrative": 0.25,
+        "atmosphere": 0.5,
+        "color": 0.25
+      },
+      "after": {
+        "abstraction": 0.35,
+        "energy": 0.65,
+        "complexity": 0.8,
+        "humanity": 0.85,
+        "narrative": 0.25,
+        "atmosphere": 0.5,
+        "color": 0.25
+      },
+      "fields": {
+        "narrative": {
+          "status": "reviewed",
+          "value": 0.25,
+          "reason": "The open mouths and small curled body give limited bodily gesture; a presumed feeling of screaming is not scored as vigorous movement. Debris, ground and distant industrial structures establish a secondary place.",
+          "evidenceKind": "assistant-visual-review"
+        },
+        "atmosphere": {
+          "status": "reviewed",
+          "value": 0.5,
+          "reason": "The open mouths and small curled body give limited bodily gesture; a presumed feeling of screaming is not scored as vigorous movement. Debris, ground and distant industrial structures establish a secondary place.",
+          "evidenceKind": "assistant-visual-review"
+        }
+      },
+      "changedFeatures": [],
+      "reviewedFeatures": [
+        "narrative",
+        "atmosphere"
+      ],
+      "retainedDraftFeatures": [
+        "abstraction",
+        "energy",
+        "complexity",
+        "humanity",
+        "color"
+      ],
+      "reviewMethod": "Individual literal action/setting review for this newly added exact reproduction. No existing catalogue values or captured responses are overwritten.",
+      "proposedFeatureSemanticVersion": "literal-action-setting-v2"
+    },
+    "canon-siqueiros-collective-suicide": {
+      "version": "literal-action-setting-v2",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://www.moma.org/collection/works/79146",
+        "image": "assets/canonical-20261116/canon-siqueiros-collective-suicide.jpg",
+        "previewSha256": "3ebc3a2978d3f790088792beeb8ab93f8449b8c53fc9f2a1b394368f7360cddb"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-siqueiros-collective-suicide-large.jpg",
+        "sha256": "7835ef6d2ce6a1c164abf8a1f1740c62473150d660803c5753da39860025361c",
+        "width": 2000,
+        "height": 1331,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://www.moma.org/collection/works/79146"
+      ],
+      "before": {
+        "abstraction": 0.4,
+        "energy": 0.85,
+        "complexity": 1,
+        "humanity": 0.35,
+        "narrative": 0.75,
+        "atmosphere": 1,
+        "color": 0.5
+      },
+      "after": {
+        "abstraction": 0.4,
+        "energy": 0.85,
+        "complexity": 1,
+        "humanity": 0.35,
+        "narrative": 0.75,
+        "atmosphere": 1,
+        "color": 0.5
+      },
+      "fields": {
+        "narrative": {
+          "status": "reviewed",
+          "value": 0.75,
+          "reason": "Small bodies visibly climb, fall and move in groups. Cliffs, ground, pit and sky dominate the environment; the irregular paint field does not itself supply a bodily-action score.",
+          "evidenceKind": "assistant-visual-review"
+        },
+        "atmosphere": {
+          "status": "reviewed",
+          "value": 1,
+          "reason": "Small bodies visibly climb, fall and move in groups. Cliffs, ground, pit and sky dominate the environment; the irregular paint field does not itself supply a bodily-action score.",
+          "evidenceKind": "assistant-visual-review"
+        }
+      },
+      "changedFeatures": [],
+      "reviewedFeatures": [
+        "narrative",
+        "atmosphere"
+      ],
+      "retainedDraftFeatures": [
+        "abstraction",
+        "energy",
+        "complexity",
+        "humanity",
+        "color"
+      ],
+      "reviewMethod": "Individual literal action/setting review for this newly added exact reproduction. No existing catalogue values or captured responses are overwritten.",
+      "proposedFeatureSemanticVersion": "literal-action-setting-v2"
+    },
+    "canon-varo-creation-birds": {
+      "version": "literal-action-setting-v2",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://gallerywendinorris.com/news/16-hyperallergic-remedios-varo-in-a-sphere-of/",
+        "image": "assets/canonical-20261116/canon-varo-creation-birds.jpg",
+        "previewSha256": "2239f06fb98e33f0a66aa78edd97d254422a5db612ac02dcdc2b8e349d67fc7d"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-varo-creation-birds-large.jpg",
+        "sha256": "9efda2a71202ee528ccb1698cd9048b9a2d33e591a747cbf6687984c5b69900e",
+        "width": 1568,
+        "height": 1316,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": true,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://gallerywendinorris.com/news/16-hyperallergic-remedios-varo-in-a-sphere-of/",
+        "https://inba.gob.mx/prensa/17510/el-museo-de-arte-moderno-reune-tres-exposiciones-en-mujeres-en-la-modernidad",
+        "https://sic.cultura.gob.mx/documentos/682.pdf"
+      ],
+      "before": {
+        "abstraction": 0.25,
+        "energy": 0.3,
+        "complexity": 0.8,
+        "humanity": 0.5,
+        "narrative": 0.25,
+        "atmosphere": 0.75,
+        "color": 0.45
+      },
+      "after": {
+        "abstraction": 0.25,
+        "energy": 0.3,
+        "complexity": 0.8,
+        "humanity": 0.5,
+        "narrative": 0.25,
+        "atmosphere": 0.75,
+        "color": 0.45
+      },
+      "fields": {
+        "narrative": {
+          "status": "reviewed",
+          "value": 0.25,
+          "reason": "Human-like hands quietly work with a brush and prism while small birds fly. Floor, walls, windows and apparatus form a substantial surrounding room; the central body is explicitly a hybrid rather than an ordinary human portrait.",
+          "evidenceKind": "assistant-visual-review"
+        },
+        "atmosphere": {
+          "status": "reviewed",
+          "value": 0.75,
+          "reason": "Human-like hands quietly work with a brush and prism while small birds fly. Floor, walls, windows and apparatus form a substantial surrounding room; the central body is explicitly a hybrid rather than an ordinary human portrait.",
+          "evidenceKind": "assistant-visual-review"
+        }
+      },
+      "changedFeatures": [],
+      "reviewedFeatures": [
+        "narrative",
+        "atmosphere"
+      ],
+      "retainedDraftFeatures": [
+        "abstraction",
+        "energy",
+        "complexity",
+        "humanity",
+        "color"
+      ],
+      "reviewMethod": "Individual literal action/setting review for this newly added exact reproduction. No existing catalogue values or captured responses are overwritten.",
+      "proposedFeatureSemanticVersion": "literal-action-setting-v2"
+    },
+    "canon-kahlo-two-fridas": {
+      "version": "literal-action-setting-v2",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://artsandculture.google.com/asset/the-two-fridas-frida-kahlo/zAHG4EZ1WrwVYg",
+        "image": "assets/canonical-20261116/canon-kahlo-two-fridas.jpg",
+        "previewSha256": "461e7a44e4d7911df801ab016d9c83b9a89d33fd57f4d525f1f596119f982181"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-kahlo-two-fridas-large.jpg",
+        "sha256": "b068392b8948f24df9554bd42c50aafe4b4fa8860617ccb047f1ef1caed89d6c",
+        "width": 1196,
+        "height": 1200,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": true,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://artsandculture.google.com/asset/the-two-fridas-frida-kahlo/zAHG4EZ1WrwVYg"
+      ],
+      "before": {
+        "abstraction": 0.1,
+        "energy": 0.25,
+        "complexity": 0.75,
+        "humanity": 1,
+        "narrative": 0.25,
+        "atmosphere": 0.25,
+        "color": 0.55
+      },
+      "after": {
+        "abstraction": 0.1,
+        "energy": 0.25,
+        "complexity": 0.75,
+        "humanity": 1,
+        "narrative": 0.25,
+        "atmosphere": 0.25,
+        "color": 0.55
+      },
+      "fields": {
+        "narrative": {
+          "status": "reviewed",
+          "value": 0.25,
+          "reason": "Hands quietly hold one another and small objects while the bodies remain posed. Cloud field and a narrow ground passage give limited place; emotional and symbolic intensity do not make vigorous bodily action.",
+          "evidenceKind": "assistant-visual-review"
+        },
+        "atmosphere": {
+          "status": "reviewed",
+          "value": 0.25,
+          "reason": "Hands quietly hold one another and small objects while the bodies remain posed. Cloud field and a narrow ground passage give limited place; emotional and symbolic intensity do not make vigorous bodily action.",
+          "evidenceKind": "assistant-visual-review"
+        }
+      },
+      "changedFeatures": [],
+      "reviewedFeatures": [
+        "narrative",
+        "atmosphere"
+      ],
+      "retainedDraftFeatures": [
+        "abstraction",
+        "energy",
+        "complexity",
+        "humanity",
+        "color"
+      ],
+      "reviewMethod": "Individual literal action/setting review for this newly added exact reproduction. No existing catalogue values or captured responses are overwritten.",
+      "proposedFeatureSemanticVersion": "literal-action-setting-v2"
+    },
+    "canon-tamayo-dualidad": {
+      "version": "literal-action-setting-v2",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://www.inah.gob.mx/boletines/el-museo-nacional-de-antropologia-celebra-60-aniversario-con-brios-fortalecidos-en-su-mision-divulgativa",
+        "image": "assets/canonical-20261116/canon-tamayo-dualidad.jpg",
+        "previewSha256": "823aa487d0b39aa324cc63d3fd864750100079757da41428c881499907de6bf7"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-tamayo-dualidad-large.jpg",
+        "sha256": "d50cf46e44a4218922e1828c43823fcf26068641275d4c31e6eb8c6a9aedce19",
+        "width": 3200,
+        "height": 1645,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://www.inah.gob.mx/boletines/el-museo-nacional-de-antropologia-celebra-60-aniversario-con-brios-fortalecidos-en-su-mision-divulgativa",
+        "https://mna.inah.gob.mx/historia_detalle.php?id=3",
+        "https://commons.wikimedia.org/wiki/File:%E2%80%9Cdualidad%E2%80%9D_(1964),_by_rufino_tamayo_(1899-1991)_(36161059194)_(cropped).jpg",
+        "https://commons.wikimedia.org/wiki/File:%E2%80%9Cdualidad%E2%80%9D_(1964),_by_rufino_tamayo_(1899-1991)_(36161059194)_(cropped).jpg#Licensing"
+      ],
+      "before": {
+        "abstraction": 0.6,
+        "energy": 0.8,
+        "complexity": 0.65,
+        "humanity": 0,
+        "narrative": 0.75,
+        "atmosphere": 0,
+        "color": 0.95
+      },
+      "after": {
+        "abstraction": 0.6,
+        "energy": 0.8,
+        "complexity": 0.65,
+        "humanity": 0,
+        "narrative": 0.75,
+        "atmosphere": 0,
+        "color": 0.95
+      },
+      "fields": {
+        "narrative": {
+          "status": "reviewed",
+          "value": 0.75,
+          "reason": "The painted animals visibly confront one another with raised limbs, coils and open jaws. Broad colour fields and disks do not establish a depicted room or terrain; photographed museum architecture is not painted setting.",
+          "evidenceKind": "assistant-visual-review"
+        },
+        "atmosphere": {
+          "status": "reviewed",
+          "value": 0,
+          "reason": "The painted animals visibly confront one another with raised limbs, coils and open jaws. Broad colour fields and disks do not establish a depicted room or terrain; photographed museum architecture is not painted setting.",
+          "evidenceKind": "assistant-visual-review"
+        }
+      },
+      "changedFeatures": [],
+      "reviewedFeatures": [
+        "narrative",
+        "atmosphere"
+      ],
+      "retainedDraftFeatures": [
+        "abstraction",
+        "energy",
+        "complexity",
+        "humanity",
+        "color"
+      ],
+      "reviewMethod": "Individual literal action/setting review for this newly added exact reproduction. No existing catalogue values or captured responses are overwritten.",
+      "proposedFeatureSemanticVersion": "literal-action-setting-v2"
+    },
+    "canon-varo-call": {
+      "version": "literal-action-setting-v2",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://nmwa.org/art/collection/la-llamada-call/",
+        "image": "assets/canonical-20261116/canon-varo-call.jpg",
+        "previewSha256": "2f93baf3ca2ae199fe51e2fbecc2e9bb34416b68f861bb327732a2f7911828d3"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-varo-call-large.jpg",
+        "sha256": "14890b408d200083dab34d4f7ca06dd0570aefb2bc74779c119a5e57be072c87",
+        "width": 2172,
+        "height": 3200,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://nmwa.org/art/collection/la-llamada-call/"
+      ],
+      "before": {
+        "abstraction": 0.25,
+        "energy": 0.5,
+        "complexity": 0.75,
+        "humanity": 0.75,
+        "narrative": 0.5,
+        "atmosphere": 1,
+        "color": 0.6
+      },
+      "after": {
+        "abstraction": 0.25,
+        "energy": 0.5,
+        "complexity": 0.75,
+        "humanity": 0.75,
+        "narrative": 0.5,
+        "atmosphere": 1,
+        "color": 0.6
+      },
+      "fields": {
+        "narrative": {
+          "status": "reviewed",
+          "value": 0.5,
+          "reason": "The central body strides with visible moderate activity. Floor, walls, recesses and steps construct an extensive surrounding place.",
+          "evidenceKind": "assistant-visual-review"
+        },
+        "atmosphere": {
+          "status": "reviewed",
+          "value": 1,
+          "reason": "The central body strides with visible moderate activity. Floor, walls, recesses and steps construct an extensive surrounding place.",
+          "evidenceKind": "assistant-visual-review"
+        }
+      },
+      "changedFeatures": [],
+      "reviewedFeatures": [
+        "narrative",
+        "atmosphere"
+      ],
+      "retainedDraftFeatures": [
+        "abstraction",
+        "energy",
+        "complexity",
+        "humanity",
+        "color"
+      ],
+      "reviewMethod": "Individual literal action/setting review for this newly added exact reproduction. No existing catalogue values or captured responses are overwritten.",
+      "proposedFeatureSemanticVersion": "literal-action-setting-v2"
+    },
+    "canon-varo-escape": {
+      "version": "literal-action-setting-v2",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://gallerywendinorris.com/news/20-hyperallergic-remedios-varos-strange-and-mysterious-universes-in-varos-work-there-is-often-a-sense/",
+        "image": "assets/canonical-20261116/canon-varo-escape.jpg",
+        "previewSha256": "d82a8bcee6368c8f9cc0bff2770f854843dd3ed32b841e6d443a4baadc3e712d"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261116/canon-varo-escape-large.jpg",
+        "sha256": "1c261c73b6013d97d341a13851bfa60190d3613f89e4283624910a1325fe83a0",
+        "width": 1568,
+        "height": 1931,
+        "mediaBinding": "exact-canonical-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": true,
+        "displayScale": "The actual local large reproduction was inspected in a contact sheet at a maximum of 384 by 440 display pixels. Finer unresolved evidence is explicitly unknown."
+      },
+      "sourceUrls": [
+        "https://gallerywendinorris.com/news/20-hyperallergic-remedios-varos-strange-and-mysterious-universes-in-varos-work-there-is-often-a-sense/",
+        "https://www-images.lacma.org/s3fs-public/In%20Wonderland%20checklist%201.23.12_1.pdf"
+      ],
+      "before": {
+        "abstraction": 0.3,
+        "energy": 0.55,
+        "complexity": 0.7,
+        "humanity": 0.65,
+        "narrative": 0.25,
+        "atmosphere": 1,
+        "color": 0.6
+      },
+      "after": {
+        "abstraction": 0.3,
+        "energy": 0.55,
+        "complexity": 0.7,
+        "humanity": 0.65,
+        "narrative": 0.25,
+        "atmosphere": 1,
+        "color": 0.6
+      },
+      "fields": {
+        "narrative": {
+          "status": "reviewed",
+          "value": 0.25,
+          "reason": "A hand quietly handles the vessel's line or steering apparatus while the travellers mostly stand. Mountains, cloud-filled space and distant terrain form an extensive imagined environment.",
+          "evidenceKind": "assistant-visual-review"
+        },
+        "atmosphere": {
+          "status": "reviewed",
+          "value": 1,
+          "reason": "A hand quietly handles the vessel's line or steering apparatus while the travellers mostly stand. Mountains, cloud-filled space and distant terrain form an extensive imagined environment.",
+          "evidenceKind": "assistant-visual-review"
+        }
+      },
+      "changedFeatures": [],
+      "reviewedFeatures": [
+        "narrative",
+        "atmosphere"
+      ],
+      "retainedDraftFeatures": [
+        "abstraction",
+        "energy",
+        "complexity",
+        "humanity",
+        "color"
+      ],
+      "reviewMethod": "Individual literal action/setting review for this newly added exact reproduction. No existing catalogue values or captured responses are overwritten.",
       "proposedFeatureSemanticVersion": "literal-action-setting-v2"
     }
   },

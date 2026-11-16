@@ -33,9 +33,9 @@ test('Per-field unknown, pending, stale numeric and source mismatches cannot be 
   const missing=structuredClone(work);delete missing.featureLiteralReview.fields.atmosphere;assert.equal(isReviewedVisualDescriptor(missing,'atmosphere'),false);
 });
 
-test('The actual463 collection respects258 exact v2 reviews,202 pending records and17 independent field unknowns',()=>{
+test('The actual487 collection respects282 exact v2 reviews,202 pending records and17 independent field unknowns',()=>{
   const works=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/artworks.json',import.meta.url),'utf8')),ledger=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/literal-descriptor-reviews.json',import.meta.url),'utf8')),byId=new Map(works.map(work=>[work.id,work]));
-  assert.equal(ledger.version,FEATURE_SEMANTIC_VERSION);assert.equal(Object.keys(ledger.reviews).length,258);assert.equal(Object.keys(ledger.withheld).length,202);let unknowns=0;
+  assert.equal(ledger.version,FEATURE_SEMANTIC_VERSION);assert.equal(Object.keys(ledger.reviews).length,282);assert.equal(Object.keys(ledger.withheld).length,202);let unknowns=0;
   for(const [id,record] of Object.entries(ledger.reviews)){const work=byId.get(id);assert.ok(work);assert.equal(work.featureSemanticVersion,FEATURE_SEMANTIC_VERSION);for(const key of ['narrative','atmosphere']){const field=record.fields[key],known=field.status==='reviewed';assert.equal(work.features[key],field.value);assert.equal(isReviewedVisualDescriptor(work,key),known,id+' '+key);if(!known){unknowns++;assert.equal(field.status,'unknown');assert.equal(work.features[key],null);}}}
   assert.equal(unknowns,17);for(const id of Object.keys(ledger.withheld)){const work=byId.get(id);assert.equal(work.featureSemanticVersion,'pending-literal-action-setting-review');for(const key of ['narrative','atmosphere'])assert.equal(isReviewedVisualDescriptor(work,key),false);for(const key of FEATURES.filter(key=>!['narrative','atmosphere'].includes(key)))assert.equal(isReviewedVisualDescriptor(work,key),true);}
   const record=Object.values(ledger.reviews)[0],frozen={features:structuredClone(record.before),featureSemanticVersion:'literal-action-setting-v1'},before=structuredClone(frozen);for(const key of ['narrative','atmosphere'])assert.equal(isReviewedVisualDescriptor(frozen,key),false);assert.deepEqual(frozen,before);

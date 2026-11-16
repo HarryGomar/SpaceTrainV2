@@ -3,6 +3,7 @@ import {APPEAL_PROTOCOL,withOverallAppeal,isOverallAppealRound} from './appeal-s
 import {summarizePreferenceHypotheses,preferenceMeasurementKey} from './adaptive-selection.mjs';
 import {isReviewedVisualDescriptor} from './visual-descriptor-semantics.mjs';
 import * as choiceGrid from './discovery-grid.mjs';
+import {isOrdinalRefinementRound,bindOrdinalRefinementRound} from './ordinal-refinement.mjs';
 
 export const FINAL_REFINEMENT_PROTOCOL='closing-refinement-v1';
 const ROLES=['favourites','cross-set','rival-check','exception-check','spaced-return'];
@@ -12,7 +13,7 @@ const pairs=values=>values.flatMap((a,i)=>values.slice(i+1).map(b=>[a,b]));
 const number=id=>/^journey-(\d+)$/.test(id)?Number(id.slice(8)):null;
 const hash=value=>{let n=2166136261;for(const c of String(value))n=Math.imul(n^c.charCodeAt(0),16777619);return n>>>0;};
 const LIMITS=['Closing questions are selected from earlier captured answers, using explicit design heuristics rather than optimal information gain.','Recorded appeal, an explicit favourite selection and a repeated comparison are different evidence. No choice here establishes a personality or a cause of preference.'];
-export const isFinalRefinementRound=round=>round?.evidence?.finalRefinement?.protocol===FINAL_REFINEMENT_PROTOCOL;
+export const isFinalRefinementRound=round=>round?.evidence?.finalRefinement?.protocol===FINAL_REFINEMENT_PROTOCOL||isOrdinalRefinementRound(round);
 
 /** Deferred definitions have real placeholder identities but make no prediction. */
 export function buildFinalRefinementRounds({works=[],offset=0,seed='closing-refinement'}={}){
@@ -65,6 +66,7 @@ function savedReservation(state){const grid=state.history.find(source=>source.ev
 
 /** Pure: callers supply actual earlier shown definitions, then freeze on entry. */
 export function bindFinalRefinementRound({round,works=[],rounds=[],answers={},seed}={}){
+  if(isOrdinalRefinementRound(round))return bindOrdinalRefinementRound({round,works,rounds,answers});
   if(!isFinalRefinementRound(round))return round;
   if(round.evidence.finalRefinement.binding==='bound')return structuredClone(round);
   const state=historyFor(round,works,rounds,answers),slot=round.evidence.finalRefinement.slot,salt=String(seed??round.evidence.finalRefinement.seed),rated=latestRatings(state.overall).sort((a,b)=>b.value-a.value||hash(salt+'|candidate|'+a.workId)-hash(salt+'|candidate|'+b.workId)),ratedById=new Map(rated.map(item=>[item.workId,item]));

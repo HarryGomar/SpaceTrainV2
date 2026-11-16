@@ -1,0 +1,573 @@
+[
+  {
+    "id": "canon-caravaggio-calling-matthew",
+    "title": "The Calling of Saint Matthew",
+    "artist": "Caravaggio",
+    "date": "1599–1600",
+    "yearRange": [
+      1599,
+      1600
+    ],
+    "medium": "Oil on canvas",
+    "movement": "Italian Baroque",
+    "country": "Italy",
+    "museum": "San Luigi dei Francesi, Rome",
+    "sourceUrl": "https://saintlouis-rome.net/horaires-visite-opening-hours/caravage/",
+    "commonsTitle": "File:Michelangelo Caravaggio 040.jpg",
+    "rightsMode": "public-domain-faithful",
+    "recognitionTier": "landmark",
+    "comparisonPurpose": "Quiet pointing, selective light and a spare interior against overt physical violence in the other Caravaggios."
+  },
+  {
+    "id": "canon-caravaggio-entombment",
+    "title": "The Entombment of Christ (Deposition)",
+    "artist": "Caravaggio",
+    "date": "1602–1604",
+    "yearRange": [
+      1602,
+      1604
+    ],
+    "medium": "Oil on canvas",
+    "movement": "Italian Baroque",
+    "country": "Italy",
+    "museum": "Vatican Museums",
+    "sourceUrl": "https://www.museivaticani.va/content/museivaticani/en/collezioni/musei/la-pinacoteca/sala-xii---secolo-xvii/caravaggio--deposizione-dalla-croce.html",
+    "sourceUrls": [
+      "https://www.vaticannews.va/en/vatican-city/news/2021-03/vatican-museums-art-prayer-faith-lent-consolation-pope-9.html"
+    ],
+    "commonsTitle": "File:The Entombment of Christ-Caravaggio (c.1602-3).jpg",
+    "rightsMode": "public-domain-faithful",
+    "recognitionTier": "landmark",
+    "comparisonPurpose": "Coordinated human carrying, a still dead body and diagonal staging against Marat and the isolated Borghese David."
+  },
+  {
+    "id": "canon-caravaggio-bacchus",
+    "title": "Bacchus",
+    "artist": "Caravaggio",
+    "date": "c. 1598",
+    "yearRange": [
+      1598,
+      1598
+    ],
+    "dateApproximate": true,
+    "dateBasis": "Nominal circa year from the Uffizi record; not a securely bounded dating interval.",
+    "medium": "Oil on canvas",
+    "movement": "Italian Baroque",
+    "country": "Italy",
+    "museum": "Uffizi Galleries",
+    "sourceUrl": "https://www.uffizi.it/en/artworks/caravaggio-bacchus",
+    "commonsTitle": "File:Bacchus-Caravaggio (1598).jpg",
+    "rightsMode": "public-domain-faithful",
+    "recognitionTier": "landmark",
+    "comparisonPurpose": "Close figure and differentiated fruit/glass material without a violent scene or deep setting."
+  },
+  {
+    "id": "canon-caravaggio-medusa",
+    "title": "Medusa, Uffizi shield",
+    "artist": "Caravaggio",
+    "date": "1598–1599",
+    "yearRange": [
+      1598,
+      1599
+    ],
+    "medium": "Oil on canvas mounted on a wooden shield",
+    "movement": "Italian Baroque",
+    "country": "Italy",
+    "museum": "Uffizi Galleries",
+    "sourceUrl": "https://www.catalogo.beniculturali.it/detail/HistoricOrArtisticProperty/0900289175",
+    "sourceUrls": [
+      "https://www.uffizi.it/mostre-virtuali/sguardi-dal-mondo"
+    ],
+    "commonsTitle": "File:Caravaggio - Medusa Uffizi - High quality.jpg",
+    "rightsMode": "cc0-photo-public-domain-work",
+    "recognitionTier": "landmark",
+    "comparisonPurpose": "Isolated severed head and close facial address, with little environmental place; distinguish imagined image from enacted cutting."
+  },
+  {
+    "id": "canon-leonardo-last-supper",
+    "title": "The Last Supper",
+    "artist": "Leonardo da Vinci",
+    "date": "1495–1498",
+    "yearRange": [
+      1495,
+      1498
+    ],
+    "dateBasis": "The museum object table gives1495–1498; its narrative also says work began1494. This is the institutional table interval, not a claim that no preparatory work preceded it.",
+    "medium": "Dry wall-painting",
+    "movement": "High Renaissance",
+    "country": "Italy",
+    "museum": "Museo del Cenacolo Vinciano",
+    "sourceUrl": "https://cenacolovinciano.org/en/museum/the-works/the-last-supper-leonardo-da-vinci-1452-1519/",
+    "commonsTitle": "File:Leonardo da Vinci - The Last Supper high res.jpg",
+    "rightsMode": "public-domain-faithful",
+    "recognitionTier": "landmark",
+    "comparisonPurpose": "Many separate human reactions within a single coherent room, compared with Bosch's dispersed episodes and sparse figure groups."
+  },
+  {
+    "id": "canon-michelangelo-creation-adam",
+    "title": "The Creation of Adam (central ceiling scene)",
+    "artist": "Michelangelo",
+    "date": "1508–1512",
+    "yearRange": [
+      1508,
+      1512
+    ],
+    "dateBasis": "The documented ceiling campaign interval is retained; this does not pretend a securely isolated year for this one panel.",
+    "medium": "Fresco",
+    "movement": "High Renaissance",
+    "country": "Italy",
+    "museum": "Vatican Museums, Sistine Chapel",
+    "sourceUrl": "https://www.museivaticani.va/content/museivaticani/en/collezioni/musei/cappella-sistina/volta/storie-centrali/creazione-di-adamo.html",
+    "rightsMode": "public-domain-faithful",
+    "recognitionTier": "landmark",
+    "compositionScope": "central-scene-crop",
+    "underlyingWork": "Sistine Chapel ceiling",
+    "pending": false,
+    "comparisonPurpose": "An iconic relational hand gesture across open space rather than density of independent stories.",
+    "commonsTitle": "File:Michelangelo - Creation of Adam (cropped).jpg",
+    "viewScope": "Named Creation of Adam scene, border trimmed; not the complete Sistine ceiling"
+  },
+  {
+    "id": "canon-bosch-temptations-lisbon",
+    "title": "The Temptation of Saint Anthony, open triptych",
+    "artist": "Hieronymus Bosch",
+    "date": "1505–1506",
+    "yearRange": [
+      1505,
+      1506
+    ],
+    "medium": "Oil on oak",
+    "movement": "Early Netherlandish painting",
+    "country": "Netherlands",
+    "museum": "Museu Nacional de Arte Antiga, Lisbon",
+    "sourceUrl": "https://raiz.museusemonumentos.pt/DetalhesObra/Index/247559?tipo=OBJ",
+    "rightsMode": "public-domain-faithful",
+    "recognitionTier": "landmark",
+    "compositionScope": "whole-open-triptych",
+    "pending": false,
+    "comparisonPurpose": "A second independent Bosch work to test recurring fascination with impossible creatures, distributed incidents and deep places.",
+    "commonsTitle": "File:The Temptation of Saint Anthony, ca. 1495-1515.jpg"
+  },
+  {
+    "id": "canon-bruegel-tower-babel",
+    "title": "The Tower of Babel, Vienna version",
+    "artist": "Pieter Bruegel the Elder",
+    "date": "1563",
+    "yearRange": [
+      1563,
+      1563
+    ],
+    "medium": "Oil on oak panel",
+    "movement": "Northern Renaissance",
+    "country": "Flanders",
+    "museum": "Kunsthistorisches Museum, Vienna",
+    "sourceUrl": "https://www.khm.at/en/visit/only-in-vienna",
+    "sourceUrls": [
+      "https://press.khm.at/fileadmin/content/KHM/Presse/2018/Bruegel/PT_Bruegel_E.pdf"
+    ],
+    "commonsTitle": "File:Pieter Bruegel the Elder - The Tower of Babel (Vienna) - Google Art Project.jpg",
+    "rightsMode": "public-domain-faithful",
+    "recognitionTier": "landmark",
+    "comparisonPurpose": "Dense architectural detail and tiny work scenes, against equally detailed human-centred proverb and battle scenes."
+  },
+  {
+    "id": "canon-bruegel-netherlandish-proverbs",
+    "title": "Netherlandish Proverbs",
+    "artist": "Pieter Bruegel the Elder",
+    "date": "1559",
+    "yearRange": [
+      1559,
+      1559
+    ],
+    "medium": "Oil on oak panel",
+    "movement": "Northern Renaissance",
+    "country": "Netherlands",
+    "museum": "Gemäldegalerie, Staatliche Museen zu Berlin",
+    "sourceUrl": "https://search.smb.museum/object/obj-867614",
+    "commonsTitle": "File:Pieter Brueghel the Elder - The Dutch Proverbs - Google Art Project.jpg",
+    "rightsMode": "public-domain-faithful",
+    "recognitionTier": "landmark",
+    "comparisonPurpose": "Many small enacted sayings within an ordinary village, separating narrative detail from fantastical creature imagery."
+  },
+  {
+    "id": "canon-goya-third-may",
+    "title": "The Third of May 1808 in Madrid",
+    "artist": "Francisco de Goya",
+    "date": "1814",
+    "yearRange": [
+      1814,
+      1814
+    ],
+    "medium": "Oil on canvas",
+    "movement": "Spanish Romanticism",
+    "country": "Spain",
+    "museum": "Museo Nacional del Prado",
+    "sourceUrl": "https://www.museodelprado.es/coleccion/obra-de-arte/el-3-de-mayo-en-madrid-o-los-fusilamientos/5e177409-2993-4240-97fb-847a02c6496c",
+    "commonsTitle": "File:El Tres de Mayo, by Francisco de Goya, from Prado in Google Earth.jpg",
+    "rightsMode": "public-domain-faithful",
+    "recognitionTier": "landmark",
+    "comparisonPurpose": "Human-directed violence and strongly selective light with comparatively restrained detail, against Saturn and the crowded Triumph of Death."
+  },
+  {
+    "id": "canon-velazquez-breda",
+    "title": "The Surrender of Breda",
+    "artist": "Diego Velázquez",
+    "date": "c. 1635",
+    "yearRange": [
+      1635,
+      1635
+    ],
+    "dateApproximate": true,
+    "dateBasis": "Nominal circa year in the Prado institutional exhibition record.",
+    "medium": "Oil on canvas",
+    "movement": "Spanish Baroque",
+    "country": "Spain",
+    "museum": "Museo Nacional del Prado",
+    "sourceUrl": "https://www.museodelprado.es/coleccion/obra-de-arte/las-lanzas-o-la-rendicion-de-breda/0cc7577a-51d9-44fd-b4d5-4dba8d9cb13a",
+    "commonsTitle": "File:Velazquez-The Surrender of Breda.jpg",
+    "rightsMode": "public-domain-faithful",
+    "recognitionTier": "landmark",
+    "comparisonPurpose": "Collective historical staging built around a quiet interpersonal exchange rather than intense bodily conflict."
+  },
+  {
+    "id": "canon-rembrandt-prodigal-son",
+    "title": "The Return of the Prodigal Son",
+    "artist": "Rembrandt van Rijn",
+    "date": "c. 1666–1669",
+    "yearRange": [
+      1666,
+      1669
+    ],
+    "dateApproximate": true,
+    "medium": "Oil on canvas",
+    "movement": "Dutch Baroque",
+    "country": "Netherlands",
+    "museum": "State Hermitage Museum",
+    "sourceUrl": "https://www.hermitagemuseum.org/digital-collection/43413?lng=en",
+    "sourceUrls": [
+      "https://hermitagemuseum.org/uploads/files/publications/d41d8cd98f00b204e9800998ecf8427e1731921599.pdf"
+    ],
+    "commonsTitle": "File:Rembrandt Harmensz van Rijn - Return of the Prodigal Son - Google Art Project.jpg",
+    "rightsMode": "public-domain-faithful",
+    "recognitionTier": "landmark",
+    "comparisonPurpose": "Intimate touch and a quiet human relationship under dramatic light, against bodily action and dispersed narrative scenes."
+  },
+  {
+    "id": "canon-holbein-dead-christ",
+    "title": "The Body of the Dead Christ in the Tomb",
+    "artist": "Hans Holbein the Younger",
+    "date": "1521–1522",
+    "yearRange": [
+      1521,
+      1522
+    ],
+    "medium": "Mixed technique on limewood panel",
+    "movement": "Northern Renaissance",
+    "country": "Switzerland",
+    "museum": "Kunstmuseum Basel",
+    "sourceUrl": "https://kunstmuseumbasel.ch/de/ausstellungen/2021/holbein-und-dostojewski/wandtexte",
+    "commonsTitle": "File:Holbein — Dead Christ.jpg",
+    "rightsMode": "cc0-photo-public-domain-work",
+    "recognitionTier": "landmark",
+    "comparisonPurpose": "A motionless body with precise physical rendering and very little extended setting, against violent events and symbolic death scenes.",
+    "sourceUrls": [
+      "https://kunstmuseumbasel.ch/de/ausstellungen/2021/holbein-und-dostojewski/wandtexte",
+      "https://kunstmuseumbasel.ch/de/sammlung/schwerpunkte"
+    ]
+  },
+  {
+    "id": "canon-durer-melencolia",
+    "title": "Melencolia I",
+    "artist": "Albrecht Dürer",
+    "date": "1514",
+    "yearRange": [
+      1514,
+      1514
+    ],
+    "medium": "Engraving",
+    "movement": "Northern Renaissance",
+    "country": "Germany",
+    "museum": "The Metropolitan Museum of Art",
+    "sourceUrl": "https://www.metmuseum.org/art/collection/search/336228",
+    "rightsMode": "institutional-cc0",
+    "recognitionTier": "landmark",
+    "pending": false,
+    "comparisonPurpose": "Dense objects, geometry and documented allegory with a mostly quiet figure, separating symbolic detail from bodily action.",
+    "downloadUrl": "https://images.metmuseum.org/CRDImages/dp/original/DP820348.jpg",
+    "sourceObjectId": 336228,
+    "sourceAccessionNumber": "43.106.1"
+  },
+  {
+    "id": "canon-delacroix-sardanapalus",
+    "title": "The Death of Sardanapalus, Louvre canvas",
+    "artist": "Eugène Delacroix",
+    "date": "1827",
+    "yearRange": [
+      1827,
+      1827
+    ],
+    "medium": "Oil on canvas",
+    "movement": "Romanticism",
+    "country": "France",
+    "museum": "Musée du Louvre",
+    "sourceUrl": "https://collections.louvre.fr/ark:/53355/cl010065757",
+    "commonsTitle": "File:Mort de Sardanapale - Eugène Delacroix - Musée du Louvre Peintures RF 2346.jpg",
+    "rightsMode": "public-domain-faithful",
+    "recognitionTier": "landmark",
+    "comparisonPurpose": "Dense theatrical bodily struggle and red diagonals, against more restrained narratives and geometrically organised spaces."
+  },
+  {
+    "id": "canon-ingres-odalisque",
+    "title": "La Grande Odalisque",
+    "artist": "Jean-Auguste-Dominique Ingres",
+    "date": "1814",
+    "yearRange": [
+      1814,
+      1814
+    ],
+    "medium": "Oil on canvas",
+    "movement": "Neoclassicism",
+    "country": "France",
+    "museum": "Musée du Louvre",
+    "sourceUrl": "https://collections.louvre.fr/ark:/53355/cl010065566",
+    "commonsTitle": "File:Jean Auguste Dominique Ingres, La Grande Odalisque, 1814.jpg",
+    "rightsMode": "public-domain-faithful",
+    "recognitionTier": "landmark",
+    "comparisonPurpose": "Precise surfaces, an isolated still body and deliberate elongation, against expressive brushwork and active ensembles."
+  },
+  {
+    "id": "canon-bocklin-isle-dead",
+    "title": "Isle of the Dead, first Basel version",
+    "artist": "Arnold Böcklin",
+    "date": "1880",
+    "yearRange": [
+      1880,
+      1880
+    ],
+    "medium": "Oil on canvas",
+    "movement": "Symbolism",
+    "country": "Switzerland",
+    "museum": "Kunstmuseum Basel, Gottfried Keller Foundation deposit",
+    "sourceUrl": "https://kunstmuseumbasel.ch/de/sammlung/schwerpunkte",
+    "commonsTitle": "File:Böcklin - Die Toteninsel (Erste Fassung), GKS588, Kunstmuseum Basel.jpg",
+    "rightsMode": "public-domain-faithful",
+    "recognitionTier": "landmark",
+    "comparisonPurpose": "Quiet arrival, architectural landscape and open water as a different route to symbolic depth than Bosch's many incidents."
+  },
+  {
+    "id": "canon-siqueiros-echo-scream",
+    "title": "Echo of a Scream",
+    "artist": "David Alfaro Siqueiros",
+    "date": "1937",
+    "yearRange": [
+      1937,
+      1937
+    ],
+    "medium": "Enamel on wood",
+    "movement": "Mexican modernism",
+    "country": "Mexico",
+    "museum": "The Museum of Modern Art",
+    "sourceUrl": "https://www.moma.org/collection/works/80144",
+    "downloadUrl": "https://www.moma.org/media/W1siZiIsIjE1MTQyNCJdLFsicCIsImNvbnZlcnQiLCItcXVhbGl0eSA5MCAtcmVzaXplIDIwMDB4MjAwMFx1MDAzZSJdXQ.jpg?sha=494dc5ae3d102c79",
+    "rightsMode": "restricted-institutional",
+    "copyrightNotice": "© Siqueiros David Alfaro / Artists Rights Society (ARS), New York / SOMAAP, Mexico",
+    "recognitionTier": "landmark",
+    "comparisonPurpose": "A giant repeated face and industrial debris, distinguishing expressive distortion and symbolic imagery from many separate stories."
+  },
+  {
+    "id": "canon-siqueiros-collective-suicide",
+    "title": "Collective Suicide",
+    "artist": "David Alfaro Siqueiros",
+    "date": "1936",
+    "yearRange": [
+      1936,
+      1936
+    ],
+    "medium": "Lacquer on wood with applied sections",
+    "movement": "Mexican Muralism",
+    "country": "Mexico",
+    "museum": "The Museum of Modern Art",
+    "sourceUrl": "https://www.moma.org/collection/works/79146",
+    "downloadUrl": "https://www.moma.org/media/W1siZiIsIjE1MTEwMiJdLFsicCIsImNvbnZlcnQiLCItcXVhbGl0eSA5MCAtcmVzaXplIDIwMDB4MjAwMFx1MDAzZSJdXQ.jpg?sha=09f8000a57b0567c",
+    "rightsMode": "restricted-institutional",
+    "copyrightNotice": "© Siqueiros David Alfaro / Artists Rights Society (ARS), New York / SOMAAP, Mexico",
+    "recognitionTier": "landmark",
+    "comparisonPurpose": "Small violent human incidents in a material-driven terrain, linking to Bruegel while varying paint treatment and historical context."
+  },
+  {
+    "id": "canon-varo-creation-birds",
+    "title": "Creación de las aves (Creation of the Birds)",
+    "artist": "Remedios Varo",
+    "date": "1957",
+    "yearRange": [
+      1957,
+      1957
+    ],
+    "medium": "Oil on hardboard",
+    "movement": "Surrealism",
+    "country": "Mexico",
+    "museum": "Museo de Arte Moderno, Mexico",
+    "sourceUrl": "https://gallerywendinorris.com/news/16-hyperallergic-remedios-varo-in-a-sphere-of/",
+    "rightsMode": "restricted-institutional",
+    "copyrightNotice": "© Remedios Varo, VEGAP / SAVA; no open reuse licence established.",
+    "recognitionTier": "landmark",
+    "pending": false,
+    "comparisonPurpose": "Precise invented mechanisms and literal transformation inside one coherent room, compared with Bosch's dispersed fantasy.",
+    "sourceUrls": [
+      "https://inba.gob.mx/prensa/17510/el-museo-de-arte-moderno-reune-tres-exposiciones-en-mujeres-en-la-modernidad",
+      "https://sic.cultura.gob.mx/documentos/682.pdf"
+    ],
+    "downloadUrl": "https://static-assets.artlogic.net/c_limit,f_auto,fl_lossy,q_auto/ws-artlogicwebsite2100/usr/library/images/main/news/16/varo1.jpg"
+  },
+  {
+    "id": "canon-varo-embroidering-mantle",
+    "title": "Bordando el manto terrestre (Embroidering the Earth's Mantle)",
+    "artist": "Remedios Varo",
+    "date": "1961",
+    "yearRange": [
+      1961,
+      1961
+    ],
+    "medium": "Oil on canvas",
+    "movement": "Surrealism",
+    "country": "Mexico",
+    "museum": "Private collection; documented by Gallery Wendi Norris",
+    "sourceUrl": "https://gallerywendinorris.com/exhibitions/83-remedios-varo-indelible-fables/",
+    "rightsMode": "restricted-institutional",
+    "copyrightNotice": "© Remedios Varo / Artists Rights Society (ARS) / VEGAP; no open reuse licence established.",
+    "recognitionTier": "landmark",
+    "pending": true,
+    "comparisonPurpose": "Many coordinated acts in a single invented workshop and a scene becoming its own textile landscape."
+  },
+  {
+    "id": "canon-varo-celestial-pabulum",
+    "title": "Papilla estelar (Celestial Pablum)",
+    "artist": "Remedios Varo",
+    "date": "1958",
+    "yearRange": [
+      1958,
+      1958
+    ],
+    "medium": "Oil on hardboard",
+    "movement": "Surrealism",
+    "country": "Mexico",
+    "museum": "Colección FEMSA",
+    "sourceUrl": "https://aaeportal.com/?id=203753",
+    "sourceUrls": [
+      "https://malba.org.ar/wp-content/uploads/2020/03/Cuadernillo-Remedios-Varo.pdf"
+    ],
+    "rightsMode": "restricted-institutional",
+    "copyrightNotice": "© Remedios Varo / VEGAP / SAVA; no open reuse licence established.",
+    "recognitionTier": "landmark",
+    "pending": true,
+    "comparisonPurpose": "An intimate impossible act and precise apparatus rather than density of many figures or events."
+  },
+  {
+    "id": "canon-kahlo-two-fridas",
+    "title": "Las dos Fridas (The Two Fridas)",
+    "artist": "Frida Kahlo",
+    "date": "1939",
+    "yearRange": [
+      1939,
+      1939
+    ],
+    "medium": "Oil on canvas",
+    "movement": "Mexican modernism",
+    "country": "Mexico",
+    "museum": "Museo de Arte Moderno, Mexico",
+    "sourceUrl": "https://artsandculture.google.com/asset/the-two-fridas-frida-kahlo/zAHG4EZ1WrwVYg",
+    "rightsMode": "restricted-institutional",
+    "copyrightNotice": "© Banco de México Diego Rivera & Frida Kahlo Museums Trust; institutional reproduction authorization is not an open licence.",
+    "recognitionTier": "landmark",
+    "pending": false,
+    "comparisonPurpose": "Two static linked figures with anatomical and object clues, separating symbolism from intense literal bodily action.",
+    "downloadUrl": "https://lh3.googleusercontent.com/ci/AL18g_QKxnzuk_MTuH-7Z2-yxCcSGYXwP5oDHBcNNSLSWvjguXl_VXNXBJ35LVi4G0we-wNOHw5HX7Q=w3200"
+  },
+  {
+    "id": "canon-kahlo-broken-column",
+    "title": "La columna rota (The Broken Column)",
+    "artist": "Frida Kahlo",
+    "date": "1944",
+    "yearRange": [
+      1944,
+      1944
+    ],
+    "medium": "Oil on hardboard",
+    "movement": "Mexican modernism",
+    "country": "Mexico",
+    "museum": "Museo Dolores Olmedo",
+    "rightsMode": "restricted-institutional",
+    "copyrightNotice": "© Banco de México Diego Rivera & Frida Kahlo Museums Trust; no open reuse licence established.",
+    "recognitionTier": "landmark",
+    "pending": true,
+    "comparisonPurpose": "A precise static self-image with impossible anatomical structure and an empty landscape."
+  },
+  {
+    "id": "canon-tamayo-dualidad",
+    "title": "Dualidad",
+    "artist": "Rufino Tamayo",
+    "date": "1964",
+    "yearRange": [
+      1964,
+      1964
+    ],
+    "medium": "Vinyl paint on linen",
+    "movement": "Mexican modernism",
+    "country": "Mexico",
+    "museum": "Museo Nacional de Antropología",
+    "sourceUrl": "https://www.inah.gob.mx/boletines/el-museo-nacional-de-antropologia-celebra-60-aniversario-con-brios-fortalecidos-en-su-mision-divulgativa",
+    "commonsTitle": "File:“dualidad” (1964), by rufino tamayo (1899-1991) (36161059194) (cropped).jpg",
+    "rightsMode": "restricted-work-photo",
+    "copyrightNotice": "© Rufino Tamayo rights holders; INAH institutional photography is not an open licence to the mural.",
+    "recognitionTier": "landmark",
+    "pending": false,
+    "comparisonPurpose": "A large two-creature confrontation and broad colour fields, contrasting dense human mural narratives with simplified mythical forms.",
+    "sourceUrls": [
+      "https://mna.inah.gob.mx/historia_detalle.php?id=3"
+    ]
+  },
+  {
+    "id": "canon-varo-call",
+    "title": "La llamada (The Call)",
+    "artist": "Remedios Varo",
+    "date": "1961",
+    "yearRange": [
+      1961,
+      1961
+    ],
+    "medium": "Oil on hardboard",
+    "movement": "Surrealism",
+    "country": "Mexico",
+    "museum": "National Museum of Women in the Arts",
+    "sourceUrl": "https://nmwa.org/art/collection/la-llamada-call/",
+    "downloadUrl": "https://nmwa.org/wp-content/uploads/2020/01/2014.155_1291.jpg",
+    "rightsMode": "restricted-institutional",
+    "copyrightNotice": "© Remedios Varo/Artists Rights Society (ARS), New York/VEGAP, Madrid; photograph by Lee Stalsworth. No open reuse licence established.",
+    "recognitionTier": "landmark",
+    "comparisonPurpose": "A single striding figure, impossible light and figures encased in a coherent architectural place, compared with dense communal stories."
+  },
+  {
+    "id": "canon-varo-escape",
+    "title": "La huida (The Escape)",
+    "artist": "Remedios Varo",
+    "date": "1961",
+    "yearRange": [
+      1961,
+      1961
+    ],
+    "medium": "Oil on hardboard",
+    "movement": "Surrealism",
+    "country": "Mexico",
+    "museum": "Museo de Arte Moderno, Mexico",
+    "sourceUrl": "https://gallerywendinorris.com/news/20-hyperallergic-remedios-varos-strange-and-mysterious-universes-in-varos-work-there-is-often-a-sense/",
+    "sourceUrls": [
+      "https://www-images.lacma.org/s3fs-public/In%20Wonderland%20checklist%201.23.12_1.pdf"
+    ],
+    "downloadUrl": "https://static-assets.artlogic.net/c_limit,f_auto,fl_lossy,q_auto/ws-artlogicwebsite2100/usr/library/images/main/news/20/varo2.jpg",
+    "rightsMode": "restricted-institutional",
+    "copyrightNotice": "© Remedios Varo/Artists Rights Society (ARS), New York/VEGAP, Madrid; photograph by Rodrigo Chapa, MAM/INBAL. No open reuse licence established.",
+    "recognitionTier": "landmark",
+    "comparisonPurpose": "Two coordinated travellers in an impossible transport vessel within an extensive landscape, connecting relational gesture to spatial fantasy.",
+    "dateBasis": "Gallery caption and LACMA checklist give1961; a later INBAL exhibition page gives1961-1962. Source-specific dating difference retained, not a fabricated exact year."
+  }
+]

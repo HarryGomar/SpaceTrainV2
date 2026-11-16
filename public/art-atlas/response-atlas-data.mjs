@@ -1,5 +1,7 @@
 import {AXES, validAnswer} from './engine.mjs';
 import {buildLookingAppraisals} from './looking-appraisals.mjs';
+import {isComparisonPreferenceRound,responseGapRequired} from './comparison-protocol.mjs';
+import {isReviewedVisualDescriptor} from './visual-descriptor-semantics.mjs';
 
 export const RESPONSE_ATLAS_VERSION = 1;
 export const ATLAS_CLEAR_GAP = 15;
@@ -58,7 +60,7 @@ function collectionDimensions(works) {
     const values = [], unknownWorkIds = [];
     for (const work of works) {
       const value = work.features?.[id];
-      if (typeof value !== 'number' || !Number.isFinite(value) || value < 0 || value > 1) {unknownWorkIds.push(work.id); continue;}
+      if (!isReviewedVisualDescriptor(work,id)) {unknownWorkIds.push(work.id); continue;}
       values.push({id: id + ':' + work.id, workId: work.id, value, source: text(work.featureSource) || 'Provisional editorial annotation; source not supplied.', sourceUrl: text(work.sourceUrl) || null});
     }
     return {id, title, kind: 'editorial-feature', domain: [0, 1], low, high, values, unknownWorkIds, provisional: true,
@@ -88,6 +90,7 @@ function noBrief(round) {
 function unconditional(round) {
   if (round.kind !== 'spectrum' || round.criterion !== 'preference' || round.evidence?.unconditional === false || !noBrief(round)) return false;
   const construct = round.evidence?.construct, family = round.evidence?.family;
+  if(Object.hasOwn(round.evidence||{},'comparisonProtocol'))return isComparisonPreferenceRound(round)&&['individual-choice','feature-check','unconditional-preference','adaptive-preference'].includes(family);
   if (construct !== undefined) return construct === 'preference' && (!family || ['individual-choice', 'feature-check'].includes(family));
   const legacy = legacyPreference.get(round.id);
   return !family && !!legacy && legacy[0] === round.title && legacy[1] === round.hint && !Object.hasOwn(round, 'scale');
@@ -164,16 +167,16 @@ function preferenceGraph(entries, works) {
     for (const [a, b] of pairs(offered)) {
       const gap = Math.abs(answer.positions[a] - answer.positions[b]), winner = answer.positions[a] > answer.positions[b] ? a : b, loser = winner === a ? b : a;
       const observation = {id: round.id + ':' + JSON.stringify([a, b]), source: a, target: b, workIds: [a, b], positions: {[a]: answer.positions[a], [b]: answer.positions[b]}, gap,
-        relation: gap >= ATLAS_CLEAR_GAP ? 'clear-preference' : gap === 0 ? 'tie' : 'near-tie', roundId: round.id, sourceRoundIds: [round.id], roundTitle: text(round.title), setId: text(round.evidence?.setId) || setKey(offered), sourceRole: sourceRole(round)};
+        relation: gap >= responseGapRequired(round) ? isComparisonPreferenceRound(round)?'preference-order':'clear-preference' : gap === 0 ? 'tie' : 'near-tie', roundId: round.id, sourceRoundIds: [round.id], roundTitle: text(round.title), setId: text(round.evidence?.setId) || setKey(offered), sourceRole: sourceRole(round),orderOnly:isComparisonPreferenceRound(round)};
       comparisons.push(observation);
-      if (gap >= ATLAS_CLEAR_GAP) edges.push({...observation, source: winner, target: loser, winnerId: winner, loserId: loser});
+      if (gap >= responseGapRequired(round)) edges.push({...observation, source: winner, target: loser, winnerId: winner, loserId: loser});
     }
   }
   const nodes = [...nodeMap.values()], groups = components(nodes, edges, 'clear'), comparisonComponents = components(nodes, comparisons, 'compared');
   for (const node of nodes) {node.componentId = groups.find(group => group.workIds.includes(node.id)).id; node.comparisonComponentId = comparisonComponents.find(group => group.workIds.includes(node.id)).id;}
   return {nodes, edges, comparisons, components: groups, comparisonComponents, connected: nodes.length > 0 && groups.length === 1, comparisonConnected: nodes.length > 0 && comparisonComponents.length === 1,
-    clearGap: ATLAS_CLEAR_GAP, sourceRoundIds: prefs.map(entry => entry.round.id), globalRanking: null,
-    limits: ['Edges point from a higher placement to a lower placement within one unconditional preference answer, with a gap of at least 15. The threshold is a display rule, not statistical significance.',
+    clearGap:prefs.length&&prefs.every(entry=>isComparisonPreferenceRound(entry.round))?1:prefs.some(entry=>isComparisonPreferenceRound(entry.round))?null:ATLAS_CLEAR_GAP, sourceRoundIds: prefs.map(entry => entry.round.id), globalRanking: null,
+    limits: ['Edges retain the original question protocol. New relative comparisons use order and exact ties; older instruments retain their 15-point reporting rule. Line spacing is not a confidence estimate.',
       'Components use undirected clear-preference links. comparisonComponents additionally retains co-comparisons with equal or close placements.',
       'Repeated or opposing edges remain separate observations with their original source. Pair counts are not independent evidence counts.',
       'There is no fitted global ranking or global taste distance. Disconnected groups cannot be aligned using these comparisons alone. Even a connected graph needs explicit modelling assumptions before estimating a global ordering.']};
@@ -186,7 +189,7 @@ function matchedPanels(entries) {
   const prefs = entries.filter(entry => unconditional(entry.round)), interests = entries.filter(entry => curiosity(entry.round)), result = [];
   for (const pref of prefs) for (const interest of interests) {
     if (setKey(pref.offered) !== setKey(interest.offered)) continue;
-    const x = spectrumQuestion(pref.round), y = spectrumQuestion(interest.round), definition = {xName: 'Preference', yName: 'Curiosity', left: text(x.scale?.left) || 'Less preferred', right: text(x.scale?.right) || 'More preferred', bottom: text(y.scale?.left) || 'Less curious', top: text(y.scale?.right) || 'More curious'};
+    const x = spectrumQuestion(pref.round), y = spectrumQuestion(interest.round), definition = {xName:isComparisonPreferenceRound(pref.round)?'Preference order':'Preference', yName: 'Curiosity', left: text(x.scale?.left) || 'Less preferred', right: text(x.scale?.right) || 'More preferred', bottom: text(y.scale?.left) || 'Less curious', top: text(y.scale?.right) || 'More curious'};
     result.push({id: 'paired-' + pref.round.id + '-' + interest.round.id, kind: 'matched-preference-curiosity', title: 'Preference and curiosity', axisId: 'preference-curiosity', axisDefinition: definition,
       signature: canonical({x, y, workIds: [...pref.offered].sort()}), domain: [0, 100], coordinates: {x: 'left-to-right', y: 'bottom-to-top'}, sourceRoundIds: [pref.round.id, interest.round.id], questionDefinitions: [x, y], workIds: [...pref.offered],
       points: pref.offered.map(workId => ({id: pref.round.id + ':' + interest.round.id + ':' + workId, workId, x: pref.answer.positions[workId], y: interest.answer.positions[workId], roundId: pref.round.id, roundTitle: text(pref.round.title), preferenceRoundId: pref.round.id, curiosityRoundId: interest.round.id, sourceRoundIds: [pref.round.id, interest.round.id]})),

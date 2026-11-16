@@ -1,8 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {buildJourneyRounds,createJourneyStimulusPlan,journeyCurationNotes,JOURNEY_REVISION,JOURNEY_VARIETY_POLICY} from '../../public/art-atlas/journey-bank.mjs';
+import {buildJourneyRounds as buildCurrentJourneyRounds,createJourneyStimulusPlan,journeyCurationNotes,JOURNEY_REVISION,JOURNEY_VARIETY_POLICY} from '../../public/art-atlas/journey-bank.mjs';
 import {selectArrangementStimuli} from '../../public/art-atlas/arrangement-stimuli.mjs';
+import {APPEAL_PROTOCOL} from '../../public/art-atlas/appeal-scale.mjs';
+// This regression route deliberately preserves the earlier overall instrument.
+// Fresh comparison-first scheduling is covered separately by journey-v12.
+const buildJourneyRounds=(works,answers={},options={})=>buildCurrentJourneyRounds(works,answers,{...options,preferenceProtocol:APPEAL_PROTOCOL});
+
 const works=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/artworks.json',import.meta.url),'utf8')).slice(0,164);
 const notes=journeyCurationNotes(works);
 const byId=new Map(works.map(work=>[work.id,work]));
@@ -14,7 +19,7 @@ const ordinary=round=>round.kind==='spectrum'&&round.criterion==='preference'&&r
 const specific=round=>!round.unavailable&&round.kind!=='statements'&&round.evidence.stimulusVisibility!=='not-shown'&&!(round.kind==='exercise'&&!['sorting','difficult-edit','edit'].includes(round.exerciseKind));
 const fresh=()=>buildJourneyRounds(works,{}, {seed});
 
-test('The variety policy preserves all18 curated main panels and the fixed50-round schedule',()=>{
+test('The historical overall-instrument variety policy preserves all18 curated main panels and the fixed50-round schedule',()=>{
   const rounds=fresh(),main=rounds.filter(round=>ordinary(round)&&Number.isInteger(round.evidence.panelNumber));
   assert.equal(rounds.length,50);assert.equal(main.length,18);assert.equal(new Set(main.flatMap(ids)).size,72);
   for(const p of notes.proposedFirst18Panels)same(ids(main.find(round=>round.evidence.panelNumber===p.panel)),p.workIds);

@@ -27,9 +27,9 @@ const portrait=(f,rounds,answers,extra={})=>buildTastePortrait({works:f.works,ro
 const responses=(f,rounds,answers)=>buildResponsePortrait({works:f.works,rounds,answers});
 function facets(work,tags){work.analysis.curatorialFacets={version:'curatorial-facets-v1',reviewed:true,tags,sourceUrls:[work.sourceUrl],reviewedImage:work.image,reviewedImageSha256:work.sha256||'1'.repeat(64)};}
 
-test('Legacy set leaders retain source order rather than an alphabetical or cross-set score ranking',()=>{
+test('Legacy set leaders remain comparison history and never become a favourite ranking',()=>{
   const f=fixture();f.works[0].id='z-early';f.works[2].id='a-later';const a=f.pref('early',[0,1],false),b=f.pref('later',[2,3],false),result=portrait(f,[a,b],{early:f.spectrum(a,[51,0]),later:f.spectrum(b,[100,0])});
-  assert.equal(result.heroWorks[0].workId,'z-early');assert.ok(result.heroWorks.every(item=>item.basis==='within-set-leader'&&item.score===null));assert.equal(result.preferenceEvidence.absoluteScaleAvailable,false);assert.deepEqual(result.preferenceEvidence.overallRatings,[]);
+  assert.deepEqual(result.heroWorks,[]);assert.equal(result.coverage.preferenceTasks,2);assert.equal(result.preferenceEvidence.absoluteScaleAvailable,false);assert.deepEqual(result.preferenceEvidence.overallRatings,[]);
 });
 
 test('Exact overall anchors make independently high paintings eligible even without a local win',()=>{
@@ -46,7 +46,7 @@ test('Explicit favourites outrank numeric appeal without inventing order within 
 
 test('A generic keep grid, recognition or save is not a favourites declaration; low appeal stays low',()=>{
   const f=fixture(),a=f.pref('a',[0,1,2]),keep={...f.favourites('keep'),evidence:{construct:'unranked-subset-selection'}},result=portrait(f,[a,keep],{a:f.spectrum(a,[20,10,0]),keep:f.selection(keep,[2])},{saved:{w2:{look:true}}});
-  assert.equal(result.heroWorks[0].workId,'w0');assert.equal(result.heroWorks[0].positive,false);assert.equal(result.coverage.uniquePreferredWorks,0);assert.deepEqual(result.discovery.artists,[]);assert.deepEqual(result.preferenceEvidence.favouriteRoundIds,[]);
+  assert.deepEqual(result.heroWorks,[]);assert.equal(result.preferenceEvidence.overallRatings.find(item=>item.workId==='w0').score,20);assert.equal(result.coverage.uniquePreferredWorks,0);assert.deepEqual(result.discovery.artists,[]);assert.deepEqual(result.preferenceEvidence.favouriteRoundIds,[]);
 });
 
 test('Repeated overall ratings preserve actual history and latest value without independent-work inflation',()=>{
@@ -151,5 +151,5 @@ test('All rich curatorial findings remain available in priority order, including
 const originalPath=new URL('../../artifacts/art-atlas/harry-first-50-original.json',import.meta.url);
 test('The privately retained original fifty answers remain legacy local evidence and are never rewritten',{skip:!fs.existsSync(originalPath)},()=>{
   const bytes=fs.readFileSync(originalPath),hash=crypto.createHash('sha256').update(bytes).digest('hex'),run=JSON.parse(bytes),works=run.manifest.catalogue,byId=new Map(works.map(work=>[work.id,work])),rounds=run.rounds.map(round=>({...round,works:(round.workIds||round.works.map(work=>work.id)).map(id=>byId.get(id))})),before=JSON.stringify({works,rounds,answers:run.answers}),result=buildTastePortrait({works,rounds,answers:run.answers,records:run.records||[]});
-  assert.ok(result.coverage.preferenceTasks>=18);assert.equal(result.preferenceEvidence.absoluteScaleAvailable,false);assert.deepEqual(result.preferenceEvidence.overallRatings,[]);assert.ok(result.heroWorks.every(item=>item.basis==='within-set-leader'&&item.score===null));assert.deepEqual(result.facets.observations,[]);assert.equal(JSON.stringify({works,rounds,answers:run.answers}),before);assert.equal(crypto.createHash('sha256').update(fs.readFileSync(originalPath)).digest('hex'),hash);
+  assert.ok(result.coverage.preferenceTasks>=18);assert.equal(result.preferenceEvidence.absoluteScaleAvailable,false);assert.deepEqual(result.preferenceEvidence.overallRatings,[]);assert.deepEqual(result.heroWorks,[]);assert.deepEqual(result.facets.observations,[]);assert.equal(JSON.stringify({works,rounds,answers:run.answers}),before);assert.equal(crypto.createHash('sha256').update(fs.readFileSync(originalPath)).digest('hex'),hash);
 });

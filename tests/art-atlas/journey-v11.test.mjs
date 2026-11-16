@@ -6,6 +6,7 @@ import {prepareJourneySession,sessionJourneyRounds,snapshotStudyRound,restoreStu
 import {collectTastePatternSources} from '../../public/art-atlas/taste-axes.mjs';
 import {isOverallAppealRound} from '../../public/art-atlas/appeal-scale.mjs';
 import {legacyV8Rounds} from './helpers/legacy-v8.mjs';
+import {legacyV11Rounds} from './helpers/legacy-v11.mjs';
 
 const works=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/artworks.json',import.meta.url),'utf8'));
 const ids=round=>round.works.map(work=>work.id);
@@ -18,9 +19,9 @@ function oldBlock(data){
   old.manifest.journeyRevision='art-profile-50-v10';for(const round of old.plan)round.evidence.journeyRevision='art-profile-50-v10';return old;
 }
 
-test('Freshv11 trades the unpaired selection and isolated label for five exact matched admiration maps',()=>{
-  const rounds=sessionJourneyRounds(fresh),preferences=rounds.filter(round=>round.evidence.construct==='preference'&&round.evidence.panelNumber),maps=rounds.filter(round=>round.kind==='grid'&&round.axis==='achievement');
-  assert.equal(JOURNEY_REVISION,'art-profile-50-v11');assert.equal(rounds.length,50);assert.equal(preferences.length,18);assert.equal(new Set(preferences.flatMap(ids)).size,72);assert.equal(new Set(preferences.flatMap(ids)).size,preferences.flatMap(ids).length);assert.ok(preferences.every(isOverallAppealRound));
+test('Captured v11 retains its eighteen overall-rating quartets and five exact matched admiration maps',()=>{
+  const rounds=legacyV11Rounds(),preferences=rounds.filter(round=>round.evidence.construct==='preference'&&round.evidence.panelNumber),maps=rounds.filter(round=>round.kind==='grid'&&round.axis==='achievement');
+  assert.ok(rounds.every(round=>round.evidence.journeyRevision==='art-profile-50-v11'));assert.equal(rounds.length,50);assert.equal(preferences.length,18);assert.equal(new Set(preferences.flatMap(ids)).size,72);assert.equal(new Set(preferences.flatMap(ids)).size,preferences.flatMap(ids).length);assert.ok(preferences.every(isOverallAppealRound));
   assert.deepEqual(maps.map(round=>round.id),['journey-004','journey-006','journey-021','journey-034','journey-045']);assert.equal(new Set(maps.flatMap(ids)).size,20);
   for(const map of maps){const preference=preferences.find(source=>source.evidence.panelNumber===map.evidence.panelNumber);assert.ok(preference);assert.ok(rounds.indexOf(preference)<rounds.indexOf(map));assert.deepEqual(new Set(ids(map)),new Set(ids(preference)));assert.equal(map.evidence.setId,preference.evidence.setId);assert.ok(map.evidence.priorMeasureRoundIds.includes(preference.id));}
   assert.ok(rounds.slice(45).every(round=>round.evidence.finalRefinement&&round.unavailable));assert.equal(rounds.filter(round=>round.evidence.construct==='attention-to-making').length,0);

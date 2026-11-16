@@ -2422,7 +2422,7 @@
     "matejko-stanczyk": {
       "workId": "matejko-stanczyk",
       "sourceIdentity": {
-        "sourceUrl": "https://cyfrowe.mnw.pl/pl/zbiory/962339",
+        "sourceUrl": "https://artsandculture.google.com/asset/sta%C5%84czyk-jan-matejko/4AHFtRqeObzoRw",
         "image": "assets/collection-matejko-stanczyk.jpg",
         "imageSourceUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/78/Jan_Matejko%2C_Sta%C5%84czyk.jpg/960px-Jan_Matejko%2C_Sta%C5%84czyk.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
       },
@@ -2437,11 +2437,11 @@
       "provenance": {
         "provider": "Wikimedia Commons",
         "metadataUrl": "https://commons.wikimedia.org/wiki/File:Jan_Matejko,_Sta%C5%84czyk.jpg",
-        "institutionRecordUrl": "https://cyfrowe.mnw.pl/pl/zbiory/962339",
+        "institutionRecordUrl": "https://artsandculture.google.com/asset/sta%C5%84czyk-jan-matejko/4AHFtRqeObzoRw",
         "institutionIdentity": {
           "title": "File:Jan Matejko, Stańczyk.jpg",
           "pageId": 43350542,
-          "institutionRecordUrl": "https://cyfrowe.mnw.pl/pl/zbiory/962339"
+          "institutionRecordUrl": "https://artsandculture.google.com/asset/sta%C5%84czyk-jan-matejko/4AHFtRqeObzoRw"
         },
         "downloadUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/78/Jan_Matejko%2C_Sta%C5%84czyk.jpg/3840px-Jan_Matejko%2C_Sta%C5%84czyk.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
         "originalImageUrl": "https://upload.wikimedia.org/wikipedia/commons/7/78/Jan_Matejko%2C_Sta%C5%84czyk.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
@@ -2466,7 +2466,22 @@
         "sourceImageSha256": "37e167a25c74b9ea31f863ddc6ecd22f51ba006479f5a0e63f3cd16f31d368d3",
         "sourceImageBytes": 2782635,
         "downloadedWidth": 3840,
-        "downloadedHeight": 2856
+        "downloadedHeight": 2856,
+        "sourceIdentityCorrection": {
+          "version": "source-correction-20261116-v1",
+          "workId": "matejko-stanczyk",
+          "previousSourceUrl": "https://cyfrowe.mnw.pl/pl/zbiory/962339",
+          "sourceUrl": "https://artsandculture.google.com/asset/sta%C5%84czyk-jan-matejko/4AHFtRqeObzoRw",
+          "reason": "The previous museum URL identifies a 1876 wood engraving by Jan Styfi after Matejko. Its prototype field identifies the actual 1862 painting as MP433MNW. The museum-provided Google Arts & Culture object identifies the displayed colour painting as 1862, oil on canvas, inventory MP433. No print date or print medium is transferred to the painting.",
+          "evidenceUrls": [
+            "https://cyfrowe.mnw.pl/pl/zbiory/962339",
+            "https://artsandculture.google.com/asset/sta%C5%84czyk-jan-matejko/4AHFtRqeObzoRw"
+          ],
+          "imageUnchanged": "assets/collection-matejko-stanczyk.jpg",
+          "previewSha256": "4632ce3b0016db122aaa60502c6979c069bbacf9a8d91999f841d41dcbc1ac24",
+          "dateUnchanged": "1862",
+          "scope": "Current catalogue and current review/media bindings only. Previously saved participant manifests and exports are not rewritten."
+        }
       },
       "smallImageSha256": "4632ce3b0016db122aaa60502c6979c069bbacf9a8d91999f841d41dcbc1ac24",
       "smallImageBytes": 180589

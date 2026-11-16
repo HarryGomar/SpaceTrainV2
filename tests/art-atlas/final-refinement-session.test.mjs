@@ -1,14 +1,17 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import fs from 'node:fs';
 import {prepareJourneySession,sessionJourneyRounds,snapshotStudyRound,validStudyAnswer} from '../../public/art-atlas/deep-study.mjs';
-import {isOverallAppealRound} from '../../public/art-atlas/appeal-scale.mjs';
-const works=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/artworks.json',import.meta.url),'utf8'));
+import {APPEAL_PROTOCOL,isOverallAppealRound} from '../../public/art-atlas/appeal-scale.mjs';
+import {JOURNEY_PROTOCOL} from '../../public/art-atlas/journey-bank.mjs';
+import {legacyV11Works,legacyV11Rounds} from './helpers/legacy-v11.mjs';
+const works=legacyV11Works();
 const ids=round=>round.works.map(work=>work.id);
 const positions=(round,values)=>({confirmed:true,criterion:'preference',workIds:ids(round),positions:Object.fromEntries(round.works.map((work,index)=>[work.id,values[index]]))});
 
-test('Entering each closing question binds actual earlier answers and freezes its resolved source chain',()=>{
-  const data=prepareJourneySession(null,works,1000),originalPlan=structuredClone(data.plan),captured=[];
+test('An entered v11 block binds its original overall closing questions from actual earlier answers and freezes the source chain',()=>{
+  const frozen=legacyV11Rounds(),plan=frozen.map(snapshotStudyRound),saved={version:1,target:50,index:0,screen:'question',startedAt:1000,finishedAt:null,answers:{},shown:{[frozen[0].id]:snapshotStudyRound(frozen[0])},archives:[],manifest:{version:1,protocol:JOURNEY_PROTOCOL,journeyRevision:'art-profile-50-v11',preferenceProtocol:APPEAL_PROTOCOL,id:'public-legacy-v11-unit',createdAt:1000,catalogue:structuredClone(works),catalogueIds:works.map(work=>work.id)},plan},before=structuredClone(saved);
+  const data=prepareJourneySession(saved,works,2000),originalPlan=structuredClone(data.plan),captured=[];
+  assert.deepEqual(saved,before);assert.deepEqual(data.plan,plan,'Starting an old block protects its pending original instrument as well as its shown questions');
   for(let index=0;index<45;index++){
     data.index=index;const round=sessionJourneyRounds(data)[index];assert.equal(round.unavailable,undefined,round.id);data.shown[round.id]=snapshotStudyRound(round);
     data.answers[round.id]=isOverallAppealRound(round)?positions(round,round.evidence.panelNumber===2?[2,12,22,32]:[58,71,84,97]):{workIds:ids(round),skipped:true};

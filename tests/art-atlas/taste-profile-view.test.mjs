@@ -1,9 +1,23 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {renderTasteAxisIndex,renderTasteAxisProfile,renderTasteQualityProfile,renderTasteQualityRecommendations} from '../../public/art-atlas/taste-profile-view.mjs';
+import {renderTasteAxisIndex,renderTasteAxisProfile,renderTasteQualityProfile,renderTasteQualityRecommendations,renderTasteBoundaries,renderDeclaredPreferences} from '../../public/art-atlas/taste-profile-view.mjs';
 const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const works=[{id:'a',title:'Painting A',artist:'Artist A'},{id:'b',title:'Painting B',artist:'Artist B'},{id:'c',title:'Painting C',artist:'Artist C'}],image=work=>`<img data-work="${work.id}">`;
 const helpers={works,image,esc,evidence:item=>`<button data-evidence="${esc(item.id)}">View the comparisons</button>`};
+
+test('The declaration gallery shows only current sourced choices and does not turn history into a new favourite',()=>{
+  const html=renderDeclaredPreferences({...helpers,profile:{explicitFavourites:[{workId:'a',sourceRoundIds:['favourite-round']}],explicitDislikes:[{workId:'b',sourceRoundIds:['dislike-round']},{workId:'c',sourceRoundIds:[]}],favouriteDeclarations:[{workId:'c',sourceRoundIds:['old-round']}]}});
+  assert.match(html,/Favourites & dislikes/);assert.match(html,/data-work="a"/);assert.match(html,/data-work="b"/);assert.doesNotMatch(html,/data-work="c"|\/ 100/);
+  assert.equal(renderDeclaredPreferences({...helpers}), '');
+});
+
+test('An explicit favourite versus dislike contrast never fabricates numerical ratings',()=>{
+  const finding={id:'declared-boundary',status:'explicit-choice-contrast',title:'Stories inside detailed scenes',text:'The observed contrast.',supportPairs:[{highWorkId:'a',lowWorkId:'b'},{highWorkId:'a',lowWorkId:'c'}]};
+  const html=renderTasteBoundaries({...helpers,profile:{findings:[finding]}});
+  assert.match(html,/Favourite/);assert.match(html,/Disliked/);assert.match(html,/data-evidence="declared-boundary"/);assert.doesNotMatch(html,/\/ 100|undefined|Rated highly|Rated lower/);
+  const legacy=renderTasteBoundaries({...helpers,profile:{findings:[{...finding,status:'exploratory-contrast',supportPairs:finding.supportPairs.map(pair=>({...pair,highValue:85,lowValue:20}))}]}});
+  assert.match(legacy,/Rated highly · 85 \/ 100/);assert.match(legacy,/Rated lower · 20 \/ 100/);
+});
 
 test('All-tied or unknown axes do not claim that opposite preferences recur',()=>{
   const axes=[{key:'colour',title:'Colour',leftLabel:'Restrained',rightLabel:'Intense',status:'mixed',positiveSetCount:0,negativeSetCount:0,summary:'No clear difference.',displayWorkIds:[]}];

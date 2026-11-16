@@ -9,8 +9,10 @@ import {reservationPoolKeys} from '../../public/art-atlas/stimulus-planner.mjs';
 import {isFinalRefinementRound,bindFinalRefinementRound} from '../../public/art-atlas/final-refinement.mjs';
 import {resolveArtworkAttributes} from '../../public/art-atlas/taste-patterns.mjs';
 import {ARTWORK_ATTRIBUTE_DEFINITIONS} from '../../public/art-atlas/artwork-attribute-definitions.mjs';
+import {routeCollection} from '../../public/art-atlas/collection-routing.mjs';
 import {createActiveStudyPersistence,loadActiveStudy} from '../../public/art-atlas/active-study-storage.mjs';
 const works=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/artworks.json',import.meta.url),'utf8')),reviews=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/artwork-attribute-reviews.json',import.meta.url),'utf8'));
+const active=routeCollection(works).studyWorks;
 const notes=journeyCurationNotes(works),rounds=buildJourneyRounds(works),ids=round=>round.works.map(work=>work.id),main=rounds.filter(round=>round.kind==='spectrum'&&round.evidence.construct==='preference'&&round.evidence.role==='discovery'),eligible=works.filter(work=>work.eligibleForStudy!==false&&work.studyEligible!==false&&work.decorativeOnly!==true);
 
 test('The actual expanded route keeps Western/Americas classics and requested anchors early while staging Asian collections accurately',()=>{
@@ -20,9 +22,9 @@ test('The actual expanded route keeps Western/Americas classics and requested an
   const imageQuestions=rounds.slice(0,45).filter(round=>round.kind!=='statements'&&!(round.kind==='exercise'&&round.exerciseKind==='curate'));
   assert.ok(imageQuestions.flatMap(round=>round.works).every(work=>!isLaterCurationWork(work,notes)),'Independent games, maps, source notes and sorting must follow the same early curation.');
   assert.deepEqual(rounds.filter(round=>round.symbolismProtocol).map(round=>round.works[0].id),['add-varo-harmony','add-watts-hope','holbein-ambassadors']);
-  for(const batch of [2,3,4]){assert.equal(notes.reservePools['batch'+batch].length,64);assert.ok(notes.reservePools['batch'+batch].every(id=>!isLaterCurationWork(works.find(work=>work.id===id),notes)));}
+  for(const [index,batch] of [2,3,4,5,6].entries()){assert.equal(notes.reservePools['batch'+batch].length,[55,55,54,54,54][index]);assert.ok(notes.reservePools['batch'+batch].every(id=>!isLaterCurationWork(works.find(work=>work.id===id),notes)));}
   const first100=new Set([...first.map(work=>work.id),...notes.reservePools.batch2]),required=eligible.filter(work=>work.curationRole==='required-anchor');assert.ok(required.length>=16);assert.ok(required.every(work=>first100.has(work.id)),'Every eligible requested anchor gets an ordinary first-rating reservation by100.');
-  const partition=[...first.map(work=>work.id),...reservationPoolKeys(notes.reservePools).flatMap(name=>notes.reservePools[name])];assert.equal(partition.length,eligible.length);assert.deepEqual(new Set(partition),new Set(eligible.map(work=>work.id)));
+  const partition=[...first.map(work=>work.id),...reservationPoolKeys(notes.reservePools).flatMap(name=>notes.reservePools[name])];assert.equal(partition.length,active.length);assert.equal(active.length,344);assert.deepEqual(new Set(partition),new Set(active.map(work=>work.id)));const world=routeCollection(works).world;assert.ok(world.every(work=>!partition.includes(work.id)),'The extended collection remains available separately, never filler for the main quiz.');const first100Canonical=eligible.filter(work=>work.curationRole==='canonical-priority');assert.equal(first100Canonical.length,24);assert.ok(first100Canonical.every(work=>first100.has(work.id)));
   assert.ok(works.filter(work=>work.eligibleForStudy===false||work.studyEligible===false).every(work=>!partition.includes(work.id)));
 });
 
@@ -50,14 +52,14 @@ function finish(data){
   data.index=data.plan.length-1;data.screen='reading';data.finishedAt=2000;return data;
 }
 
-test('The actual460-eligible collection reaches300 with64 new ratings in every later block and saves full source records under a tiny local quota',async t=>{
+test('The actual main collection reaches300 with55/55/54/54/54 newly compared paintings and saves full source records under a tiny local quota',async t=>{
   let data=prepareJourneySession(null,works,1000);const initialPools=structuredClone(data.manifest.stimulusPlanning.reservations),sizes={fresh:JSON.stringify(data).length};
   finish(data);sizes.at50=JSON.stringify(data).length;
   for(let batch=1;batch<6;batch++){
     const before=structuredClone(data);data=extendJourneySession(data,works,3000+batch);
     assert.deepEqual(data.plan.slice(0,before.plan.length),before.plan);assert.deepEqual(data.shown,before.shown);assert.deepEqual(data.answers,before.answers);assert.deepEqual(data.manifest.catalogue,before.manifest.catalogue);
     assert.deepEqual(data.manifest.stimulusPlanning.reservations,initialPools);
-    const selection=data.batches.at(-1).selection;assert.equal(selection.coverage.firstRatingTarget,64);assert.equal(selection.coverage.firstRatingTargetMet,true);assert.equal(selection.coverage.firstRatingTargetFeasible,true);assert.deepEqual(new Set(selection.coverage.firstRatingWorkIds),new Set(initialPools['batch'+(batch+1)]));const roles=selection.coverage.actualRoles;assert.equal(roles.repeat,1);assert.equal(roles.recontextualization,0);assert.ok([0,1].includes(roles.challenge));assert.equal(roles.exploration,17-roles.challenge);if(!roles.challenge)assert.ok(selection.coverage.fallbackReasons.some(reason=>reason.requestedRole==='challenge'&&reason.actualRole==='exploration'&&/did not support.*prediction/.test(reason.reason)),'An unsupported direction must have an explicit exploration fallback, not an invented prediction.');for(const panel of selection.panels.filter(panel=>panel.role==='challenge'))assert.ok(panel.provisionalHypothesis&&panel.provisionalPrediction);finish(data);
+    const selection=data.batches.at(-1).selection;assert.equal(selection.coverage.firstRatingTarget,initialPools['batch'+(batch+1)].length);assert.equal(selection.coverage.firstRatingTargetMet,true);assert.equal(selection.coverage.firstRatingTargetFeasible,true);assert.deepEqual(new Set(selection.coverage.firstRatingWorkIds),new Set(initialPools['batch'+(batch+1)]));const roles=selection.coverage.actualRoles;assert.equal(roles.repeat,1);assert.equal(roles.recontextualization,0);assert.ok([0,1].includes(roles.challenge));assert.equal(roles.exploration,17-roles.challenge);if(!roles.challenge)assert.ok(selection.coverage.fallbackReasons.some(reason=>reason.requestedRole==='challenge'&&reason.actualRole==='exploration'&&/did not support.*prediction/.test(reason.reason)),'An unsupported direction must have an explicit exploration fallback, not an invented prediction.');for(const panel of selection.panels.filter(panel=>panel.role==='challenge'))assert.ok(panel.provisionalHypothesis&&panel.provisionalPrediction);finish(data);
   }
   assert.equal(data.plan.length,300);sizes.at300=JSON.stringify(data).length;t.diagnostic('Serialized active study characters: '+JSON.stringify(sizes));
   const values=new Map(),database=new Map(),storage={getItem:key=>values.get(key)||null,setItem(key,value){if(value.length>2048)throw Error('local quota');values.set(key,value);},removeItem:key=>values.delete(key)},store={async put(id,value){database.set(id,structuredClone(value));},async get(id){return structuredClone(database.get(id));},async remove(id){database.delete(id);}};

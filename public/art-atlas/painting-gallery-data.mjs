@@ -1,5 +1,6 @@
 import {validAnswer} from './engine.mjs';
 import {artworkContextSearchText} from './artwork-context.mjs';
+import {routeCollection} from './collection-routing.mjs';
 
 export const GALLERY_CONTEXT_KEY='art-atlas-gallery-context-v1';
 export const GALLERY_CONTEXT_SCOPE='Gallery opened; which artwork labels were actually read is unknown.';
@@ -40,7 +41,8 @@ function answeredGroups(saved){
 
 /** The live proposal and the viewer's frozen answers are separate sources. */
 export function buildPaintingGallery({works=[],notes={},saved=null}={}){
-  const pool=catalogue(works),byId=new Map(pool.map(work=>[work.id,work])),briefs=Array.isArray(notes?.proposedFirst18Panels)?notes.proposedFirst18Panels:[],planned=[],rejectedPanels=[];
+  notes=plain(notes)?notes:{};
+  const pool=catalogue(works),routing=routeCollection(pool,notes.collectionRouting,notes),main=routing.main,world=routing.world,byId=new Map(pool.map(work=>[work.id,work])),briefs=Array.isArray(notes?.proposedFirst18Panels)?notes.proposedFirst18Panels:[],planned=[],rejectedPanels=[];
   for(const brief of briefs){
     const ids=brief?.workIds;if(!Number.isInteger(brief?.panel)||!Array.isArray(ids)||ids.length<2||ids.length>4||unique(ids).length!==ids.length||ids.some(id=>!byId.has(id))){rejectedPanels.push(brief?.panel??null);continue;}
     planned.push(group({id:'planned:'+brief.panel,kind:'planned-comparison',number:brief.panel,label:'Set '+String(brief.panel).padStart(2,'0'),title:brief.galleryTitle||brief.title||brief.targetContrast||'Comparison set '+brief.panel,curatorialQuestion:brief.primaryQuestion||null,scope:brief.questionUse||null},ids.map(id=>byId.get(id)),'current'));
@@ -54,10 +56,11 @@ export function buildPaintingGallery({works=[],notes={},saved=null}={}){
     view('next','Next '+next.length,'The next paintings.','Reserved for first preference ratings in the second block. Their comparison groups depend on earlier answers.',next.length?[group({id:'reserve:next',kind:'reserve-pool',title:'Paintings for the second block',label:'Rounds 51–100'},next,'current')]:[],'reserve'),
     view('later','Following '+later.length,'Further into the collection.','Reserved for first preference ratings in the third block. Later comparison groups depend on earlier answers.',later.length?[group({id:'reserve:later',kind:'reserve-pool',title:'Paintings for the third block',label:'Rounds 101–150'},later,'current')]:[],'reserve'),
     ...laterBlocks,
-    view('all','All '+pool.length,'The collection','Every painting available in the current collection.',pool.length?[group({id:'catalogue',kind:'catalogue',title:'',label:''},pool,'current')]:[],'catalogue')
+    view('all','Main collection · '+main.length,'The main collection','Classics and Americas works, with a few global anchors.',main.length?[group({id:'catalogue',kind:'catalogue',title:'',label:''},main,'current')]:[],'catalogue'),
+    ...(world.length?[view('world','World collection · '+world.length,'The world collection','Additional East Asian, South Asian and Himalayan works. These remain available without filling the main quiz.',[group({id:'world-catalogue',kind:'catalogue',title:'',label:''},world,'current')],'catalogue')]:[])
   ];
   if(history.available)views.push(view('answered','Your answered sets','Your answered comparisons.','Completed ordinary preference comparisons, with the artwork details saved in your study.',history.groups,'history'));
-  return {version:1,views,history:{available:history.available,answeredSetCount:history.groups.length,rejectedRoundIds:history.rejectedRoundIds},coverage:{catalogue:pool.length,first:counts(planned).workCount,next:next.length,later:later.length,plannedSetCount:planned.length},audit:{rejectedPanels},scope:['The first comparison sets describe the current proposal, not what any particular viewer saw.','Later pools reserve first preference ratings. Paintings may appear earlier in other activities.','Later comparison groups adapt to earlier responses.','Saved answers use their own captured catalogue. Current metadata never fills a missing historical artwork.']};
+  return {version:1,views,history:{available:history.available,answeredSetCount:history.groups.length,rejectedRoundIds:history.rejectedRoundIds},coverage:{catalogue:pool.length,main:main.length,world:world.length,first:counts(planned).workCount,next:next.length,later:later.length,plannedSetCount:planned.length},collectionRouting:routing.metadata,audit:{rejectedPanels},scope:['The first comparison sets describe the current proposal, not what any particular viewer saw.','Later pools reserve first preference comparisons. Paintings may appear earlier in other activities.','Later comparison groups adapt to earlier responses.','Saved answers use their own captured catalogue. Current metadata never fills a missing historical artwork.','The full world collection remains available separately. Main routing is editorial selection, never evidence of a personal like or dislike.']};
 }
 
 export function filterPaintingGallery(view,query=''){

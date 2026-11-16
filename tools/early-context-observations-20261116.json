@@ -1,0 +1,524 @@
+{
+  "brueghel-sight": {
+    "medium": {
+      "value": "Oil on panel",
+      "sourceUrl": "https://canon.codart.nl/artwork/the-five-senses/",
+      "sourcePublisher": "CODART Canon, curator-authored object entry by Asuka Nakada",
+      "sourceLocator": "Object details, representative Sight panel"
+    },
+    "label": "Collaborative allegorical picture-gallery scene",
+    "reason": "The curator-authored series entry distinguishes Rubens's figure contribution from Brueghel's elaborate settings and identifies actual pictures represented within Sight. This supports a contextual label for a painting about looking and collecting, not a presumed response from a visitor.",
+    "additionalSourceUrls": [
+      "https://canon.codart.nl/artwork/the-five-senses/"
+    ],
+    "documentedContext": [
+      {
+        "claim": "The curator identifies Rubens as the maker of the main personifications and Brueghel as the maker of their settings. Some small represented paintings refer to actual works, including their collaborative Madonna and Child in a Garland of Flowers.",
+        "sourceUrl": "https://canon.codart.nl/artwork/the-five-senses/",
+        "sourcePublisher": "CODART Canon, Asuka Nakada, curator at the National Museum of Western Art",
+        "sourceLocator": "Series discussion and Sight example"
+      }
+    ],
+    "sourceLimit": "The Prado object page returned403 during this pass. The1617 date remains explicitly reported from the existing source-linked catalogue; the oil-panel medium and series context were independently checked in the curator-authored CODART entry."
+  },
+  "matejko-stanczyk": {
+    "reportedDate": {
+      "value": "1862",
+      "sourceLocator": "Museum-provided Details, Date and inventory MP433"
+    },
+    "medium": {
+      "value": "Oil on canvas",
+      "sourceLocator": "Museum-provided Details, Medium"
+    },
+    "sourceWorkType": {
+      "value": "Painting",
+      "sourceLocator": "Museum-provided Details, Type"
+    },
+    "label": "Nineteenth-century historical figure scene",
+    "reason": "The museum's painting record establishes the1862 object and oil-canvas support. The source-bound visual review describes an isolated foreground jester with festivities beyond, so a historical figure-scene label does not depend on an inferred emotion or the later reproductive print.",
+    "sourceLimit": "The earlier source URL referred to an1876 engraving after the painting. Current object/source bindings were corrected to the museum-provided painting record, with the old URL retained as an audited correction; no engraving date or technique was transferred."
+  },
+  "add-albers-light-grey-wall": {
+    "reportedDate": {
+      "value": "1958",
+      "sourceLocator": "Details, Date Created"
+    },
+    "medium": {
+      "value": "Oil on fiberboard",
+      "sourceLocator": "Details, Medium"
+    },
+    "sourceWorkType": {
+      "value": "Painting",
+      "sourceLocator": "Details, Type"
+    },
+    "label": "Adobe-related geometric abstraction",
+    "reason": "The Budapest museum explicitly relates this object to the Adobe series and its recurring rectangular structure. Mexico is documented as an inspiration for that series, not inferred as the place this particular object was made or the artist's nationality.",
+    "documentedContext": [
+      {
+        "claim": "The museum connects Light Grey Wall to Albers's Adobe series and discusses the repeated rectangular scheme as a setting for variations in colour and perceived depth.",
+        "sourcePublisher": "Museum of Fine Arts, Budapest, institutional Google Arts & Culture record",
+        "sourceLocator": "Object commentary by Dávid Fehér"
+      }
+    ]
+  },
+  "friedrich-moonrise": {
+    "reportedDate": {
+      "value": "1822",
+      "sourceLocator": "Work title and dated commission discussion"
+    },
+    "medium": {
+      "value": "Oil on canvas",
+      "sourceLocator": "Object details"
+    },
+    "sourceWorkType": {
+      "value": "Painting",
+      "sourceLocator": "Work discussion"
+    },
+    "label": "Romantic evening landscape with back-turned figures",
+    "reason": "The official anniversary project identifies the painting as the evening counterpart to The Solitary Tree and describes the three seated figures, ships and moon. This is an object-specific pairing and arrangement, not a universal meaning of a moonlit sea.",
+    "documentedContext": [
+      {
+        "claim": "The painting was commissioned as the evening counterpart to The Solitary Tree. The published commission account records that both works were completed by November1822.",
+        "sourcePublisher": "Caspar David Friedrich anniversary project, contribution by Birgit Verwiebe",
+        "sourceLocator": "Commission discussion and cited1822 letter"
+      }
+    ]
+  },
+  "gauguin-call": {
+    "cmaAccession": "1943.392",
+    "label": "Late imagined figural scene",
+    "reason": "The exact CMA record describes the quiet beckoning gesture as an ambiguous event and places the object among Gauguin's late works about life and death. This contextual description does not establish the subject's emotion or a viewer's beliefs.",
+    "documentedContext": [
+      {
+        "claim": "CMA presents the beckoning gesture as unresolved and connects this work with a late group exploring life and death. Its interpretation is kept separate from the visibly quiet bodily action.",
+        "sourcePublisher": "Cleveland Museum of Art",
+        "sourceLocator": "Object description"
+      }
+    ],
+    "primaryApiUrl": "https://openaccess-api.clevelandart.org/api/artworks/123168",
+    "primaryMetadata": {
+      "id": 123168,
+      "accession_number": "1943.392",
+      "title": "The Call",
+      "creation_date": "1902",
+      "creation_date_earliest": 1902,
+      "creation_date_latest": 1902,
+      "technique": "oil on canvas",
+      "culture": [
+        "France, late 19th–early 20th century"
+      ],
+      "type": "Painting",
+      "creatorAttribution": [
+        {
+          "description": "Paul Gauguin (French, 1848–1903)",
+          "qualifier": null,
+          "role": "artist"
+        }
+      ]
+    }
+  },
+  "teotihuacan-mural": {
+    "cmaAccession": "1963.252",
+    "label": "Classic-period Teotihuacán processional mural fragment",
+    "reason": "The API identifies this as a fresco wall fragment in Teotihuacán style and qualifies the possible compound attribution. The object's fragmentary format is retained; no complete wall scheme is reconstructed from it.",
+    "documentedContext": [
+      {
+        "claim": "CMA identifies the figure as part of a repeated procession and reads the mouth scroll as materialised chant or prayer. The museum's possible associations of the maguey spines remain qualified interpretations.",
+        "sourcePublisher": "Cleveland Museum of Art",
+        "sourceLocator": "Object description"
+      }
+    ],
+    "primaryApiUrl": "https://openaccess-api.clevelandart.org/api/artworks/138881",
+    "primaryMetadata": {
+      "id": 138881,
+      "accession_number": "1963.252",
+      "title": "Mural Fragment with Elite Male and Maguey Cactus Leaves",
+      "creation_date": "500–550",
+      "creation_date_earliest": 500,
+      "creation_date_latest": 550,
+      "technique": "fresco on wall fragment",
+      "culture": [
+        "Central Mexico, Tlacuilapaxco apartment compound(?), Teotihuacán style, Classic Period"
+      ],
+      "type": "Painting",
+      "creatorAttribution": []
+    }
+  },
+  "add-mondrian-composition-1930": {
+    "reportedDate": {
+      "value": "1930",
+      "sourceLocator": "Details, Date Created and inventory1987/0028"
+    },
+    "medium": {
+      "value": "Oil on canvas",
+      "sourceLocator": "Details, Medium"
+    },
+    "sourceWorkType": {
+      "value": "Painting",
+      "sourceLocator": "Details, Type"
+    },
+    "label": "Neoplasticism with displaced rectangular divisions",
+    "reason": "Kunsthaus Zürich's exact object commentary calls Mondrian's method Neoplasticism and describes this composition's large red field, peripheral black bars and smaller blue/yellow areas. This is distinct from treating all geometric abstraction as one handling or composition.",
+    "documentedContext": [
+      {
+        "claim": "Kunsthaus Zürich relates the painting's vertical and horizontal divisions and primary colours to Mondrian's Neoplasticism. The record describes a type developed around1930 rather than assigning every Mondrian the same layout.",
+        "sourcePublisher": "Kunsthaus Zürich, institutional Google Arts & Culture record",
+        "sourceLocator": "Object commentary"
+      }
+    ]
+  },
+  "tanner-waters": {
+    "cmaAccession": "2007.286",
+    "label": "Religious etching with later publication credit",
+    "reason": "The exact record classifies this object as an etching and credits publication after the artist's death by his son. The approximate image date does not establish that every impression was printed around1910.",
+    "documentedContext": [
+      {
+        "claim": "The API credits Tanner as artist and separately lists posthumous publication by his son. The image's circa1910 date and the impression's publication history are not collapsed.",
+        "sourcePublisher": "Cleveland Museum of Art",
+        "sourceLocator": "Creators array, artist and published-by roles"
+      }
+    ],
+    "primaryApiUrl": "https://openaccess-api.clevelandart.org/api/artworks/165549",
+    "primaryMetadata": {
+      "id": 165549,
+      "accession_number": "2007.286",
+      "title": "Christ Walking on the Waters",
+      "creation_date": "c. 1910",
+      "creation_date_earliest": 1905,
+      "creation_date_latest": 1915,
+      "technique": "etching",
+      "culture": [
+        "America"
+      ],
+      "type": "Print",
+      "creatorAttribution": [
+        {
+          "description": "Henry Ossawa Tanner (American, 1859–1937)",
+          "qualifier": null,
+          "role": "artist"
+        },
+        {
+          "description": "published posthumously by artist's son",
+          "qualifier": null,
+          "role": "published by"
+        }
+      ]
+    }
+  },
+  "still-life-sweets": {
+    "cmaAccession": "1980.6",
+    "label": "Spanish arranged food still life",
+    "reason": "The object record identifies specific sweets and vessels in an oil painting on canvas. Its discussion of shape, texture and arrangement supports a still-life context without assuming a pictured meal or a visitor's appetite.",
+    "documentedContext": [
+      {
+        "claim": "CMA identifies the sweets as turrones and notes that the arrangement need not represent an actual meal or snack.",
+        "sourcePublisher": "Cleveland Museum of Art",
+        "sourceLocator": "Object description"
+      }
+    ],
+    "primaryApiUrl": "https://openaccess-api.clevelandart.org/api/artworks/150140",
+    "primaryMetadata": {
+      "id": 150140,
+      "accession_number": "1980.6",
+      "title": "Still Life with Sweets",
+      "creation_date": "1622",
+      "creation_date_earliest": 1622,
+      "creation_date_latest": 1622,
+      "technique": "oil on canvas",
+      "culture": [
+        "Spain"
+      ],
+      "type": "Painting",
+      "creatorAttribution": [
+        {
+          "description": "Juan van der Hamen y Léon (Spanish, 1596–1631)",
+          "qualifier": null,
+          "role": "artist"
+        }
+      ]
+    }
+  },
+  "add-delaunay-air-iron-water": {
+    "reportedDate": {
+      "value": "1937",
+      "sourceLocator": "Details, Date Created"
+    },
+    "medium": {
+      "value": "Oil on canvas",
+      "sourceLocator": "Details, Medium"
+    },
+    "sourceWorkType": {
+      "value": "Painting",
+      "sourceLocator": "Details, Type"
+    },
+    "label": "Late colour-and-structure composition",
+    "reason": "The Israel Museum's object record establishes the1937 oil-canvas work. The existing source-bound visual review distinguishes its curved colour divisions and architectural suggestion; no pictorial movement or place of creation is inferred from the generic location field."
+  },
+  "add-malevich-football-player": {
+    "reportedDate": {
+      "value": "summer-fall1915",
+      "sourceLocator": "Art Institute-provided Details, Date Created"
+    },
+    "medium": {
+      "value": "Oil on canvas",
+      "sourceLocator": "Art Institute-provided Details, Media"
+    },
+    "sourceWorkType": {
+      "value": "Painting",
+      "sourceLocator": "Details, Type"
+    },
+    "additionalSourceUrls": [
+      "https://artsandculture.google.com/asset/painterly-realism-of-a-football-player-%E2%80%93-color-masses-in-the-4th-dimension-0101/HAFbsVPXhzyLMg"
+    ],
+    "label": "Early Suprematist nonfigurative painting",
+    "reason": "The Art Institute's exact object commentary identifies this as one of the first Suprematist paintings and warns that its descriptive title does not tell the viewer which represented natural form to find. The football-player title does not supply a visible human figure.",
+    "documentedContext": [
+      {
+        "claim": "The Art Institute places this object in the first group of Suprematist works and explains that the fourth-dimension wording refers to a mathematical idea used by artists. The title is context rather than evidence of a visibly depicted footballer.",
+        "sourcePublisher": "Art Institute of Chicago, institutional Google Arts & Culture record",
+        "sourceLocator": "Object commentary"
+      }
+    ]
+  },
+  "add-atl-climatic-eruption": {
+    "reportedDate": {
+      "value": "ca.1960",
+      "sourceLocator": "Details, Date Created"
+    },
+    "medium": {
+      "value": "Oil and Atl color on Masonite",
+      "sourceLocator": "Details, Medium, normalized from Spanish"
+    },
+    "sourceWorkType": {
+      "value": "Painting",
+      "sourceLocator": "Details, Type"
+    },
+    "depictedPlace": {
+      "value": "Paricutín volcano, Michoacán, Mexico",
+      "sourceLocator": "Details, Depicted Topic"
+    },
+    "label": "Volcanic landscape using oil and Atl color",
+    "reason": "The Blaisten record names Paricutín and documents the combined oil/Atl-color medium. This supplies a depicted-place fact and a technique context; the place of creation remains unknown and erupting nature does not create human bodily action."
+  },
+  "piazza-san-marco": {
+    "cmaAccession": "1962.169",
+    "depictedPlace": {
+      "value": "Piazza San Marco, Venice",
+      "sourceLocator": "Object title and architectural description"
+    },
+    "label": "Attributed Venetian veduta",
+    "reason": "The museum creator entry explicitly says attributed to Bernardo Bellotto. The detailed named architecture supports a Venetian city-view label; attribution uncertainty is retained and the depicted city is not automatically the place of execution.",
+    "primaryApiUrl": "https://openaccess-api.clevelandart.org/api/artworks/137224",
+    "primaryMetadata": {
+      "id": 137224,
+      "accession_number": "1962.169",
+      "title": "Piazza San Marco, Venice",
+      "creation_date": "c. 1740",
+      "creation_date_earliest": 1735,
+      "creation_date_latest": 1745,
+      "technique": "oil on canvas",
+      "culture": [
+        "Italy"
+      ],
+      "type": "Painting",
+      "creatorAttribution": [
+        {
+          "description": "Bernardo Bellotto (Italian, 1721–1780)",
+          "qualifier": "attributed to",
+          "role": "artist"
+        }
+      ]
+    }
+  },
+  "add-kandinsky-impression-concert": {
+    "reportedDate": {
+      "value": "1911",
+      "sourceLocator": "Lenbachhaus-provided Details, Date Created"
+    },
+    "sourceWorkType": {
+      "value": "Oil painting",
+      "sourceLocator": "Details, Type"
+    },
+    "label": "Early abstracted composition with a concert reference",
+    "reason": "The institution record supplies the title,1911 date and oil-painting type. The source-bound review describes the dominant black shape and yellow field. The concert reference is contextual and does not prove that the viewer experienced music, motion or a specific emotion.",
+    "sourceLimit": "This institutional record states oil painting as the type but does not separately specify the support. The medium/support field stays unknown rather than supplying canvas from an artist default."
+  },
+  "herran-la-ofrenda": {
+    "reportedDate": {
+      "value": "1913",
+      "sourceLocator": "MUNAL Acervo, Saturnino Herrán, La ofrenda"
+    },
+    "medium": {
+      "value": "Oil on canvas",
+      "sourceLocator": "MUNAL Acervo, Óleo sobre tela"
+    },
+    "sourceWorkType": {
+      "value": "Painting",
+      "sourceLocator": "Acervo object entry"
+    },
+    "label": "Early twentieth-century figural boat-and-flower scene",
+    "reason": "The MUNAL entry establishes the1913 oil-canvas work. The source-bound visual review describes several close figures, a boat and flowers; this does not turn every flower into documented symbolism or every Mexican picture into a mural."
+  },
+  "add-de-chirico-engineer": {
+    "reportedDate": {
+      "value": "1916",
+      "sourceLocator": "Chrysler Museum-provided Details, Date Created"
+    },
+    "medium": {
+      "value": "Oil on canvas",
+      "sourceLocator": "Details, Medium"
+    },
+    "sourceWorkType": {
+      "value": "Painting",
+      "sourceLocator": "Details, Type"
+    },
+    "creationPlace": {
+      "value": "Ferrara, Italy",
+      "sourceLocator": "Details, Location Created"
+    },
+    "label": "Metaphysical painting with fractured constructed space",
+    "reason": "The Chrysler Museum explicitly identifies a metaphysical approach and describes unusual object combinations and perspective in this object. Its specific Ferrara creation-location field is distinguishable from the artist's Italian nationality and Greek birthplace.",
+    "documentedContext": [
+      {
+        "claim": "The Chrysler Museum describes the painting's common objects, unusual perspective and fractured space as part of de Chirico's metaphysical approach. Its proposed mood is the museum's interpretation, not an attributed response from the participant.",
+        "sourcePublisher": "Chrysler Museum of Art, institutional Google Arts & Culture record",
+        "sourceLocator": "Object commentary"
+      }
+    ]
+  },
+  "study-belmiro-arrufos": {
+    "reportedDate": {
+      "value": "1887",
+      "sourceLocator": "Ibram/MNBA object caption"
+    },
+    "medium": {
+      "value": "Oil on canvas",
+      "sourceLocator": "Ibram/MNBA object caption, Óleo sobre tela"
+    },
+    "sourceWorkType": {
+      "value": "Painting",
+      "sourceLocator": "Pintura Brasileira collection entry"
+    },
+    "label": "Nineteenth-century domestic genre scene",
+    "reason": "The primary MNBA/Ibram caption establishes the1887 oil-canvas object. The existing exact-image review describes the two differently posed figures and interior. Their narrative relation can remain suggestive rather than asserting a particular argument or the visitor's personal associations."
+  },
+  "klee-carnival": {
+    "cmaAccession": "1969.46",
+    "label": "Watercolour with abstracted carnival references",
+    "reason": "The exact API identifies watercolor and Drawing, so this context is not silently treated as oil painting. Abstracted figures and the carnival title can coexist without resolving every small form as a particular performer.",
+    "primaryApiUrl": "https://openaccess-api.clevelandart.org/api/artworks/144705",
+    "primaryMetadata": {
+      "id": 144705,
+      "accession_number": "1969.46",
+      "title": "Carnival in the Snow",
+      "creation_date": "1923",
+      "creation_date_earliest": 1923,
+      "creation_date_latest": 1923,
+      "technique": "watercolor",
+      "culture": [
+        "Germany, 20th century"
+      ],
+      "type": "Drawing",
+      "creatorAttribution": [
+        {
+          "description": "Paul Klee (German, 1879–1940)",
+          "qualifier": null,
+          "role": "artist"
+        }
+      ]
+    }
+  },
+  "van-gogh-plane-trees": {
+    "cmaAccession": "1947.209",
+    "creationPlace": {
+      "value": "Saint-Rémy, France",
+      "sourceLocator": "Object description identifies the place of painting"
+    },
+    "depictedPlace": {
+      "value": "Village road at Saint-Rémy, France",
+      "sourceLocator": "Object title and the described road-repair scene"
+    },
+    "label": "Late landscape with embedded road work",
+    "reason": "The museum identifies this as a Saint-Rémy landscape with road repair beneath large plane trees. This is an object-specific landscape-and-labour context, not a claim that every Van Gogh has the same subject or effect.",
+    "primaryApiUrl": "https://openaccess-api.clevelandart.org/api/artworks/125249",
+    "primaryMetadata": {
+      "id": 125249,
+      "accession_number": "1947.209",
+      "title": "The Large Plane Trees (Road Menders at Saint-Rémy)",
+      "creation_date": "1889",
+      "creation_date_earliest": 1889,
+      "creation_date_latest": 1889,
+      "technique": "oil on fabric",
+      "culture": [
+        "Netherlands"
+      ],
+      "type": "Painting",
+      "creatorAttribution": [
+        {
+          "description": "Vincent van Gogh (Dutch, 1853–1890)",
+          "qualifier": null,
+          "role": "artist"
+        }
+      ]
+    }
+  },
+  "morisot-reading": {
+    "cmaAccession": "1950.89",
+    "label": "Impressionist outdoor figure at a private task",
+    "reason": "The exact record identifies Edma as the model and describes a woman reading outdoors. The museum's reported gaze revision is a documented technical observation; absorption is not a diagnosed personality trait of either sitter or viewer.",
+    "documentedContext": [
+      {
+        "claim": "CMA identifies the sitter as Morisot's sister Edma and reports that X-ray examination found an earlier version of the eyes directed toward the viewer.",
+        "sourcePublisher": "Cleveland Museum of Art",
+        "sourceLocator": "Object description, sitter and X-ray discussion"
+      }
+    ],
+    "primaryApiUrl": "https://openaccess-api.clevelandart.org/api/artworks/128072",
+    "primaryMetadata": {
+      "id": 128072,
+      "accession_number": "1950.89",
+      "title": "Reading",
+      "creation_date": "1873",
+      "creation_date_earliest": 1873,
+      "creation_date_latest": 1873,
+      "technique": "oil on canvas",
+      "culture": [
+        "France"
+      ],
+      "type": "Painting",
+      "creatorAttribution": [
+        {
+          "description": "Berthe Morisot (French, 1841–1895)",
+          "qualifier": null,
+          "role": "artist"
+        }
+      ]
+    }
+  },
+  "redon-violette": {
+    "cmaAccession": "1926.1976",
+    "label": "Pastel portrait with a surrounding floral field",
+    "reason": "The exact object is a pastel on gray wove paper and is classed as a Drawing. Its real medium and portrait format distinguish it from oil paintings or a generic Symbolist mood label.",
+    "primaryApiUrl": "https://openaccess-api.clevelandart.org/api/artworks/148753",
+    "primaryMetadata": {
+      "id": 148753,
+      "accession_number": "1926.1976",
+      "title": "Violette Heymann",
+      "creation_date": "1910",
+      "creation_date_earliest": 1910,
+      "creation_date_latest": 1910,
+      "technique": "pastel on gray wove paper",
+      "culture": [
+        "France, early 20th Century"
+      ],
+      "type": "Drawing",
+      "creatorAttribution": [
+        {
+          "description": "Odilon Redon (French, 1840–1916)",
+          "qualifier": null,
+          "role": "artist"
+        }
+      ]
+    }
+  }
+}

@@ -28,10 +28,10 @@ test('All Art Atlas entry pages resolve their local files under the route',()=>{
   }
 });
 
-test('The expanded collection preserves its records and supplies480 canonical opening artworks',()=>{
+test('The expanded collection preserves its records and canonical opening identities',()=>{
   const study=JSON.parse(read('artworks.json')),opening=JSON.parse(read('opening-artworks.json')),all=[...study,...opening],canonical=canonicalOpeningPool(all);
-  assert.equal(study.length,463);assert.equal(opening.length,255);assert.equal(new Set(all.map(work=>work.id)).size,483);
-  assert.equal(canonical.length,480);assert.equal(new Set(canonical.map(work=>work.image)).size,480);
+  assert.equal(study.length,487);assert.equal(opening.length,255);assert.equal(new Set(all.map(work=>work.id)).size,507);
+  assert.equal(canonical.length,504);assert.equal(new Set(canonical.map(work=>work.image)).size,504);
   for(const work of new Map(all.map(work=>[work.id,work])).values()){
     const file=new URL(work.image,root);assert.ok(file.pathname.startsWith(root.pathname),work.id);
     const bytes=fs.readFileSync(file);assert.equal(bytes[0],255,work.id);assert.equal(bytes[1],216,work.id);

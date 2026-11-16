@@ -1,15 +1,20 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {buildJourneyRounds,journeyCurationNotes,JOURNEY_REVISION} from '../../public/art-atlas/journey-bank.mjs';
+import {buildJourneyRounds as buildCurrentJourneyRounds,journeyCurationNotes,JOURNEY_REVISION} from '../../public/art-atlas/journey-bank.mjs';
 import {validAnswer} from '../../public/art-atlas/engine.mjs';
 import {sanitizeContrastDraft,validContrastAnswer} from '../../public/art-atlas/contrast-rounds.mjs';
 import {buildContrastReadings} from '../../public/art-atlas/contrast-readings.mjs';
 import {auditTrajectory,works,ordinary,questionIds} from './helpers/repetition-audit.mjs';
 import {legacyV8Rounds} from './helpers/legacy-v8.mjs';
+import {APPEAL_PROTOCOL} from '../../public/art-atlas/appeal-scale.mjs';
+// This regression route deliberately preserves the earlier overall instrument.
+// Fresh comparison-first scheduling is covered separately by journey-v12.
+const buildJourneyRounds=(works,answers={},options={})=>buildCurrentJourneyRounds(works,answers,{...options,preferenceProtocol:APPEAL_PROTOCOL});
+
 const ids=round=>round.works.map(work=>work.id),same=(a,b)=>assert.deepEqual([...a].sort(),[...b].sort());
 let cached;const fixture=()=>cached||=auditTrajectory('editorial-release-audit');
 
-test('Fresh first150 retains72/46/46 and every claimed ordinary baseline names a real earlier exact pair',()=>{
+test('The historical overall route retains72/46/46 through150 and every claimed ordinary baseline names a real earlier exact pair',()=>{
   const {rounds:history,answers,blocks}=fixture(),notes=journeyCurationNotes(works);assert.deepEqual(blocks.map(block=>block.plan.coverage.firstRatingWorkIds.length),[72,46,46]);
   for(const panel of notes.proposedFirst18Panels)same(ids(blocks[0].rounds.find(round=>ordinary(round)&&round.evidence.panelNumber===panel.panel)),panel.workIds);
   for(const round of history.filter(round=>round.kind==='contrast')){

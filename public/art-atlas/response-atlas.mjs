@@ -8,11 +8,12 @@ import {buildResponseAtlas} from './response-atlas-data.mjs';
 import {restoreStudyRound} from './deep-study.mjs';
 import {AXES} from './engine.mjs';
 import {loadActiveStudy} from './active-study-storage.mjs';
+import {mainCollectionWorks} from './collection-routing.mjs';
 const app=document.querySelector('#atlas'),esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const picker=createAtlasPicker(app);
 const short=work=>work?.shortTitle||work?.title||'';
 const roundLabel=id=>/^journey-\d+$/.test(id||'')?'Round '+Number(id.slice(8)):'Original question';
-let works=[],currentWorks=[],personalWorks=[],atlas,mode='collection',mapId='',roundId='',xId='abstraction',yId='complexity',selectedId=null,zoom=1,pan=[0,0],photos=true,currentPoints=[],currentEdges=[],currentAxes=null;
+let works=[],catalogueWorks=[],currentWorks=[],personalWorks=[],atlas,mode='collection',mapId='',roundId='',xId='abstraction',yId='complexity',selectedId=null,zoom=1,pan=[0,0],photos=true,currentPoints=[],currentEdges=[],currentAxes=null,includeExtended=new URLSearchParams(location.search).get('collection')==='all';
 let plotWidth=1000,plotHeight=680,navigation=null,pointFrame=null,currentGroups=new Map();
 const get=id=>(mode==='collection'?currentWorks:personalWorks).find(work=>work.id===id)||works.find(work=>work.id===id),pointKey=point=>point.id||point.workId;
 const pointPosition=point=>[32+point.x/100*(plotWidth-64),plotHeight-32-point.y/100*(plotHeight-64)];
@@ -34,6 +35,8 @@ function renderControls(){
     intro.textContent='The painting comparisons you actually made.';
     controls.innerHTML=`<p>${atlas.graph.nodes.length} paintings · ${atlas.graph.sourceRoundIds.length} preference rounds · ${atlas.graph.comparisonComponents.length} comparison groups</p><label>Group<select id="atlas-component"><option value="">All comparison groups</option>${atlas.graph.comparisonComponents.map((component,index)=>`<option value="${esc(component.id)}" ${component.id===roundId?'selected':''}>Group ${index+1} · ${component.workIds.length} paintings</option>`).join('')}</select></label>`;
   }
+  if(mode==='collection')controls.insertAdjacentHTML('beforeend',`<button type="button" class="atlas-extended" data-extended-collection aria-pressed="${includeExtended}"><i aria-hidden="true"></i>Extended collection</button>`);
+  app.dataset.collectionScope=includeExtended?'all':'featured';
   const previews=Object.fromEntries(atlas.matchedPanels.map(map=>[map.id,{label:map.sourceRoundIds.map(roundLabel).join(' + '),images:map.workIds.map(get).filter(Boolean).map(work=>({src:'./'+work.image,title:short(work)}))}]));
   picker.decorate(controls,Object.fromEntries(atlas.dimensions.map(d=>[d.id,d.low+' → '+d.high])),previews);renderPlot();
 }
@@ -98,6 +101,7 @@ function inspectArtwork(id){
 app.addEventListener('click',event=>{
   if(event.target.closest('.atlas-drawing')&&!event.target.closest('[data-zoom]')&&navigation?.consumeClick()){event.preventDefault();event.stopPropagation();return;}
   const m=event.target.closest('button[data-mode]');if(m){mode=m.dataset.mode;roundId='';resetView();renderControls();return;}
+  if(event.target.closest('[data-extended-collection]')){includeExtended=!includeExtended;currentWorks=includeExtended?catalogueWorks:mainCollectionWorks(catalogueWorks);atlas.dimensions=buildResponseAtlas({works:currentWorks,rounds:[],answers:{}}).dimensions;resetView();renderControls();return;}
   let point=event.target.closest('[data-point]');
   if(event.target.closest('#atlas-svg')&&!point?.classList.contains('has-thumbnail')){
     const svg=app.querySelector('#atlas-svg'),box=svg.getBoundingClientRect(),[x,y]=atlasScreenToWorld([(event.clientX-box.left)/box.width*plotWidth,(event.clientY-box.top)/box.height*plotHeight],{zoom,pan},{width:plotWidth,height:plotHeight});
@@ -115,7 +119,7 @@ app.addEventListener('keydown',event=>{const point=event.target.closest('[data-p
 const method=document.querySelector('#atlas-method');method.querySelector('button').addEventListener('click',()=>method.close());
 try{
   const response=await fetch('./artworks.json');if(!response.ok)throw Error('Catalogue unavailable');const current=await response.json(),saved=await loadActiveStudy('art-profile-journey-v1');
-  const captured=Array.isArray(saved?.manifest?.catalogue)?saved.manifest.catalogue:[];currentWorks=current;personalWorks=captured;works=[...new Map([...captured,...current].map(work=>[work.id,work])).values()];
+  const captured=Array.isArray(saved?.manifest?.catalogue)?saved.manifest.catalogue:[];catalogueWorks=current;currentWorks=includeExtended?current:mainCollectionWorks(current);personalWorks=captured;works=[...new Map([...captured,...current].map(work=>[work.id,work])).values()];
   const rounds=Object.values(saved?.shown||{}).map(snapshot=>restoreStudyRound(snapshot.kind==='grid'&&!snapshot.axisDefinition&&saved?.manifest?.axisDefinitions?.[snapshot.axis]?{...snapshot,axisDefinition:saved.manifest.axisDefinitions[snapshot.axis]}:snapshot,personalWorks)).filter(Boolean);
   atlas=buildResponseAtlas({works:personalWorks,rounds,answers:saved?.answers||{}});atlas.dimensions=buildResponseAtlas({works:currentWorks,rounds:[],answers:{}}).dimensions;if(atlas.maps.length||atlas.matchedPanels.length)mode='responses';shell();
 }catch{app.innerHTML='<p class="atlas-loading">The collection could not load. <a href="./maps.html">Try again</a></p>';}

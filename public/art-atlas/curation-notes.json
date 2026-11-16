@@ -3,10 +3,9 @@
   "catalogueSize": 156,
   "annotationStatus": "Provisional editorial descriptors. The first99 action and setting scores have a separate literal-descriptor review; saved studies retain their captured metadata.",
   "sourceBasis": [
-    "artworks.json contains 156 study works, including 57 source-checked additions recorded in collection-additions-20261115.json.",
-    "opening-artworks.json contains 255 separate decorative works. The opening uses 411 distinct works across both catalogues.",
-    "The original 99 study reproductions have a literal-action/setting review in descriptor-review-20261115.json. The additions have image-checked editorial descriptions and source records.",
-    "Object source URLs, image credits, actual source dimensions and rights statements remain in the source manifests. These records do not establish reproduction permission."
+    "This file preserves the earlier156-work design and annotations as historical source material. It does not report the current collection size.",
+    "The current source inventory is artworks.json; active and world collection routing are computed from collection-routing.mjs.",
+    "Fresh comparison-first cohorts use current reviewed sources and declared quartet objectives. Saved cohorts retain their captured question and artwork definitions."
   ],
   "reservationConvention": "These pools delay first ordinary preference ratings. They do not assert that an image or label has never been shown elsewhere.",
   "coverage": {
@@ -8370,5 +8369,13 @@
     4,
     4
   ],
-  "maximumLandmarksPerPanel": 3
+  "maximumLandmarksPerPanel": 3,
+  "historicalBase": true,
+  "catalogueScope": "Historical156-work design source. The recorded baseline panels/annotations remain for provenance; current journey cohorts are bound by journeyCurationNotes and primary collection routing.",
+  "historicalSourceBasis": [
+    "artworks.json contains 156 study works, including 57 source-checked additions recorded in collection-additions-20261115.json.",
+    "opening-artworks.json contains 255 separate decorative works. The opening uses 411 distinct works across both catalogues.",
+    "The original 99 study reproductions have a literal-action/setting review in descriptor-review-20261115.json. The additions have image-checked editorial descriptions and source records.",
+    "Object source URLs, image credits, actual source dimensions and rights statements remain in the source manifests. These records do not establish reproduction permission."
+  ]
 }

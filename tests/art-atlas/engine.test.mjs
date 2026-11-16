@@ -28,7 +28,10 @@ test('The expanded catalogue keeps the original sixteen and verifies local image
   assert.ok(works.filter(w=>w.country==='Mexico').length>=3);
   for (const w of works) {
     assert.ok(typeof w.rights==='string'&&w.rights.trim());
-    if(w.rights==='CC0') assert.match(w.sourceUrl, /^https:\/\/(www\.)?(?:clevelandart\.org\/art\/|metmuseum\.org\/art\/collection\/search\/|nga\.gov\/artworks\/)/);
+    if(w.rights==='CC0'&&w.provenance?.reuseStatus==='cc0-photograph-of-public-domain-era-work'){
+      assert.match(w.rightsUrl,/^https:\/\/creativecommons\.org\/publicdomain\/zero\/1\.0\//);assert.match(w.provenance.recordUrl,/^https:\/\/commons\.wikimedia\.org\/wiki\/File:/);assert.equal(w.provenance.licenseMetadata.LicenseShortName,'CC0');assert.equal(w.provenance.institutionRecordUrl,w.sourceUrl);assert.ok(w.provenance.rightsScope);
+    }
+    else if(w.rights==='CC0') assert.match(w.sourceUrl, /^https:\/\/(www\.)?(?:clevelandart\.org\/art\/|metmuseum\.org\/art\/collection\/search\/|nga\.gov\/artworks\/)/);
     else if(w.rights==='Public domain')assert.match(w.rightsUrl,/^https:\/\/commons\.wikimedia\.org\/wiki\//);
     else if(w.provenance?.reuseStatus==='institutional-open-access'){assert.match(w.rightsUrl,/^https:\/\/www\.nga\.gov\//);assert.equal(w.provenance.openaccess,1);assert.equal(w.provenance.publishedImage.openaccess,'1');assert.equal(w.provenance.publishedImage.viewtype,'primary');}
     else{assert.match(w.rightsUrl,/^https:\/\//);assert.ok(w.creditLine);assert.ok(['permission-not-established','permission-not-established-for-underlying-work'].includes(w.provenance.reuseStatus));}

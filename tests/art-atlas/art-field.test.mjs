@@ -6,17 +6,19 @@ import {canonicalOpeningPool,createOpeningSeed,orderOpeningPool} from '../../pub
 
 const studyWorks=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/artworks.json',import.meta.url),'utf8'));
 const decorativeWorks=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/opening-artworks.json',import.meta.url),'utf8'));
-const fullCollection=canonicalOpeningPool([...studyWorks,...decorativeWorks]);
+const canonicalCollection=canonicalOpeningPool([...studyWorks,...decorativeWorks]);
+const fullCollection=orderOpeningPool(canonicalCollection,{seed:9317});
 
-test('The painting field is deterministic, uses the whole catalogue and has actual depth',()=>{
-  assert.equal(studyWorks.length,463);
+test('The painting field is deterministic, uses its curated opening pool and has actual depth',()=>{
+  assert.equal(studyWorks.length,487);
   assert.equal(decorativeWorks.length,255);
-  assert.equal(fullCollection.length,480);
+  assert.equal(canonicalCollection.length,504);
+  assert.equal(fullCollection.length,346);
   const field=createArtField({workCount:fullCollection.length});
   assert.deepEqual(field,createArtField({workCount:fullCollection.length}));
-  assert.equal(new Set(field.paintings.map(p=>p.workIndex)).size,480);
-  assert.equal(new Set(field.paintings.map(p=>fullCollection[p.workIndex].id)).size,480);
-  assert.equal(field.paintings.length,480);
+  assert.equal(new Set(field.paintings.map(p=>p.workIndex)).size,fullCollection.length);
+  assert.equal(new Set(field.paintings.map(p=>fullCollection[p.workIndex].id)).size,fullCollection.length);
+  assert.equal(field.paintings.length,fullCollection.length);
   assert.ok(field.particles.length>20000);
   const depth=field.paintings.map(p=>p.position[2]);
   assert.ok(Math.max(...depth)-Math.min(...depth)>2);
@@ -56,7 +58,7 @@ test('Phone clearing protects the title and Start area while retaining paintings
 });
 
 test('A visit seed gives a repeatable order and geometry,while different visits change both',()=>{
-  const a=orderOpeningPool(fullCollection,{seed:12345}),b=orderOpeningPool(fullCollection,{seed:67890});assert.deepEqual(a,orderOpeningPool(fullCollection,{seed:12345}));assert.notDeepEqual(a.slice(0,14).map(w=>w.id),b.slice(0,14).map(w=>w.id));assert.equal(new Set(a.map(w=>w.id)).size,480);assert.notDeepEqual(createArtField({workCount:480,seed:12345}).paintings,createArtField({workCount:480,seed:67890}).paintings);
+  const a=orderOpeningPool(fullCollection,{seed:12345}),b=orderOpeningPool(fullCollection,{seed:67890});assert.deepEqual(a,orderOpeningPool(fullCollection,{seed:12345}));assert.notDeepEqual(a.slice(0,14).map(w=>w.id),b.slice(0,14).map(w=>w.id));assert.equal(new Set(a.map(w=>w.id)).size,fullCollection.length);assert.notDeepEqual(createArtField({workCount:fullCollection.length,seed:12345}).paintings,createArtField({workCount:fullCollection.length,seed:67890}).paintings);
   for(const list of [a,b]){const ten=list.slice(0,10),fourteen=list.slice(0,14);assert.ok(ten.filter(w=>/mexic/i.test(w.country||'')).length>=3);assert.ok(ten.filter(w=>w.recognitionTier==='landmark').length>=5);assert.ok(fourteen.filter(w=>/mexic/i.test(w.country||'')).length>=4);assert.ok(fourteen.filter(w=>w.recognitionTier==='landmark').length>=8);assert.ok(list.every(w=>fullCollection.includes(w)),'Original canonical records are reused');}
 });
 

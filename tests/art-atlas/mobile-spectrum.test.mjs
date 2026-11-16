@@ -3,15 +3,21 @@ import assert from 'node:assert/strict';
 import {JSDOM} from 'jsdom';
 import {createInteractions} from '../../public/art-atlas/interactions.mjs';
 import {withOverallAppeal} from '../../public/art-atlas/appeal-scale.mjs';
+import {withComparisonPreference} from '../../public/art-atlas/comparison-protocol.mjs';
 import {validAnswer} from '../../public/art-atlas/engine.mjs';
 import {renderOpening} from '../../public/art-atlas/experience-view.mjs';
 
-function fixture({width=390,count=4,positions={},ready=true}={}){
+test('A fresh quiz can reach preserved previous quizzes without a profile or a restart icon',()=>{
+  const html=renderOpening({archiveCount:1});assert.match(html,/data-action="deep-start">Start/);assert.match(html,/data-action="deep-archives">Previous quizzes/);assert.doesNotMatch(html,/deep-reset|Restart|Reset/);
+  assert.doesNotMatch(renderOpening(),/deep-archives/);
+});
+
+function fixture({width=390,count=4,positions={},ready=true,comparison=false}={}){
   const dom=new JSDOM('<!doctype html><main id="app"></main>',{pretendToBeVisual:true}),previous={};
   for(const name of ['window','document','requestAnimationFrame','cancelAnimationFrame','innerHeight']){previous[name]=Object.getOwnPropertyDescriptor(globalThis,name);Object.defineProperty(globalThis,name,{configurable:true,writable:true,value:name==='window'?dom.window:name==='document'?dom.window.document:name==='innerHeight'?844:dom.window[name].bind(dom.window)});}
   let screenWidth=width;dom.window.matchMedia=query=>({matches:!query.includes('max-width')||screenWidth<=Number(/max-width:\s*(\d+)/.exec(query)?.[1]||0),addEventListener(){},removeEventListener(){}});
   const works=Array.from({length:count},(_,i)=>({id:'painting-'+i,title:'Painting '+i,image:'image-'+i+'.jpg'}));
-  let round=withOverallAppeal({id:'round-1',kind:'spectrum',criterion:'preference',title:'How much does each painting appeal to you?',works,evidence:{construct:'preference',family:'individual-choice'}}),draft={workIds:works.map(work=>work.id),criterion:'preference',positions:{...positions},confirmed:false},saves=0,isReady=ready;
+  let round=(comparison?withComparisonPreference:withOverallAppeal)({id:'round-1',kind:'spectrum',criterion:'preference',title:'How much does each painting appeal to you?',works,evidence:{construct:'preference',family:'individual-choice'}}),draft={workIds:works.map(work=>work.id),criterion:'preference',positions:{...positions},confirmed:false},saves=0,isReady=ready;
   const app=dom.window.document.querySelector('#app'),image=work=>`<img src="${work.image}" alt="Painting">`,input=createInteractions({app,getRound:()=>round,getDraft:()=>draft,ready:()=>isReady,image,esc:String,workById:id=>round.works.find(work=>work.id===id),saveDraft:()=>saves++,sync:()=>{}});
   app.innerHTML=`<section class="deep-question journey-question" data-kind="spectrum"><div class="deep-round-body">${input.markup()}</div></section>`;
   app.addEventListener('click',event=>{const control=event.target.closest('[data-action]');if(control)input.click(control.dataset.action,control,event);});input.attach();
@@ -88,4 +94,19 @@ test('A phone painting can be dragged onto the shared line and advances only aft
 test('The opening keeps a single primary action for a fresh or started quiz',()=>{
   const fresh=new JSDOM(renderOpening()),started=new JSDOM(renderOpening({started:true,profileAvailable:false}));
   try{for(const dom of [fresh,started])assert.equal(dom.window.document.querySelector('[data-action=deep-retake]'),null);assert.equal(fresh.window.document.querySelector('.opening-start').textContent,'Start');assert.equal(started.window.document.querySelector('.opening-start').textContent,'Continue');assert.equal(started.window.document.querySelector('[data-action=deep-reading]'),null);}finally{fresh.window.close();started.window.close();}
+});
+
+test('Comparison mode keeps the shared granular line without presenting positions as absolute ratings',()=>{
+  const f=fixture({comparison:true,positions:{'painting-0':91,'painting-1':90,'painting-2':0,'painting-3':100}});
+  try{
+    assert.equal(f.app.querySelectorAll('.spectrum-token img').length,4);
+    assert.equal(f.app.querySelectorAll('.position-value,.reference-rating').length,0);
+    assert.doesNotMatch(f.app.querySelector('#fine-controls').textContent,/91|100|Not rated/);
+    const range=f.app.querySelector('#mobile-spectrum-range');assert.equal(range.step,'1');assert.equal(range.min,'0');assert.equal(range.max,'100');
+    assert.match(range.getAttribute('aria-label'),/^Place painting/);assert.match(range.getAttribute('aria-valuetext'),/Preference order 2 of 4/);
+    f.app.querySelector('#fine-controls [data-dx="-1"]').click();
+    assert.equal(f.draft.positions['painting-0'],90);assert.match(range.getAttribute('aria-valuetext'),/Joint preference order 2 of 4/);
+    for(let value=0;value<=100;value++){f.rate(value);assert.equal(f.draft.positions['painting-0'],value);}
+    assert.ok(validAnswer(f.round,{...f.draft,confirmed:true}));
+  }finally{f.close();}
 });

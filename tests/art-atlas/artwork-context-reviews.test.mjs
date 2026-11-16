@@ -8,6 +8,7 @@ const attributes=JSON.parse(fs.readFileSync(new URL('artwork-attribute-reviews.j
 const data=JSON.parse(fs.readFileSync(new URL('artwork-context-reviews.json',site),'utf8'));
 const originalIds=Object.keys(JSON.parse(fs.readFileSync(new URL('../../tools/artwork-attribute-observations-20261115.json',import.meta.url),'utf8')));
 const originals=originalIds.map(id=>data.records[id]);
+const earlyNotes=JSON.parse(fs.readFileSync(new URL('../../tools/early-context-observations-20261116.json',import.meta.url),'utf8'));
 
 test('All merged context records bind their reviewed source identities and retain the original96 fixture',()=>{
   assert.equal(data.version,'artwork-context-v1');
@@ -69,4 +70,47 @@ test('Different abstract treatments stay distinct, while date normalization and 
   assert.equal(shen.facts.reportedDate.value,'after 1490');
   assert.match(shen.facts.sourceIndexRange.scope,/not a statistical confidence interval/);
   assert.match(data.records['study-munch-scream'].editorial.chronologicalInterval.scope,/Existing editorial interval/);
+});
+
+test('The current first50 and entire second-block reserve have exact source-bound context records',()=>{
+  const notes=journeyCurationNotes(works),first=new Set(notes.proposedFirst18Panels.flatMap(panel=>panel.workIds));
+  assert.equal(first.size,72);
+  const allocation=new Set([...first,...notes.reservePools.batch2]);
+  assert.equal(notes.reservePools.batch2.length,55);
+  assert.equal(allocation.size,127);
+  for(const id of allocation){assert.ok(data.records[id],id);assert.deepEqual(data.records[id].sourceIdentity,attributes.reviews[id].sourceIdentity,id);}
+  assert.equal(Object.keys(earlyNotes).length,21);
+  for(const id of Object.keys(earlyNotes)){
+    assert.ok(data.records[id].reviewMethod.length>60,id);
+    assert.equal(data.records[id].editorial.reviewedLabels[0].label,earlyNotes[id].label,id);
+  }
+});
+
+test('New context facts preserve source qualifications, exact technique and independent indexing intervals',()=>{
+  assert.equal(data.records['brueghel-sight'].facts.medium.value,'Oil on panel');
+  assert.equal(data.records['brueghel-sight'].facts.medium.sourceUrl,'https://canon.codart.nl/artwork/the-five-senses/');
+  assert.equal(data.records['brueghel-sight'].facts.reportedDate.status,'reported');
+  assert.match(data.records['brueghel-sight'].sourceLimit,/403/);
+  assert.equal(data.records['tanner-waters'].facts.medium.value,'etching');
+  assert.deepEqual(data.records['tanner-waters'].facts.sourceIndexRange.value,[1905,1915]);
+  assert.equal(data.records['klee-carnival'].facts.medium.value,'watercolor');
+  assert.equal(data.records['redon-violette'].facts.medium.value,'pastel on gray wove paper');
+  assert.equal(data.records['add-malevich-football-player'].facts.medium.value,'Oil on canvas');
+  assert.equal(data.records['add-kandinsky-impression-concert'].facts.medium.status,'unknown');
+  assert.equal(data.records['add-kandinsky-impression-concert'].facts.sourceWorkType.value,'Oil painting');
+  assert.equal(data.records['add-de-chirico-engineer'].facts.creationPlace.value,'Ferrara, Italy');
+  assert.equal(data.records['add-atl-climatic-eruption'].facts.depictedPlace.value,'Paricutín volcano, Michoacán, Mexico');
+  assert.equal(data.records['add-atl-climatic-eruption'].facts.creationPlace.status,'unknown');
+  assert.equal(data.records['piazza-san-marco'].facts.sourceCreatorAttribution.value[0].qualifier,'attributed to');
+});
+
+test('Stańczyk points to the1862 painting while the wrong reproductive-print reference remains an explicit audit',()=>{
+  const work=works.find(work=>work.id==='matejko-stanczyk'),record=data.records[work.id];
+  assert.equal(work.sourceUrl,'https://artsandculture.google.com/asset/sta%C5%84czyk-jan-matejko/4AHFtRqeObzoRw');
+  assert.equal(work.date,'1862');assert.equal(record.facts.reportedDate.value,'1862');
+  assert.equal(record.facts.medium.value,'Oil on canvas');
+  assert.equal(record.sourceIdentityCorrection.previousSourceUrl,'https://cyfrowe.mnw.pl/pl/zbiory/962339');
+  assert.deepEqual(record.sourceIdentityCorrection,work.provenance.sourceIdentityCorrection);
+  assert.equal(record.sourceIdentityCorrection.previewSha256,record.sourceIdentity.previewSha256);
+  assert.match(record.sourceIdentityCorrection.reason,/wood engraving/);
 });

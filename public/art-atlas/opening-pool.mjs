@@ -1,4 +1,5 @@
 import {fieldRandom} from './art-field.mjs';
+import {mainCollectionWorks} from './collection-routing.mjs';
 
 const localImage=value=>typeof value==='string'&&/^\.?\/?assets\/[a-zA-Z0-9_./-]+\.(?:jpg|jpeg|png|webp)$/i.test(value)&&!value.includes('..');
 const imageKey=value=>value.replace(/^\.\//,'');
@@ -34,8 +35,8 @@ const shuffled=(items,random)=>{const result=[...items];for(let i=result.length-
 
 /** The decorative foreground varies each visit. It contains a mix of Mexican
  * works, editorial landmarks and other works, without claiming user preference. */
-export function orderOpeningPool(works,{seed=9317,max=480}={}){
-  const random=fieldRandom(seed^0x85ebca6b),all=shuffled(works,random),used=new Set(),selected=[];
+export function orderOpeningPool(works,{seed=9317,max=480,includeWorld=false}={}){
+  const random=fieldRandom(seed^0x85ebca6b),all=shuffled(includeWorld?works:mainCollectionWorks(works),random),used=new Set(),selected=[];
   const mexican=all.filter(work=>/mexic/.test(normal([work.country,...(Array.isArray(work.culture)?work.culture:[])].join(' ')))),landmarks=all.filter(work=>work.recognitionTier==='landmark');
   const take=(pool,count)=>{const chosen=[];for(const work of pool){if(used.has(work.id))continue;chosen.push(work);used.add(work.id);if(chosen.length===count)break;}return chosen;};
   // The first ten are also a balanced foreground on a small screen.

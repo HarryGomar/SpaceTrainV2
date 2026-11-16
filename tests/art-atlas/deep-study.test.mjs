@@ -6,6 +6,7 @@ import { buildStudyRounds } from '../../public/art-atlas/question-bank.mjs';
 import {buildJourneyRounds} from '../../public/art-atlas/journey-bank.mjs';
 import { correctOption } from '../../public/art-atlas/engine.mjs';
 import {allowsMultipleNeighbourReasons} from '../../public/art-atlas/contrast-rounds.mjs';
+import {legacyV11Rounds} from './helpers/legacy-v11.mjs';
 const real=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/artworks.json',import.meta.url),'utf8'));
 const works=real.slice(0,12).map((w,i)=>({...w,artist:'Artist '+i,artistKnown:true,features:{...w.features,abstraction:.5,energy:i/11,complexity:.5,humanity:.5,narrative:.5,atmosphere:.5,color:.5}}));
 function spectrum(id,art=works.slice(0,4),construct='preference',setId='set-one',role='discovery') {return {id,kind:'spectrum',format:'spectrum',criterion:construct==='curiosity'?'interest':'preference',title:'Which do you prefer?',hint:'Place the works.',works:art,evidence:{construct,setId,role}};}
@@ -20,14 +21,16 @@ test('Frozen study definitions retain shown works, anchors, scales and evidence 
 });
 
 test('Every actual contrast survives serialization with its original candidates, anchor, metadata and categorical answer',()=>{
-  const contrasts=buildJourneyRounds(real).filter(round=>round.kind==='contrast');assert.deepEqual(contrasts.map(round=>round.contrastKind),['chronology','neighbour','keep-leave','same-subject']);const responses={};
+  for(const [label,source,kinds] of [['captured-v11',legacyV11Rounds(),['chronology','neighbour','keep-leave','same-subject']],['current-v12',buildJourneyRounds(real),['chronology','same-subject']]]){
+  const contrasts=source.filter(round=>round.kind==='contrast');assert.deepEqual(contrasts.map(round=>round.contrastKind),kinds,label);const responses={};
   for(const original of contrasts){
     const round=structuredClone(original),saved=snapshotStudyRound(round),frozen=structuredClone(saved),workIds=round.works.map(work=>work.id),base={workIds,contrastKind:round.contrastKind,confirmed:true};
     const response=round.contrastKind==='chronology'?{...base,orderedIds:[...workIds].reverse(),uncertainIds:[workIds[0]],orderReviewed:true}:round.contrastKind==='neighbour'?{...base,neighbourId:workIds[1],noGoodNeighbour:false,...(allowsMultipleNeighbourReasons(round)?{relationshipIds:round.relationshipOptions?.length?[round.relationshipOptions[0].id]:[]}:round.relationshipOptions?.length?{relationshipId:round.relationshipOptions[0].id}:{})}:round.contrastKind==='keep-leave'?{...base,keepId:workIds[0],leaveId:workIds.at(-1)}:{...base,preferredId:null,noPreference:true};
     round.title='A later question';round.works.reverse();round.sourceUrls.push('https://example.org/later-source');round.evidence.construct='another-construct';if(round.dateEvidence)Object.values(round.dateEvidence)[0].yearRange[0]=-99999;if(round.subject)round.subject.label='A later subject';if(round.relationshipOptions)round.relationshipOptions[0].label='A later relation';
     const restored=restoreStudyRound(saved,real);assert.ok(restored,original.contrastKind);assert.deepEqual(snapshotStudyRound(restored),frozen);assert.deepEqual(saved,frozen);assert.ok(validStudyAnswer(restored,response));assert.equal(validStudyAnswer(restored,{...response,confirmed:false}),false);assert.equal(validStudyAnswer(restored,{...response,workIds:[...workIds].reverse()}),false);assert.equal(restoreStudyRound({...saved,workIds:['missing',...saved.workIds.slice(1)]},real),null);if(original.contrastKind==='neighbour')assert.equal(restoreStudyRound({...saved,anchorIds:[]},real),null);responses[restored.id]=response;
   }
-  const result=analyzeStudy(real,contrasts,responses);assert.equal(result.answered,4);assert.equal(result.predictionChecks,0);assert.equal(result.repeatsCompared,0);assert.equal(result.findings.some(finding=>finding.feature),false,'Contextual and knowledge choices cannot become an unconditional preference explanation');
+  const result=analyzeStudy(real,contrasts,responses);assert.equal(result.answered,kinds.length);assert.equal(result.predictionChecks,0);assert.equal(result.repeatsCompared,0);assert.equal(result.findings.some(finding=>finding.feature),false,'Contextual and knowledge choices cannot become an unconditional preference explanation');
+  }
 });
 
 test('A legacy capped keep snapshot and its partial draft retain their cap rather than acquiring the new uncapped prompt',()=>{

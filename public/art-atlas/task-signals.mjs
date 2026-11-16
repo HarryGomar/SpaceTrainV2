@@ -3,7 +3,7 @@ export const TASK_COLOURS={preference:'#a05c43',curiosity:'#4e6d94',familiarity:
 export function axisColours(axis){const keys=axis==='achievement'?['preference','making']:axis==='reading'?['curiosity','meaning']:axis==='returnResponse'?['emotion','preference']:axis==='connection'?['curiosity','connection']:axis==='meaning'?['meaning','curiosity']:axis==='preference-curiosity'?['preference','curiosity']:['emotion','curiosity'];return keys.map(key=>TASK_COLOURS[key]);}
 export function taskSignal(round={}){
   if(round.kind==='contrast')return round.contrastKind==='chronology'?{key:'familiarity',label:'Dates',icon:'time',terms:['time','order']}:round.contrastKind==='neighbour'?{key:'curation',label:'Connections',icon:'link',terms:['neighbour','connection']}:round.contrastKind==='keep-leave'?{key:'preference',label:'Selection',icon:'choice',terms:['keep','leave']}:{key:'preference',label:'Shared subject',icon:'choice',terms:['subject','treatments','prefer']};
-  if(round.kind==='choice-grid')return round.selectionMode==='familiarity'?{key:'familiarity',label:'Familiarity',icon:'eye',terms:['seen','recognise']}:round.evidence?.construct==='overall-favourites'?{key:'preference',label:'Favourites',icon:'grid',terms:['favourites','favourite','choose']}:{key:'preference',label:'First choices',icon:'grid',terms:['keep','choose']};
+  if(round.kind==='choice-grid')return round.selectionMode==='familiarity'?{key:'familiarity',label:'Familiarity',icon:'eye',terms:['seen','recognise']}:round.evidence?.construct==='overall-favourites'?{key:'preference',label:'Favourites',icon:'grid',terms:['favourites','favourite','choose']}:round.evidence?.construct==='overall-dislikes'?{key:'preference',label:'Dislikes',icon:'grid',terms:['dislike','select']}:{key:'preference',label:'First choices',icon:'grid',terms:['keep','choose']};
   if(round.kind==='exercise')return {key:'curation',label:'Curation',icon:'curation',terms:['group','rooms','remove','arrange']};
   if(round.kind==='match')return {key:'familiarity',label:round.field==='artist'?'Artist match':'Style match',icon:'eye',terms:['artists','style','tradition','match']};
   if(round.kind==='context')return round.symbolismProtocol?{key:'meaning',label:'Symbolism',icon:'meaning',terms:['appeal','symbols','meaning']}:{key:'meaning',label:'Before & after',icon:'story',terms:['like','story','read']};
@@ -19,6 +19,7 @@ export function taskSignal(round={}){
   }
   if(round.evidence?.construct==='curiosity'||round.criterion==='interest')return {key:'curiosity',label:'Curiosity',icon:'eye',terms:['understand','investigate','curious','return']};
   if(round.evidence?.measurementScope==='overall-appeal'&&round.evidence?.appealProtocol==='overall-appeal-v1')return {key:'preference',label:'Overall rating',icon:'choice',terms:['like','overall','appeal']};
+  if(round.evidence?.comparisonProtocol==='within-set-preference-order-v1')return {key:'preference',label:'Comparison',icon:'choice',terms:['prefer']};
   return {key:'preference',label:'Preference',icon:'choice',terms:['prefer','like','rank','choose']};
 }
 export function applyTaskSignals(app,round){

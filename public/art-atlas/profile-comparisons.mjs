@@ -1,4 +1,5 @@
 import {validAnswer} from './engine.mjs';
+import {isComparisonPreferenceRound} from './comparison-protocol.mjs';
 
 export function contextPurpose(brief=''){
   if(/weeks|longer|live with/i.test(brief))return 'longer looking';
@@ -22,7 +23,7 @@ export function comparisonReadout(item,{works=[],rounds=[],answers={}}={}){
     const source=item?.support?.find(entry=>!/frozen/i.test(entry.label||'')&&entry.workIds?.length===2&&rounds.some(round=>round.id===entry.roundId));
     const round=rounds.find(round=>round.id===source?.roundId),answer=answers[source?.roundId];let valid=false;
     try{valid=round?.kind==='spectrum'&&round.criterion==='preference'&&validAnswer(round,answer);}catch{}
-    if(valid)pair={workIds:source.workIds,measures:[{key:'preference',label:'Preference',values:source.workIds.map(id=>answer.positions[id])}]};
+    if(valid)pair={workIds:source.workIds,preferenceRoundId:round.id,measures:[{key:'preference',label:'Preference',values:source.workIds.map(id=>answer.positions[id])}]};
   }
   if(!pair||![1,2].includes(pair.workIds?.length)||new Set(pair.workIds).size!==pair.workIds.length||!pair.workIds.every(id=>known.has(id)))return null;
   const measures=pair.measures||[{key:'preference',label:'Preference',values:pair.preference},{key:'curiosity',label:'Want to understand',values:pair.curiosity}];
@@ -30,7 +31,8 @@ export function comparisonReadout(item,{works=[],rounds=[],answers={}}={}){
   const notes=Object.fromEntries(pair.workIds.map(id=>[id,[]]));
   if(pair.workIds.length===2)for(const measure of measures){
     const difference=measure.values[0]-measure.values[1];
-    if(Math.abs(difference)<15){if(measure.key==='preference')for(const id of pair.workIds)notes[id].push({role:'near-tie',tone:'neutral',text:'Similar preference'});continue;}
+    const sourceIds=[measure.roundId,pair.preferenceRoundId,...(item?.support||[]).filter(source=>pair.workIds.every(id=>source.workIds?.includes(id))).map(source=>source.roundId)],ordinal=measure.key==='preference'&&sourceIds.some(id=>{const round=rounds.find(round=>round.id===id),answer=answers[id];return isComparisonPreferenceRound(round)&&pair.workIds.every((workId,index)=>round.works.some(work=>work.id===workId)&&answer?.positions?.[workId]===measure.values[index]);});
+    if(Math.abs(difference)<(ordinal?1:15)){if(measure.key==='preference')for(const id of pair.workIds)notes[id].push({role:ordinal?'tie':'near-tie',tone:'neutral',text:ordinal?'Equal preference':'Similar preference'});continue;}
     const winner=pair.workIds[difference>0?0:1],other=pair.workIds[difference>0?1:0];
     if(measure.key==='preference'||measure.key==='appeal'){
       notes[winner].push({role:'preferred',tone:'preference',text:measure.key==='appeal'?'More for you':item?.module==='context'?'Your earlier preference':'You preferred this'});

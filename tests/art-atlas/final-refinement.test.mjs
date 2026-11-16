@@ -6,19 +6,29 @@ import {APPEAL_PROTOCOL,isOverallAppealRound,withOverallAppeal} from '../../publ
 import {summarizePreferenceHypotheses,planAdaptivePanels} from '../../public/art-atlas/adaptive-selection.mjs';
 import {buildJourneyRounds,createJourneyStimulusPlan,journeyAdaptiveQuotas,JOURNEY_REVISION} from '../../public/art-atlas/journey-bank.mjs';
 import {validAnswer} from '../../public/art-atlas/engine.mjs';
-const works=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/artworks.json',import.meta.url),'utf8')).slice(0,164);
+import {isComparisonPreferenceRound} from '../../public/art-atlas/comparison-protocol.mjs';
+import {ORDINAL_REFINEMENT_PROTOCOL} from '../../public/art-atlas/ordinal-refinement.mjs';
+import {legacyV11Works,legacyV11Rounds} from './helpers/legacy-v11.mjs';
+const currentWorks=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/artworks.json',import.meta.url),'utf8'));
+const works=legacyV11Works().slice(0,164);
 const ids=round=>round.works.map(work=>work.id),sig=values=>JSON.stringify([...values].sort());
 const answer=(round,values)=>({confirmed:true,criterion:'preference',workIds:ids(round),positions:Object.fromEntries(round.works.map((work,index)=>[work.id,values[index]]))});
 const source=(offered,index,values=[10,40,70,100],overall=true)=>{const round={id:'journey-'+String(index+1).padStart(3,'0'),kind:'spectrum',criterion:'preference',title:'Which do you prefer?',hint:'Place the paintings by preference.',scale:{left:'Less preferred',right:'More preferred'},works:offered,evidence:{construct:'preference',family:'individual-choice',role:'discovery',panelNumber:index+2,setId:'source-'+index,journeyRevision:overall?'art-profile-50-v10':'art-profile-50-v9'}};const r=overall?withOverallAppeal(round):round;return {round:r,answer:answer(r,values)};};
 function fixture(){const history=[],answers={};for(let i=0;i<8;i++){const item=source(works.slice(i*4,i*4+4),i,i<2?[5+i,15+i,25+i,35+i]:[55+i,65+i,75+i,85+i]);history.push(item.round);answers[item.round.id]=item.answer;}for(let i=8;i<45;i++)history.push({id:'journey-'+String(i+1).padStart(3,'0'),kind:'statements',title:'Shown text',hint:'',works:[works[40]],evidence:{stimulusVisibility:'not-shown'}});return {history,answers,templates:buildFinalRefinementRounds({works,seed:'final-regression'})};}
 
-test('The fresh164 journey uses18 appeal quartets,3 Caravaggios, Mexico and deferred closing questions',()=>{
-  const plan=createJourneyStimulusPlan({works}),rounds=buildJourneyRounds(works,{}, {panels:plan}),main=rounds.filter(r=>r.evidence.panelNumber&&r.evidence.construct==='preference');
-  assert.equal(JOURNEY_REVISION,'art-profile-50-v11');assert(plan.complete);assert.equal(main.length,18);assert.equal(new Set(main.flatMap(ids)).size,72);assert(main.every(isOverallAppealRound));assert.deepEqual([plan.reservations.batch2.length,plan.reservations.batch3.length],[46,46]);
+test('Captured v11 definitions retain18 overall-appeal quartets, their actual sorting sets and deferred closing instruments',()=>{
+  const rounds=legacyV11Rounds(),main=rounds.filter(r=>r.evidence.panelNumber&&r.evidence.construct==='preference');
+  assert.equal(rounds.length,50);assert.equal(rounds[0].evidence.journeyRevision,'art-profile-50-v11');assert.equal(main.length,18);assert.equal(new Set(main.flatMap(ids)).size,72);assert(main.every(isOverallAppealRound));assert(main.every(round=>!isComparisonPreferenceRound(round)));
   const chosen=new Set(main.flatMap(ids));for(const id of ['add-caravaggio-judith-barberini','add-caravaggio-supper-emmaus-1601','add-caravaggio-taking-christ','add-siqueiros-madre-nina','add-varo-harmony','add-carrington-dagobert','add-kahlo-borderline'])assert(chosen.has(id),id);
   assert.deepEqual(rounds.slice(-5).map(r=>r.evidence.finalRefinement.slot),[1,2,3,4,5]);assert(rounds.slice(-5).every(r=>isFinalRefinementRound(r)&&r.unavailable));
   assert.equal(rounds[24].kind,'context');assert.equal(rounds[31].evidence.repeatOf,rounds[7].id);assert.equal(rounds[42].axis,'reading');assert.equal(rounds[44].axis,'achievement');
-  const earlier=new Set(rounds.slice(0,7).filter(r=>r.evidence.construct==='preference').flatMap(ids));assert(rounds[7].works.every(w=>earlier.has(w.id)));for(const id of ['blanchard-still-life','add-tamayo-still-life-foot','add-rivera-portrait-frida'])assert(ids(rounds[7]).includes(id));assert.equal(rounds[7].evidence.arrangementSelection.revision,'earlier-appeal-sorting-v1');assert.equal(sig(ids(rounds[31])),sig(ids(rounds[7])));assert(ids(rounds[9]).includes('add-siqueiros-madre-nina'));
+  const earlier=new Set(rounds.slice(0,7).filter(r=>r.evidence.construct==='preference').flatMap(ids));assert(rounds[7].works.every(w=>earlier.has(w.id)));for(const id of ['add-tamayo-still-life-foot','add-rivera-portrait-frida'])assert(ids(rounds[7]).includes(id));assert.equal(rounds[7].evidence.arrangementSelection.revision,'earlier-appeal-sorting-v1');assert.equal(sig(ids(rounds[31])),sig(ids(rounds[7])));assert(ids(rounds[9]).includes('add-siqueiros-madre-nina'));
+});
+
+test('The fresh comparison-first journey retains72 main stimuli without inheriting overall-appeal closing semantics',()=>{
+  const rounds=buildJourneyRounds(currentWorks),main=rounds.filter(round=>round.evidence.panelNumber&&round.evidence.construct==='preference');
+  assert.equal(rounds.length,50);assert.equal(rounds[0].evidence.journeyRevision,JOURNEY_REVISION);assert.equal(main.length,18);assert.equal(new Set(main.flatMap(ids)).size,72);assert(main.every(isComparisonPreferenceRound));assert(main.every(round=>!isOverallAppealRound(round)));
+  assert(rounds.slice(-5).every(round=>round.evidence.finalRefinement.protocol===ORDINAL_REFINEMENT_PROTOCOL));
 });
 
 test('Favourite candidates retain all earlier overall appeal works, sorted without sacrificing a favourite for a repeat',()=>{
@@ -77,10 +87,10 @@ test('Legacy and overall ratings cannot jointly manufacture the three-set direct
   const plan=planAdaptivePanels({works,rounds,answers,panelCount:6,seed:'mixed-scope'});assert.equal(plan.coverage.activeMeasurementScope,APPEAL_PROTOCOL);assert.deepEqual(plan.coverage.modelSourceRoundIds,rounds.slice(3).map(r=>r.id));assert(plan.panels.every(p=>!p.provisionalHypothesis));
 });
 
-test('A shownv9 relative question survives freshv10 generation byte-for-byte',()=>{
+test('A shown v9 relative question survives current generation byte-for-byte',()=>{
   const old=source(works.slice(20,24),5,[10,20,30,40],false).round,before=structuredClone(old),rebuilt=buildJourneyRounds(works,{}, {history:[old],seed:'preserve-v9'});assert.deepEqual(rebuilt.find(r=>r.id===old.id),before);assert.equal(isOverallAppealRound(rebuilt.find(r=>r.id===old.id)),false);assert.deepEqual(old,before);
 });
-test('Later164 blocks introduce46 new ratings with feasible exploration capacity and unchanged protected panels',()=>{
+test('Later164 blocks introduce46 first comparisons with feasible exploration capacity and unchanged protected panels',()=>{
   let rounds=[],answers={},reservationPlan;const seen=new Set();
   for(let batchIndex=0;batchIndex<3;batchIndex++){
     const seed='fresh164-allocation-'+batchIndex,released=new Set(reservationPlan?.['batch'+(batchIndex+1)]||[]),adaptivePlan=batchIndex?planAdaptivePanels({works:works.filter(work=>seen.has(work.id)||released.has(work.id)),rounds,answers,batchIndex,seed,quotas:journeyAdaptiveQuotas(batchIndex,reservationPlan)}):undefined,before=adaptivePlan&&structuredClone(adaptivePlan);

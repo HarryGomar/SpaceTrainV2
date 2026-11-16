@@ -1,0 +1,686 @@
+{
+  "canon-caravaggio-calling-matthew": {
+    "features": [
+      0.05,
+      0.35,
+      0.7,
+      0.85,
+      0.5,
+      0.5,
+      0.35
+    ],
+    "alt": "A beam crosses a dark room where seated men turn toward two standing men who point across the table.",
+    "note": "The Contarelli Chapel canvas places the biblical encounter among figures dressed in different historical periods. Its many pointing hands connect the arriving group to the seated people.",
+    "reason": "Several restrained pointing and turning gestures act within a recognisable but spare room. Dramatic light is separate from bodily force and from the amount of setting.",
+    "present": {
+      "N": "Money, table objects, divided groups and different pointing hands offer clues beyond a single focal pose.",
+      "D": "A sharply selected band of illumination crosses deep shadow and lights the figures unevenly.",
+      "S": "The near table and seated group stand before a separate wall, window and arriving figures.",
+      "V": "Several arms point and reach while heads and torsos turn toward the arriving group.",
+      "F": "The nearby grouped bodies occupy much of the lower composition.",
+      "P": "Faces, fingers, cloth edges and small table objects have controlled differentiated contours.",
+      "H": "Pointing hands and directed gazes connect the two groups visibly.",
+      "T": "The frontal table encounter and entering figures are arranged beneath a window as a conspicuous presented scene.",
+      "M": "Skin, folded cloth, hats and small reflective objects receive different local descriptions.",
+      "O": "A broad relatively uninterrupted shadowed wall remains above the figures."
+    },
+    "unknown": {
+      "B": "Fine paint handling cannot be separated confidently from reproduction grain at the whole-work review scale."
+    }
+  },
+  "canon-caravaggio-entombment": {
+    "features": [
+      0.05,
+      0.7,
+      0.75,
+      1,
+      0.75,
+      0.25,
+      0.45
+    ],
+    "alt": "Several people lower a pale dead body toward a stone slab while a woman raises both arms behind them.",
+    "note": "The Vatican describes the body being placed on the anointing stone rather than lowered into an open grave. The carriers and surrounding hands form a descending diagonal.",
+    "reason": "The living figures carry and reach with substantial effort while the dead body remains still. Slab, shroud and a little ground provide limited place against darkness.",
+    "present": {
+      "N": "Shroud, wounds, supporting hands and several different mourning gestures give secondary incident clues.",
+      "D": "Selected faces, arms and pale flesh stand in strong illumination against deep darkness.",
+      "V": "Living arms support and lower the body while another figure thrusts both arms upward.",
+      "F": "A compact near-view group and the carried body fill most of the image.",
+      "P": "Controlled anatomical contours and differentiated hand and fabric details remain clear.",
+      "R": "Recurring extended arms and folded cloth produce a conspicuous descending rhythm.",
+      "H": "The carriers visibly coordinate their holds around the dead body.",
+      "T": "The projecting stone and emphatically presented body form a stage-like foreground display.",
+      "M": "Skin, shroud folds and stone edges have differentiated surface descriptions."
+    },
+    "unknown": {
+      "S": "The bodies overlap strongly, but a separate deep physical setting is not unambiguous.",
+      "B": "The whole-image view does not resolve fine paint marks confidently."
+    }
+  },
+  "canon-caravaggio-bacchus": {
+    "features": [
+      0.05,
+      0.2,
+      0.65,
+      0.8,
+      0.25,
+      0,
+      0.55
+    ],
+    "alt": "A vine-crowned young figure holds out a shallow glass of wine above a table with fruit and a dark bottle.",
+    "note": "The Uffizi dates this early Caravaggio to about1598. Wine, fruit and leaf crown add object clues to the close figure without creating a developed surrounding room.",
+    "reason": "The hand quietly offers the wine while the body remains posed. Cloth and a table do not establish an extended environmental place.",
+    "present": {
+      "N": "Fruit, wine glass, bottle, leaf crown and held ribbon offer several object clues beyond the pose.",
+      "D": "The face, chest and hand are selectively illuminated against a much darker surround.",
+      "V": "The extended hand quietly presents the glass.",
+      "F": "The nearby half-length figure occupies most of the view.",
+      "P": "Fruit edges, fingers, leaves and the glass have finely controlled details.",
+      "R": "Repeated rounded fruit and recurring leaves make a conspicuous foreground and crown rhythm.",
+      "T": "Draped fabric and a frontal table display frame the posed figure and its objects.",
+      "M": "Glass, fruit skins, leaves, cloth and bare skin receive different local descriptions."
+    },
+    "unknown": {
+      "B": "The reproduction shows grain but does not resolve fine brush marks confidently."
+    }
+  },
+  "canon-caravaggio-medusa": {
+    "features": [
+      0.1,
+      0.4,
+      0.65,
+      0.85,
+      0.25,
+      0,
+      0.4
+    ],
+    "alt": "An open-mouthed severed head with writhing snakes for hair is painted on a round green shield.",
+    "note": "This is the Uffizi shield, not the smaller privately held Medusa. The photograph includes the complete curved shield; its grey photographic surround is excluded from painted-setting judgements.",
+    "reason": "The open mouth and articulated snake bodies give limited bodily gesture. No beheading stroke or surrounding place is depicted; the shield's photographed support is not a painted environment.",
+    "present": {
+      "I": "Snakes replace human hair on an uncannily animate severed head.",
+      "D": "The face is strongly illuminated while the surrounding snakes fall into deep shadow.",
+      "G": "The round green field and circular shield boundary strongly organise the composition.",
+      "V": "The mouth opens widely and multiple snake bodies visibly lift and curl.",
+      "F": "The near-view human head occupies a substantial central area.",
+      "P": "Eyes, teeth, blood strands and snake contours are sharply differentiated.",
+      "R": "Recurring coils and raised snake heads form a conspicuous radial rhythm.",
+      "M": "Facial flesh, wet-looking blood and snake skins receive differentiated local description."
+    },
+    "unknown": {
+      "B": "Photographic detail does not establish whether fine paint marks themselves are conspicuous."
+    },
+    "absent": {
+      "N": "The blood and snakes describe the one focal severed head; separate secondary incidents are not clearly emphasised."
+    }
+  },
+  "canon-leonardo-last-supper": {
+    "features": [
+      0.05,
+      0.4,
+      0.85,
+      0.75,
+      0.5,
+      1,
+      0.35
+    ],
+    "alt": "Thirteen figures sit and gesture around a long table inside a deep rectangular room with three rear windows.",
+    "note": "Leonardo worked on dry plaster rather than using the usual wet-fresco process. The visible scene contains several different hand reactions within one strongly organised room.",
+    "reason": "Many hands turn, reach and react with moderate activity. The long room, coffered ceiling and distant openings dominate the environmental construction.",
+    "present": {
+      "N": "Table objects and several distinct clusters of hand and face exchanges create separate local incidents.",
+      "S": "The foreground table, side walls, ceiling and rear windows establish distinct spatial stages.",
+      "G": "Repeated rectangles, ceiling divisions and straight wall boundaries organise the room.",
+      "V": "Numerous figures extend arms, raise hands and lean toward one another.",
+      "R": "Repeated ceiling compartments, wall panels and grouped figures create conspicuous rhythm.",
+      "H": "Visible hand gestures and directed gazes connect people in several local exchanges.",
+      "T": "The long frontal table and centred deep room present the group as an emphatic arranged encounter."
+    },
+    "unknown": {
+      "P": "Fading and surface loss prevent a confident whole-work judgement of fine original rendering.",
+      "B": "Surface damage cannot be treated as visible brushwork.",
+      "M": "Faded details limit confidence in the differentiation of depicted materials."
+    }
+  },
+  "canon-bruegel-tower-babel": {
+    "features": [
+      0.05,
+      0.3,
+      1,
+      0.25,
+      0.5,
+      1,
+      0.55
+    ],
+    "alt": "A huge unfinished round tower with many arched levels rises above tiny builders, a harbour and a town.",
+    "note": "This is the large Vienna painting of1563. Its close technical and architectural details allow attention to many small activities within an overarching building form.",
+    "reason": "Small workers carry, kneel and handle materials. Tower, harbour, town, terrain and sky provide an extensive environmental place.",
+    "present": {
+      "N": "Builders, material handling, a foreground procession and harbour activities supply numerous separate local incidents.",
+      "S": "Foreground people and ground, tower levels, distant town and harbour establish successive spatial stages.",
+      "G": "Regular circular tiers and repeated arched compartments strongly structure the tower.",
+      "V": "Small people kneel, carry materials and reach around the construction.",
+      "L": "Water, terrain and a broad surrounding horizon substantially organise the view.",
+      "P": "Tiny arches, windows, scaffolds and figures have finely differentiated contours.",
+      "R": "Many repeated arcades, floors and scaffold divisions create a conspicuous rhythm.",
+      "H": "Foreground people address one another and workers coordinate around carried objects.",
+      "M": "Stonework, wood structures, ground and vessels receive different detailed treatment.",
+      "O": "Broad sky and relatively open water remain around the tower."
+    },
+    "unknown": {
+      "B": "Fine brush marks are not confidently distinguished from age and reproduction texture."
+    }
+  },
+  "canon-bruegel-netherlandish-proverbs": {
+    "features": [
+      0.05,
+      0.75,
+      1,
+      0.65,
+      0.75,
+      1,
+      0.6
+    ],
+    "alt": "Many small people perform different odd acts among village houses, roofs, a bridge, fields and distant water.",
+    "note": "The Berlin museum identifies more than100 sayings enacted within the village. These are multiple local scenes rather than a single central hero or event.",
+    "reason": "Many figures walk, grapple, reach and handle objects. Village, square, water, bridge and distant terrain make an extensive surrounding place.",
+    "present": {
+      "N": "Dozens of separate bodily acts and object encounters create independent local story clues.",
+      "S": "Roof and room openings, foreground square, bridge, fields and distant sea establish many spatial stages.",
+      "V": "Numerous small figures visibly bend, climb, pull, strike or handle objects.",
+      "L": "Fields, trees and distant water form substantial parts of the surrounding village terrain.",
+      "P": "Small tools, animals, figures and building details are sharply differentiated.",
+      "R": "Repeated roof tiles, window divisions and patterned architectural rows establish conspicuous local rhythms.",
+      "H": "Many pairs visibly pull against, guide, restrain or address one another.",
+      "M": "Thatch, plaster, brick, cloth and small objects receive differentiated fine descriptions."
+    },
+    "unknown": {
+      "I": "Some small motifs may be impossible or enacted props; this whole-image review does not establish every referent confidently.",
+      "B": "Fine paint marks cannot be distinguished confidently from reproduction texture."
+    }
+  },
+  "canon-goya-third-may": {
+    "features": [
+      0.1,
+      0.7,
+      0.75,
+      0.9,
+      0.5,
+      0.75,
+      0.4
+    ],
+    "alt": "A white-shirted man raises his arms before a row of armed soldiers, with dead bodies at his feet and a lantern between them.",
+    "note": "Goya painted the scene in1814 to represent the1808 executions. Strong illumination links the raised arms, nearby faces and the lantern while the soldiers form a repeated opposing group.",
+    "reason": "Bodies raise arms, aim weapons, kneel and cover faces, with moderate visible exertion. The hillside, ground and distant buildings form substantial setting; the scene's violent meaning does not by itself make an action score of1.",
+    "present": {
+      "N": "Lantern, weapons, praying hands, blood and differently responding figures give several incident clues.",
+      "D": "The white shirt and nearby faces stand in sharp selected light against deep night and shadow.",
+      "S": "Near bodies, facing groups and the distant city occupy separate spatial stages.",
+      "V": "Arms rise, rifles are aimed, hands cover faces and bodies kneel.",
+      "F": "The close foreground bodily groups occupy a substantial part of the composition.",
+      "L": "The sloping ground and dark outdoor terrain substantially organise the scene.",
+      "B": "Broad rough passages and distinct painterly touches remain conspicuous in ground and clothing.",
+      "R": "Repeated soldier backs and nearly parallel rifles form a strong directional rhythm.",
+      "H": "The two groups visibly confront each other and several victims make local gestures toward companions."
+    },
+    "unknown": {
+      "M": "Several materials are suggested, but finely differentiated surface texture is not dominant at the reviewed scale."
+    }
+  },
+  "canon-velazquez-breda": {
+    "features": [
+      0.05,
+      0.3,
+      0.85,
+      0.8,
+      0.25,
+      0.75,
+      0.45
+    ],
+    "alt": "Two men exchange a key between groups of soldiers, with repeated upright lances, horses and distant fields behind them.",
+    "note": "The central key exchange is quieter than the ranks of armed men might suggest. Lances, figures and distant terrain give several different scales of detail.",
+    "reason": "The central hands and surrounding people make restrained gestures rather than fight. Deep ground, distant buildings and landscape create substantial setting.",
+    "present": {
+      "N": "Key, hats, horses, varied onlookers and distant smoke provide secondary incident and object clues.",
+      "S": "Foreground horses and people stand before troop ranks, open terrain and a distant horizon.",
+      "G": "The long closely spaced upright lances create salient straight divisions across the right side.",
+      "V": "The central figures reach toward one another around the small key.",
+      "L": "Extensive terrain and a distant horizon substantially organise the background.",
+      "P": "Cloth, weapons, horse fittings and faces have finely differentiated details.",
+      "R": "Repeated lances and ranks of figures create strong vertical and horizontal rhythm.",
+      "H": "The key exchange and a hand on the other man's shoulder create an explicit interpersonal encounter.",
+      "T": "The opposing groups and central exchange form an emphatically presented public encounter.",
+      "M": "Metal, embroidered cloth, leather and horse coats receive different local descriptions."
+    },
+    "unknown": {
+      "B": "Fine paint handling is not confidently separated from reproduction texture at whole-work scale."
+    }
+  },
+  "canon-rembrandt-prodigal-son": {
+    "features": [
+      0.05,
+      0.2,
+      0.6,
+      0.9,
+      0.25,
+      0.5,
+      0.3
+    ],
+    "alt": "An older man in red rests both hands on a kneeling young man while several figures watch from shadow.",
+    "note": "This is the late Hermitage painting, not Rembrandt's earlier prints of the story. Torn clothes, worn shoes and the quiet contact of hands carry much of its local detail.",
+    "reason": "Hands quietly touch the kneeling figure; intense feeling is not intense bodily action. Steps, floor and dim architectural recesses supply a recognisable secondary interior.",
+    "present": {
+      "N": "Damaged footwear, worn clothing, touching hands and differently placed witnesses give clues beyond the central pose.",
+      "D": "Selected hands, heads and red cloth emerge strongly from deep shadow.",
+      "S": "The near kneeling body and raised standing figures sit before dark recessed witnesses and architectural passages.",
+      "V": "Both hands visibly embrace or support the kneeling figure.",
+      "F": "The nearby central bodily pair occupies a substantial portion of the image.",
+      "H": "The older man's hands and the younger man's leaning body create an emphatic exchange of touch.",
+      "T": "A low platform and foreground pair are presented before separately positioned witnesses.",
+      "M": "Worn cloth, bare feet and damaged footwear have distinct local descriptions.",
+      "O": "Broad relatively uninterrupted shadowed fields remain above and beside the central pair."
+    },
+    "unknown": {
+      "P": "Fine rendering varies across the softly resolved reproduction and is not confidently dominant.",
+      "B": "Individual paint marks require a closer surface view than this whole-work inspection."
+    }
+  },
+  "canon-holbein-dead-christ": {
+    "features": [
+      0.03,
+      0.05,
+      0.5,
+      1,
+      0,
+      0.25,
+      0.2
+    ],
+    "alt": "A thin dead body lies lengthwise on a white cloth inside a shallow dark stone cavity.",
+    "note": "The Basel museum retains1521–1522 because technical examination complicates the painted date. Wounds and exact bodily description carry the image without an enacted death scene.",
+    "reason": "The dead body is motionless. A shallow cavity and cloth give minimal physical place rather than a large surrounding environment.",
+    "present": {
+      "D": "The pale body is strongly selected against the deep shadow of the surrounding cavity.",
+      "G": "Long straight cavity boundaries create a dominant narrow rectangular structure.",
+      "F": "The single near-view body occupies most of the painted field.",
+      "P": "Fingers, toes, wounds and bodily contours are sharply differentiated.",
+      "T": "The body is emphatically displayed within a shallow framing cavity.",
+      "M": "Skin, wounds, cloth and stone edges receive different fine descriptions."
+    },
+    "unknown": {
+      "B": "Fine original paint marks cannot be resolved confidently from the reproduced surface."
+    },
+    "absent": {
+      "N": "The wounds describe the one focal dead body rather than independent secondary incidents or separate object clues."
+    }
+  },
+  "canon-delacroix-sardanapalus": {
+    "features": [
+      0.1,
+      0.9,
+      1,
+      1,
+      1,
+      0.5,
+      0.65
+    ],
+    "alt": "Many figures struggle around a large red bed while a reclining man watches and a pale horse rears at one side.",
+    "note": "This is the large Louvre canvas painted in1827, not the preparatory sketch or a later copy. Curving bodies and objects fill several stages around the elevated bed.",
+    "reason": "Bodies wrestle, restrain, strike and strain with intense visible action. Bed, drapery and architectural fragments supply a secondary surrounding interior.",
+    "present": {
+      "N": "Different attacks, a horse, scattered possessions and the watching reclining figure create many distinct incidents.",
+      "D": "Selected pale bodies and bright cloth contrast sharply with deep surrounding shadow.",
+      "S": "Near struggling figures, raised bed and deeper architectural passages create several physical stages.",
+      "V": "Bodies grip, pull, strike, raise limbs and resist throughout the scene.",
+      "F": "Several close compact bodily groups occupy large foreground areas.",
+      "P": "Many anatomical, jewellery and textile contours are carefully differentiated.",
+      "R": "Recurring curved limbs and diagonal fabric folds create a conspicuous directional rhythm.",
+      "H": "Several pairs visibly restrain, attack or handle one another.",
+      "T": "Curtains, the raised bed and an emphatic presented action make a strongly staged encounter.",
+      "M": "Skin, jewellery, fabric, metal objects and animal surfaces receive differentiated local description."
+    },
+    "unknown": {
+      "B": "Fine paint marks are not confidently separated from image texture in the whole-work view."
+    }
+  },
+  "canon-ingres-odalisque": {
+    "features": [
+      0.05,
+      0.1,
+      0.5,
+      1,
+      0,
+      0.25,
+      0.45
+    ],
+    "alt": "A reclining nude turns her face toward the viewer on a draped bed, holding a peacock-feather fan beside a blue curtain.",
+    "note": "The1814 Louvre painting uses a deliberately elongated reclining body among carefully described textiles and small objects. Its stillness differs from the active group scenes in this addition.",
+    "reason": "The figure rests in a posed position rather than enacting an activity. Bed and curtain give limited interior context.",
+    "present": {
+      "D": "The lit skin stands distinctly against the very dark background and curtain.",
+      "F": "The nearby reclining body occupies most of the image width.",
+      "X": "The back and torso are conspicuously elongated relative to the head and limbs.",
+      "P": "Skin contours, facial details, jewellery and fabric edges are sharply controlled.",
+      "R": "Repeated textile ornaments and feather markings create clear local pattern.",
+      "T": "The curtain and arranged bed frame the figure as a posed display.",
+      "M": "Satin-like cloth, metal, feathers and skin receive finely differentiated descriptions."
+    },
+    "unknown": {},
+    "absent": {
+      "N": "The fan, turban and jewellery function primarily as accessories to the focal pose, without a clearly distinct secondary incident."
+    }
+  },
+  "canon-bocklin-isle-dead": {
+    "features": [
+      0.08,
+      0.15,
+      0.65,
+      0.1,
+      0.25,
+      1,
+      0.35
+    ],
+    "alt": "A small boat with a white-cloaked figure approaches a rocky island with tall dark trees and rectangular entrances.",
+    "note": "This is the first Basel version of1880, not the later Berlin or New York paintings. Boat, pale figure and tomb-like openings offer sparse narrative clues within an extensive environment.",
+    "reason": "The small rower makes a quiet handling gesture. Water, island, rocks, trees and sky dominate the surrounding place.",
+    "present": {
+      "N": "Boat, pale upright figure, rectangular cargo and dark entrances create several small object and incident clues.",
+      "D": "The pale figure and bright opening stand against dark water, trees and recesses.",
+      "S": "Near water and boat lead to the island entrances and taller tree-filled enclosure.",
+      "V": "The small seated figure visibly handles an oar.",
+      "L": "Water, rocky terrain, trees and sky dominate the composition.",
+      "P": "Rock faces, openings and tree contours are controlled and differentiated.",
+      "R": "Repeated tall tree forms and rectangular openings create a conspicuous vertical rhythm.",
+      "O": "Broad open water and dark sky leave substantial space around the island."
+    },
+    "unknown": {
+      "B": "Fine surface marks are not confidently resolved at whole-work scale."
+    }
+  },
+  "canon-siqueiros-echo-scream": {
+    "features": [
+      0.35,
+      0.65,
+      0.8,
+      0.85,
+      0.25,
+      0.5,
+      0.25
+    ],
+    "alt": "A very large open-mouthed head rises behind a smaller seated child among broken mechanical parts and distant industrial forms.",
+    "note": "MoMA records enamel on wood for this1937 work. Repeated faces and machine-like debris produce an uncanny image without a crowd of separate human episodes.",
+    "reason": "The open mouths and small curled body give limited bodily gesture; a presumed feeling of screaming is not scored as vigorous movement. Debris, ground and distant industrial structures establish a secondary place.",
+    "present": {
+      "N": "The repeated head, small child, broken machine parts and distant structures create secondary clues.",
+      "I": "The enormous separate head and its relation to the child are physically uncanny.",
+      "D": "The faces are strongly selected in light against dark surrounding debris.",
+      "S": "Near debris and child stand before the huge head and distant industrial horizon.",
+      "F": "Large close faces occupy much of the composition.",
+      "X": "The head is enlarged and facial proportions are forcefully altered.",
+      "P": "Facial creases, eyelids and mechanical edges are carefully differentiated.",
+      "B": "Rough directional marks remain visible across parts of the debris and background.",
+      "R": "Repeated facial forms and recurring circular machine parts create conspicuous visual echoes.",
+      "M": "Skin, cloth and broken mechanical surfaces receive different local treatment."
+    },
+    "unknown": {}
+  },
+  "canon-siqueiros-collective-suicide": {
+    "features": [
+      0.4,
+      0.85,
+      1,
+      0.35,
+      0.75,
+      1,
+      0.5
+    ],
+    "alt": "Tiny groups of people and horses occupy dark cliffs around a pale swirling chasm beneath a red and black sky.",
+    "note": "MoMA records lacquer and applied sections on wood for this1936 painting. Its small human incidents sit within strongly worked terrain rather than a close foreground portrait.",
+    "reason": "Small bodies visibly climb, fall and move in groups. Cliffs, ground, pit and sky dominate the environment; the irregular paint field does not itself supply a bodily-action score.",
+    "present": {
+      "N": "Separate human and mounted groups, a captive and scattered bodies create several small incident clues.",
+      "D": "The pale central terrain contrasts strongly with dark surrounding ground and sky.",
+      "S": "Foreground ledges, separate chasm sides and distant groups establish successive physical stages.",
+      "V": "Small bodies fall, climb and reach along the terrain.",
+      "L": "Rocky ground, cliffs, chasm and sky dominate the surrounding place.",
+      "B": "Poured-looking swirls, irregular accumulations and directional marks remain conspicuous as paint treatment.",
+      "R": "Small repeated mounted figures and aligned human groups create local rhythms.",
+      "H": "Small figures confront and direct other bodies in coordinated groups."
+    },
+    "unknown": {
+      "X": "Some terrain is highly transformed, but the referents are too uncertain to distinguish distortion from irregular natural form confidently.",
+      "P": "Fine contours in the tiny figures do not establish a consistently dominant precise treatment across the entire reproduction.",
+      "M": "Fine differentiated depicted material surfaces cannot be confidently separated from actual paint texture."
+    }
+  },
+  "canon-michelangelo-creation-adam": {
+    "features": [
+      0.08,
+      0.5,
+      0.6,
+      1,
+      0.5,
+      0.25,
+      0.4
+    ],
+    "alt": "A reclining nude reaches toward a bearded figure extending one hand from a floating cloak crowded with smaller figures.",
+    "note": "The reproduction isolates the central Creation of Adam scene from the Sistine ceiling. The reaching fingers and clustered figures are reviewed as this displayed scene, not the whole ceiling programme.",
+    "reason": "Several bodies extend their limbs and the right-hand group is visibly unsupported in flight. A small amount of rocky ground gives limited setting against a broad light field.",
+    "present": {
+      "I": "A bodily group is suspended in a floating cloak without physical support.",
+      "V": "The two main arms extend toward one another and smaller bodies hold or support the floating group.",
+      "F": "Large close human bodies occupy most of the displayed scene.",
+      "P": "Anatomical contours, fingers and folds are sharply controlled and differentiated.",
+      "H": "Directed hands and gazes create an emphatic visible exchange between the main figures.",
+      "M": "Flesh, drapery and the rocky support have differentiated local descriptions.",
+      "O": "A broad light field leaves substantial open space between and around the two groups."
+    },
+    "unknown": {
+      "B": "Surface cracking and reproduction texture do not establish fine original brush marks."
+    },
+    "absent": {
+      "N": "The reaching bodies and accompanying figures form one focal encounter; no independent secondary incident or separate object clue is emphasised."
+    }
+  },
+  "canon-bosch-temptations-lisbon": {
+    "features": [
+      0.25,
+      0.7,
+      1,
+      0.6,
+      0.75,
+      1,
+      0.6
+    ],
+    "alt": "Across three panels, many small people and hybrid creatures act among ruins, bridges, water, distant buildings and a burning settlement.",
+    "note": "This is the complete open Lisbon triptych. The holding museum dates it1505–1506; the source file's broader historical date wording is retained in file provenance rather than substituted for that museum record.",
+    "reason": "Numerous bodies visibly carry, climb, fly, reach and interact. Extensive terrain, ruins, water and distant buildings structure all three panels.",
+    "present": {
+      "N": "Many small acts, carried bodies, strange vessels and separate encounters provide independent local incidents.",
+      "I": "Human-animal hybrids, unsupported flying creatures and impossible bodily constructions are visible.",
+      "D": "A glowing burning settlement and illuminated passages contrast with deep night and dark recesses.",
+      "S": "Bridge, cave-like openings, foreground groups, ruined temple and distant landscape create many distinct spatial stages.",
+      "V": "Numerous small bodies carry, climb, fly and reach around objects or other figures.",
+      "L": "Terrain, water, vegetation and extensive horizons organise all three panels.",
+      "X": "Recognisable bodies and objects are conspicuously hybridised, bent or altered in shape.",
+      "P": "Small creature contours, buildings and objects are finely differentiated.",
+      "H": "Several pairs carry, support, approach or handle one another visibly."
+    },
+    "unknown": {
+      "B": "Fine original brush marks are unresolved at the whole-triptych review scale.",
+      "M": "Small detailed contours do not establish finely differentiated material textures confidently at this scale."
+    }
+  },
+  "canon-durer-melencolia": {
+    "features": [
+      0.1,
+      0.25,
+      1,
+      0.7,
+      0.25,
+      0.75,
+      0
+    ],
+    "alt": "A winged seated figure rests its head on a hand among tools, a large polyhedron, a dog, a ladder, a number square and a distant bright sky.",
+    "note": "This is the Met impression43.106.1 of the1514 engraving. Geometry tools and the numbered square are documented parts of its allegorical imagery, distinct from the mostly quiet bodily poses.",
+    "reason": "The smaller seated figure quietly writes while the main figure rests and holds a tool. The built corner and distant water provide substantial physical setting.",
+    "present": {
+      "N": "Many tools, numbered square, suspended objects, dog and distant banner provide clues beyond the resting pose.",
+      "I": "The human-like winged figures and banner-bearing airborne creature are visibly fantastical.",
+      "S": "Near tools and bodies stand before a built corner, ladder and distant sea horizon.",
+      "G": "Sphere, polyhedron, numbered square and straight ladder divisions are salient geometric motifs.",
+      "V": "The small seated figure visibly handles a writing implement and tablet.",
+      "F": "The close foreground winged figure occupies a substantial part of the composition.",
+      "L": "Water and distant coastal terrain establish a substantial background beyond the objects.",
+      "P": "Very fine controlled lines distinguish numbers, tools, hair, fur and folds.",
+      "B": "Conspicuous parallel and crossed engraved lines remain visible as marks rather than disappearing into smooth shading.",
+      "R": "Ladder rungs, number-square cells, radiating lines and recurring hatch marks create strong rhythm.",
+      "M": "Fur, cloth, wood and stone-like surfaces have differentiated fine line descriptions."
+    },
+    "unknown": {}
+  },
+  "canon-varo-creation-birds": {
+    "features": [
+      0.25,
+      0.3,
+      0.8,
+      0.5,
+      0.25,
+      0.75,
+      0.45
+    ],
+    "alt": "An owl-like humanoid works at a table with a prism, brush and small birds inside a room with tiled floor and arched windows.",
+    "note": "The1957 MAM painting joins a birdlike creator to precise devices and small birds. This reproduction is limited to1568 native pixels on its long edge; it has not been upscaled.",
+    "reason": "Human-like hands quietly work with a brush and prism while small birds fly. Floor, walls, windows and apparatus form a substantial surrounding room; the central body is explicitly a hybrid rather than an ordinary human portrait.",
+    "present": {
+      "N": "Brush, prism, attached stringed instrument, apparatus and several differently placed birds create secondary clues.",
+      "I": "A feathered humanoid uses visibly connected devices while birds lift from the working area.",
+      "S": "Foreground apparatus and table stand before separate walls, floor and window openings.",
+      "G": "The repeated floor grid and clearly shaped tabletop organise much of the lower room.",
+      "V": "Hands work with a brush and triangular instrument while small birds extend their wings.",
+      "F": "A nearby human-like bodily figure occupies a substantial central area.",
+      "X": "A recognisable upright body has an owl-like head, feathers and conspicuously altered bodily features.",
+      "P": "Strings, feather patterns, bird edges and apparatus lines are finely controlled.",
+      "R": "Floor tiles, feather motifs and recurring arched openings create conspicuous pattern.",
+      "M": "Feathers, wood, tools and the pale apparatus have differentiated local descriptions."
+    },
+    "unknown": {
+      "B": "The fine reproduction texture does not resolve original paint marks confidently."
+    }
+  },
+  "canon-kahlo-two-fridas": {
+    "features": [
+      0.1,
+      0.25,
+      0.75,
+      1,
+      0.25,
+      0.25,
+      0.55
+    ],
+    "alt": "Two seated women hold hands in different dresses, with exposed connected hearts, a small portrait and blood on a white skirt beneath a cloudy sky.",
+    "note": "The MAM record identifies the small held portrait and the connected exposed hearts. These documented object clues remain separate from any claim about what a viewer feels or why they like the painting.",
+    "reason": "Hands quietly hold one another and small objects while the bodies remain posed. Cloud field and a narrow ground passage give limited place; emotional and symbolic intensity do not make vigorous bodily action.",
+    "present": {
+      "N": "Exposed hearts, connecting vessel, scissors, miniature portrait and stained dress provide several secondary clues.",
+      "I": "The hearts are exposed outside otherwise intact bodies and linked by an external vessel.",
+      "V": "The two figures quietly join hands and hold small objects.",
+      "F": "The near-view seated pair occupies most of the reproduction.",
+      "P": "Lace, fingers, hair, small objects and garment edges have controlled differentiated contours.",
+      "B": "Distinct broad directional touches remain visible in the cloudy background.",
+      "R": "Repeated dress ornaments, lace details and mirrored seated forms establish pattern.",
+      "H": "The joined hands and connected bodies create an explicit visible relationship.",
+      "M": "Lace, cloth, skin and anatomical objects have different local descriptions.",
+      "O": "The broad sky field leaves substantial open space above and beside the figures."
+    },
+    "unknown": {}
+  },
+  "canon-tamayo-dualidad": {
+    "features": [
+      0.6,
+      0.8,
+      0.65,
+      0,
+      0.75,
+      0,
+      0.95
+    ],
+    "alt": "A green coiling serpent faces an orange spotted jaguar across a red and blue mural, shown in a photograph of the complete museum wall.",
+    "note": "INAH identifies the mural's opposed serpent and jaguar imagery. The photographer's wall, ceiling, lights and barriers are excluded from the painted composition's descriptor review.",
+    "reason": "The painted animals visibly confront one another with raised limbs, coils and open jaws. Broad colour fields and disks do not establish a depicted room or terrain; photographed museum architecture is not painted setting.",
+    "present": {
+      "N": "Opposing animals and separate sun- and moon-like disks supply clues beyond an isolated decorative motif.",
+      "I": "The enormous stylised animal confrontation and serpent form are visibly uncanny.",
+      "G": "Large bounded red and blue fields, circular disks and the serpent's broad loop organise the mural.",
+      "V": "The jaguar extends its limbs and jaws toward the coiling serpent.",
+      "X": "Recognisable animal bodies are conspicuously stretched, simplified and altered in proportion.",
+      "P": "Animal contours, spots and disks have controlled clearly separated edges.",
+      "R": "Repeated jaguar spots, scale-like motifs and circular forms create conspicuous pattern."
+    },
+    "unknown": {
+      "B": "The complete-wall photograph does not resolve original mural paint marks confidently.",
+      "M": "Fine material differentiation is not sufficiently resolved in the photographed mural surface."
+    }
+  },
+  "canon-varo-call": {
+    "features": [
+      0.25,
+      0.5,
+      0.75,
+      0.75,
+      0.5,
+      1,
+      0.6
+    ],
+    "alt": "A glowing orange figure strides through a tall shadowy courtyard where other figures appear embedded in walls and columns.",
+    "note": "The NMWA painting dates to1961. The museum documents alchemical implements and wall-bound figures; the image joins one walking figure to many small architectural clues.",
+    "reason": "The central body strides with visible moderate activity. Floor, walls, recesses and steps construct an extensive surrounding place.",
+    "present": {
+      "N": "Small held implements, a collar object, celestial hair and figures in the walls provide secondary clues.",
+      "I": "Faces and bodies appear fused with surrounding walls while a glowing hair-like form rises toward a celestial disk.",
+      "D": "The orange figure is strongly selected in light against dark muted architectural surroundings.",
+      "S": "Foreground steps, near floor, side recesses and distant enclosure create several physical stages.",
+      "G": "Repeated triangular floor divisions and straight architectural boundaries organise the place.",
+      "V": "The figure visibly strides while quietly holding objects in its hands.",
+      "F": "The near full-length figure is the substantial central bodily motif.",
+      "X": "The main figure and wall-bound bodies are conspicuously elongated or transformed.",
+      "P": "Fine folds, faces, implements and architectural lines have controlled edges.",
+      "R": "Repeated floor triangles, vertical ribs and recessed faces create conspicuous rhythm.",
+      "M": "Drapery folds and bark-like wall surfaces receive different fine local descriptions."
+    },
+    "unknown": {
+      "B": "Fine original paint marks remain unresolved in the reproduced surface."
+    }
+  },
+  "canon-varo-escape": {
+    "features": [
+      0.3,
+      0.55,
+      0.7,
+      0.65,
+      0.25,
+      1,
+      0.6
+    ],
+    "alt": "Two cloaked figures stand in a small vessel among golden clouds beside steep striated mountains under a dark sky.",
+    "note": "This is the complete composition La huida, the third painting of a dispersed triptych. The individual painting is reviewed here; traits are not assigned to the two other panels from this view.",
+    "reason": "A hand quietly handles the vessel's line or steering apparatus while the travellers mostly stand. Mountains, cloud-filled space and distant terrain form an extensive imagined environment.",
+    "present": {
+      "N": "Small vessel, handled line, two differently directed figures and separate mountain passages offer secondary clues.",
+      "I": "The small vessel and standing figures appear unsupported among clouds rather than on water.",
+      "D": "Golden illuminated passages contrast strongly with the dark surrounding sky and terrain.",
+      "S": "The foreground vessel and bodies stand before successive cloud and mountain stages.",
+      "V": "A hand visibly handles the line or steering apparatus at the vessel's front.",
+      "F": "The nearby compact pair occupies a substantial central area.",
+      "L": "Steep rocky mountains and distant terrain substantially organise the view.",
+      "X": "Faces, limbs and the tall bodily silhouettes are conspicuously elongated.",
+      "P": "Rock striations, facial edges, cloth folds and vessel boundaries are finely controlled.",
+      "R": "Recurring vertical rock striations and cloud curls create conspicuous rhythm.",
+      "M": "Cloth folds, rock textures and the vessel's structure have differentiated local description.",
+      "O": "A broad relatively uninterrupted dark sky remains around the upper bodies and mountain."
+    },
+    "unknown": {
+      "B": "Fine original paint marks cannot be separated confidently from reproduced cloud and rock texture.",
+      "H": "Travelling together does not by itself establish an emphasised exchange between the figures; partly concealed hands leave coordination uncertain."
+    }
+  }
+}

@@ -7,6 +7,7 @@ import {validAnswer,sanitizeDraft,AXES} from '../../public/art-atlas/engine.mjs'
 import {createGalleryRecord,gallerySlots,placePainting,validGallery} from '../../public/art-atlas/gallery-model.mjs';
 import {createScenario} from '../../public/art-atlas/scenarios.mjs';
 import {isFinalRefinementRound,bindFinalRefinementRound} from '../../public/art-atlas/final-refinement.mjs';
+import {choiceGridExposure} from '../../public/art-atlas/discovery-grid.mjs';
 import {allowsMultipleNeighbourReasons} from '../../public/art-atlas/contrast-rounds.mjs';
 
 // Use the complete sourced catalogue, not a synthetic small pool.
@@ -17,7 +18,7 @@ function completeAnswer(round){
   const workIds=ids(round);
   if(round.kind==='spectrum')return {workIds,criterion:round.criterion,positions:Object.fromEntries(round.works.map((work,index)=>[work.id,Math.round(index/(round.works.length-1)*100)])),confirmed:true};
   if(round.kind==='grid')return {workIds,axis:round.axis,points:Object.fromEntries(round.works.map((work,index)=>[work.id,[10+index*20,90-index*20]])),confirmed:true};
-  if(round.kind==='choice-grid')return {workIds,selectionMode:round.selectionMode,selectedIds:workIds.slice(0,round.selectionMode==='familiarity'?2:round.maxChoices||3),explicitNone:false,unsure:false,confirmed:true,...(round.evidence?.instrumentRevision==='paged-favourites-v1'?{presentation:{protocol:'paged-favourites-v1',pageSize:18,visitedPages:[0],activePage:0}}:{})};
+  if(round.kind==='choice-grid')return {workIds,selectionMode:round.selectionMode,selectedIds:workIds.slice(0,Math.min(round.selectionMode==='familiarity'?2:round.maxChoices||3,round.evidence?.instrumentRevision==='paged-favourites-v1'?18:Infinity)),explicitNone:false,unsure:false,confirmed:true,...(round.evidence?.instrumentRevision==='paged-favourites-v1'?{presentation:{protocol:'paged-favourites-v1',pageSize:18,visitedPages:[0],activePage:0}}:{})};
   if(round.kind==='statements')return {workIds,claims:Object.fromEntries(round.statements.map(statement=>[statement.id,3]))};
   if(round.kind==='match')return {workIds,field:round.field,guesses:Object.fromEntries(round.works.map(work=>[work.id,round.options.find(option=>option.label===work[round.field]).id])),confirmed:true};
   if(round.kind==='context')return round.contextMode==='preference-before-after-v1'?{workIds,workId:workIds[0],before:25,after:75,storySeen:true}:{workIds,workId:workIds[0],change:'same'};
@@ -65,7 +66,7 @@ test('Journey extends 50 → 100 → 150 → 200 without rewriting prior respons
     assert.deepEqual(data,before,'Extension must not mutate the supplied saved session');
     assert.equal(extended.target,target);assert.equal(extended.plan.length,target);assert.equal(extended.index,prefixLength);assert.equal(extended.screen,'question');assert.equal(extended.finishedAt,null);
     assert.equal(extended.manifest.id,before.manifest.id);assert.deepEqual(extended.manifest.catalogue,before.manifest.catalogue);assert.deepEqual(extended.plan.slice(0,prefixLength),before.plan);assert.deepEqual(extended.answers,before.answers);assert.deepEqual(extended.shown,before.shown);
-    const resolved=sessionJourneyRounds(extended);assert.equal(resolved.length,target);assert.equal(new Set(resolved.map(round=>round.id)).size,target);assert.equal(resolved.some(round=>round.unavailable),false);assert.ok(resolved.every(round=>round.works.every(work=>extended.manifest.catalogueIds.includes(work.id))));
+    const resolved=sessionJourneyRounds(extended);assert.equal(resolved.length,target);assert.equal(new Set(resolved.map(round=>round.id)).size,target);assert.ok(resolved.filter(round=>round.unavailable).every(isFinalRefinementRound),'Only future answer-bound refinement questions may remain deferred');assert.ok(resolved.every(round=>round.works.every(work=>extended.manifest.catalogueIds.includes(work.id))));
     const batch=extended.batches.at(-1);assert.equal(batch.offset,prefixLength);assert.equal(batch.index,prefixLength/50);assert.equal(batch.selection.panels.length,18);assert.ok(batch.selection.coverage.eligiblePreferenceRoundIds.length);
     for(const round of resolved.slice(prefixLength).filter(round=>round.kind==='spectrum'&&round.evidence.role==='repeat')){
       const source=resolved.find(previous=>previous.id===round.evidence.repeatOf);assert.ok(source);assert.ok(resolved.indexOf(source)<resolved.indexOf(round));if(!round.evidence.lateExactReturn)assert.ok(resolved.indexOf(source)<prefixLength);assert.equal(round.title,source.title);assert.equal(round.hint,source.hint);assert.deepEqual(round.scale,source.scale);assert.deepEqual([...ids(round)].sort(),[...ids(source)].sort());
@@ -221,7 +222,7 @@ test('Museum exposure preserves seen-but-unplaced uncertainty and does not presu
   data.answers[museum.id]={workIds:ids(museum),record};assert.ok(validStudyAnswer(museum,data.answers[museum.id]));
   const extended=extendJourneySession(data,works,3000),coverage=extended.batches.at(-1).selection.coverage;assert.ok(coverage.exposureUnknownRoundIds.includes(museum.id));for(const id of extra)assert.ok(coverage.exposureUnknownWorkIds.includes(id));
   const unpresented=museum.works.find(work=>!record.presentedIds.includes(work.id)&&!otherExerciseIds.has(work.id)&&!rounds.some(round=>round.kind==='statements'&&ids(round).includes(work.id)));assert.ok(unpresented);
-  const expected=rounds.filter(round=>round.id!==museum.id&&round.evidence?.stimulusVisibility!=='not-shown'&&[...round.works,...(round.anchorWorks||[])].some(work=>work.id===unpresented.id)).length;assert.equal(coverage.exposureBefore[unpresented.id],expected,'The museum source tray is offered, but only recorded presentation increments exposure; actual neighbour anchors still count');
+  const expected=rounds.filter(round=>round.id!==museum.id&&round.evidence?.stimulusVisibility!=='not-shown'&&(round.evidence?.instrumentRevision==='paged-favourites-v1'?(choiceGridExposure(round,data.answers[round.id])?.presentedIds||[]):[...round.works,...(round.anchorWorks||[])].map(work=>work.id)).includes(unpresented.id)).length;assert.equal(coverage.exposureBefore[unpresented.id],expected,'The museum source tray is offered, but only recorded presentation increments exposure; actual neighbour anchors still count');
 });
 
 test('A shown agreement question with an explicitly hidden artwork does not count as viewing that work',()=>{

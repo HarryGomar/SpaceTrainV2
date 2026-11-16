@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {buildJourneyRounds,createJourneyStimulusPlan,bindJourneyStimulusPlan,JOURNEY_PROTOCOL,JOURNEY_REVISION} from '../../public/art-atlas/journey-bank.mjs';
+import {buildJourneyRounds as buildCurrentJourneyRounds,createJourneyStimulusPlan,bindJourneyStimulusPlan,JOURNEY_PROTOCOL,JOURNEY_REVISION} from '../../public/art-atlas/journey-bank.mjs';
 import {FIRST_PANEL_SIZES} from '../../public/art-atlas/stimulus-planner.mjs';
 import {buildStudyRounds} from '../../public/art-atlas/question-bank.mjs';
 import {prepareJourneySession,sessionJourneyRounds,snapshotStudyRound,restoreStudyRound,validStudyAnswer,analyzeStudy} from '../../public/art-atlas/deep-study.mjs';
@@ -13,11 +13,16 @@ import {buildResponseAtlas} from '../../public/art-atlas/response-atlas-data.mjs
 import {planAdaptivePanels} from '../../public/art-atlas/adaptive-selection.mjs';
 import {legacyV8Rounds} from './helpers/legacy-v8.mjs';
 import {isFinalRefinementRound} from '../../public/art-atlas/final-refinement.mjs';
+import {APPEAL_PROTOCOL} from '../../public/art-atlas/appeal-scale.mjs';
+// This regression route deliberately preserves the earlier overall instrument.
+// Fresh comparison-first scheduling is covered separately by journey-v12.
+const buildJourneyRounds=(works,answers={},options={})=>buildCurrentJourneyRounds(works,answers,{...options,preferenceProtocol:APPEAL_PROTOCOL});
+
 const works=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/artworks.json',import.meta.url),'utf8')).slice(0,164);
 const workIds=r=>r.works.map(w=>w.id);
 const preferencePanels=rounds=>rounds.filter(r=>r.evidence.construct==='preference'&&Number.isInteger(r.evidence.panelNumber));
 
-test('One 50-round sequence includes comparisons, maps, statements, matching, notes and four arrangement rounds',()=>{
+test('The historical overall-instrument 50-round sequence includes comparisons, maps, statements, matching, notes and four arrangement rounds',()=>{
   const rounds=buildJourneyRounds(works);
   assert.equal(rounds.length,50);assert.equal(new Set(rounds.map(r=>r.id)).size,50);
   assert.deepEqual(rounds.flatMap((r,i)=>r.kind==='exercise'?[[i+1,r.exerciseKind]]:[]),[[8,'sorting'],[22,'difficult-edit'],[32,'sorting'],[36,'curate']]);

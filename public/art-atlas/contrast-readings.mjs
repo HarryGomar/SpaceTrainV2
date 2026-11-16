@@ -1,5 +1,6 @@
 import {validAnswer} from './engine.mjs';
 import {validContrastAnswer, allowsMultipleNeighbourReasons, neighbourRelationshipLabels} from './contrast-rounds.mjs';
+import {isComparisonPreferenceRound,responseGapRequired} from './comparison-protocol.mjs';
 
 export const CONTRAST_READING_THRESHOLDS = Object.freeze({preferenceGap:15, featureGap:.25, minimumSubjectSets:2});
 const unique = values => [...new Set(values)];
@@ -13,6 +14,13 @@ const features = {complexity:['sparser compositions','denser compositions'], col
 const families = new Set(['individual-choice','feature-check','unconditional-preference','adaptive-preference']);
 const scope = 'These observations connect recorded decisions under different instructions. They do not establish a personality, a stable motive or the cause of a choice.';
 const joinLabels = labels => labels.length < 2 ? labels[0] || '' : labels.slice(0,-1).join(', ') + ' and ' + labels.at(-1);
+const comparableGap=item=>isComparisonPreferenceRound(item.source.round)?Math.sign(item.gap):item.gap;
+function earlierLabel(source,id){
+  const value=source.answer.positions[id];
+  if(!isComparisonPreferenceRound(source.round))return 'Earlier preference: '+value+' / 100';
+  const values=source.round.works.map(work=>source.answer.positions[work.id]),rank=1+values.filter(other=>other>value).length;
+  return 'Earlier order: '+(values.filter(other=>other===value).length>1?'joint ':'')+rank+' of '+values.length;
+}
 const sourceRole = entry => entry.round.evidence?.repeatOf ? 'repeated preference' : entry.round.kind === 'spectrum' ? 'earlier preference' : entry.round.contrastKind === 'neighbour' ? 'connection beside a fixed anchor' : entry.round.contrastKind === 'keep-leave' ? 'relative keep and leave choices' : 'subject-matched choice';
 
 function entriesFor(works, rounds, answers) {
@@ -28,7 +36,7 @@ function entriesFor(works, rounds, answers) {
     if (!plain(answer) || answer.skipped) return [];
     let valid = false;
     if (round.kind === 'contrast') valid = validContrastAnswer(round, answer);
-    else if (round.kind === 'spectrum' && round.criterion === 'preference' && round.evidence?.construct === 'preference' && families.has(round.evidence.family) && round.evidence.unconditional !== false && !anchors.length && !round.anchorIds?.length && !round.brief && !round.evidence?.brief) {
+    else if (round.kind === 'spectrum' && round.criterion === 'preference' && round.evidence?.construct === 'preference' && (!round.evidence.comparisonProtocol||isComparisonPreferenceRound(round)) && families.has(round.evidence.family) && round.evidence.unconditional !== false && !anchors.length && !round.anchorIds?.length && !round.brief && !round.evidence?.brief) {
       try { valid = validAnswer(round, answer); } catch { valid = false; }
     }
     return valid ? [{round, answer, index}] : [];
@@ -56,21 +64,21 @@ function keepLeaveReading(entries, preferences) {
     const a = entry.answer.keepId, b = entry.answer.leaveId, source = previousPreference(preferences, entry, a, b);
     if (!source) return [];
     const gap = source.answer.positions[a] - source.answer.positions[b];
-    return Math.abs(gap) >= CONTRAST_READING_THRESHOLDS.preferenceGap ? [{entry,source,a,b,gap}] : [];
+    return Math.abs(gap) >= responseGapRequired(source.round) ? [{entry,source,a,b,gap}] : [];
   });
-  const support = distinctSets(linked.filter(item => item.gap <= -CONTRAST_READING_THRESHOLDS.preferenceGap)), counter = distinctSets(linked.filter(item => item.gap >= CONTRAST_READING_THRESHOLDS.preferenceGap));
+  const support = distinctSets(linked.filter(item => item.gap <= -responseGapRequired(item.source.round))), counter = distinctSets(linked.filter(item => item.gap >= responseGapRequired(item.source.round)));
   if (!support.length) return null;
   const sample = support[0], kept = sample.entry.round.works.find(work => work.id === sample.a), left = sample.entry.round.works.find(work => work.id === sample.b);
   const pack = item => [preferenceEvidence(item.source,[item.a,item.b]),ev(item.entry,`Kept ${short(item.entry.round.works.find(work => work.id === item.a))}; left ${short(item.entry.round.works.find(work => work.id === item.b))}. The other four were not ranked.`,ids(item.entry.round))];
   const comparison = (item, role = 'support') => categorical([item.a,item.b], {
-    [item.a]:[{role:'earlier-preference',tone:'preference',text:'Earlier preference: '+item.source.answer.positions[item.a]+' / 100'},{role:'keep',tone:'curation',text:'Kept'}],
-    [item.b]:[{role:'earlier-preference',tone:'preference',text:'Earlier preference: '+item.source.answer.positions[item.b]+' / 100'},{role:'leave',tone:'curation',text:'Left out'}]
+    [item.a]:[{role:'earlier-preference',tone:'preference',text:earlierLabel(item.source,item.a)},{role:'keep',tone:'curation',text:'Kept'}],
+    [item.b]:[{role:'earlier-preference',tone:'preference',text:earlierLabel(item.source,item.b)},{role:'leave',tone:'curation',text:'Left out'}]
   },[item.source.round.id,item.entry.round.id],role);
   return finding('contrast-keep-leave','taste-and-selection','You kept a work you had ranked lower.',`You had placed ${short(left)} above ${short(kept)}. In the later six-work choice, you kept ${short(kept)} and left ${short(left)}.${support.length > 1 ? ` This change appeared in ${support.length} distinct offered sets.` : ''}${counter.length ? ' Other recorded selections kept the earlier order.' : ''}`,support.slice(0,3).flatMap(pack),counter.slice(0,2).flatMap(pack),[...support.slice(0,2).map(item => comparison(item)),...counter.slice(0,1).map(item => comparison(item,'counter'))],[
     'Keep and leave are relative decisions among six. The other four remain unranked, and leaving a work is not an absolute dislike.',
     'The earlier source contains this exact pair, but its other offered works can differ. The instructions, company, attention and elapsed time changed together.',
     'Each six-work set contributes once per direction. A return to the same set can supply counterevidence, not an independent replication. Linked earlier ratings and repeated pictures remain dependent evidence.',
-    'A 15-point earlier gap is a provisional display threshold, not a confidence estimate.'
+    'New relative comparisons use order and exact ties; legacy instruments retain their original gap rule. Neither supplies a confidence estimate.'
   ],{supportingSetCount:support.length,counterSetCount:counter.length});
 }
 
@@ -81,8 +89,8 @@ function neighbourReading(entries, preferences) {
       const source = previousPreference(preferences, entry, a, b);
       return source ? [{entry,source,a,b,gap:source.answer.positions[a]-source.answer.positions[b]}] : [];
     });
-    const reversal = linked.filter(item => item.gap <= -CONTRAST_READING_THRESHOLDS.preferenceGap).sort((a,b) => a.gap-b.gap)[0];
-    const aligned = linked.filter(item => item.gap >= CONTRAST_READING_THRESHOLDS.preferenceGap).sort((a,b) => b.gap-a.gap)[0];
+    const reversal = linked.filter(item => item.gap <= -responseGapRequired(item.source.round)).sort((a,b) => comparableGap(a)-comparableGap(b))[0];
+    const aligned = linked.filter(item => item.gap >= responseGapRequired(item.source.round)).sort((a,b) => comparableGap(b)-comparableGap(a))[0];
     return [reversal,aligned].filter(Boolean);
   });
   const support = distinctSets(records.filter(item => item.gap < 0)), counter = distinctSets(records.filter(item => item.gap > 0));
@@ -94,8 +102,8 @@ function neighbourReading(entries, preferences) {
     return [preferenceEvidence(item.source,[item.a,item.b]),ev(item.entry,`Chose ${short(chosen)} beside ${short(anchor)} under "${item.entry.round.prompt || item.entry.round.title}".${label ? ` Reported connection${labels.length > 1 ? 's' : ''}: ${label}.` : ''} Other candidates were not ranked.`,[anchor.id,...ids(item.entry.round)])];
   };
   const comparison = (item, role = 'support') => categorical([item.a,item.b], {
-    [item.a]:[{role:'earlier-preference',tone:'preference',text:'Earlier preference: '+item.source.answer.positions[item.a]+' / 100'},{role:'chosen-neighbour',tone:'curation',text:'Chosen beside '+short(item.entry.round.anchorWorks[0])}],
-    [item.b]:[{role:'earlier-preference',tone:'preference',text:'Earlier preference: '+item.source.answer.positions[item.b]+' / 100'},{role:'offered-neighbour',tone:'neutral',text:'Offered, not chosen'}]
+    [item.a]:[{role:'earlier-preference',tone:'preference',text:earlierLabel(item.source,item.a)},{role:'chosen-neighbour',tone:'curation',text:'Chosen beside '+short(item.entry.round.anchorWorks[0])}],
+    [item.b]:[{role:'earlier-preference',tone:'preference',text:earlierLabel(item.source,item.b)},{role:'offered-neighbour',tone:'neutral',text:'Offered, not chosen'}]
   },[item.source.round.id,item.entry.round.id],role);
   return finding('contrast-neighbour','taste-and-neighbours','Your chosen neighbour differed from your earlier preference.',`You preferred ${short(work(sample.b))} to ${short(work(sample.a))}, then chose ${short(work(sample.a))} as the stronger connection to ${short(anchor)}.${relationship ? allowsMultipleNeighbourReasons(sample.entry.round) ? ` You named ${relationship.toLowerCase()} as connections.` : ` You connected them through ${relationship.toLowerCase()}.` : ''}${counter.length ? ' Other recorded comparisons also aligned with earlier preference.' : ''}`,support.slice(0,3).flatMap(pack),counter.slice(0,2).flatMap(pack),[...support.slice(0,2).map(item => comparison(item)),...counter.slice(0,1).map(item => comparison(item,'counter'))],[
     'The neighbour task asks for a connection to one fixed painting. It is not an unconditional preference or an answer with a single correct pairing.',
@@ -114,8 +122,8 @@ function subjectReversalReading(entries, preferences) {
       return source ? [{entry,source,a,b,gap:source.answer.positions[a]-source.answer.positions[b]}] : [];
     });
     return [
-      linked.filter(item => item.gap <= -CONTRAST_READING_THRESHOLDS.preferenceGap).sort((a,b) => a.gap-b.gap)[0],
-      linked.filter(item => item.gap >= CONTRAST_READING_THRESHOLDS.preferenceGap).sort((a,b) => b.gap-a.gap)[0]
+      linked.filter(item => item.gap <= -responseGapRequired(item.source.round)).sort((a,b) => comparableGap(a)-comparableGap(b))[0],
+      linked.filter(item => item.gap >= responseGapRequired(item.source.round)).sort((a,b) => comparableGap(b)-comparableGap(a))[0]
     ].filter(Boolean);
   });
   const support = distinctSets(records.filter(item => item.gap < 0)), counter = distinctSets(records.filter(item => item.gap > 0));
@@ -123,8 +131,8 @@ function subjectReversalReading(entries, preferences) {
   const sample = support[0], work = id => sample.entry.round.works.find(candidate => candidate.id === id);
   const pack = item => [preferenceEvidence(item.source,[item.a,item.b]),ev(item.entry,`${item.entry.round.subject.description || item.entry.round.subject.label} Chose ${short(item.entry.round.works.find(work => work.id === item.a))} under "${item.entry.round.prompt || item.entry.round.title}". The unchosen alternatives were not ranked.`,ids(item.entry.round))];
   const comparison = (item, role = 'support') => ({...categorical([item.a,item.b],{
-    [item.a]:[{role:'earlier-preference',tone:'preference',text:'Earlier preference: '+item.source.answer.positions[item.a]+' / 100'},{role:'preferred-treatment',tone:'preference',text:'Chosen in the subject comparison'}],
-    [item.b]:[{role:'earlier-preference',tone:'preference',text:'Earlier preference: '+item.source.answer.positions[item.b]+' / 100'},{role:'offered-treatment',tone:'neutral',text:'Offered alternative'}]
+    [item.a]:[{role:'earlier-preference',tone:'preference',text:earlierLabel(item.source,item.a)},{role:'preferred-treatment',tone:'preference',text:'Chosen in the subject comparison'}],
+    [item.b]:[{role:'earlier-preference',tone:'preference',text:earlierLabel(item.source,item.b)},{role:'offered-treatment',tone:'neutral',text:'Offered alternative'}]
   },[item.source.round.id,item.entry.round.id],role),subjectId:item.entry.round.subject.id,subjectLabel:item.entry.round.subject.label});
   return finding('contrast-subject-reversal','subject-and-treatment',sample.entry.round.works.length === 2 ? 'Your two-work choice reversed the earlier order.' : 'Your subject-matched choice reversed an earlier order.',`You placed ${short(work(sample.b))} above ${short(work(sample.a))} in the earlier preference comparison. You then chose ${short(work(sample.a))} in the later ${sample.entry.round.subject.label.toLowerCase()} comparison.${support.length > 1 ? ` A reversal appeared in ${support.length} distinct subject sets.` : ''}${counter.length ? ' Other recorded pair relations kept the earlier preference order.' : ''}`,support.slice(0,3).flatMap(pack),counter.slice(0,2).flatMap(pack),[...support.slice(0,2).map(item => comparison(item)),...counter.slice(0,1).map(item => comparison(item,'counter'))],[
     'This links a later explicit choice to the latest eligible earlier unconditional preference response containing the exact same pair. The earlier full offered set can be larger or different.',
@@ -132,7 +140,7 @@ function subjectReversalReading(entries, preferences) {
     'The later choice records a direction, not a numeric strength. No-clear-preference answers supply no direction, and unchosen alternatives remain unranked.',
     ...unique([...support,...counter].flatMap(item => item.entry.round.residualConfounds)),
     'Each subject set contributes once per direction. Aligned and opposing pair relations can coexist inside one set; they are local evidence, not a trait or an independent replication.',
-    'The 15-point earlier gap is a provisional design threshold, not a confidence estimate.'
+    'New relative comparisons use order and exact ties; legacy instruments retain their original gap rule. Neither supplies a confidence estimate.'
   ],{readingBasis:'matched-earlier-preference',supportingSetCount:support.length,counterSetCount:counter.length,priority:11});
 }
 
