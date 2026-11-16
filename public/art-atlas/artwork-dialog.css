@@ -1,0 +1,24 @@
+html.artwork-dialog-open{overflow:hidden}
+#art-dialog .art-dialog-tools{display:flex;align-items:center;gap:15px;flex:0 0 auto;min-height:44px;margin:0;padding:0;color:var(--ink,#302d29)}
+#art-dialog .art-dialog-zoom{display:flex;align-items:center;gap:5px;margin-right:auto}
+#art-dialog .art-dialog-tools button{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;margin:0;padding:5px 9px;border:0;background:none;color:inherit;font:inherit;font-size:12px;line-height:1;cursor:pointer}
+#art-dialog .art-dialog-tools [data-art-zoom="in"],#art-dialog .art-dialog-tools [data-art-zoom="out"]{font-size:24px}
+#art-dialog .art-dialog-tools button:disabled{opacity:.3;cursor:default}
+#art-dialog .art-dialog-tools button:focus-visible{outline:1px solid currentColor;outline-offset:-4px}
+#art-dialog .art-dialog-image{position:relative;overflow:hidden;touch-action:none;overscroll-behavior:contain;outline:none;cursor:zoom-in}
+#art-dialog.art-dialog-zoomed .art-dialog-image{cursor:grab}
+#art-dialog.art-dialog-zoomed .art-dialog-image:active{cursor:grabbing}
+#art-dialog .art-dialog-image>img{object-fit:contain;transform-origin:50% 50%;user-select:none;-webkit-user-drag:none;will-change:transform}
+#art-dialog .art-dialog-error{position:absolute;bottom:15px;left:15px;right:15px;margin:0;text-align:center;background:var(--paper,#f5f4f1);padding:10px}
+#art-dialog[data-info-open="false"] #art-dialog-footer{display:none}
+@media(max-width:700px){
+ #art-dialog.art-dialog[open]{position:fixed;inset:0;width:100vw;height:100dvh;max-width:none;max-height:none;margin:0;padding:max(6px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) max(10px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left));border:0;border-radius:0;box-sizing:border-box;overflow:hidden}
+ #art-dialog .art-dialog-tools{gap:4px;min-height:46px;flex-shrink:0}
+ #art-dialog .art-dialog-tools button{font-size:12px;padding:6px}
+ #art-dialog #art-dialog-content{width:100%;min-width:0;overflow:hidden}
+ #art-dialog .art-dialog-image{margin:4px 0 0;min-height:0;width:100%;flex:1}
+ #art-dialog[data-info-open="false"] #art-dialog-footer{display:none}
+ #art-dialog #art-dialog-footer{max-height:35dvh;overflow:auto;overscroll-behavior:contain;padding:12px 6px 0}
+ #art-dialog #art-dialog-footer h2{font-size:22px;margin:0 0 9px}
+ #art-dialog #art-dialog-footer p{font-size:12px;line-height:1.6;margin:9px 0}
+}

@@ -1,6 +1,7 @@
 import { createInteractions } from './interactions.mjs';
 import {artworkImageAttributes} from './artwork-image.mjs';
 import {renderArtworkContext} from './artwork-context.mjs';
+import {createArtworkDialog} from './artwork-dialog.mjs';
 import { createCurationLab } from './curation.mjs';
 import { createDeepStudy } from './deep-study.mjs';
 import { analyzeScenarios } from './scenarios.mjs';
@@ -17,6 +18,7 @@ let collection = { version: 1, saved: {}, sessions: [] }, collectionFilter = 'sa
 const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
 const workById = id => works.find(w => w.id === id);
 const image = (w, extra = '', options={}) => `<img ${artworkImageAttributes(w,options)} data-artwork="${esc(w.id)}" alt="${esc(w.alt)}" ${extra}>`;
+const artworkDialog=createArtworkDialog({dialog:document.getElementById('art-dialog'),content:document.getElementById('art-dialog-content'),image,esc,keepButtons,renderContext:renderArtworkContext});
 const inputs = createInteractions({ app, getRound: () => round, getDraft: () => draft, ready: () => state.stage==='question'&&imagesReady, image, esc, workById, saveDraft: () => saveDraft(), sync: () => syncRoundImages() });
 const imageZoom = w => `<button type="button" class="text-button" data-action="zoom" data-work="${esc(w.id)}">Look closer ↗</button>`;
 const workIds = r => r.works.map(w => w.id);
@@ -181,9 +183,8 @@ function toggleKeep(id, purpose) {
   const live = document.getElementById('collection-status'); if (live) live.textContent = `${workById(id).title}: ${old[purpose] ? 'kept for ' + (purpose === 'look' ? 'looking' : 'study') : 'removed from ' + (purpose === 'look' ? 'looking' : 'study')}.`;
 }
 function showArtwork(id, reveal = false) {
-  const w = workById(id); if (!w) return;
-  document.getElementById('art-dialog-content').innerHTML = `<div class="art-dialog-image">${image(w,"",{large:true})}</div><footer>${reveal ? `<h2>${esc(w.title)}</h2><p>${esc(w.artist)} · ${esc(w.date)}${reveal === 'artist' ? '' : ' · ' + esc(w.movement)}</p>${reveal === 'artist' ? '' : `<p>${esc(w.note)}</p>${keepButtons(w)}`}<p><a href="${esc(w.sourceUrl)}" target="_blank" rel="noopener noreferrer">${esc(w.museum)} ↗</a> · ${w.rightsUrl ? '<a href="' + esc(w.rightsUrl) + '" target="_blank" rel="noopener noreferrer">' + esc(w.rights) + ' ↗</a>' : esc(w.rights)}</p>` : `<p>Shown in full. The artist and context will be revealed later.</p><p>${esc(w.museum)} · ${esc(w.rights)}</p>`}${reveal===true?`<details class="painting-metadata"><summary>Painting details</summary>${renderArtworkContext(w,{esc})}</details>`:''}</footer>`;
-  document.getElementById('art-dialog').showModal();
+  const w=state.stage==='study'?deep.getArtwork(id):workById(id);if(!w)return;
+  artworkDialog.open(w,{reveal});
 }
 function downloadFile(filename, text, type) {
   const url = URL.createObjectURL(new Blob([text],{type})), link = document.createElement('a'); link.href = url; link.download = filename; link.click(); setTimeout(() => URL.revokeObjectURL(url),1000);
@@ -231,7 +232,7 @@ function onAction(event) {
 }
 app.addEventListener('click',onAction); document.getElementById('art-dialog').addEventListener('click',onAction);
 document.querySelector('.site-footer').addEventListener('click',onAction);
-for (const dialog of document.querySelectorAll('#art-dialog,#about-dialog')) { dialog.querySelector('.dialog-close').addEventListener('click',() => dialog.close()); dialog.addEventListener('click',event => { if (event.target === dialog) { const r = dialog.getBoundingClientRect(); if (event.clientX < r.left || event.clientX > r.right || event.clientY < r.top || event.clientY > r.bottom) dialog.close(); } }); }
+for (const dialog of document.querySelectorAll('#about-dialog')) { dialog.querySelector('.dialog-close').addEventListener('click',() => dialog.close()); dialog.addEventListener('click',event => { if (event.target === dialog) { const r = dialog.getBoundingClientRect(); if (event.clientX < r.left || event.clientX > r.right || event.clientY < r.top || event.clientY > r.bottom) dialog.close(); } }); }
 document.getElementById('about-button').addEventListener('click',() => document.getElementById('about-dialog').showModal());
 document.getElementById('clear-session').addEventListener('click',() => { localStorage.removeItem(STORAGE_KEY); state = freshState(); viewingSession = null; document.getElementById('about-dialog').close(); render(); focusQuestion(); });
 document.getElementById('clear-collection').addEventListener('click',() => { localStorage.removeItem(COLLECTION_KEY); collection = {version:1,saved:{},sessions:[]}; viewingSession = null; document.getElementById('about-dialog').close(); render(); focusQuestion(); });

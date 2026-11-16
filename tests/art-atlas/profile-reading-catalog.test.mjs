@@ -30,12 +30,12 @@ test('Implemented source declarations point to real analytical exports and actua
 test('Current and retained instruments stay distinct, without presenting removed appraisals as fresh v10 questions',()=>{
   const availability=id=>catalogue.find(item=>item.id===id).availability;for(const id of ['reported-density','people-and-reaction','unexpectedness-and-preference','openness-and-preference'])assert.equal(availability(id),'legacy');for(const id of ['attention-to-making','chosen-work-connections','range-in-positive-choices','favourites-and-ratings','prospective-feature-check'])assert.equal(availability(id),'current');
   assert.ok(sourcesFor('human-figures').some(source=>source.export==='buildTasteAxes'&&source.resultPath==='axes'&&source.match.key==='human-presence'));assert.ok(sourcesFor('prospective-feature-check').some(source=>source.resultPath==='closingRefinement.checks'));assert.ok(sourcesFor('admiration-and-appeal').some(source=>source.match.idIn?.includes('response-making')));assert.ok(sourcesFor('tension-and-return').some(source=>source.match.idIn?.includes('response-return-range')));
-  assert.deepEqual(Object.fromEntries(['current','legacy','planned'].map(value=>[value,catalogue.filter(item=>item.availability===value).length])),{current:39,legacy:7,planned:5});for(const item of catalogue.filter(item=>item.status==='planned'))assert.deepEqual(item.sources,[]);
+  assert.deepEqual(Object.fromEntries(['current','legacy','planned'].map(value=>[value,catalogue.filter(item=>item.availability===value).length])),{current:38,legacy:8,planned:5});assert.equal(availability('claim-and-story-comparison'),'legacy');assert.equal(availability('story-rating-change'),'current');assert.ok(sourcesFor('story-rating-change').some(source=>source.resultPath==='reportedContextChanges.responses'));for(const item of catalogue.filter(item=>item.status==='planned'))assert.deepEqual(item.sources,[]);
 });
 
 test('Every current family supplies short art-facing requirements and limits without exposing implementation rules',()=>{
   const current=catalogue.filter(item=>item.availability==='current'),technical=/checksum|sha256|features\.|measurementScope|protocol|criterion|qualified|descriptor|unassigned tag|editorial non-assignment/i;
-  assert.equal(current.length,39);
+  assert.equal(current.length,38);
   for(const item of current){
     assert.ok(Array.isArray(item.userSignals)&&item.userSignals.length>=2&&item.userSignals.length<=4,item.id+' has concise product requirements');
     assert.ok(Array.isArray(item.userLimits)&&item.userLimits.length===2,item.id+' has two plain limits');

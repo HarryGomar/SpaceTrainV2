@@ -1,6 +1,8 @@
+import {isContinuousPreferenceRound} from './continuous-preference.mjs';
 import {validAnswer} from './engine.mjs';
 import {isOverallAppealRound} from './appeal-scale.mjs';
 import {isComparisonPreferenceRound,comparisonDirection} from './comparison-protocol.mjs';
+const orderOnly=round=>isComparisonPreferenceRound(round)&&!isContinuousPreferenceRound(round);
 
 export const MUSEUM_PREFERENCE_PROTOCOL='museum-preference-snapshot-v2';
 const LEGACY_MUSEUM_PREFERENCE_PROTOCOL='museum-preference-snapshot-v1';
@@ -25,7 +27,7 @@ export function captureMuseumPreferences(works,options={}){
 
 function ratings(works,record){
   const snapshot=record.preferenceSnapshot;if(![MUSEUM_PREFERENCE_PROTOCOL,LEGACY_MUSEUM_PREFERENCE_PROTOCOL].includes(snapshot?.protocol))return new Map();
-  const result=new Map();for(const source of usableSources(works,snapshot.context,snapshot.sources).filter(source=>isOverallAppealRound(source.round)))for(const work of source.round.works)result.set(work.id,{work,score:source.answer.positions[work.id],source});
+  const result=new Map();for(const source of usableSources(works,snapshot.context,snapshot.sources).filter(source=>isOverallAppealRound(source.round)))for(const work of source.round.works)result.set(work.id,{work,score:source.answer.positions[work.id],scope:source.round.evidence.continuousProtocol||source.round.evidence.appealProtocol,source});
   return result;
 }
 function earlierEvidence(...items){
@@ -36,7 +38,7 @@ function finding(record,id,title,text,support,options={}){const counter=options.
 
 function ordinalFindings(works,record){
   const snapshot=record.preferenceSnapshot;if(snapshot?.protocol!==MUSEUM_PREFERENCE_PROTOCOL)return [];
-  const sources=usableSources(works,snapshot.context,snapshot.sources).filter(source=>isComparisonPreferenceRound(source.round)),presented=new Set(record.presentedIds),hung=new Set(Object.keys(record.placements)),pairs=new Map();
+  const sources=usableSources(works,snapshot.context,snapshot.sources).filter(source=>orderOnly(source.round)),presented=new Set(record.presentedIds),hung=new Set(Object.keys(record.placements)),pairs=new Map();
   // A comparison is usable only when both works shared the original question.
   for(const source of sources)for(let i=0;i<source.round.works.length;i++)for(let j=i+1;j<source.round.works.length;j++){
     const a=source.round.works[i],b=source.round.works[j];if(!presented.has(a.id)||!presented.has(b.id))continue;
@@ -56,14 +58,14 @@ function ordinalFindings(works,record){
 export function museumPreferenceFindings(works,record){
   if(!record?.confirmed||!Number.isFinite(record.finishedAt)||!record.placements||!Array.isArray(record.presentedIds)||!Array.isArray(record.offeredIds))return [];
   const known=ratings(works,record),hung=Object.keys(record.placements).filter(id=>known.has(id)),omitted=record.offeredIds.filter(id=>record.presentedIds.includes(id)&&!record.placements[id]&&known.has(id));
-  const output=[],candidates=omitted.flatMap(left=>hung.map(right=>({left:known.get(left),right:known.get(right)}))).filter(pair=>pair.left.score>=70&&pair.left.score-pair.right.score>=20).sort((a,b)=>(b.left.score-b.right.score)-(a.left.score-a.right.score));
+  const output=[],candidates=omitted.flatMap(left=>hung.map(right=>({left:known.get(left),right:known.get(right)}))).filter(pair=>pair.left.scope===pair.right.scope&&pair.left.score>=70&&pair.left.score-pair.right.score>=20).sort((a,b)=>(b.left.score-b.right.score)-(a.left.score-a.right.score));
   if(candidates.length){
     const {left,right}=candidates[0],support=[...earlierEvidence(left,right),museumEvidence(record,[left.work.id,right.work.id],`${short(left.work)} was presented but left unhung. ${short(right.work)} received a place.`)];
-    const opposite=hung.flatMap(first=>omitted.map(second=>({first:known.get(first),second:known.get(second)}))).find(pair=>pair.first.score-pair.second.score>=20);
+    const opposite=hung.flatMap(first=>omitted.map(second=>({first:known.get(first),second:known.get(second)}))).find(pair=>pair.first.scope===pair.second.scope&&pair.first.score-pair.second.score>=20);
     const counter=opposite?[...earlierEvidence(opposite.first,opposite.second),museumEvidence(record,[opposite.first.work.id,opposite.second.work.id],'This hung/omitted pair follows the earlier appeal order.')]:[];
     output.push(finding(record,'omission','A higher-rated painting stayed off the walls.',`You rated ${short(left.work)} ${left.score} and ${short(right.work)} ${right.score} on the overall-appeal scale. In your museum, the first was shown but left unhung, while the second received a place.`,support,{counter}));
   }
-  const entry=known.get(record.roomResponses?.entryId),higher=entry?hung.map(id=>known.get(id)).filter(item=>item.work.id!==entry.work.id&&item.score-entry.score>=20).sort((a,b)=>b.score-a.score)[0]:null;
+  const entry=known.get(record.roomResponses?.entryId),higher=entry?hung.map(id=>known.get(id)).filter(item=>item.work.id!==entry.work.id&&item.scope===entry.scope&&item.score-entry.score>=20).sort((a,b)=>b.score-a.score)[0]:null;
   if(higher)output.push(finding(record,'entry','Your opening work differed from a higher-rated choice.',`Both paintings hang in your museum. You chose ${short(entry.work)} to begin the visit, although you had given ${short(higher.work)} a higher overall-appeal rating.`,[...earlierEvidence(entry,higher),museumEvidence(record,[entry.work.id,higher.work.id],'The first work was explicitly chosen as the entrance painting; the other was also hung.')],{priority:11}));
   return [...output,...ordinalFindings(works,record)];
 }

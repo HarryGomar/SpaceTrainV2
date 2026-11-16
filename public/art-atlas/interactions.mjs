@@ -1,17 +1,19 @@
+import {isContinuousPreferenceRound} from './continuous-preference.mjs';
 import { AXES, describePoint, matchResults } from './engine.mjs';
 import { updateArtworkCorners } from './artwork-corners.mjs';
 import {isOverallAppealRound} from './appeal-scale.mjs';
 import {isComparisonPreferenceRound} from './comparison-protocol.mjs';
 
 export function createInteractions({ app, getRound, getDraft, ready, image, esc, workById, saveDraft, sync }) {
-  let selected = null, suppressClick = false, mobileGesture = null;
+  let selected = null, suppressClick = false, mobileGesture = null, mobileMapStage='painting';
   const bound = new WeakSet();
   const label = id => String.fromCharCode(65 + getRound().works.findIndex(w => w.id === id));
   const locked = () => getRound().kind === 'match' && getDraft().confirmed;
   const placed = id => { const r = getRound(), d = getDraft(); return r.kind === 'spectrum' ? d.positions[id] !== undefined : r.kind === 'grid' ? !!d.points[id] : !!d.guesses[id]; };
   const initial = () => getRound().works.find(w => !placed(w.id))?.id || getRound().works[0].id;
   const mobileSpectrum=()=>getRound()?.kind==='spectrum'&&getRound().works.length>=3&&!!app.querySelector('.journey-question')&&window.matchMedia('(max-width:700px)').matches;
-  const ordinal=()=>isComparisonPreferenceRound(getRound());
+  const mobileMap=()=>getRound()?.kind==='grid'&&!!app.querySelector('.journey-question')&&window.matchMedia('(max-width:700px)').matches;
+  const ordinal=()=>isComparisonPreferenceRound(getRound())&&!isContinuousPreferenceRound(getRound());
   function spectrumDescription(id){
     const r=getRound(),d=getDraft(),value=d.positions[id];
     if(!ordinal())return `${value??'not placed'} on the scale. Arrow keys adjust by one; Shift by ten.`;
@@ -29,7 +31,7 @@ export function createInteractions({ app, getRound, getDraft, ready, image, esc,
   }
   function focusMarkup() {
     const w = workById(selected);
-    return `<div class="focus-meta"><span class="focus-index-desktop">Artwork ${label(selected)} <span class="meta-divider">/ ${getRound().works.length}</span></span><span class="focus-index-mobile">Painting ${getRound().works.findIndex(work=>work.id===selected)+1} of ${getRound().works.length}</span><button class="text-button" data-action="zoom" data-work="${esc(selected)}" type="button">Look closer ↗</button></div>${source(w, 'focus-art')}`;
+    return `<div class="focus-meta"><span class="focus-index-desktop">Artwork ${label(selected)} <span class="meta-divider">/ ${getRound().works.length}</span></span><span class="focus-index-mobile">Painting ${getRound().works.findIndex(work=>work.id===selected)+1} of ${getRound().works.length}</span><button class="text-button focus-zoom" data-action="zoom" data-work="${esc(selected)}" type="button" aria-label="View painting full screen"><span>Look closer</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M3 7V3h4M13 3h4v4M17 13v4h-4M7 17H3v-4"/></svg></button></div>${source(w, 'focus-art')}`;
   }
   function tray() {
     const r = getRound();
@@ -70,7 +72,7 @@ export function createInteractions({ app, getRound, getDraft, ready, image, esc,
       if (r.kind === 'spectrum') el.setAttribute('aria-label', `Artwork ${label(id)}, ${spectrumDescription(id)}`);
       if (r.kind === 'grid') el.setAttribute('aria-label', `Artwork ${label(id)}, ${d.points[id] ? describePoint(r.axis,d.points[id]) + ', coordinates ' + d.points[id].join(', ') : 'not placed'}. Arrow keys adjust by one; Shift by ten.`);
     }
-    for (const el of app.querySelectorAll('.reference-work')) { const id = el.querySelector('.drag-art').dataset.work; el.classList.toggle('has-placement', placed(id)); el.querySelector('.drag-art').setAttribute('data-placed',String(placed(id)));const rating=el.querySelector('.reference-rating');if(rating)rating.textContent=getDraft().positions[id]??'—'; }
+    for (const el of app.querySelectorAll('.reference-work')) { const art=el.querySelector('.drag-art'),id=art.dataset.work; el.classList.toggle('has-placement', placed(id)); art.setAttribute('data-placed',String(placed(id)));if(mobileSpectrum()&&placed(id)){art.setAttribute('aria-hidden','true');art.tabIndex=-1;}else{art.removeAttribute('aria-hidden');art.removeAttribute('tabindex');}const rating=el.querySelector('.reference-rating');if(rating)rating.textContent=getDraft().positions[id]??'—'; }
     for (const el of app.querySelectorAll('.tray-work')) { const id = el.querySelector('.drag-art').dataset.work; el.classList.toggle('has-placement',placed(id)); el.querySelector('.drag-caption span:last-child').textContent = placed(id) ? 'Placed' : 'Drag to place'; }
     const next = app.querySelector('[data-action=next-art]');
     if (next) next.disabled = !ready();
@@ -78,9 +80,21 @@ export function createInteractions({ app, getRound, getDraft, ready, image, esc,
     const fine = app.querySelector('#fine-controls'), r = getRound(), d = getDraft();
     if (fine && r.kind === 'spectrum') fine.innerHTML = `<span>${ordinal()?`Painting ${label(selected)}`:mobileSpectrum()?`Painting ${r.works.findIndex(work=>work.id===selected)+1} · ${d.positions[selected]===undefined?'Not rated':d.positions[selected]+' / 100'}`:`Artwork ${label(selected)} · ${d.positions[selected] ?? 'Not placed'}`}</span><button type="button" data-action="nudge" data-dx="-1" aria-label="Move artwork ${label(selected)} one step left" ${placed(selected) ? '' : 'disabled'}>−</button><button type="button" data-action="nudge" data-dx="1" aria-label="Move artwork ${label(selected)} one step right" ${placed(selected) ? '' : 'disabled'}>+</button>`;
     if (fine && r.kind === 'grid') fine.innerHTML = `<span>Artwork ${label(selected)} · ${placed(selected) ? esc(describePoint(r.axis, d.points[selected])) : 'Not placed'}</span>${[['←',-1,0,'left'],['↓',0,-1,'down'],['↑',0,1,'up'],['→',1,0,'right']].map(([text, dx, dy, word]) => `<button type="button" data-action="nudge" data-dx="${dx}" data-dy="${dy}" aria-label="Move artwork ${label(selected)} one step ${word}" ${placed(selected) ? '' : 'disabled'}>${text}</button>`).join('')}`;
+    if(fine&&mobileSpectrum()){
+      const value=d.positions[selected];fine.classList.add('mobile-precision');fine.querySelector('span').innerHTML=ordinal()?'<span aria-hidden="true">↔</span>':value===undefined?'—':`${value}<small> / 100</small>`;
+    }else fine?.classList.remove('mobile-precision');
+    syncMobileMap();
     const range=app.querySelector('#mobile-spectrum-range');
     if(range){const value=d.positions[selected],hasValue=value!==undefined;range.disabled=!ready();range.setAttribute('aria-label',`${ordinal()?'Place':'Rate'} painting ${r.works.findIndex(work=>work.id===selected)+1} of ${r.works.length}. Arrow keys adjust by one; Enter moves to the next ${ordinal()?'unplaced':'unrated'} painting.`);range.setAttribute('aria-valuetext',ordinal()?spectrumDescription(selected):hasValue?`${value} of 100`:'Not rated');if(!mobileGesture)range.value=String(hasValue?value:50);const output=app.querySelector('#mobile-spectrum-value');if(output)output.textContent=ordinal()?'':hasValue?`${value} / 100`:'Not rated';const controls=range.closest('.mobile-spectrum-controls');controls.dataset.rated=String(hasValue);for(const button of controls.querySelectorAll('[data-action=nudge]'))button.disabled=!ready()||!hasValue||Number(button.dataset.dx)<0&&value===0||Number(button.dataset.dx)>0&&value===100;}
     if (focused) [...app.querySelectorAll('[data-action=nudge]')].find(el => el.dataset.dx === focused.dx && el.dataset.dy === focused.dy)?.focus({preventScroll:true});
+  }
+  function syncMobileMap(){
+    const layout=app.querySelector('.map-layout');if(!layout)return;
+    const mobile=mobileMap();layout.classList.toggle('mobile-map-mode',mobile);layout.dataset.mapStage=mobileMapStage;
+    const question=layout.closest('.journey-question');if(question){if(mobile)question.dataset.mobileMapStage=mobileMapStage;else delete question.dataset.mobileMapStage;}
+    let toolbar=layout.querySelector('.mobile-map-toolbar');if(!toolbar){toolbar=document.createElement('div');toolbar.className='mobile-map-toolbar';layout.insertBefore(toolbar,layout.querySelector('.placement-column'));}
+    if(mobile&&toolbar.dataset.work!==selected){toolbar.dataset.work=selected;toolbar.innerHTML=`<button type="button" data-action="zoom" data-work="${esc(selected)}" aria-label="View painting full screen"><span class="mobile-map-preview">${image(workById(selected))}</span><span>Painting ${getRound().works.findIndex(work=>work.id===selected)+1} of ${getRound().works.length}</span><span aria-hidden="true">↗</span></button>`;for(const img of toolbar.querySelectorAll('img'))img.loading='eager';}
+    const prompt=layout.querySelector('.pad-prompt');if(prompt&&mobile)prompt.textContent='Tap or drag to place';
   }
   function status() {
     const r = getRound(), count = r.works.filter(w => placed(w.id)).length, el = app.querySelector('#input-status');
@@ -96,7 +110,7 @@ export function createInteractions({ app, getRound, getDraft, ready, image, esc,
   function paintSpectrum() {
     const r = getRound(), d = getDraft(), holder = app.querySelector('#spectrum-placements');
     if (!holder) return;
-    const mobile=mobileSpectrum();app.querySelector('.spectrum-layout')?.classList.toggle('mobile-spectrum-mode',mobile);
+    const mobile=mobileSpectrum();app.querySelector('.spectrum-layout')?.classList.toggle('mobile-spectrum-mode',mobile);app.querySelector('.work-overview')?.setAttribute('aria-label',mobile?'Paintings still to place':'Your artwork reference group');
     const compactPhone=mobile&&window.innerHeight<740,rail=app.querySelector('.spectrum-rail'),lanes=[],laneStep=mobile?(compactPhone?40:48):65,tokenBase=mobile?(compactPhone?12:14):22;
     const positions = r.works.filter(w => placed(w.id)).sort((a, b) => d.positions[a.id] - d.positions[b.id]);
     holder.innerHTML = positions.map(w => {
@@ -205,7 +219,7 @@ export function createInteractions({ app, getRound, getDraft, ready, image, esc,
         if (moved) {
           suppressClick = true; setTimeout(() => { suppressClick = false; }, 120);
           const id = handle.dataset.dragWork,hadPlacement=placed(id);
-          if (dropAt(id, e.clientX, e.clientY)) { if (getRound().kind !== 'match') {if(!hadPlacement)cycle(1,true,id);else select(id);} }
+          if (dropAt(id, e.clientX, e.clientY)) { if (getRound().kind !== 'match') {if(!hadPlacement&&!mobileMap())cycle(1,true,id);else select(id);} }
           else app.querySelector('#input-status').textContent = 'Drop on the line, map or a label to place the work.';
         }
       });
@@ -236,13 +250,13 @@ export function createInteractions({ app, getRound, getDraft, ready, image, esc,
     range.addEventListener('pointerup',()=>{if(mobileGesture?.mode==='pointer')finish(true);});
     range.addEventListener('pointercancel',()=>{if(current()&&mobileGesture.changed&&mobileGesture.mode==='pointer')saveDraft();mobileGesture=null;paintSelection();});
     range.addEventListener('blur',()=>{if(mobileGesture?.mode==='keyboard')finish(false);});
-    range.addEventListener('keydown',event=>{if(event.key==='Enter'&&ready()&&mobileSpectrum()){event.preventDefault();if(!mobileGesture)begin('keyboard');finish(true);}});
+    range.addEventListener('keydown',event=>{if(!ready()||!mobileSpectrum())return;if(event.shiftKey&&['ArrowLeft','ArrowRight'].includes(event.key)){event.preventDefault();if(!mobileGesture)begin('keyboard');mobileGesture.changed=true;const value=Math.max(0,Math.min(100,(getDraft().positions[selected]??50)+(event.key==='ArrowLeft'?-10:10)));range.value=String(value);setPosition(selected,value);}else if(event.key==='Enter'){event.preventDefault();if(!mobileGesture)begin('keyboard');finish(true);}});
   }
   function attachPad() {
     const pad = app.querySelector('#response-pad'); let dragging = false,fresh=false,padWork=null;
     pad.addEventListener('pointerdown', e => { if (!ready() || e.button !== 0 || e.target.closest('[data-drag-work]')) return; fresh=!placed(selected);padWork=selected;dragging = true; pad.setPointerCapture(e.pointerId); setPoint(selected, gridPoint(e.clientX, e.clientY), false); });
     pad.addEventListener('pointermove', e => { if (dragging) setPoint(selected, gridPoint(e.clientX, e.clientY), false); });
-    const end = () => { if (dragging) { dragging = false; saveDraft(); sync();if(fresh)cycle(1,true,padWork); } };
+    const end = () => { if (dragging) { dragging = false; saveDraft(); sync();if(fresh&&!mobileMap())cycle(1,true,padWork); } };
     pad.addEventListener('pointerup', end); pad.addEventListener('pointercancel', end);
     pad.addEventListener('keydown', e => { if (e.target !== pad || !ready() || !['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Enter',' '].includes(e.key)) return; e.preventDefault(); if (['Enter',' '].includes(e.key)) setPoint(selected, getDraft().points[selected] || [50,50]); else adjust(selected, e.key, e.shiftKey ? 10 : 1); });
   }
@@ -256,9 +270,11 @@ export function createInteractions({ app, getRound, getDraft, ready, image, esc,
     });
   });
   return {
-    markup() { selected = initial(); return getRound().kind === 'spectrum' ? spectrumMarkup() : getRound().kind === 'grid' ? gridMarkup() : matchMarkup(); },
+    markup() { selected = initial(); mobileMapStage=getRound().kind==='grid'&&getRound().works.every(work=>placed(work.id))?'review':'painting'; return getRound().kind === 'spectrum' ? spectrumMarkup() : getRound().kind === 'grid' ? gridMarkup() : matchMarkup(); },
     attach() { if (getRound().kind === 'spectrum') {paintSpectrum();bindMobileSpectrum();} if (getRound().kind === 'grid') { paintGrid(); attachPad(); } if (getRound().kind === 'match') paintMatches(); bindSources(); },
     refresh() { paintSelection(); },
+    mobileMapAction(){if(!mobileMap()||mobileMapStage==='review')return null;return {label:mobileMapStage==='painting'?'Place on map':getRound().works.some(work=>work.id!==selected&&!placed(work.id))?'Next painting':'Review map',disabled:mobileMapStage==='map'&&!placed(selected)};},
+    advanceMobileMap(){if(!mobileMap()||mobileMapStage==='review')return false;if(!ready())return true;if(mobileMapStage==='painting')mobileMapStage='map';else if(placed(selected)){const next=getRound().works.find(work=>!placed(work.id));if(next){mobileMapStage='painting';select(next.id);}else mobileMapStage='review';}paintGrid();sync();return true;},
     click(action, control, event) {
       if (!['select-art','next-art','previous-art','place-spectrum','place-match','nudge'].includes(action)) return false;
       if (!ready() || locked() || suppressClick) return true;

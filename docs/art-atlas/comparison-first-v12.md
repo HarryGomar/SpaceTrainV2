@@ -1,5 +1,7 @@
 # Comparison-first study decisions
 
+This records the earlier order-only method and its allocation audit. The current fresh quiz retains both personal appeal and gaps; see [Continuous personal appeal](continuous-personal-appeal.md). Captured responses to this earlier method keep their original meaning.
+
 Fresh studies ask **“Which do you prefer?”** for each small group. The line retains 101 positions, dragging and one-position adjustments. Its labels are “Less preferred here” and “More preferred here”; numerical positions are hidden. Only order and exact ties enter the new preference models. Moving every painting through a strictly increasing transformation leaves the evidence and query selection unchanged.
 
 A group winner is not automatically liked. Separate selections ask for actual favourites and dislikes, with **None** and **Not sure** available. Admiration, interpretation, familiarity and museum choices keep their own instructions and evidence channels.

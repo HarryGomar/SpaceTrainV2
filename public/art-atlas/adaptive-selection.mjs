@@ -4,13 +4,15 @@ import {isReviewedVisualDescriptor,FEATURE_SEMANTIC_VERSION} from './visual-desc
 import {APPEAL_PROTOCOL,isOverallAppealRound} from './appeal-scale.mjs';
 import {choiceGridExposure} from './discovery-grid.mjs';
 import {isStudyEligibleArtwork} from './study-eligibility.mjs';
-import {COMPARISON_PROTOCOL,isComparisonPreferenceRound,ordinalBands} from './comparison-protocol.mjs';
+import {COMPARISON_PROTOCOL,COMPARISON_SCOPE,isComparisonPreferenceRound,ordinalBands} from './comparison-protocol.mjs';
+import {CONTINUOUS_PROTOCOL,CONTINUOUS_SCOPE,isContinuousPreferenceRound} from './continuous-preference.mjs';
+import {sameOrdinalArtworkIdentity} from './ordinal-preference-graph.mjs';
 
 const FAMILIES = new Set(['individual-choice', 'feature-check', 'unconditional-preference', 'adaptive-preference']);
 const FEATURES = ['abstraction', 'energy', 'complexity', 'humanity', 'narrative', 'atmosphere', 'color'];
 const LIMITS = [
   'Selection uses design heuristics, not a validated optimal-information algorithm.',
-  'High, low and middle describe a position within one offered set. They are not absolute likes or dislikes.',
+  'High, low and middle retain the captured instrument. Only an explicitly anchored appeal question supplies absolute likes or dislikes.',
   'Exact repeats remain dependent observations. They cannot provide a reliability percentage.',
   'A work compared with new alternatives is a new contextual comparison, not an exact consistency check.',
   'A new comparison can contain familiar artworks. Several visual properties may still vary together.'
@@ -29,8 +31,9 @@ function roundIds(round) {
   return Array.isArray(round?.works) ? round.works.map(w => typeof w === 'string' ? w : w?.id) : Array.isArray(round?.workIds) ? [...round.workIds] : [];
 }
 export function preferenceMeasurementKey(round){
-  if(round?.evidence?.comparisonProtocol!==undefined)return isComparisonPreferenceRound(round)?COMPARISON_PROTOCOL:null;
-  if(isOverallAppealRound(round))return APPEAL_PROTOCOL;
+  if(round?.evidence?.continuousProtocol!==undefined||round?.evidence?.measurementScope===CONTINUOUS_SCOPE)return isContinuousPreferenceRound(round)?CONTINUOUS_PROTOCOL:null;
+  if(round?.evidence?.comparisonProtocol!==undefined||round?.evidence?.measurementScope===COMPARISON_SCOPE)return isComparisonPreferenceRound(round)?COMPARISON_PROTOCOL:null;
+  if(round?.evidence?.appealProtocol!==undefined)return isOverallAppealRound(round)?APPEAL_PROTOCOL:null;
   const scale=round?.scale;
   return 'legacy-relative:'+JSON.stringify({title:round?.title||'',hint:round?.hint||'',scale:scale&&typeof scale==='object'?Object.fromEntries(Object.keys(scale).sort().map(key=>[key,scale[key]])):null});
 }
@@ -44,10 +47,17 @@ function preferenceRecord(round, index, answers, byId) {
   const answer = answers[round.id];
   const definition = { ...round, works: workIds.map(id => byId.get(id)) };
   if (!answer || answer.confirmed !== true || !Array.isArray(answer.workIds)||answer.workIds.join('|')!==workIds.join('|')||!answer.positions||Array.isArray(answer.positions)||Object.keys(answer.positions).length!==workIds.length||workIds.some(id=>!Number.isInteger(answer.positions[id]))||answer.roundId!==undefined&&answer.roundId!==round.id||evidence.appealProtocol===APPEAL_PROTOCOL&&!isOverallAppealRound(round)||evidence.comparisonProtocol===COMPARISON_PROTOCOL&&!isComparisonPreferenceRound(round)||!validAnswer(definition, answer)) return null;
-  const measurementScope=preferenceMeasurementKey(round);
+  const measurementScope=preferenceMeasurementKey(round);if(!measurementScope)return null;
+  if(measurementScope===CONTINUOUS_PROTOCOL&&(!Array.isArray(round.works)||round.works.some(work=>!sameOrdinalArtworkIdentity(work,byId.get(work.id),{requireSource:true}))))return null;
   return { round, index, workIds, answer, measurementScope, signature:measurementScope+'|'+setKey(workIds) };
 }
 function focusFor(record, band) {
+  if(isContinuousPreferenceRound(record.round)){
+    const ordered=record.workIds.map(id=>({id,value:record.answer.positions[id]})).sort((a,b)=>a.value-b.value||a.id.localeCompare(b.id));
+    const item=band==='relative-high'?ordered.filter(item=>item.value>50).at(-1):band==='relative-low'?ordered.find(item=>item.value<50):ordered.filter(item=>item.value>=25&&item.value<=75).sort((a,b)=>Math.abs(a.value-50)-Math.abs(b.value-50)||a.id.localeCompare(b.id))[0];
+    if(!item)return null;
+    return {workId:item.id,band,anchorBand:band==='relative-high'?'above-neutral':band==='relative-low'?'below-neutral':'near-neutral',sourceRoundId:record.round.id,positionWithinSource:item.value,appealDistanceFromNeutral:Math.abs(item.value-50),meaning:'The captured continuous personal-appeal anchors supply level and distance. This is not a confidence estimate.',comparedWith:ordered.filter(other=>other.id!==item.id).map(other=>({workId:other.id,gap:item.value-other.value}))};
+  }
   if(isComparisonPreferenceRound(record.round)){
     const groups=ordinalBands(record.round,record.answer);if(!groups||groups.allTied)return null;
     const candidates=band==='relative-high'?groups.high:band==='relative-low'?groups.low:groups.middle;if(!candidates.length)return null;
@@ -65,7 +75,7 @@ function focusFor(record, band) {
 }
 function promptSnapshot(record) {
   const r = record.round;
-  const evidence = Object.fromEntries(['construct','family','role','setId','batchIndex','journeyRevision','bankRevision','repeatOf','dependencyGroup','appealProtocol','comparisonProtocol','measurementScope','positionMeaning','showNumericScale'].filter(key => r.evidence[key] !== undefined).map(key => [key, structuredClone(r.evidence[key])]));
+  const evidence = Object.fromEntries(['construct','family','role','setId','batchIndex','journeyRevision','bankRevision','repeatOf','dependencyGroup','appealProtocol','comparisonProtocol','continuousProtocol','measurementScope','positionMeaning','showNumericScale'].filter(key => r.evidence[key] !== undefined).map(key => [key, structuredClone(r.evidence[key])]));
   return {
     id: r.id, kind: 'spectrum', criterion: 'preference', title: typeof r.title==='string'?r.title:'Which do you prefer?', hint: typeof r.hint==='string'?r.hint:'Place the works from less preferred to more preferred. Equal positions are fine.',
     ...(r.scale ? { scale: structuredClone(r.scale) } : {}), workIds: [...record.workIds], evidence
@@ -82,8 +92,8 @@ function directionalHypotheses(records, byId) {
       if(literalFeature(key)&&record.workIds.some(id=>!finiteFeature(byId.get(id),key)))return [];
       const observations = pairs(record.workIds).flatMap(([a, b]) => {
         const wa = byId.get(a), wb = byId.get(b), gap = record.answer.positions[a] - record.answer.positions[b];
-        if (!finiteFeature(wa, key) || !finiteFeature(wb, key) || Math.abs(gap) < (record.measurementScope===COMPARISON_PROTOCOL?1:10)) return [];
-        const weight=record.measurementScope===APPEAL_PROTOCOL?Math.min(1,Math.abs(gap)/50):1;
+        if (!finiteFeature(wa, key) || !finiteFeature(wb, key) || Math.abs(gap) < ([COMPARISON_PROTOCOL,CONTINUOUS_PROTOCOL].includes(record.measurementScope)?1:10)) return [];
+        const weight=record.measurementScope===CONTINUOUS_PROTOCOL?Math.abs(gap)/100:record.measurementScope===APPEAL_PROTOCOL?Math.min(1,Math.abs(gap)/50):1;
         return [Math.sign(gap) * (wa.features[key] - wb.features[key]) * weight];
       });
       return observations.length ? [{ value: mean(observations), record }] : [];
@@ -94,11 +104,11 @@ function directionalHypotheses(records, byId) {
     if (groups.length < 3 || featureArtistCount < 4 || Math.abs(score) < .035 || supporting.length < 2) return [];
     return [{ feature: key, direction, score, measurementScope:groups[0].record.measurementScope, ...(literalFeature(key)?{featureSemanticVersion:FEATURE_SEMANTIC_VERSION}:{}), supportingRoundIds: supporting.map(g => g.record.round.id), trainingRoundIds: groups.map(g => g.record.round.id), trainingEvidence: groups.map(({record}) => ({ roundId: record.round.id, workIds: [...record.workIds], criterion: 'preference', confirmed: true, measurementScope:record.measurementScope, positions: structuredClone(record.answer.positions), featureValues: Object.fromEntries(record.workIds.filter(id => finiteFeature(byId.get(id), key)).map(id => [id, byId.get(id).features[key]])), ...(literalFeature(key)?{featureSemanticVersions:Object.fromEntries(record.workIds.map(id=>[id,byId.get(id).featureSemanticVersion]))}:{}) })), featureBasis: 'Supplied catalogue descriptors at planning time; only known values are included.', sourceSetCount: groups.length, artistCount: featureArtistCount }];
   });
-  return cues.sort((a, b) => Math.abs(b.score) - Math.abs(a.score) || a.feature.localeCompare(b.feature)).map(cue=>({ ...cue,weightBasis:cue.measurementScope===APPEAL_PROTOCOL?'within-set-appeal-gap':'within-set-order-only', method: 'Heuristic average of signed, within-set feature contrasts under one captured measurement scope. One contribution per distinct artwork set. Legacy relative positions supply direction without treating their distance as appeal intensity.', limits: ['The feature was selected after observing earlier choices. Correlated properties, artists and subjects remain alternative explanations.', 'The numerical score is an internal selection weight, not confidence or probability.'] }));
+  return cues.sort((a, b) => Math.abs(b.score) - Math.abs(a.score) || a.feature.localeCompare(b.feature)).map(cue=>({ ...cue,weightBasis:cue.measurementScope===CONTINUOUS_PROTOCOL?'continuous-personal-appeal-gap':cue.measurementScope===APPEAL_PROTOCOL?'within-set-appeal-gap':'within-set-order-only', method: 'Heuristic average of signed, within-set feature contrasts under one captured measurement scope. One contribution per distinct artwork set. Legacy relative positions supply direction without treating their distance as appeal intensity.', limits: ['The feature was selected after observing earlier choices. Correlated properties, artists and subjects remain alternative explanations.', 'The numerical score is an internal selection weight, not confidence or probability.'] }));
 }
 
 export function summarizePreferenceHypotheses({works=[],rounds=[],answers={},measurementScope}={}){
-  const byId=new Map(works.map(work=>[work.id,work])),records=rounds.flatMap((round,index)=>{const record=preferenceRecord(round,index,answers,byId);return record&&!round.evidence?.repeatOf&&!['repeat','probe','check','counterexample','heldout','holdout'].includes(round.evidence?.role)?[record]:[];}),scope=measurementScope||(records.some(record=>record.measurementScope===APPEAL_PROTOCOL)?APPEAL_PROTOCOL:records.at(-1)?.measurementScope);
+  const byId=new Map(works.map(work=>[work.id,work])),records=rounds.flatMap((round,index)=>{const record=preferenceRecord(round,index,answers,byId);return record&&!round.evidence?.repeatOf&&!['repeat','probe','check','counterexample','heldout','holdout'].includes(round.evidence?.role)?[record]:[];}),scope=measurementScope||(records.some(record=>record.measurementScope===CONTINUOUS_PROTOCOL)?CONTINUOUS_PROTOCOL:records.some(record=>record.measurementScope===APPEAL_PROTOCOL)?APPEAL_PROTOCOL:records.at(-1)?.measurementScope);
   return directionalHypotheses(records.filter(record=>record.measurementScope===scope),byId);
 }
 
@@ -154,7 +164,7 @@ export function planAdaptivePanels({ works, rounds = [], answers = {}, batchInde
   for (let i = 0; i < targets.repeat; i++) {
     const band = repeatBands[(i+Math.max(0,batch-1)) % repeatBands.length];
     const candidates = records.filter(r => delayed(r) && !repeatUsed.has(r.signature) && !r.workIds.some(id => repeatWorks.has(id)));
-    candidates.sort((a, b) => (focusFor(b, band) ? 100 : 0) - (focusFor(a, band) ? 100 : 0) || mean(a.workIds.map(id => exposures[id])) - mean(b.workIds.map(id => exposures[id])) || jitter(a.round.id, 'repeat') - jitter(b.round.id, 'repeat'));
+    candidates.sort((a, b) => (focusFor(b, band) ? 100 : 0) - (focusFor(a, band) ? 100 : 0) || mean(a.workIds.map(id => exposures[id])) - mean(b.workIds.map(id => exposures[id])) || (focusFor(b,band)?.appealDistanceFromNeutral||0)-(focusFor(a,band)?.appealDistanceFromNeutral||0) || jitter(a.round.id, 'repeat') - jitter(b.round.id, 'repeat'));
     const source = candidates[0];
     if (!source) break;
     repeatUsed.add(source.signature); source.workIds.forEach(id => repeatWorks.add(id));
@@ -172,7 +182,7 @@ export function planAdaptivePanels({ works, rounds = [], answers = {}, batchInde
     const record = repeatRecords[repeatSlot++];
     if (record) for (const id of record.source.workIds) reservedUntil.set(id, index);
   }
-  const activeMeasurementScope=measurementScope||(eligible.some(record=>record.measurementScope===APPEAL_PROTOCOL)?APPEAL_PROTOCOL:eligible.at(-1)?.measurementScope),modelRecords=eligible.filter(record=>record.measurementScope===activeMeasurementScope);
+  const activeMeasurementScope=measurementScope||(eligible.some(record=>record.measurementScope===CONTINUOUS_PROTOCOL)?CONTINUOUS_PROTOCOL:eligible.some(record=>record.measurementScope===APPEAL_PROTOCOL)?APPEAL_PROTOCOL:eligible.at(-1)?.measurementScope),modelRecords=eligible.filter(record=>record.measurementScope===activeMeasurementScope&&(activeMeasurementScope!==CONTINUOUS_PROTOCOL||!record.round.evidence.repeatOf&&!['repeat','probe','check','counterexample','heldout','holdout'].includes(record.round.evidence.role)));
   const hypothesis = directionalHypotheses(modelRecords, byId)[0]||null, usedPairs = new Set(seenPairs), uses = Object.fromEntries(pool.map(w => [w.id, 0]));
   const lastPlanned = new Map(), panels = [], fallbackReasons = [], usedFocus = new Set();
   let repeatCursor = 0, recontextCursor = 0;

@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {JSDOM} from 'jsdom';
 import {prepareJourneySession,extendJourneySession,sessionJourneyRounds,snapshotStudyRound,comparisonMethodMigration,createDeepStudy,validStudyAnswer} from '../../public/art-atlas/deep-study.mjs';
+import {CONTINUOUS_PROTOCOL,isContinuousPreferenceRound} from '../../public/art-atlas/continuous-preference.mjs';
+import {buildJourneyRounds} from '../../public/art-atlas/journey-bank.mjs';
 import {isComparisonPreferenceRound,COMPARISON_PROTOCOL} from '../../public/art-atlas/comparison-protocol.mjs';
 import {isOrdinalRefinementRound} from '../../public/art-atlas/ordinal-refinement.mjs';
 import {legacyV11Rounds,legacyV11Works} from './helpers/legacy-v11.mjs';
@@ -17,7 +19,7 @@ async function browser(task,{quota=50_000_000}={}){
   try{return await task(dom.window.document.querySelector('main'),dom);}finally{for(const [key,descriptor]of Object.entries(previous))if(descriptor)Object.defineProperty(globalThis,key,descriptor);else delete globalThis[key];dom.window.close();}
 }
 
-test('Every fresh v12 refinement binds on entry from actual earlier sources, and captured definitions survive later answers',()=>{
+test('Every fresh continuous refinement binds on entry from actual earlier sources, and captured definitions survive later answers',()=>{
   const data=prepareJourneySession(null,works,100),beforePlan=structuredClone(data.plan),closing=[];
   for(let index=0;index<50;index++){
     data.index=index;const round=sessionJourneyRounds(data)[index];assert.equal(round.unavailable,undefined,round.id+' must have its actual source by entry');
@@ -35,7 +37,7 @@ test('Every fresh v12 refinement binds on entry from actual earlier sources, and
 test('One-time method migration archives exact overall answers, source bindings and pending questions without conversion',()=>{
   const old={...prepareJourneySession(null,legacyV11Works(),100),plan:legacyV11Rounds().map(snapshotStudyRound),archives:[{manifest:{id:'older'},answers:{private:{unchanged:true}}}]};delete old.manifest.preferenceProtocol;old.manifest.journeyRevision='art-profile-50-v11';
   const first=legacyV11Rounds()[0];old.shown[first.id]=snapshotStudyRound(first);old.answers[first.id]=ordered(first);old.answers[first.id].positions[first.works[0].id]=0;const before=structuredClone(old),migration=comparisonMethodMigration(old,works,200),archived=structuredClone(before);delete archived.archives;
-  assert.deepEqual(old,before);assert.deepEqual(migration.archives[0],before.archives[0]);assert.deepEqual(migration.archives[1],archived);assert.deepEqual(migration.answers,{});assert.deepEqual(migration.shown,{});assert.equal(migration.manifest.preferenceProtocol,COMPARISON_PROTOCOL);assert.ok(sessionJourneyRounds(migration).filter(round=>round.evidence.panelNumber&&round.evidence.construct==='preference').every(isComparisonPreferenceRound));assert.equal(comparisonMethodMigration(migration,works),null);assert.equal(comparisonMethodMigration({...old,reviewingArchived:true},works),null);
+  assert.deepEqual(old,before);assert.deepEqual(migration.archives[0],before.archives[0]);assert.deepEqual(migration.archives[1],archived);assert.deepEqual(migration.answers,{});assert.deepEqual(migration.shown,{});assert.equal(migration.manifest.preferenceProtocol,CONTINUOUS_PROTOCOL);assert.ok(sessionJourneyRounds(migration).filter(round=>round.evidence.panelNumber&&round.evidence.construct==='preference').every(isComparisonPreferenceRound));assert.equal(comparisonMethodMigration(migration,works),null);assert.equal(comparisonMethodMigration({...old,reviewingArchived:true},works),null);
 });
 
 test('Completed comparison blocks continue at 51/100 and 101/150 rather than requesting another retake',async()=>{
@@ -54,4 +56,9 @@ test('A failed migration cannot replace the last stored old run or erase its ans
   await browser(async app=>{
     localStorage.setItem('art-profile-journey-v1',raw);const study=makeStudy(app);await study.restore();assert.equal(localStorage.getItem('art-profile-journey-v1'),raw);assert.equal(study.exportData().manifest.id,old.manifest.id);assert.deepEqual(study.exportData().answers,old.answers);assert.match(app.textContent,/new quiz could not be saved/);await study.clear();
   },{quota:raw.length+1024});
+});
+
+
+test('A captured v12 order-only run archives exactly and never acquires personal-appeal levels',()=>{
+ const old=prepareJourneySession(null,foundation,10),rounds=buildJourneyRounds(foundation,{}, {preferenceProtocol:COMPARISON_PROTOCOL});old.plan=rounds.map(snapshotStudyRound);old.manifest.preferenceProtocol=COMPARISON_PROTOCOL;old.manifest.journeyRevision='art-profile-50-v12';old.shown[rounds[0].id]=snapshotStudyRound(rounds[0]);old.answers[rounds[0].id]=ordered(rounds[0]);const before=structuredClone(old),fresh=comparisonMethodMigration(old,foundation,20);assert.deepEqual(old,before);const archived=structuredClone(before);delete archived.archives;assert.deepEqual(fresh.archives.at(-1),archived);assert.equal(fresh.manifest.preferenceProtocol,CONTINUOUS_PROTOCOL);assert.ok(isContinuousPreferenceRound(sessionJourneyRounds(fresh)[0]));assert.equal(isContinuousPreferenceRound(sessionJourneyRounds({...old,reviewingArchived:true})[0]),false);assert.equal(sessionJourneyRounds(old)[0].scale.left,'Less preferred here');assert.equal(sessionJourneyRounds(fresh)[0].scale.left,'Strongly dislike');
 });

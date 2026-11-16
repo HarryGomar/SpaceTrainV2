@@ -6,6 +6,7 @@ import {retakeJourneySession,snapshotStudyRound,createDeepStudy} from '../../pub
 import {JOURNEY_PROTOCOL,JOURNEY_REVISION} from '../../public/art-atlas/journey-bank.mjs';
 import {isOverallAppealRound,APPEAL_PROTOCOL} from '../../public/art-atlas/appeal-scale.mjs';
 import {isComparisonPreferenceRound} from '../../public/art-atlas/comparison-protocol.mjs';
+import {CONTINUOUS_QUESTION} from '../../public/art-atlas/continuous-preference.mjs';
 import {legacyV11Works,legacyV11Rounds} from './helpers/legacy-v11.mjs';
 import {legacyV8Works,legacyV8Rounds} from './helpers/legacy-v8.mjs';
 
@@ -42,10 +43,10 @@ test('The actual archived v11 host preserves its genuine neutral overall anchor 
   });
 });
 
-test('The fresh comparison host keeps granular positions and shows only its within-set preference anchors',async()=>{
+test('The fresh personal-appeal host keeps granular positions and its explicit dislike, neutral and like anchors',async()=>{
   await inHost(null,app=>{
-    assert.deepEqual([...app.querySelectorAll('.spectrum-labels>span')].map(el=>el.textContent),['Less preferred here','More preferred here']);
+    assert.deepEqual([...app.querySelectorAll('.spectrum-labels>span')].map(el=>el.textContent),['Strongly dislike','Neutral','Strongly like']);
     const range=app.querySelector('#mobile-spectrum-range');assert(range);assert.deepEqual(['min','max','step'].map(key=>range.getAttribute(key)),['0','100','1']);
-    assert.doesNotMatch(app.textContent,/Strongly dislike|Strongly like/);
+    assert(app.textContent.includes(CONTINUOUS_QUESTION));
   });
 });

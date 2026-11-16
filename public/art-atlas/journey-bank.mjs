@@ -10,6 +10,8 @@ import {buildContrastRound} from './contrast-rounds.mjs';
 import {selectArrangementStimuli} from './arrangement-stimuli.mjs';
 import {APPEAL_PROTOCOL,withOverallAppeal,isOverallAppealRound} from './appeal-scale.mjs';
 import {COMPARISON_PROTOCOL,withComparisonPreference,isComparisonPreferenceRound} from './comparison-protocol.mjs';
+import {CONTINUOUS_PROTOCOL,withContinuousPreference,isContinuousPreferenceRound} from './continuous-preference.mjs';
+import {withContextChange} from './context-change.mjs';
 import {buildOrdinalClosingRounds,buildOrdinalRefinementRound} from './ordinal-refinement.mjs';
 import {buildFinalRefinementRounds} from './final-refinement.mjs';
 import {choiceGridExposure} from './discovery-grid.mjs';
@@ -20,7 +22,7 @@ import {routeCollection} from './collection-routing.mjs';
 import {PANEL_OBJECTIVES} from './curation-panel-objectives.mjs';
 
 export const JOURNEY_PROTOCOL='art-profile-50-v1';
-export const JOURNEY_REVISION='art-profile-50-v12';
+export const JOURNEY_REVISION='art-profile-50-v13';
 export const JOURNEY_VARIETY_POLICY='specific-question-variety-v2';
 export const JOURNEY_LENGTH=50;
 export const JOURNEY_MAX_LENGTH=JOURNEY_BLOCK_LIMIT*JOURNEY_LENGTH;
@@ -93,7 +95,7 @@ export function journeyCurationNotes(works,reservationPlan,{firstWorkIds,startBa
   const canonicalReady=regional&&['canon-leonardo-last-supper','canon-caravaggio-calling-matthew','canon-siqueiros-collective-suicide','canon-siqueiros-echo-scream','canon-kahlo-two-fridas','canon-varo-creation-birds'].every(id=>available.has(id));
   if(canonicalReady)Object.assign(replacements,{2:['study-vermeer-pearl','study-vermeer-milkmaid','study-rembrandt-night-watch','add-rivera-portrait-frida'],7:['study-raphael-school-athens','canon-leonardo-last-supper','canon-caravaggio-calling-matthew','add-orozco-buffoons'],9:['velazquez-las-meninas','holbein-ambassadors','add-van-eyck-arnolfini','add-hammershoi-room-wife'],14:['study-posada-catrina','goya-saturn','brueghel-sight','req-patinir-massys-temptations'],15:['turner-burning-parliament','study-delacroix-liberty','bonheur-horses','canon-siqueiros-collective-suicide'],16:['millais-ophelia','canon-siqueiros-echo-scream','van-gogh-night-cafe','canon-kahlo-two-fridas'],17:['study-matisse-dance','study-seurat-grande-jatte','study-tanner-banjo-lesson','add-izquierdo-sorrowful-friday'],18:['canon-varo-creation-birds','add-carrington-dagobert','add-miro-harlequin-carnival','add-rivera-zapatista-landscape']});
   for(const panel of notes.proposedFirst18Panels){if(replacements[panel.panel]){panel.workIds=replacements[panel.panel];panel.primaryQuestion='Record each painting’s overall appeal; compare different treatments without forcing a rank.';panel.targetFeature=null;panel.targetContrast=null;panel.sharedGround='A deliberate set of different treatments for separate overall liking ratings.';panel.confounds=['Artist, subject, period, material, reproduction and several visual qualities can vary together.'];panel.sourceUrls=panel.workIds.map(id=>works.find(work=>work.id===id)?.sourceUrl).filter(Boolean);delete panel.contrastPairs;}}
-  if(canonicalReady){notes.qualityDesign='predeclared-source-quality-crossings-v1';for(const panel of notes.proposedFirst18Panels){const objective=PANEL_OBJECTIVES[panel.panel];panel.galleryTitle=objective.title;panel.comparisonObjectives=structuredClone(objective);panel.primaryQuestion=objective.purposes.join(' ');panel.questionUse='Within-group ordinal preference, followed by separately reported judgments where planned.';panel.confounds=uniqueIds([...(panel.confounds||[]),'These are deliberately crossed examples, not randomized isolation of a single visual cause.']);}}
+  if(canonicalReady){notes.qualityDesign='predeclared-source-quality-crossings-v1';for(const panel of notes.proposedFirst18Panels){const objective=PANEL_OBJECTIVES[panel.panel];panel.galleryTitle=objective.title;panel.comparisonObjectives=structuredClone(objective);panel.primaryQuestion=objective.purposes.join(' ');panel.questionUse='Continuous personal appeal, followed by separately reported judgments where planned.';panel.confounds=uniqueIds([...(panel.confounds||[]),'These are deliberately crossed examples, not randomized isolation of a single visual cause.']);}}
   const first=new Set(notes.proposedFirst18Panels.flatMap(panel=>panel.workIds));
   if(first.size!==72||[...first].some(id=>!available.has(id)))return CURATION_NOTES;
   const routed=regional&&(!reservationPlan||reservationPlan.collectionRouting)?routeCollection(works,reservationPlan?.collectionRouting,notes):null,activeWorks=routed?routed.studyWorks:works;
@@ -201,7 +203,8 @@ function selectWorks(pool,size,{uses,lastSeen,index,distinctField,focus,mode='ma
 /** Only shown snapshots are fixed. A fresh journey uses the current sourced catalogue. */
 export function buildJourneyRounds(works,answers={},options={}){
   const offset=options.offset??0,batchIndex=options.batchIndex??Math.floor(offset/JOURNEY_LENGTH);
-  const comparisonFirst=options.preferenceProtocol!==APPEAL_PROTOCOL;
+  const preferenceProtocol=options.preferenceProtocol??CONTINUOUS_PROTOCOL,comparisonFirst=preferenceProtocol!==APPEAL_PROTOCOL;
+  if(![CONTINUOUS_PROTOCOL,COMPARISON_PROTOCOL,APPEAL_PROTOCOL].includes(preferenceProtocol))throw Error('Unknown painting-preference protocol.');
   if(!Number.isInteger(offset)||offset<0||offset%JOURNEY_LENGTH||!Number.isInteger(batchIndex)||batchIndex<0)throw Error('Journey batches need a non-negative batch index and an offset in steps of fifty.');
   const at=index=>idAt(offset+index),selectionSeed=String(options.seed??'journey-batch-'+batchIndex);
   const pool=[...works].filter(work=>isStudyEligibleArtwork(work)&&typeof work.id==='string'&&work.title&&work.image&&work.sourceUrl).sort((a,b)=>a.id.localeCompare(b.id));
@@ -243,7 +246,7 @@ export function buildJourneyRounds(works,answers={},options={}){
     if(!sourceIndex||Number(sourceIndex[1])<=offset)registerSpecificQuestion(round,sourceIndex?Number(sourceIndex[1])-1:null);
     if(sourceIndex&&Number(sourceIndex[1])<=offset&&round.kind!=='statements')round.works.forEach(work=>lastSeen.set(work.id,Math.max(lastSeen.get(work.id)??-Infinity,Number(sourceIndex[1])-1)));
     const legacyPanel=/^panel-(\d+)$/.exec(round.evidence?.setId||''),number=round.evidence?.panelNumber||(legacyPanel?Number(legacyPanel[1]):null),sourceBatch=round.evidence?.batchIndex??Math.floor((Number(sourceIndex?.[1]||1)-1)/JOURNEY_LENGTH);
-    if((['art-profile-50-v2','art-profile-50-v3','art-profile-50-v4','art-profile-50-v5','art-profile-50-v6','art-profile-50-v7','art-profile-50-v8','art-profile-50-v9','art-profile-50-v10','art-profile-50-v11',JOURNEY_REVISION].includes(round.evidence?.journeyRevision)||legacyPanel)&&sourceBatch===batchIndex&&Number.isInteger(number)&&number>=1&&number<=18&&round.works.every(work=>pool.some(item=>item.id===work.id))&&!panels.has(number)){
+    if((['art-profile-50-v2','art-profile-50-v3','art-profile-50-v4','art-profile-50-v5','art-profile-50-v6','art-profile-50-v7','art-profile-50-v8','art-profile-50-v9','art-profile-50-v10','art-profile-50-v11','art-profile-50-v12',JOURNEY_REVISION].includes(round.evidence?.journeyRevision)||legacyPanel)&&sourceBatch===batchIndex&&Number.isInteger(number)&&number>=1&&number<=18&&round.works.every(work=>pool.some(item=>item.id===work.id))&&!panels.has(number)){
       panels.set(number,round.works.map(work=>pool.find(item=>item.id===work.id)));
       if(round.evidence?.setId)panelSetIds.set(number,round.evidence.setId);
       round.works.forEach(work=>panelUses.set(work.id,(panelUses.get(work.id)||0)+1));
@@ -255,7 +258,7 @@ export function buildJourneyRounds(works,answers={},options={}){
     if(!panels.has(index+1))panels.set(index+1,panel.workIds.map(id=>pool.find(work=>work.id===id)));
   }
   for(const previous of history.values())if(previous.kind==='choice-grid'&&previous.evidence?.batchIndex===batchIndex&&previous.evidence?.gridGroup&&previous.works.every(work=>pool.some(other=>other.id===work.id))){gridPanels.set(previous.evidence.gridGroup,previous.works.map(work=>pool.find(other=>other.id===work.id)));gridSelectionAudits.set(previous.evidence.gridGroup,previous.evidence.varietySelection?structuredClone(previous.evidence.varietySelection):{policy:JOURNEY_VARIETY_POLICY,preservedCachedBinding:true,scope:'A previously bound grid identity is preserved before applying new spacing choices.'});}
-  const sequence=[],closing=comparisonFirst?buildOrdinalClosingRounds({works:activeSourcePool,offset,seed:selectionSeed}):buildFinalRefinementRounds({works:pool,offset,seed:selectionSeed}),earlyRefinements=new Map(comparisonFirst?[[18,'bridge-high-high'],[22,'dislikes'],[26,'bridge-low-low']]:[]);
+  const sequence=[],closing=comparisonFirst?buildOrdinalClosingRounds({works:activeSourcePool,offset,seed:selectionSeed,preferenceProtocol}):buildFinalRefinementRounds({works:pool,offset,seed:selectionSeed}),earlyRefinements=new Map(comparisonFirst?[[18,'bridge-high-high'],[22,'dislikes'],[26,'bridge-low-low']]:[]);
   const firstSortingPlan=()=>{
     const earlier=sequence.filter(source=>source.kind==='spectrum'&&source.evidence?.construct==='preference'&&source.evidence.unconditional!==false),offered=new Map(earlier.flatMap(source=>source.works.map(work=>[work.id,work]))),preferred=regional?['van-gogh-starry-night','klimt-kiss','study-hokusai-great-wave','study-vermeer-milkmaid','mondrian-composition','study-kandinsky-composition-eight','add-rivera-portrait-frida','add-tamayo-still-life-foot']:['van-gogh-starry-night','klimt-kiss','study-hokusai-great-wave','study-vermeer-milkmaid','blanchard-still-life','add-tamayo-still-life-foot','add-rivera-portrait-frida','hiroshige-sudden-shower','add-siqueiros-madre-nina','study-cassatt-child-bath'],chosen=uniqueIds([...preferred.filter(id=>offered.has(id)),...offered.keys()]).slice(0,8);
     if(chosen.length<8){const fallback=selectArrangementStimuli({works:activityPool,batchIndex,kind:'sorting'});return {...fallback,fallback:true,fallbackReason:'Fewer than eight distinct earlier appeal paintings were available; the reviewed arrangement rotation was retained.'};}
@@ -291,7 +294,7 @@ export function buildJourneyRounds(works,answers={},options={}){
       registerSpecificQuestion(previous,globalIndex);
       continue;
     }
-    if(index>=45||earlyRefinements.has(index)){const pending=index>=45?closing[index-45]:buildOrdinalRefinementRound({works:activeSourcePool,id,role:earlyRefinements.get(index),slot:0,offset,seed:selectionSeed});sequence.push({...pending,evidence:{...pending.evidence,journeyRevision:JOURNEY_REVISION,batchIndex,selectionSeed}});continue;}
+    if(index>=45||earlyRefinements.has(index)){const pending=index>=45?closing[index-45]:buildOrdinalRefinementRound({works:activeSourcePool,id,role:earlyRefinements.get(index),slot:0,offset,seed:selectionSeed,preferenceProtocol});sequence.push({...pending,evidence:{...pending.evidence,journeyRevision:JOURNEY_REVISION,batchIndex,selectionSeed}});continue;}
     const contrastKind=CONTRAST_SLOTS.get(index),contrastContent=contrastKind?contrastContentAt(index):null;
     const contrastRound=contrastContent?.status==='ready'?buildContrastRound({works:pool,content:contrastContent,id,batchIndex}):null;
     if(contrastRound)spec={task:'contrast',contrastKind};
@@ -318,7 +321,7 @@ export function buildJourneyRounds(works,answers={},options={}){
           round={...round,title:source.title,hint:source.hint,works:[...sourceIds].reverse().map(workId=>pool.find(work=>work.id===workId))};
           if(source.scale)round.scale=structuredClone(source.scale);else delete round.scale;
           evidence={...evidence,role:'repeat',repeatOf,exactRepeat:true,sourceRoundId:repeatOf,presentationOrder:'reversed-from-source',sourcePrompt:{title:source.title,hint:source.hint,criterion:source.criterion,...(source.scale?{scale:structuredClone(source.scale)}:{})},limits:['This deliberately repeats the same unconditional preference question and artwork set. Time, familiarity, earlier context and memory can affect a changed answer.',...LIMITS]};
-          if(isOverallAppealRound(source)){evidence.appealProtocol=source.evidence.appealProtocol;evidence.measurementScope=source.evidence.measurementScope;}else if(isComparisonPreferenceRound(source)){evidence.comparisonProtocol=COMPARISON_PROTOCOL;evidence.measurementScope=source.evidence.measurementScope;evidence.positionMeaning='order-and-exact-ties-only';evidence.showNumericScale=false;}
+          if(isContinuousPreferenceRound(source)){evidence.continuousProtocol=CONTINUOUS_PROTOCOL;evidence.measurementScope=source.evidence.measurementScope;evidence.positionMeaning='personal-appeal-level-and-gap';evidence.showNumericScale=true;}else if(isOverallAppealRound(source)){evidence.appealProtocol=source.evidence.appealProtocol;evidence.measurementScope=source.evidence.measurementScope;}else if(isComparisonPreferenceRound(source)){evidence.comparisonProtocol=COMPARISON_PROTOCOL;evidence.measurementScope=source.evidence.measurementScope;evidence.positionMeaning='order-and-exact-ties-only';evidence.showNumericScale=false;}
         }else evidence.role=planMatches&&['probe','recontextualization','challenge'].includes(plannedPanel.role)?'probe':'discovery';
       }
     }else if(spec.task==='appraisal-map'){
@@ -351,7 +354,7 @@ export function buildJourneyRounds(works,answers={},options={}){
     }else if(spec.task==='statement'){
       template=templateFor(item=>item.kind==='statements');
       round={kind:'statements',title:'Agree or disagree.',hint:'',works:[noteWork],statements:[{...CONTEXT_CLAIM}]};
-      evidence={construct:'self-description',family:'reported-rule',role:'check',statementTest:'contextEffect',checkId:'journey-context-effect-'+batchIndex,contextRoundId:at(34),referenceOnlyWorkIds:[noteWork.id],stimulusVisibility:'not-shown',limits:['This broad claim is compared with a later before-and-after liking rating for one painting. A single exception does not establish a general trait.',...LIMITS]};
+      evidence={construct:'self-description',family:'reported-rule',role:'check',statementTest:'contextEffect',checkId:'journey-context-effect-'+batchIndex,contextRoundId:at(34),referenceOnlyWorkIds:[noteWork.id],stimulusVisibility:'not-shown',limits:['This broad claim is compared with the later response about the note for one painting, under its captured instructions. A single exception does not establish a general trait.',...LIMITS]};
     }else if(spec.task==='artist'||spec.task==='movement'){
       const field=spec.task==='artist'?'artist':'movement';
       template=templateFor(item=>item.kind==='match'&&item.field===field);
@@ -389,7 +392,8 @@ export function buildJourneyRounds(works,answers={},options={}){
       priorExposure:priorIds.length?'some-works-previously-planned':'first-planned-presentation',
       ...(spec.panel?{plannedSetSignature:signature(art)}:{})
     }};
-    if(full.kind==='spectrum'&&full.criterion==='preference'&&full.evidence.construct==='preference'&&!full.evidence.repeatOf&&full.evidence.role!=='repeat')full=comparisonFirst?withComparisonPreference(full):withOverallAppeal(full);
+    if(full.kind==='spectrum'&&full.criterion==='preference'&&full.evidence.construct==='preference'&&!full.evidence.repeatOf&&full.evidence.role!=='repeat')full=preferenceProtocol===CONTINUOUS_PROTOCOL?withContinuousPreference(full):comparisonFirst?withComparisonPreference(full):withOverallAppeal(full);
+    if(full.kind==='context'&&preferenceProtocol===CONTINUOUS_PROTOCOL)full=withContextChange(full);
     sequence.push(full);
     if(full.kind!=='statements')[...full.works,...(full.anchorWorks||[])].forEach(work=>lastSeen.set(work.id,globalIndex));
     registerSpecificQuestion(full,globalIndex);

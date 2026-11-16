@@ -7,8 +7,8 @@ import {withComparisonPreference} from '../../public/art-atlas/comparison-protoc
 import {validAnswer} from '../../public/art-atlas/engine.mjs';
 import {renderOpening} from '../../public/art-atlas/experience-view.mjs';
 
-test('A fresh quiz can reach preserved previous quizzes without a profile or a restart icon',()=>{
-  const html=renderOpening({archiveCount:1});assert.match(html,/data-action="deep-start">Start/);assert.match(html,/data-action="deep-archives">Previous quizzes/);assert.doesNotMatch(html,/deep-reset|Restart|Reset/);
+test('Preserved old quizzes do not add archive or reset controls to the opening',()=>{
+  const html=renderOpening({archiveCount:3});assert.match(html,/data-action="deep-start">Start/);assert.doesNotMatch(html,/deep-archives|Previous quizzes|deep-reset|Restart|Reset/);
   assert.doesNotMatch(renderOpening(),/deep-archives/);
 });
 
@@ -108,5 +108,17 @@ test('Comparison mode keeps the shared granular line without presenting position
     assert.equal(f.draft.positions['painting-0'],90);assert.match(range.getAttribute('aria-valuetext'),/Joint preference order 2 of 4/);
     for(let value=0;value<=100;value++){f.rate(value);assert.equal(f.draft.positions['painting-0'],value);}
     assert.ok(validAnswer(f.round,{...f.draft,confirmed:true}));
+  }finally{f.close();}
+});
+
+test('Placed phone paintings remain on the line and leave the pending tray, with compact precise adjustment',()=>{
+  const f=fixture({positions:{'painting-0':90}});try{
+    const pending=f.app.querySelector('.reference-art[data-work="painting-0"]');assert.equal(pending.getAttribute('aria-hidden'),'true');assert.equal(pending.tabIndex,-1);
+    assert.equal(f.app.querySelector('.work-overview').getAttribute('aria-label'),'Paintings still to place');
+    assert.equal(f.app.querySelector('.reference-art[data-work="painting-1"]').getAttribute('aria-hidden'),null);
+    const placed=f.app.querySelector('.placed-art[data-work="painting-0"]');placed.click();assert.equal(f.app.querySelector('#fine-controls').textContent.replace(/\s+/g,' ').trim(),'90 / 100−+');
+    const range=f.app.querySelector('#mobile-spectrum-range');range.dispatchEvent(new f.dom.window.KeyboardEvent('keydown',{key:'ArrowLeft',shiftKey:true,bubbles:true}));assert.equal(f.draft.positions['painting-0'],80);
+    range.dispatchEvent(new f.dom.window.KeyboardEvent('keydown',{key:'Enter',bubbles:true}));assert.equal(f.draft.positions['painting-0'],80);
+    assert.equal(f.app.querySelector('.focus-art').dataset.work,'painting-0');
   }finally{f.close();}
 });

@@ -1,6 +1,7 @@
 import {validChoiceGrid,sanitizeChoiceGrid} from './discovery-grid.mjs';
 import {validContrastAnswer,sanitizeContrastDraft} from './contrast-rounds.mjs';
 import {isSymbolismRound,validSymbolismAnswer,sanitizeSymbolismDraft} from './symbolism-rounds.mjs';
+import {isContextChangeRound,validContextChangeAnswer,sanitizeContextChangeDraft} from './context-change.mjs';
 export const SCHEMA = 5;
 export const FEATURES = ['abstraction', 'energy', 'complexity', 'humanity', 'narrative', 'atmosphere', 'color'];
 export const ROUND_IDS = ['preferenceRank', 'closer', 'feeling', 'interestRank', 'connection', 'probe', 'selfView', 'artistMatch', 'styleMatch', 'context', 'contextSecond', 'lastLook'];
@@ -46,6 +47,7 @@ export function freshState() { return { schema: SCHEMA, stage: 'intro', index: 0
 export function pruneAfter(answers, index) { return Object.fromEntries(Object.entries(answers).filter(([key]) => ROUND_IDS.includes(key) && ROUND_IDS.indexOf(key) <= index)); }
 export function validAnswer(round, a) {
   if (!a || a.skipped) return false;
+  if(isContextChangeRound(round))return validContextChangeAnswer(round,a);
   if(isSymbolismRound(round))return validSymbolismAnswer(round,a);
   if(round.kind==='choice-grid')return validChoiceGrid(round,a);
   if(round.kind==='contrast')return validContrastAnswer(round,a);
@@ -66,6 +68,7 @@ export function validAnswer(round, a) {
 // Keep a partial answer without turning a missing response into a neutral one.
 export function sanitizeDraft(round, answer) {
   const workIds = ids(round), base = { workIds };
+  if(isContextChangeRound(round))return sanitizeContextChangeDraft(round,answer);
   if(isSymbolismRound(round))return sanitizeSymbolismDraft(round,answer);
   if(round.kind==='choice-grid')return sanitizeChoiceGrid(round,answer);
   if(round.kind==='contrast')return sanitizeContrastDraft(round,answer||{});

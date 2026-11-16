@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import {APPEAL_PROTOCOL} from '../../public/art-atlas/appeal-scale.mjs';
 import {buildJourneyRounds} from '../../public/art-atlas/journey-bank.mjs';
 import {buildSymbolismRound,validSymbolismDefinition} from '../../public/art-atlas/symbolism-rounds.mjs';
 import {validAnswer,sanitizeDraft} from '../../public/art-atlas/engine.mjs';
@@ -11,8 +12,8 @@ import {renderTastePortrait} from '../../public/art-atlas/taste-portrait-view.mj
 const works=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/artworks.json',import.meta.url)));
 const answer=(round,before,after)=>({workIds:[round.works[0].id],workId:round.works[0].id,before,after,storySeen:true});
 
-test('Three sourced symbolism exercises occupy distinct slots and preserve the prospective claim link',()=>{
-  const rounds=buildJourneyRounds(works),notes=rounds.filter(round=>round.symbolismProtocol);
+test('The historical overall route keeps three sourced before/after symbolism exercises in distinct slots and preserve the prospective claim link',()=>{
+  const rounds=buildJourneyRounds(works,{}, {preferenceProtocol:APPEAL_PROTOCOL}),notes=rounds.filter(round=>round.symbolismProtocol);
   assert.deepEqual(notes.map(round=>round.id),['journey-025','journey-035','journey-040']);
   assert.equal(new Set(notes.map(round=>round.works[0].id)).size,3);
   for(const round of notes){assert.ok(validSymbolismDefinition(round));assert.equal(round.bankRoundId,undefined);assert.ok(round.evidence.newInstrument);}

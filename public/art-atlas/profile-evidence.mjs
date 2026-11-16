@@ -1,6 +1,7 @@
 import {validAnswer,AXES} from './engine.mjs';
 import {isOverallAppealRound} from './appeal-scale.mjs';
 import {COMPARISON_PROTOCOL,COMPARISON_SCOPE,isComparisonPreferenceRound} from './comparison-protocol.mjs';
+import {CONTINUOUS_PROTOCOL,CONTINUOUS_SCOPE,isContinuousPreferenceRound} from './continuous-preference.mjs';
 import * as discoveryGrid from './discovery-grid.mjs';
 
 const plain=value=>!!value&&typeof value==='object'&&!Array.isArray(value);
@@ -35,7 +36,7 @@ export function validatedProfileEntries({works=[],rounds=[],answers={}}={}){
   });
 }
 
-export const hasComparisonMarker=round=>round?.evidence?.comparisonProtocol!==undefined||round?.evidence?.measurementScope===COMPARISON_SCOPE;
+export const hasComparisonMarker=round=>round?.evidence?.comparisonProtocol!==undefined||round?.evidence?.measurementScope===COMPARISON_SCOPE||round?.evidence?.continuousProtocol!==undefined||round?.evidence?.measurementScope===CONTINUOUS_SCOPE;
 export function isUnconditionalPreference(round){
   return (!hasComparisonMarker(round)||isComparisonPreferenceRound(round))&&round?.kind==='spectrum'&&round.criterion==='preference'&&round.evidence?.construct==='preference'&&round.evidence.unconditional!==false&&!round.brief&&!round.evidence.brief&&round.evidence.family!=='contextual-choice'&&!round.anchorWorks?.length&&!round.anchorIds?.length;
 }
@@ -58,10 +59,11 @@ function anchorEntry(entry,entries,negative=false){
   const {round,answer}=entry,construct=negative?'overall-dislikes':'overall-favourites',flag=negative?'explicitDislikes':'explicitFavourites';
   if(round.kind!=='choice-grid'||round.selectionMode!=='shortlist'||round.evidence?.construct!==construct||round.evidence[flag]===false||negative&&round.evidence[flag]!==true)return null;
   const exposure=favouriteExposure(round,answer);if(!exposure)return null;
-  const marked=round.evidence.anchorComparisonProtocol!==undefined||round.evidence.finalRefinement?.protocol==='closing-refinement-v2-ordinal';
+  const marked=round.evidence.anchorComparisonProtocol!==undefined||['closing-refinement-v2-ordinal','closing-refinement-v3-continuous'].includes(round.evidence.finalRefinement?.protocol);
   if(marked){
-    if(round.evidence.anchorComparisonProtocol!==COMPARISON_PROTOCOL||round.evidence[flag]!==true)return null;
-    const earlier=entries.filter(source=>source.index<entry.index&&isComparisonPreferenceRound(source.round));
+    const protocol=round.evidence.anchorComparisonProtocol;
+    if(![COMPARISON_PROTOCOL,CONTINUOUS_PROTOCOL].includes(protocol)||round.evidence[flag]!==true)return null;
+    const earlier=entries.filter(source=>source.index<entry.index&&(protocol===CONTINUOUS_PROTOCOL?isContinuousPreferenceRound(source.round):isComparisonPreferenceRound(source.round)&&!isContinuousPreferenceRound(source.round)));
     if(exposure.presentedIds.some(id=>!earlier.some(source=>source.round.works.some(work=>{const chosen=round.works.find(candidate=>candidate.id===id);return work.id===id&&['sourceUrl','image'].every(key=>work[key]===chosen[key])&&['sha256','previewSha256'].every(key=>work[key]===undefined||chosen[key]===undefined||work[key]===chosen[key]);}))))return null;
   }
   return {...entry,exposure,negative};
@@ -76,9 +78,9 @@ export function buildPreferenceBasis(entries=[]){
   const overallEntries=entries.filter(entry=>isUnconditionalPreference(entry.round)&&isOverallAppealRound(entry.round));
   const ratings=new Map(),favouriteStates=new Map(),dislikeStates=new Map(),currentAnchors=new Map(),anchorHistories=new Map(),lastDeclarations=new Map();
   for(const entry of overallEntries)for(const work of entry.round.works){
-    const previous=ratings.get(work.id),score=entry.answer.positions[work.id];
-    const evidence=profileEvidence(entry,[work.id],`${short(work)}: overall appeal ${score} on the recorded 0–100 scale.`, 'Overall appeal');
-    ratings.set(work.id,{work,workId:work.id,score,entry,sourceRoundIds:unique([...(previous?.sourceRoundIds||[]),entry.round.id]),support:[evidence],history:[...(previous?.history||[]),{roundId:entry.round.id,score}],basis:'overall-appeal',positive:score>=POSITIVE_APPEAL,negative:score<=LOW_APPEAL});
+    const previous=ratings.get(work.id),score=entry.answer.positions[work.id],continuous=isContinuousPreferenceRound(entry.round);
+    const evidence=profileEvidence(entry,[work.id],`${short(work)}: ${continuous?'personal':'overall'} appeal ${score} on the recorded 0–100 scale.${continuous?` ${score>50?'Above':score<50?'Below':'At'} the neutral anchor.`:''}`, continuous?'Personal appeal':'Overall appeal');
+    ratings.set(work.id,{work,workId:work.id,score,entry,sourceRoundIds:unique([...(previous?.sourceRoundIds||[]),entry.round.id]),support:[evidence],history:[...(previous?.history||[]),{roundId:entry.round.id,score,...(continuous?{measurementScope:CONTINUOUS_PROTOCOL}:{})}],basis:continuous?'personal-appeal':'overall-appeal',measurementScope:continuous?CONTINUOUS_PROTOCOL:'overall-appeal-v1',positive:continuous?score>50:score>=POSITIVE_APPEAL,negative:continuous?score<50:score<=LOW_APPEAL,neutral:continuous&&score===50});
   }
   const favourites=entries.flatMap(entry=>{const value=anchorEntry(entry,entries);return value?[value]:[];}),dislikeEntries=entries.flatMap(entry=>{const value=anchorEntry(entry,entries,true);return value?[value]:[];});
   for(const entry of [...favourites,...dislikeEntries].sort((a,b)=>a.index-b.index)){
@@ -93,7 +95,7 @@ export function buildPreferenceBasis(entries=[]){
   }
   const favouriteDeclarations=[...favouriteStates.values()].filter(item=>item.selected).map(item=>{
     const rating=ratings.get(item.work.id);
-    return {work:item.work,workId:item.work.id,basis:'overall-favourites',positive:true,score:rating?.score??null,entry:item.entry,sourceRoundIds:unique([item.entry.round.id,...(rating?.sourceRoundIds||[])]),support:[profileEvidence(item.entry,[item.work.id],`${short(item.work)} was explicitly included in your favourites selection. The selected works were not ranked.`, 'Your favourites'),...(rating?.support||[])],counter:rating&&rating.score<=LOW_APPEAL?[...rating.support]:[],history:rating?.history||[]};
+    return {work:item.work,workId:item.work.id,basis:'overall-favourites',positive:true,score:rating?.score??null,entry:item.entry,sourceRoundIds:unique([item.entry.round.id,...(rating?.sourceRoundIds||[])]),support:[profileEvidence(item.entry,[item.work.id],`${short(item.work)} was explicitly included in your favourites selection. The selected works were not ranked.`, 'Your favourites'),...(rating?.support||[])],counter:rating?.negative?[...rating.support]:[],history:rating?.history||[]};
   });
   const dislikeDeclarations=[...dislikeStates.values()].filter(item=>item.selected).map(item=>{
     const rating=ratings.get(item.work.id),positive=favouriteDeclarations.find(seed=>seed.work.id===item.work.id);
@@ -110,12 +112,12 @@ export function buildPreferenceBasis(entries=[]){
     seeds,heroSeeds,ratings:orderedRatings,favourites:selected,dislikes,negativeSeeds,
     favouriteDeclarations,dislikeDeclarations,anchorHistory:[...anchorHistories].map(([workId,history])=>({workId,history,current:currentAnchors.get(workId)?.type||null})),
     favouriteCandidates:[...favouriteStates.values()],dislikeCandidates:[...dislikeStates.values()],
-    basis:selected.length?'overall-favourites':overallEntries.length?'overall-appeal':entries.some(entry=>isComparisonPreferenceRound(entry.round))?COMPARISON_SCOPE:'within-set-comparisons',
+    basis:selected.length?'overall-favourites':overallEntries.some(entry=>isContinuousPreferenceRound(entry.round))?'personal-appeal':overallEntries.length?'overall-appeal':entries.some(entry=>isComparisonPreferenceRound(entry.round))?COMPARISON_SCOPE:'within-set-comparisons',
     absoluteScaleAvailable:overallEntries.length>0,
     sourceRoundIds:unique([...overallEntries,...favourites,...dislikeEntries].map(entry=>entry.round.id)),
     overallRoundIds:overallEntries.map(entry=>entry.round.id),favouriteRoundIds:favourites.map(entry=>entry.round.id),
     dislikeRoundIds:dislikeEntries.map(entry=>entry.round.id),negativeWorkIds:negativeSeeds.map(item=>item.work.id),conflictingAnchorWorkIds:favouriteDeclarations.filter(item=>dislikeDeclarations.some(negative=>negative.workId===item.workId)).map(item=>item.work.id),
-    positiveBand:POSITIVE_APPEAL,lowBand:LOW_APPEAL,
-    limits:['Only questions carrying the exact overall-appeal protocol share its liking anchors. Comparison placements remain within their original sets; order and exact ties do not establish absolute likes or dislikes.','The 65/35 descriptive bands apply only to the older anchored overall scale. They are provisional interface rules, not population cut-offs or confidence estimates.','Favourite and dislike selections are separate unranked declarations. Non-selection only withdraws the same declaration for actually presented works; it never supplies the opposite. An unsure answer leaves earlier declarations unchanged.','Repeated ratings remain a response history for the same work; they do not add independent artworks or replications.']
+    positiveBand:POSITIVE_APPEAL,lowBand:LOW_APPEAL,continuousNeutral:50,continuousRoundIds:overallEntries.filter(entry=>isContinuousPreferenceRound(entry.round)).map(entry=>entry.round.id),
+    limits:['The new personal-appeal scale records levels and differences: above 50 is above neutral, below 50 is below neutral. Older order-only questions retain only their original group ordering.','The 65/35 descriptive bands identify high and low ratings for stronger example contrasts. They are provisional interface rules, not population cut-offs or confidence estimates.','Favourite and dislike selections are separate unranked declarations. Non-selection only withdraws the same declaration for actually presented works; it never supplies the opposite. An unsure answer leaves earlier declarations unchanged.','Repeated ratings remain a response history for the same work; they do not add independent artworks or replications.']
   };
 }

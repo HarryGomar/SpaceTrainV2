@@ -87,3 +87,41 @@ test('Every observation retains exact known identities and the exhibition record
   const {works,record}=synthetic(),result=analyzeRoomDecisions(works,record,walls,connections);assert.ok(result.length<=3);
   for(const f of result)for(const e of [...f.support,...f.counter]){assert.equal(e.roundId,'scenario:'+record.id);for(const id of e.workIds)assert.ok(works.some(w=>w.id===id));}
 });
+
+function narrativeFixture(){
+  const result=synthetic();
+  for(const work of result.works){work.features.narrative=work.features.humanity;work.features.humanity=.5;}
+  result.record.roomResponses.bridgeIds=[result.works[0].id,result.works[6].id];
+  return result;
+}
+
+test('Pending, v1 and per-field unknown action annotations cannot explain a bridge or room adjacency',()=>{
+  for(const mode of ['pending','v1','unknown']){
+    const {works,record}=narrativeFixture();
+    for(const work of works){
+      work.featureSemanticVersion=mode==='pending'?'pending-literal-action-setting-review':mode==='v1'?'literal-action-setting-v1':'literal-action-setting-v2';
+      if(mode==='unknown')work.featureLiteralReview={version:'literal-action-setting-v2',reviewed:true,fields:{narrative:{status:'unknown',value:null}}};
+    }
+    const findings=analyzeRoomDecisions(works,record,walls,connections);
+    assert.equal(findings.some(finding=>finding.feature==='narrative'),false,mode+' adjacency');
+    const bridge=findings.find(finding=>finding.id.endsWith('chosen-bridge'));
+    assert.ok(bridge,mode+' retains the explicit chosen connection');
+    assert.doesNotMatch(bridge.text,/depicted events|depicted action/,mode+' bridge');
+    assert.equal(bridge.support.length,1,mode+' has no invented descriptor support');
+  }
+});
+
+test('Explicit reviewed-v2 action supports the same descriptive comparisons while a stale field value is rejected',()=>{
+  const {works,record}=narrativeFixture();
+  for(const work of works){
+    work.featureSemanticVersion='literal-action-setting-v2';
+    work.featureLiteralReview={version:'literal-action-setting-v2',reviewed:true,fields:{narrative:{status:'reviewed',value:work.features.narrative}}};
+  }
+  const findings=analyzeRoomDecisions(works,record,walls,connections);
+  assert.ok(findings.some(finding=>finding.feature==='narrative'));
+  assert.match(findings.find(finding=>finding.id.endsWith('chosen-bridge')).text,/depicted events|depicted action/);
+  for(const work of works)work.featureLiteralReview.fields.narrative.value=1-work.features.narrative;
+  const stale=analyzeRoomDecisions(works,record,walls,connections);
+  assert.equal(stale.some(finding=>finding.feature==='narrative'),false);
+  assert.doesNotMatch(stale.find(finding=>finding.id.endsWith('chosen-bridge')).text,/depicted events|depicted action/);
+});

@@ -1,7 +1,10 @@
+import {hasComparisonMarker} from './profile-evidence.mjs';
+import {isContinuousPreferenceRound} from './continuous-preference.mjs';
 import {AXES, validAnswer} from './engine.mjs';
 import {buildLookingAppraisals} from './looking-appraisals.mjs';
 import {isComparisonPreferenceRound,responseGapRequired} from './comparison-protocol.mjs';
 import {isReviewedVisualDescriptor} from './visual-descriptor-semantics.mjs';
+const orderOnly=round=>isComparisonPreferenceRound(round)&&!isContinuousPreferenceRound(round);
 
 export const RESPONSE_ATLAS_VERSION = 1;
 export const ATLAS_CLEAR_GAP = 15;
@@ -90,7 +93,7 @@ function noBrief(round) {
 function unconditional(round) {
   if (round.kind !== 'spectrum' || round.criterion !== 'preference' || round.evidence?.unconditional === false || !noBrief(round)) return false;
   const construct = round.evidence?.construct, family = round.evidence?.family;
-  if(Object.hasOwn(round.evidence||{},'comparisonProtocol'))return isComparisonPreferenceRound(round)&&['individual-choice','feature-check','unconditional-preference','adaptive-preference'].includes(family);
+  if(hasComparisonMarker(round))return isComparisonPreferenceRound(round)&&['individual-choice','feature-check','unconditional-preference','adaptive-preference'].includes(family);
   if (construct !== undefined) return construct === 'preference' && (!family || ['individual-choice', 'feature-check'].includes(family));
   const legacy = legacyPreference.get(round.id);
   return !family && !!legacy && legacy[0] === round.title && legacy[1] === round.hint && !Object.hasOwn(round, 'scale');
@@ -167,7 +170,7 @@ function preferenceGraph(entries, works) {
     for (const [a, b] of pairs(offered)) {
       const gap = Math.abs(answer.positions[a] - answer.positions[b]), winner = answer.positions[a] > answer.positions[b] ? a : b, loser = winner === a ? b : a;
       const observation = {id: round.id + ':' + JSON.stringify([a, b]), source: a, target: b, workIds: [a, b], positions: {[a]: answer.positions[a], [b]: answer.positions[b]}, gap,
-        relation: gap >= responseGapRequired(round) ? isComparisonPreferenceRound(round)?'preference-order':'clear-preference' : gap === 0 ? 'tie' : 'near-tie', roundId: round.id, sourceRoundIds: [round.id], roundTitle: text(round.title), setId: text(round.evidence?.setId) || setKey(offered), sourceRole: sourceRole(round),orderOnly:isComparisonPreferenceRound(round)};
+        relation: gap >= responseGapRequired(round) ? orderOnly(round)?'preference-order':isContinuousPreferenceRound(round)?'appeal-difference':'clear-preference' : gap === 0 ? 'tie' : 'near-tie', roundId: round.id, sourceRoundIds: [round.id], roundTitle: text(round.title), setId: text(round.evidence?.setId) || setKey(offered), sourceRole: sourceRole(round),orderOnly:orderOnly(round)};
       comparisons.push(observation);
       if (gap >= responseGapRequired(round)) edges.push({...observation, source: winner, target: loser, winnerId: winner, loserId: loser});
     }
@@ -189,7 +192,7 @@ function matchedPanels(entries) {
   const prefs = entries.filter(entry => unconditional(entry.round)), interests = entries.filter(entry => curiosity(entry.round)), result = [];
   for (const pref of prefs) for (const interest of interests) {
     if (setKey(pref.offered) !== setKey(interest.offered)) continue;
-    const x = spectrumQuestion(pref.round), y = spectrumQuestion(interest.round), definition = {xName:isComparisonPreferenceRound(pref.round)?'Preference order':'Preference', yName: 'Curiosity', left: text(x.scale?.left) || 'Less preferred', right: text(x.scale?.right) || 'More preferred', bottom: text(y.scale?.left) || 'Less curious', top: text(y.scale?.right) || 'More curious'};
+    const x = spectrumQuestion(pref.round), y = spectrumQuestion(interest.round), definition = {xName:orderOnly(pref.round)?'Preference order':isContinuousPreferenceRound(pref.round)?'Personal appeal':'Preference', yName: 'Curiosity', left: text(x.scale?.left) || 'Less preferred', right: text(x.scale?.right) || 'More preferred', bottom: text(y.scale?.left) || 'Less curious', top: text(y.scale?.right) || 'More curious'};
     result.push({id: 'paired-' + pref.round.id + '-' + interest.round.id, kind: 'matched-preference-curiosity', title: 'Preference and curiosity', axisId: 'preference-curiosity', axisDefinition: definition,
       signature: canonical({x, y, workIds: [...pref.offered].sort()}), domain: [0, 100], coordinates: {x: 'left-to-right', y: 'bottom-to-top'}, sourceRoundIds: [pref.round.id, interest.round.id], questionDefinitions: [x, y], workIds: [...pref.offered],
       points: pref.offered.map(workId => ({id: pref.round.id + ':' + interest.round.id + ':' + workId, workId, x: pref.answer.positions[workId], y: interest.answer.positions[workId], roundId: pref.round.id, roundTitle: text(pref.round.title), preferenceRoundId: pref.round.id, curiosityRoundId: interest.round.id, sourceRoundIds: [pref.round.id, interest.round.id]})),

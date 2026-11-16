@@ -1,4 +1,6 @@
-/** Locations provide an order, not a personal-appeal score or confidence. */
+import {isContinuousPreferenceRound} from './continuous-preference.mjs';
+/** Captured v12 locations provide order only. The separate continuous
+ * instrument below also supports comparisons without discarding its levels. */
 export const COMPARISON_PROTOCOL='within-set-preference-order-v1';
 export const COMPARISON_SCOPE='within-set-ordinal-preference';
 export const COMPARISON_QUESTION='Which do you prefer?';
@@ -6,13 +8,14 @@ export const COMPARISON_HINT='Use the line to order these paintings. Same positi
 export const COMPARISON_SCALE=Object.freeze({left:'Less preferred here',right:'More preferred here'});
 
 export function isComparisonPreferenceRound(round){
+  if(round?.evidence?.continuousProtocol!==undefined)return isContinuousPreferenceRound(round);
   return round?.kind==='spectrum'&&round.criterion==='preference'&&round.evidence?.construct==='preference'&&round.evidence.comparisonProtocol===COMPARISON_PROTOCOL&&round.evidence.measurementScope===COMPARISON_SCOPE&&!round.evidence.appealProtocol&&round.title===COMPARISON_QUESTION&&round.hint===COMPARISON_HINT&&Object.entries(COMPARISON_SCALE).every(([key,value])=>round.scale?.[key]===value)&&round.evidence.unconditional!==false&&!round.brief&&!round.evidence.brief&&!round.anchorWorks?.length&&!round.anchorIds?.length;
 }
 
 export function withComparisonPreference(round){
   if(round?.kind!=='spectrum'||round.criterion!=='preference'||round.evidence?.construct!=='preference'||round.evidence.unconditional===false||round.brief||round.evidence.brief||round.anchorWorks?.length||round.anchorIds?.length)throw Error('Comparison preference requires an unconditional painting spectrum.');
   if(round.evidence.repeatOf||round.evidence.role==='repeat')throw Error('A repeat must retain its original question and measurement protocol.');
-  const {appealProtocol,...evidence}=round.evidence;
+  const {appealProtocol,continuousProtocol,...evidence}=round.evidence;
   return {...round,title:COMPARISON_QUESTION,hint:COMPARISON_HINT,scale:{...COMPARISON_SCALE},evidence:{...evidence,comparisonProtocol:COMPARISON_PROTOCOL,measurementScope:COMPARISON_SCOPE,positionMeaning:'order-and-exact-ties-only',showNumericScale:false}};
 }
 

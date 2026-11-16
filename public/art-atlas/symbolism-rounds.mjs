@@ -26,6 +26,7 @@ const known = works => {
 
 // Route malformed typed records to strict validation rather than to legacy context.
 export const isSymbolismRound = round => plain(round) && (Object.hasOwn(round,'symbolismProtocol') || round.evidence?.family==='symbolism-reveal');
+const hasSymbolismNote=round=>isSymbolismRound(round)||round?.kind==='context'&&round.contextContentProtocol===SYMBOLISM_PROTOCOL&&round.contextNote?.workId===round.works?.[0]?.id;
 
 export function availableSymbolismContent(works=[]) {
   const byId=known(works);
@@ -43,11 +44,11 @@ export function selectSymbolismContent({works=[],rounds=[],answers={},preferredW
   }
   const priority=content=>{const preferred=preferredWorkIds.indexOf(content.workId);return preferred>=0?preferred:preferredWorkIds.length+(rated.has(content.workId)?0:1);};
   available.sort((a,b)=>priority(a)-priority(b));
-  const used=new Set(rounds.filter(isSymbolismRound).map(round=>round.contextNote?.id));
+  const used=new Set(rounds.filter(hasSymbolismNote).map(round=>round.contextNote?.id));
   const fresh=available.find(content=>!used.has(content.id));
   if(fresh)return {status:'ready',content:fresh,revisit:false};
   if(allowRevisit&&available.length){
-    const last=new Map();rounds.forEach((round,index)=>{if(isSymbolismRound(round))last.set(round.contextNote?.id,index);});
+    const last=new Map();rounds.forEach((round,index)=>{if(hasSymbolismNote(round))last.set(round.contextNote?.id,index);});
     available.sort((a,b)=>(last.get(a.id)??-1)-(last.get(b.id)??-1));
     return {status:'ready',content:available[0],revisit:true};
   }
@@ -59,7 +60,7 @@ export function buildSymbolismRound({id,works=[],contentId,evidence={},rounds=[]
   const selection=contentId?{content:getSymbolismContent(contentId)}:selectSymbolismContent({works,rounds,answers,preferredWorkIds,excludeContentIds,excludeWorkIds,allowRevisit});
   const content=selection.content,work=content&&known(works).get(content.workId);
   if(!content||!work)return null;
-  const previous=rounds.filter(isSymbolismRound).filter(round=>round.contextNote?.id===content.id);
+  const previous=rounds.filter(hasSymbolismNote).filter(round=>round.contextNote?.id===content.id);
   return {
     id,kind:'context',format:'context',works:[structuredClone(work)],criterion:'preference',
     contextMode:SYMBOLISM_CONTEXT_MODE,symbolismProtocol:SYMBOLISM_PROTOCOL,contextCriterion:SYMBOLISM_CRITERION,

@@ -15,6 +15,25 @@ function grouped(count=9) {
   return {works,record:{version:2,kind:'curate',protocol:'open-gallery-v1',id:'exhibition-one',createdAt:1,offeredIds:works.map(w=>w.id),presentedIds:works.map(w=>w.id),placements,roomNames:{g1:'My first room'},baselineAnswers:{},confirmed:true,finishedAt:2}};
 }
 
+test('A low-figure-focus landscape room and a figure-focused room show contrasting representatives and explicit room roles',()=>{
+  const lowIds=['cezanne-mountain','opening-cma-141639','study-monet-japanese-footbridge'],highIds=['study-leonardo-mona-lisa','study-vermeer-pearl','holbein-ambassadors'];
+  const works=[...lowIds,...highIds].map(id=>structuredClone(actual.find(work=>work.id===id)));
+  assert.ok(works.every(Boolean));assert.ok(works.filter(work=>lowIds.includes(work.id)).every(work=>work.features.humanity===0));
+  const before=JSON.stringify(works),record={version:2,kind:'curate',protocol:'open-gallery-v1',id:'landscape-and-figure-rooms',createdAt:1,finishedAt:2,confirmed:true,offeredIds:works.map(work=>work.id),presentedIds:works.map(work=>work.id),placements:Object.fromEntries(works.map((work,i)=>[work.id,{wallId:i<3?'wall-0':'wall-1',t:(i%3+1)/4}])),roomNames:{},baselineAnswers:{}};
+  const finding=analyzeGallery(works,record,walls).find(finding=>finding.feature==='humanity');
+  assert.ok(finding);assert.equal(finding.title,'Rooms differed in how prominently they showed people.');
+  assert.equal(finding.displayWorkIds.length,2);assert.ok(lowIds.includes(finding.displayWorkIds[0]));assert.ok(highIds.includes(finding.displayWorkIds[1]));
+  const [low,high]=finding.displayWorkIds;
+  assert.equal(finding.displayRoles[low].role,'lower-figure-focus');assert.equal(finding.displayRoles[high].role,'higher-figure-focus');
+  assert.equal(finding.displayRoles[low].roomId,'g1');assert.equal(finding.displayRoles[high].roomId,'g2');
+  assert.equal(finding.displayRoles[low].descriptorValue,0);assert.equal(finding.displayRoles[high].descriptorValue,1);
+  assert.match(finding.displayNotes[low].description,/Gallery01|Gallery 01/);assert.match(finding.displayNotes[low].description,/less emphasis on human figures/);
+  assert.match(finding.displayNotes[high].description,/stronger emphasis on human figures/);
+  assert.doesNotMatch(finding.text,/more people|fewer people|all.*contain.*people/i);
+  assert.ok(finding.alternatives.some(line=>/not a count of people/.test(line)));
+  assert.equal(JSON.stringify(works),before);
+});
+
 test('Palette distance uses sampled colour distributions rather than colour intensity alone',()=>{
   const a=work('a',0),b=work('b',1),same=work('same',0);
   assert.equal(a.features.color,b.features.color);assert.equal(paletteDistance(a,same),0);assert.equal(paletteDistance(a,b),1);

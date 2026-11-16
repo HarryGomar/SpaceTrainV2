@@ -34,7 +34,7 @@ function historyFor(round,works,rounds,answers){
     if(source.unavailable||source.kind!=='spectrum'||source.criterion!=='preference'||e?.construct!=='preference'||!FAMILY.has(e.family)||e.unconditional===false||source.brief||e.brief||source.anchorWorks?.length||source.anchorIds?.length||workIds.length<2||workIds.length>4||new Set(workIds).size!==workIds.length||workIds.some(id=>!byId.has(id))||a?.confirmed!==true||!Array.isArray(a.workIds)||a.workIds.join('|')!==workIds.join('|')||!a.positions||Array.isArray(a.positions)||Object.keys(a.positions).length!==workIds.length||workIds.some(id=>!Number.isInteger(a.positions[id]))||a.roundId!==undefined&&a.roundId!==source.id)continue;
     let valid=false;try{valid=validAnswer(source,a);}catch{}if(valid)preferences.push({round:source,answer:a,index,workIds,scope:preferenceMeasurementKey(source)});
   }
-  return {byId,history,preferences,overall:preferences.filter(entry=>isOverallAppealRound(entry.round))};
+  return {byId,history,preferences,overall:preferences.filter(entry=>entry.scope===APPEAL_PROTOCOL&&isOverallAppealRound(entry.round))};
 }
 function exposure(round,answers){
   if(round.unavailable||round.kind==='statements'||round.evidence?.stimulusVisibility==='not-shown')return {presented:[],groups:[],unknown:[]};

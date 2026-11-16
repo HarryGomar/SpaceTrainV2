@@ -6,7 +6,7 @@ import {APPEAL_PROTOCOL,isOverallAppealRound,withOverallAppeal} from '../../publ
 import {summarizePreferenceHypotheses,planAdaptivePanels} from '../../public/art-atlas/adaptive-selection.mjs';
 import {buildJourneyRounds,createJourneyStimulusPlan,journeyAdaptiveQuotas,JOURNEY_REVISION} from '../../public/art-atlas/journey-bank.mjs';
 import {validAnswer} from '../../public/art-atlas/engine.mjs';
-import {isComparisonPreferenceRound} from '../../public/art-atlas/comparison-protocol.mjs';
+import {COMPARISON_PROTOCOL,isComparisonPreferenceRound} from '../../public/art-atlas/comparison-protocol.mjs';
 import {ORDINAL_REFINEMENT_PROTOCOL} from '../../public/art-atlas/ordinal-refinement.mjs';
 import {legacyV11Works,legacyV11Rounds} from './helpers/legacy-v11.mjs';
 const currentWorks=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/artworks.json',import.meta.url),'utf8'));
@@ -25,8 +25,8 @@ test('Captured v11 definitions retain18 overall-appeal quartets, their actual so
   const earlier=new Set(rounds.slice(0,7).filter(r=>r.evidence.construct==='preference').flatMap(ids));assert(rounds[7].works.every(w=>earlier.has(w.id)));for(const id of ['add-tamayo-still-life-foot','add-rivera-portrait-frida'])assert(ids(rounds[7]).includes(id));assert.equal(rounds[7].evidence.arrangementSelection.revision,'earlier-appeal-sorting-v1');assert.equal(sig(ids(rounds[31])),sig(ids(rounds[7])));assert(ids(rounds[9]).includes('add-siqueiros-madre-nina'));
 });
 
-test('The fresh comparison-first journey retains72 main stimuli without inheriting overall-appeal closing semantics',()=>{
-  const rounds=buildJourneyRounds(currentWorks),main=rounds.filter(round=>round.evidence.panelNumber&&round.evidence.construct==='preference');
+test('An explicitly requested ordinal journey retains72 main stimuli without inheriting overall-appeal closing semantics',()=>{
+  const rounds=buildJourneyRounds(currentWorks,{}, {preferenceProtocol:COMPARISON_PROTOCOL}),main=rounds.filter(round=>round.evidence.panelNumber&&round.evidence.construct==='preference');
   assert.equal(rounds.length,50);assert.equal(rounds[0].evidence.journeyRevision,JOURNEY_REVISION);assert.equal(main.length,18);assert.equal(new Set(main.flatMap(ids)).size,72);assert(main.every(isComparisonPreferenceRound));assert(main.every(round=>!isOverallAppealRound(round)));
   assert(rounds.slice(-5).every(round=>round.evidence.finalRefinement.protocol===ORDINAL_REFINEMENT_PROTOCOL));
 });

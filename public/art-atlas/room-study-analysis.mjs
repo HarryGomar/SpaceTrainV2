@@ -1,5 +1,6 @@
 import { buildRounds, validAnswer } from './engine.mjs';
 import { paletteDistance, GROUPING_CRITERIA } from './gallery-analysis.mjs';
+import { isReviewedVisualDescriptor } from './visual-descriptor-semantics.mjs';
 
 const STUDY='room-relations-v1';
 const finite=Number.isFinite;
@@ -67,10 +68,10 @@ function descriptors() {
     {key:'palette',label:'sampled colour palettes',distance:paletteDistance,limit:'The palette descriptor comes from digital reproductions. Frames, lighting and reproduction colour can influence it.'},
     {key:'date',label:'recorded dates',distance:(a,b)=>GROUPING_CRITERIA.find(c=>c.key==='date').distance(a,b),limit:'Dates use recorded ranges and their approximate midpoints. Open-ended and very broad ranges provide no chronological comparison.'},
     {key:'humanity',label:'emphasis on human figures',distance:(a,b)=>featureDistance(a,b,'humanity'),limit:'Emphasis on figures is a coarse editorial annotation, not a complete account of subject or meaning.'},
-    {key:'narrative',label:'emphasis on depicted events',distance:(a,b)=>featureDistance(a,b,'narrative'),limit:'Depicted events use a coarse editorial annotation. The system does not recognise every story or association.'}
+    {key:'narrative',label:'emphasis on depicted action',distance:(a,b)=>featureDistance(a,b,'narrative'),limit:'Depicted bodily action uses the strict reviewed literal annotation. It does not supply a story, symbolic meaning or the reason behind a connection.'}
   ];
 }
-function featureDistance(a,b,key){return finite(a?.features?.[key])&&finite(b?.features?.[key])?Math.abs(a.features[key]-b.features[key]):null;}
+function featureDistance(a,b,key){return isReviewedVisualDescriptor(a,key)&&isReviewedVisualDescriptor(b,key)?Math.abs(a.features[key]-b.features[key]):null;}
 function bridgeFinding(record,info,connections) {
   const [aId,bId]=info.responses.bridgeIds,a=info.byId.get(aId),b=info.byId.get(bId),aRoom=info.roomByWork.get(aId),bRoom=info.roomByWork.get(bId),steps=roomGraphDistance(connections,aRoom,bRoom),allPairs=pairs(info.ids).filter(([x,y])=>info.roomByWork.get(x)!==info.roomByWork.get(y));
   const candidates=descriptors().map(descriptor=>{const value=descriptor.distance(a,b),values=allPairs.map(([x,y])=>descriptor.distance(info.byId.get(x),info.byId.get(y))).filter(v=>v!==null&&finite(v)),baseline=mean(values),range=values.length?Math.max(...values)-Math.min(...values):0;return {descriptor,value,baseline,range,gain:value===null||baseline===null?0:baseline-value};}).filter(c=>c.value!==null&&c.range>=.3&&c.value<=.25&&c.gain>=.15).sort((a,b)=>b.gain-a.gain);

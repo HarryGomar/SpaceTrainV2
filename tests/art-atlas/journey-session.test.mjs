@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {prepareJourneySession,extendJourneySession,sessionJourneyRounds,snapshotStudyRound,restoreStudyRound,validStudyAnswer,analyzeStudy} from '../../public/art-atlas/deep-study.mjs';
+import {legacyV11Rounds} from './helpers/legacy-v11.mjs';
 import {JOURNEY_REVISION} from '../../public/art-atlas/journey-bank.mjs';
 import {validAnswer,sanitizeDraft,AXES} from '../../public/art-atlas/engine.mjs';
 import {createGalleryRecord,gallerySlots,placePainting,validGallery} from '../../public/art-atlas/gallery-model.mjs';
@@ -21,6 +22,7 @@ function completeAnswer(round){
   if(round.kind==='choice-grid')return {workIds,selectionMode:round.selectionMode,selectedIds:workIds.slice(0,Math.min(round.selectionMode==='familiarity'?2:round.maxChoices||3,round.evidence?.instrumentRevision==='paged-favourites-v1'?18:Infinity)),explicitNone:false,unsure:false,confirmed:true,...(round.evidence?.instrumentRevision==='paged-favourites-v1'?{presentation:{protocol:'paged-favourites-v1',pageSize:18,visitedPages:[0],activePage:0}}:{})};
   if(round.kind==='statements')return {workIds,claims:Object.fromEntries(round.statements.map(statement=>[statement.id,3]))};
   if(round.kind==='match')return {workIds,field:round.field,guesses:Object.fromEntries(round.works.map(work=>[work.id,round.options.find(option=>option.label===work[round.field]).id])),confirmed:true};
+  if(round.kind==='context'&&round.contextMode==='reported-context-change-v1')return {workIds,workId:workIds[0],contextProtocol:round.contextProtocol,contentId:round.contextNote.id,storySeen:true,reportedChange:50,uncertain:false,confirmed:true};
   if(round.kind==='context')return round.contextMode==='preference-before-after-v1'?{workIds,workId:workIds[0],before:25,after:75,storySeen:true}:{workIds,workId:workIds[0],change:'same'};
   if(round.kind==='contrast'){
     const base={workIds,contrastKind:round.contrastKind,confirmed:true};
@@ -202,13 +204,13 @@ test('Partially shownv2 questions keep responses, labels, catalogue and all stil
 });
 
 test('A story answer requires both exact five-point ratings, its actual work and seeing the story',()=>{
-  const story=sessionJourneyRounds(initial).find(round=>round.contextMode==='preference-before-after-v1'),valid={workIds:ids(story),workId:ids(story)[0],before:0,after:100,storySeen:true};assert.ok(story);assert.ok(validAnswer(story,valid));assert.ok(validStudyAnswer(story,valid));
+  const story=legacyV11Rounds().find(round=>round.contextMode==='preference-before-after-v1'),valid={workIds:ids(story),workId:ids(story)[0],before:0,after:100,storySeen:true};assert.ok(story);assert.ok(validAnswer(story,valid));assert.ok(validStudyAnswer(story,valid));
   for(const mutate of [answer=>delete answer.before,answer=>delete answer.after,answer=>answer.before=null,answer=>answer.before='25',answer=>answer.before=20,answer=>answer.after=NaN,answer=>answer.storySeen=false,answer=>answer.workId='another-work',answer=>answer.workIds=['another-work'],answer=>answer.skipped=true]){const answer=structuredClone(valid);mutate(answer);assert.equal(validAnswer(story,answer),false);assert.equal(validStudyAnswer(story,answer),false);}
   for(const value of [0,25,50,75,100])assert.ok(validAnswer(story,{...valid,before:value,after:value}));
 });
 
 test('Earlier generic before/after draft sanitising preserves zero, partial progress and source identity without fabricating a baseline',()=>{
-  const story=structuredClone(sessionJourneyRounds(initial).find(round=>round.contextMode==='preference-before-after-v1'));delete story.symbolismProtocol;delete story.evidence.family;const workId=ids(story)[0],before=sanitizeDraft(story,{workId,before:0,after:100,storySeen:false});assert.equal(before.before,0);assert.equal(before.after,undefined);assert.equal(before.storySeen,false);assert.equal(before.stage,'before');assert.deepEqual(before.workIds,ids(story));assert.equal(validAnswer(story,before),false);
+  const story=structuredClone(legacyV11Rounds().find(round=>round.contextMode==='preference-before-after-v1'));delete story.symbolismProtocol;delete story.evidence.family;const workId=ids(story)[0],before=sanitizeDraft(story,{workId,before:0,after:100,storySeen:false});assert.equal(before.before,0);assert.equal(before.after,undefined);assert.equal(before.storySeen,false);assert.equal(before.stage,'before');assert.deepEqual(before.workIds,ids(story));assert.equal(validAnswer(story,before),false);
   const after=sanitizeDraft(story,{workId,before:0,after:100,storySeen:true});assert.equal(after.before,0);assert.equal(after.after,100);assert.equal(after.stage,'after');assert.equal(validAnswer(story,after),true);
   const missing=sanitizeDraft(story,{workId,after:75,storySeen:true});assert.equal(missing.before,undefined);assert.equal(missing.after,75);assert.equal(validAnswer(story,missing),false);
   const changed=sanitizeDraft(story,{workId:'another-work',before:25,after:75,storySeen:true});assert.equal(changed.workId,workId);assert.equal(changed.before,undefined);assert.equal(changed.after,undefined);assert.equal(changed.storySeen,false);assert.equal(changed.stage,'before');

@@ -171,8 +171,8 @@ const userCopy={
     userLimits:['A clear scene can still allow several interpretations.','These answers do not judge whether an interpretation is correct.']
   },
   'story-rating-change':{
-    userSignals:['An appeal rating before reading and another afterwards.','The same painting in both ratings.','A sourced note about the painting that you actually opened.'],
-    userLimits:['Reading and looking again happen together.','A change after the note does not prove that the note alone caused it.']
+    userSignals:['Your direct answer about how much knowing the note changes your appreciation.','The exact painting and sourced note that you opened.','An earlier personal-appeal answer, when one was actually recorded; older quizzes retain their original before-and-after ratings.'],
+    userLimits:['The direct response can be Much more even if an earlier appeal rating was already at the top.','Reading and looking again happen together. A reported change does not prove that the note alone caused it.']
   },
   'claim-and-story-comparison':{
     userSignals:['An earlier answer about whether stories usually change your preferences.','A later before-and-after response to a particular painting.','The earlier statement and the later response kept together.'],
@@ -377,21 +377,21 @@ export const PROFILE_READING_CATALOG=Object.freeze([
     limits:["Scene clarity and possible meanings are personal reports, not tests of correct interpretation.","The relationship does not establish that symbolism caused a preference or measure intelligence or tolerance for ambiguity.","Repeated maps of the same works do not add distinct-set support; preference and appraisal order can affect the comparison."]
   },
   {
-    id:"story-rating-change",lensId:"meaning-and-context",title:"Symbolism & appeal",status:"implemented",availability:"current",
-    description:"How appeal changes after a sourced note about the symbols in a painting.",
-    example:example("Hope moved from 2 to 4 out of 5 after its remaining string was explained. The Ambassadors stayed at 3 out of 5 after the note about its skull.",["add-watts-hope","holbein-ambassadors"]),
-    requiredSignals:["A context round with contextMode preference-before-after-v1.","Valid before and after preference values from 0, 25, 50, 75 and 100.","The same workId, a recorded storySeen flag and exact work binding."],
-    sources:[portrait("symbolism.responses",{}),portrait("observations",{"module":"symbolism"}),portrait("contextRatings",{})],
-    implementationNote:"Typed symbolism questions preserve the note, its sources, the five response choices and both answers. Cross-work counts use the first completed response for each painting. Earlier generic context questions retain their own contextRatings records.",
-    limits:["Reading, repeated viewing and elapsed time occur together. A 25-point input change is one response-scale step, not an effect size or a causal estimate."]
+    id:"story-rating-change",lensId:"meaning-and-context",title:"Context & appreciation",status:"implemented",availability:"current",
+    description:"What you report the sourced note adds to your appreciation, even when the painting already had maximum appeal.",
+    example:example("Hope already had an appeal rating of 100. After the note about its remaining string, the viewer reported Much more appreciation. The Ambassadors received No change after its note. Neither response invents a new appeal score.",["add-watts-hope","holbein-ambassadors"]),
+    requiredSignals:["A confirmed reported-context-change-v1 question with its exact reported-appreciation-change-v1 marker, painting and sourced note.","The note was revealed before one of five direct change responses, or an explicit Unsure; uncertainty is separate from No change.","An optional earlier continuous personal-appeal snapshot must match the painting source. Historical preference-before-after-v1 ratings remain a separate supported route."],
+    sources:[portrait("reportedContextChanges.responses",{}),portrait("reportedContextChanges.observations",{}),portrait("symbolism.responses",{}),portrait("observations",{"module":"symbolism"}),portrait("contextRatings",{})],
+    implementationNote:"Direct change records preserve the source note, response category, uncertainty and any real earlier baseline without synthesizing an after-rating. Older typed symbolism and generic before/after records retain their original measures. Cross-work summaries do not treat repeated notes about the same painting as independent artworks.",
+    limits:["Reading, repeated viewing and elapsed time occur together. Direct change is a self-report, not a causal effect or a computed after-score.","The five change codes identify ordered response choices; their spacing is not a calibrated psychological interval. An old 5-to-5 rating remains unchanged under its original instrument."]
   },
   {
-    id:"claim-and-story-comparison",lensId:"meaning-and-context",title:"Expectations & context",status:"implemented",availability:"current",
+    id:"claim-and-story-comparison",lensId:"meaning-and-context",title:"Expectations & context",status:"implemented",availability:"legacy",
     description:"A broad statement about stories is placed beside a specific later before/after response.",
     example:example("The viewer agreed that stories rarely change their preferences. The Birth of Venus then moved from 3 to 4 out of 5 after a museum note. That is one local exception, not a verdict on the broader claim.",["study-botticelli-birth-venus"]),
     requiredSignals:["The exact contextEffect statement answered before the note.","Reciprocal claimRoundId/contextRoundId links and a shared checkId.","Agreement of at least 3 on the 0–4 scale and a nonzero validated before/after change."],
     sources:[portrait("observations",{"id":"symbolism-context-claim"}),portrait("observations",{"id":"taste-context-rating","variant":"linked claim with agreement >= 3 and a nonzero change"})],
-    implementationNote:"This is a claim-linked variant of the same context-rating observation, not an additional independent result.",
+    implementationNote:"This historical before/after route is a claim-linked variant of the same context-rating observation, not an additional independent result. Current direct appreciation-change responses have their own reading; this older claim-linked rule is not applied to them.",
     limits:["Rarely allows exceptions. One changed rating does not falsify the broad claim or measure honesty, consistency or self-awareness."]
   },
   {

@@ -1,3 +1,5 @@
+import {CONTEXT_CHANGE_PROTOCOL} from './context-change.mjs';
+import {CONTINUOUS_PROTOCOL} from './continuous-preference.mjs';
 const unique=values=>[...new Set(values)];
 const names={
   'human-presence':['Subjects & settings','Human presence'],
@@ -15,21 +17,24 @@ function qualitySummary(pattern,fallback){
   const phrase=qualityPhrases[pattern.qualityKey];if(!phrase)return fallback;
   if(pattern.channel==='explicit-favourites')return `Several of your favourites share ${phrase}.`;
   if(pattern.channel==='admiration-of-making')return `Your admiration repeatedly favours ${phrase}.`;
-  if(pattern.status==='descriptive-association')return `Your higher overall ratings cluster around ${phrase}.`;
+  if(pattern.status==='descriptive-association')return `Your higher ${pattern.channel==='personal-appeal'?'personal-appeal':'overall'} ratings cluster around ${phrase}.`;
   return `Your comparisons repeatedly favour ${phrase}.`;
 }
 
 /** A one-off reversal is evidence to explore, never an overall taste profile. */
-export function composeTasteSummary({tastePatterns={},tasteBoundaries={},axesProfile={},themes=[],observations=[],legacyBasis='observed-comparisons'}={}){
+export function composeTasteSummary({tastePatterns={},tasteBoundaries={},reportedContextChanges={},axesProfile={},themes=[],observations=[],legacyBasis='observed-comparisons'}={}){
+  const contextSummary=reportedContextChanges.summary?.measurementScope===CONTEXT_CHANGE_PROTOCOL&&reportedContextChanges.summary.distinctWorkCount>=2&&new Set(reportedContextChanges.summary.workIds||[]).size>=2&&reportedContextChanges.summary.sourceRoundIds?.length>=2?reportedContextChanges.summary:null;
   const boundaryCandidates=[...(tasteBoundaries.findings||[]),...(tasteBoundaries.explicitChoices?.findings||[])],boundary=boundaryCandidates.filter(item=>item?.status==='explicit-choice-contrast'&&item.summaryEligible===true&&item.measurementScope==='explicit-favourite-dislike-choices'&&[1,-1].includes(item.direction)&&typeof item.id==='string'&&typeof item.title==='string'&&typeof item.text==='string'&&Array.isArray(item.highWorkIds)&&new Set(item.highWorkIds).size>=3&&Array.isArray(item.lowWorkIds)&&new Set(item.lowWorkIds).size>=3&&item.highWorkIds.every(id=>!item.lowWorkIds.includes(id))&&Array.isArray(item.supportPairs)&&item.supportPairs.length>=3&&item.coverage?.favouriteArtists>=3&&item.coverage?.dislikeArtists>=3&&item.coverage?.distinctDiscoverySets>=3).sort((a,b)=>(b.priority||0)-(a.priority||0))[0];
+  const continuousBoundary=(tasteBoundaries.continuousFindings||[]).find(item=>item.status==='exploratory-contrast'&&item.summaryEligible===true&&item.measurementScope===CONTINUOUS_PROTOCOL&&item.highWorkIds?.length>=3&&item.lowWorkIds?.length>=3&&item.coverage?.highArtists>=3&&item.coverage?.lowArtists>=3&&item.coverage?.distinctDiscoverySets>=3&&item.supportPairs?.length>=2);
   const qualified=(tastePatterns.patterns||[]).filter(item=>['qualified','descriptive','descriptive-association'].includes(item.status)&&item.summaryEligible===true&&item.direction!==-1);
   const proposed=tastePatterns.readingSummary;
   if(proposed?.patternIds?.length&&proposed.patternIds.every(id=>qualified.some(item=>item.id===id))){
     const leading=qualified.find(item=>item.id===proposed.patternIds[0]);
-    return {title:proposed.title,text:qualitySummary(leading,proposed.text),findingIds:unique([...proposed.patternIds,...(boundary?[boundary.id]:[])]),workIds:unique(proposed.workIds||[]),basis:'reviewed-quality-patterns',...(boundary?{boundaryFindingIds:[boundary.id]}:{})};
+    return {title:proposed.title,text:qualitySummary(leading,proposed.text)+(leading.arrangementSummary?' '+leading.arrangementSummary:'')+(contextSummary?' '+contextSummary.text.split('. ')[0]+'.':''),findingIds:unique([...proposed.patternIds,...(contextSummary?[contextSummary.id]:[]),...(leading.arrangementConnections||[]).map(item=>item.sourceFindingId),...(boundary?[boundary.id]:[])]),workIds:unique(proposed.workIds||[]),basis:'reviewed-quality-patterns',...(boundary?{boundaryFindingIds:[boundary.id]}:{})};
   }
   if(boundary)return {title:boundary.title,text:boundary.text,findingIds:[boundary.id],workIds:unique(boundary.highWorkIds),comparisonWorkIds:[...(boundary.displayWorkIds||[])],basis:'explicit-choice-contrast'};
-  const axes=(axesProfile.axes||[]).filter(axis=>axis.status==='leaning'&&[1,-1].includes(axis.direction)&&axis.eligibleSetCount>=3&&names[axis.key]).sort((a,b)=>(b.supportingSetCount-b.opposingSetCount)-(a.supportingSetCount-a.opposingSetCount)||b.eligibleSetCount-a.eligibleSetCount).slice(0,2);
+  if(continuousBoundary)return {title:continuousBoundary.title,text:continuousBoundary.text,findingIds:[continuousBoundary.id],workIds:unique(continuousBoundary.highWorkIds),comparisonWorkIds:[...continuousBoundary.displayWorkIds],basis:'continuous-choice-contrast'};
+  const axes=(axesProfile.axes||[]).filter(axis=>axis.status==='leaning'&&axis.summaryEligible!==false&&[1,-1].includes(axis.direction)&&axis.eligibleSetCount>=3&&names[axis.key]).sort((a,b)=>(b.supportingSetCount-b.opposingSetCount)-(a.supportingSetCount-a.opposingSetCount)||b.eligibleSetCount-a.eligibleSetCount).slice(0,2);
   if(axes.length){
     return {title:axes.map(axis=>names[axis.key][axis.direction>0?1:0]).join(' · '),text:axes.map(axis=>axis.summary).filter(Boolean).join(' '),findingIds:axes.map(axis=>'axis-'+axis.key),workIds:unique(axes.flatMap(axis=>axis.displayWorkIds||[])),basis:'recurring-visual-comparisons'};
   }
@@ -38,5 +43,6 @@ export function composeTasteSummary({tastePatterns={},tasteBoundaries={},axesPro
     const first=observations.find(item=>item.id===eligibleThemes[0].findingIds[0]);
     return {title:eligibleThemes.map(theme=>theme.title).join(' · '),text:first.text?.split(/(?<=[.!?])\s+/)[0]||'',findingIds:unique(eligibleThemes.flatMap(theme=>theme.findingIds)),workIds:unique(eligibleThemes.flatMap(theme=>theme.workIds||[])),basis:legacyBasis};
   }
+  if(contextSummary)return {title:'Context & appreciation',text:contextSummary.text,findingIds:[contextSummary.id],workIds:[...contextSummary.displayWorkIds],basis:'direct-context-reports'};
   return {title:'Art profile',text:'More comparisons are needed to separate a recurring pattern.',findingIds:[],workIds:[],basis:'insufficient-recurring-patterns'};
 }

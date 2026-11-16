@@ -1,6 +1,9 @@
+import {hasComparisonMarker} from './profile-evidence.mjs';
+import {isContinuousPreferenceRound} from './continuous-preference.mjs';
 import {validAnswer} from './engine.mjs';
 import {validContrastAnswer, allowsMultipleNeighbourReasons, neighbourRelationshipLabels} from './contrast-rounds.mjs';
 import {isComparisonPreferenceRound,responseGapRequired} from './comparison-protocol.mjs';
+const orderOnly=round=>isComparisonPreferenceRound(round)&&!isContinuousPreferenceRound(round);
 
 export const CONTRAST_READING_THRESHOLDS = Object.freeze({preferenceGap:15, featureGap:.25, minimumSubjectSets:2});
 const unique = values => [...new Set(values)];
@@ -14,10 +17,10 @@ const features = {complexity:['sparser compositions','denser compositions'], col
 const families = new Set(['individual-choice','feature-check','unconditional-preference','adaptive-preference']);
 const scope = 'These observations connect recorded decisions under different instructions. They do not establish a personality, a stable motive or the cause of a choice.';
 const joinLabels = labels => labels.length < 2 ? labels[0] || '' : labels.slice(0,-1).join(', ') + ' and ' + labels.at(-1);
-const comparableGap=item=>isComparisonPreferenceRound(item.source.round)?Math.sign(item.gap):item.gap;
+const comparableGap=item=>orderOnly(item.source.round)?Math.sign(item.gap):item.gap;
 function earlierLabel(source,id){
   const value=source.answer.positions[id];
-  if(!isComparisonPreferenceRound(source.round))return 'Earlier preference: '+value+' / 100';
+  if(!orderOnly(source.round))return 'Earlier preference: '+value+' / 100';
   const values=source.round.works.map(work=>source.answer.positions[work.id]),rank=1+values.filter(other=>other>value).length;
   return 'Earlier order: '+(values.filter(other=>other===value).length>1?'joint ':'')+rank+' of '+values.length;
 }
@@ -36,7 +39,7 @@ function entriesFor(works, rounds, answers) {
     if (!plain(answer) || answer.skipped) return [];
     let valid = false;
     if (round.kind === 'contrast') valid = validContrastAnswer(round, answer);
-    else if (round.kind === 'spectrum' && round.criterion === 'preference' && round.evidence?.construct === 'preference' && (!round.evidence.comparisonProtocol||isComparisonPreferenceRound(round)) && families.has(round.evidence.family) && round.evidence.unconditional !== false && !anchors.length && !round.anchorIds?.length && !round.brief && !round.evidence?.brief) {
+    else if (round.kind === 'spectrum' && round.criterion === 'preference' && round.evidence?.construct === 'preference' && (!hasComparisonMarker(round)||isComparisonPreferenceRound(round)) && families.has(round.evidence.family) && round.evidence.unconditional !== false && !anchors.length && !round.anchorIds?.length && !round.brief && !round.evidence?.brief) {
       try { valid = validAnswer(round, answer); } catch { valid = false; }
     }
     return valid ? [{round, answer, index}] : [];
@@ -78,7 +81,7 @@ function keepLeaveReading(entries, preferences) {
     'Keep and leave are relative decisions among six. The other four remain unranked, and leaving a work is not an absolute dislike.',
     'The earlier source contains this exact pair, but its other offered works can differ. The instructions, company, attention and elapsed time changed together.',
     'Each six-work set contributes once per direction. A return to the same set can supply counterevidence, not an independent replication. Linked earlier ratings and repeated pictures remain dependent evidence.',
-    'New relative comparisons use order and exact ties; legacy instruments retain their original gap rule. Neither supplies a confidence estimate.'
+    'Continuous personal appeal retains its reported values and gaps. Earlier order-only comparisons use order and exact ties; older rating instruments retain their original gap rule. These are not confidence estimates.'
   ],{supportingSetCount:support.length,counterSetCount:counter.length});
 }
 
@@ -140,7 +143,7 @@ function subjectReversalReading(entries, preferences) {
     'The later choice records a direction, not a numeric strength. No-clear-preference answers supply no direction, and unchosen alternatives remain unranked.',
     ...unique([...support,...counter].flatMap(item => item.entry.round.residualConfounds)),
     'Each subject set contributes once per direction. Aligned and opposing pair relations can coexist inside one set; they are local evidence, not a trait or an independent replication.',
-    'New relative comparisons use order and exact ties; legacy instruments retain their original gap rule. Neither supplies a confidence estimate.'
+    'Continuous personal appeal retains its reported values and gaps. Earlier order-only comparisons use order and exact ties; older rating instruments retain their original gap rule. These are not confidence estimates.'
   ],{readingBasis:'matched-earlier-preference',supportingSetCount:support.length,counterSetCount:counter.length,priority:11});
 }
 

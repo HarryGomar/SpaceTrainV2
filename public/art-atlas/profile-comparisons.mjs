@@ -1,5 +1,6 @@
 import {validAnswer} from './engine.mjs';
 import {isComparisonPreferenceRound} from './comparison-protocol.mjs';
+import {isContinuousPreferenceRound} from './continuous-preference.mjs';
 
 export function contextPurpose(brief=''){
   if(/weeks|longer|live with/i.test(brief))return 'longer looking';
@@ -28,10 +29,14 @@ export function comparisonReadout(item,{works=[],rounds=[],answers={}}={}){
   if(!pair||![1,2].includes(pair.workIds?.length)||new Set(pair.workIds).size!==pair.workIds.length||!pair.workIds.every(id=>known.has(id)))return null;
   const measures=pair.measures||[{key:'preference',label:'Preference',values:pair.preference},{key:'curiosity',label:'Want to understand',values:pair.curiosity}];
   if(!measures.length||measures.some(measure=>!Array.isArray(measure.values)||measure.values.length!==pair.workIds.length||measure.values.some(value=>!Number.isFinite(value)||value<0||value>100)))return null;
-  const notes=Object.fromEntries(pair.workIds.map(id=>[id,[]]));
+  const notes=Object.fromEntries(pair.workIds.map(id=>[id,[]])),spacingNotes=[];
   if(pair.workIds.length===2)for(const measure of measures){
     const difference=measure.values[0]-measure.values[1];
-    const sourceIds=[measure.roundId,pair.preferenceRoundId,...(item?.support||[]).filter(source=>pair.workIds.every(id=>source.workIds?.includes(id))).map(source=>source.roundId)],ordinal=measure.key==='preference'&&sourceIds.some(id=>{const round=rounds.find(round=>round.id===id),answer=answers[id];return isComparisonPreferenceRound(round)&&pair.workIds.every((workId,index)=>round.works.some(work=>work.id===workId)&&answer?.positions?.[workId]===measure.values[index]);});
+    const sourceIds=[measure.roundId,pair.preferenceRoundId,...(item?.support||[]).filter(source=>pair.workIds.every(id=>source.workIds?.includes(id))).map(source=>source.roundId)],matches=round=>pair.workIds.every((workId,index)=>round.works.some(work=>work.id===workId)&&answers[round.id]?.positions?.[workId]===measure.values[index]),continuous=['preference','appeal'].includes(measure.key)&&sourceIds.some(id=>{const round=rounds.find(round=>round.id===id);return isContinuousPreferenceRound(round)&&matches(round);}),ordinal=measure.key==='preference'&&sourceIds.some(id=>{const round=rounds.find(round=>round.id===id);return isComparisonPreferenceRound(round)&&!isContinuousPreferenceRound(round)&&matches(round);});
+    if(continuous){
+      for(const [index,id] of pair.workIds.entries()){const value=measure.values[index];notes[id].push({role:'rating',tone:'preference',text:`${measure.label==='Preference'?'Personal appeal':measure.label}: ${value} / 100 · ${value>50?'above neutral':value<50?'below neutral':'neutral'}`});}
+      spacingNotes.push(`${Math.abs(difference)}-point appeal gap${measure.values.every(value=>value>50)?' · both above neutral':measure.values.every(value=>value<50)?' · both below neutral':''}`);continue;
+    }
     if(Math.abs(difference)<(ordinal?1:15)){if(measure.key==='preference')for(const id of pair.workIds)notes[id].push({role:ordinal?'tie':'near-tie',tone:'neutral',text:ordinal?'Equal preference':'Similar preference'});continue;}
     const winner=pair.workIds[difference>0?0:1],other=pair.workIds[difference>0?1:0];
     if(measure.key==='preference'||measure.key==='appeal'){
@@ -42,5 +47,5 @@ export function comparisonReadout(item,{works=[],rounds=[],answers={}}={}){
       if(text)notes[winner].push({role:measure.key,tone:['curiosity','clarity'].includes(measure.key)?'curiosity':measure.key==='return'?'preference':measure.key==='tension'?'response':'meaning',text});
     }
   }
-  return {workIds:[...pair.workIds],notes,measures,single:pair.workIds.length===1};
+  return {workIds:[...pair.workIds],notes,measures,single:pair.workIds.length===1,...(spacingNotes.length?{displayNote:spacingNotes.join('; ')}:{})};
 }
