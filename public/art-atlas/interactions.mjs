@@ -3,23 +3,24 @@ import { updateArtworkCorners } from './artwork-corners.mjs';
 import {isOverallAppealRound} from './appeal-scale.mjs';
 
 export function createInteractions({ app, getRound, getDraft, ready, image, esc, workById, saveDraft, sync }) {
-  let selected = null, suppressClick = false;
+  let selected = null, suppressClick = false, mobileGesture = null;
   const bound = new WeakSet();
   const label = id => String.fromCharCode(65 + getRound().works.findIndex(w => w.id === id));
   const locked = () => getRound().kind === 'match' && getDraft().confirmed;
   const placed = id => { const r = getRound(), d = getDraft(); return r.kind === 'spectrum' ? d.positions[id] !== undefined : r.kind === 'grid' ? !!d.points[id] : !!d.guesses[id]; };
   const initial = () => getRound().works.find(w => !placed(w.id))?.id || getRound().works[0].id;
-  function cycle(direction=1,unplacedOnly=false,from=selected){const list=getRound().works,index=list.findIndex(w=>w.id===from);for(let n=1;n<=list.length;n++){const w=list[(index+direction*n+list.length*2)%list.length];if(!unplacedOnly||!placed(w.id)){select(w.id);return;}}select(from);}
+  const mobileSpectrum=()=>getRound()?.kind==='spectrum'&&getRound().works.length>=3&&!!app.querySelector('.journey-question')&&window.matchMedia('(max-width:700px)').matches;
+  function cycle(direction=1,unplacedOnly=false,from=selected){const list=getRound().works,index=list.findIndex(w=>w.id===from);for(let n=1;n<=list.length;n++){const w=list[(index+direction*n+list.length*2)%list.length];if(!unplacedOnly||!placed(w.id)){select(w.id);return;}}if(selected!==from)select(from);else{paintSelection();sync();}}
   function source(w, extra = '') {
     const r = getRound(), d = getDraft();
-    return `<button type="button" class="drag-art ${extra}" data-action="select-art" data-drag-work="${esc(w.id)}" data-work="${esc(w.id)}" aria-label="Artwork ${label(w.id)}${r.kind === 'spectrum' ? ', ' + (d.positions[w.id] ?? 'not placed') + ' on the scale. Arrow keys adjust by one; Shift by ten.' : r.kind === 'grid' ? '. Drag onto the map or use arrow keys.' : '. Select, then choose a label.'}" aria-pressed="${selected === w.id}"><span class="art-visual">${image(w)}</span><span class="drag-caption"><span>${label(w.id)}</span><span>${placed(w.id) ? 'Placed' : 'Drag to place'}</span></span></button>`;
+    return `<button type="button" class="drag-art ${extra}" data-action="select-art" data-drag-work="${esc(w.id)}" data-work="${esc(w.id)}" aria-label="Artwork ${label(w.id)}${r.kind === 'spectrum' ? ', ' + (d.positions[w.id] ?? 'not placed') + ' on the scale. Arrow keys adjust by one; Shift by ten.' : r.kind === 'grid' ? '. Drag onto the map or use arrow keys.' : '. Select, then choose a label.'}" aria-pressed="${selected === w.id}"><span class="art-visual">${image(w)}</span><span class="drag-caption"><span>${label(w.id)}</span><span>${placed(w.id) ? 'Placed' : 'Drag to place'}</span></span>${r.kind==='spectrum'&&extra.includes('reference-art')?`<span class="reference-rating" aria-hidden="true">${d.positions[w.id]??'—'}</span>`:''}</button>`;
   }
   function overview() {
     return `<div class="work-overview" aria-label="Your artwork reference group">${getRound().works.map(w => `<div class="reference-work">${source(w, 'reference-art')}</div>`).join('')}</div>`;
   }
   function focusMarkup() {
     const w = workById(selected);
-    return `<div class="focus-meta"><span>Artwork ${label(selected)} <span class="meta-divider">/ ${getRound().works.length}</span></span><button class="text-button" data-action="zoom" data-work="${esc(selected)}" type="button">Look closer ↗</button></div>${source(w, 'focus-art')}`;
+    return `<div class="focus-meta"><span class="focus-index-desktop">Artwork ${label(selected)} <span class="meta-divider">/ ${getRound().works.length}</span></span><span class="focus-index-mobile">Painting ${getRound().works.findIndex(work=>work.id===selected)+1} of ${getRound().works.length}</span><button class="text-button" data-action="zoom" data-work="${esc(selected)}" type="button">Look closer ↗</button></div>${source(w, 'focus-art')}`;
   }
   function tray() {
     const r = getRound();
@@ -27,7 +28,8 @@ export function createInteractions({ app, getRound, getDraft, ready, image, esc,
   }
   function spectrumMarkup() {
     const r = getRound(), overall=isOverallAppealRound(r), target = `<div class="placement-column"><div class="spectrum-target${overall?' overall-appeal-target':''}" id="spectrum-target"><button type="button" class="spectrum-hit" data-action="place-spectrum" aria-label="Place the selected artwork on the scale${overall?'. Every point from 0 to 100 is available. Neutral is 50.':''}"><span class="spectrum-empty">Drop a painting on the line</span></button><div class="spectrum-rail"><span class="spectrum-line"></span><span class="spectrum-mid"></span>${overall?'<span class="appeal-quarter" style="left:25%"></span><span class="appeal-quarter" style="left:75%"></span>':''}<div class="spectrum-placements" id="spectrum-placements"></div></div></div><div class="spectrum-labels${overall?' overall-appeal-labels':''}"><span>${esc(r.scale?.left || (r.criterion === 'interest' ? 'Less curious' : 'Less preferred'))}</span>${overall?`<span class="appeal-neutral">${esc(r.scale.middle)}</span>`:''}<span>${esc(r.scale?.right || (r.criterion === 'interest' ? 'More curious' : 'More preferred'))}</span></div><div class="fine-controls" id="fine-controls"></div><p class="input-status" id="input-status" aria-live="polite"></p></div>`;
-    return r.works.length >= 3 ? `<div class="placement-layout"><div class="focus-column" id="focus-column">${focusMarkup()}</div>${target}${overview()}</div>` : `<div class="spectrum-input">${tray()}${target}</div>`;
+    const mobile=`<div class="mobile-spectrum-controls" role="group" aria-label="Painting rating"><div class="mobile-spectrum-heading"><label for="mobile-spectrum-range">Your rating</label><output id="mobile-spectrum-value" for="mobile-spectrum-range">Not rated</output></div><div class="mobile-spectrum-track"><button type="button" data-action="nudge" data-dx="-1" aria-label="Decrease rating by one" disabled>−</button><input id="mobile-spectrum-range" type="range" min="0" max="100" step="1" value="50" aria-label="Rate the selected painting" aria-describedby="mobile-spectrum-labels"><button type="button" data-action="nudge" data-dx="1" aria-label="Increase rating by one" disabled>+</button></div><div class="mobile-spectrum-labels" id="mobile-spectrum-labels"><span>${esc(r.scale?.left||(r.criterion==='interest'?'Less curious':'Less preferred'))}</span><span>${esc(r.scale?.middle||'')}</span><span>${esc(r.scale?.right||(r.criterion==='interest'?'More curious':'More preferred'))}</span></div></div>`;
+    return r.works.length >= 3 ? `<div class="placement-layout spectrum-layout"><div class="focus-column" id="focus-column">${focusMarkup()}</div>${target.replace('<div class="placement-column">','<div class="placement-column">'+mobile)}${overview()}</div>` : `<div class="spectrum-input">${tray()}${target}</div>`;
   }
   function gridMarkup() {
     const a = AXES[getRound().axis];
@@ -43,6 +45,7 @@ export function createInteractions({ app, getRound, getDraft, ready, image, esc,
     return `<div class="match-review-grid">${r.works.map(work=>{const result=results.find(item=>item.workId===work.id),chosen=r.options.find(option=>option.id===result.chosen)?.label,correct=result.status==='correct',unsure=result.status==='unsure',feedback=correct?'Correct':unsure?'Not sure':'Incorrect',path=correct?'M5 9l3 3 5-6':unsure?'M5 9h8':'M6 6l6 6M12 6l-6 6';return `<figure class="match-review-work" data-review-work="${esc(work.id)}" data-match-status="${result.status}"><div class="match-review-painting">${source(work,'matched-art')}</div><figcaption><span class="match-review-status"><svg viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="7.25"/><path d="${path}"/></svg>${feedback}</span><strong class="match-review-answer">${correct?'':'<span class="match-answer-prefix">Answer: </span>'}${esc(result.label)}</strong>${!correct&&!unsure&&chosen?`<span class="match-review-guess">You chose ${esc(chosen)}</span>`:''}</figcaption></figure>`;}).join('')}</div><p class="input-status" id="input-status" aria-live="polite">${results.filter(item=>item.status==='correct').length} correct${results.some(item=>item.status==='unsure')?' · '+results.filter(item=>item.status==='unsure').length+' not sure':''} out of ${results.length}. Correct answers are shown under each painting.</p>`;
   }
   function select(id) {
+    mobileGesture=null;
     selected = id;
     const focus = app.querySelector('#focus-column');
     if (focus) { focus.innerHTML = focusMarkup(); bindSources(); }
@@ -50,14 +53,14 @@ export function createInteractions({ app, getRound, getDraft, ready, image, esc,
   }
   function paintSelection() {
     updateArtworkCorners(app);
-    const focused = document.activeElement?.matches('[data-action=nudge]') ? { dx: document.activeElement.dataset.dx, dy: document.activeElement.dataset.dy } : null;
+    const focused = document.activeElement?.matches('[data-action=nudge]')&&!document.activeElement.closest('.mobile-spectrum-controls') ? { dx: document.activeElement.dataset.dx, dy: document.activeElement.dataset.dy } : null;
     for (const el of app.querySelectorAll('.drag-art')) {
       const id = el.dataset.dragWork, r = getRound(), d = getDraft();
       el.setAttribute('aria-pressed', String(id === selected));
       if (r.kind === 'spectrum') el.setAttribute('aria-label', `Artwork ${label(id)}, ${d.positions[id] ?? 'not placed'} on the scale. Arrow keys adjust by one; Shift by ten.`);
       if (r.kind === 'grid') el.setAttribute('aria-label', `Artwork ${label(id)}, ${d.points[id] ? describePoint(r.axis,d.points[id]) + ', coordinates ' + d.points[id].join(', ') : 'not placed'}. Arrow keys adjust by one; Shift by ten.`);
     }
-    for (const el of app.querySelectorAll('.reference-work')) { const id = el.querySelector('.drag-art').dataset.work; el.classList.toggle('has-placement', placed(id)); el.querySelector('.drag-art').setAttribute('data-placed',String(placed(id))); }
+    for (const el of app.querySelectorAll('.reference-work')) { const id = el.querySelector('.drag-art').dataset.work; el.classList.toggle('has-placement', placed(id)); el.querySelector('.drag-art').setAttribute('data-placed',String(placed(id)));const rating=el.querySelector('.reference-rating');if(rating)rating.textContent=getDraft().positions[id]??'—'; }
     for (const el of app.querySelectorAll('.tray-work')) { const id = el.querySelector('.drag-art').dataset.work; el.classList.toggle('has-placement',placed(id)); el.querySelector('.drag-caption span:last-child').textContent = placed(id) ? 'Placed' : 'Drag to place'; }
     const next = app.querySelector('[data-action=next-art]');
     if (next) next.disabled = !ready();
@@ -65,6 +68,8 @@ export function createInteractions({ app, getRound, getDraft, ready, image, esc,
     const fine = app.querySelector('#fine-controls'), r = getRound(), d = getDraft();
     if (fine && r.kind === 'spectrum') fine.innerHTML = `<span>Artwork ${label(selected)} · ${d.positions[selected] ?? 'Not placed'}</span><button type="button" data-action="nudge" data-dx="-1" aria-label="Move artwork ${label(selected)} one step left" ${placed(selected) ? '' : 'disabled'}>−</button><button type="button" data-action="nudge" data-dx="1" aria-label="Move artwork ${label(selected)} one step right" ${placed(selected) ? '' : 'disabled'}>+</button>`;
     if (fine && r.kind === 'grid') fine.innerHTML = `<span>Artwork ${label(selected)} · ${placed(selected) ? esc(describePoint(r.axis, d.points[selected])) : 'Not placed'}</span>${[['←',-1,0,'left'],['↓',0,-1,'down'],['↑',0,1,'up'],['→',1,0,'right']].map(([text, dx, dy, word]) => `<button type="button" data-action="nudge" data-dx="${dx}" data-dy="${dy}" aria-label="Move artwork ${label(selected)} one step ${word}" ${placed(selected) ? '' : 'disabled'}>${text}</button>`).join('')}`;
+    const range=app.querySelector('#mobile-spectrum-range');
+    if(range){const value=d.positions[selected],hasValue=value!==undefined;range.disabled=!ready();range.setAttribute('aria-label',`Rate painting ${r.works.findIndex(work=>work.id===selected)+1} of ${r.works.length}. Arrow keys adjust by one; Enter moves to the next unrated painting.`);range.setAttribute('aria-valuetext',hasValue?`${value} of 100`:'Not rated');if(!mobileGesture)range.value=String(hasValue?value:50);app.querySelector('#mobile-spectrum-value').textContent=hasValue?`${value} / 100`:'Not rated';const controls=range.closest('.mobile-spectrum-controls');controls.dataset.rated=String(hasValue);for(const button of controls.querySelectorAll('[data-action=nudge]'))button.disabled=!ready()||!hasValue||Number(button.dataset.dx)<0&&value===0||Number(button.dataset.dx)>0&&value===100;}
     if (focused) [...app.querySelectorAll('[data-action=nudge]')].find(el => el.dataset.dx === focused.dx && el.dataset.dy === focused.dy)?.focus({preventScroll:true});
   }
   function status() {
@@ -72,15 +77,17 @@ export function createInteractions({ app, getRound, getDraft, ready, image, esc,
     if(r.kind!=='match'&&el&&app.querySelector('.journey-question')){el.classList.add('sr-only');el.textContent=`${count} of ${r.works.length} artworks placed`;return;}
     if (r.kind !== 'match' && el) el.textContent = `${count} of ${r.works.length} placed. ${count === r.works.length ? 'Adjust any work, then confirm.' : r.works.length === 2 ? 'Drag a painting, or select it and tap the line.' : 'Drag the painting or tap the ' + (r.kind === 'grid' ? 'map' : 'line') + '.'}${r.kind === 'grid' && app.querySelector('.map-location') ? ' Nearby images fan out; dots mark positions.' : ''}`;
   }
-  function setPosition(id, value) {
+  function setPosition(id, value,commit=true) {
     const d = getDraft(); selected = id;
     d.positions[id] = Math.max(0, Math.min(100, Math.round(value))); d.confirmed = false;
-    saveDraft(); paintSpectrum(); sync();
+    if(commit)saveDraft(); paintSpectrum(); sync();
   }
   function spectrumValue(x) { const rect = app.querySelector('.spectrum-rail').getBoundingClientRect(); return (x - rect.left) / rect.width * 100; }
   function paintSpectrum() {
     const r = getRound(), d = getDraft(), holder = app.querySelector('#spectrum-placements');
     if (!holder) return;
+    const mobile=mobileSpectrum();app.querySelector('.spectrum-layout')?.classList.toggle('mobile-spectrum-mode',mobile);
+    if(mobile){holder.replaceChildren();app.querySelector('#spectrum-target').style.height='0px';paintSelection();status();bindSources();return;}
     const rail = app.querySelector('.spectrum-rail'), lanes = [];
     const positions = r.works.filter(w => placed(w.id)).sort((a, b) => d.positions[a.id] - d.positions[b.id]);
     holder.innerHTML = positions.map(w => {
@@ -172,6 +179,7 @@ export function createInteractions({ app, getRound, getDraft, ready, image, esc,
       };
       handle.addEventListener('pointerdown', e => {
         if (!ready() || locked() || e.button !== 0) return;
+        if(mobileSpectrum())return;
         const b = handle.getBoundingClientRect(); drag = { startX: e.clientX, startY: e.clientY, x: e.clientX, y: e.clientY, width: Math.min(160, b.width), ghost: null };
         handle.setPointerCapture(e.pointerId);
       });
@@ -203,6 +211,24 @@ export function createInteractions({ app, getRound, getDraft, ready, image, esc,
       });
     }
   }
+  function bindMobileSpectrum(){
+    const range=app.querySelector('#mobile-spectrum-range');if(!range||bound.has(range))return;bound.add(range);
+    const current=()=>mobileGesture&&mobileGesture.roundId===getRound()?.id&&getRound().works.some(work=>work.id===mobileGesture.workId);
+    const begin=mode=>{mobileGesture={roundId:getRound().id,workId:selected,fresh:!placed(selected),mode,changed:false};};
+    const finish=(advance=false)=>{
+      if(!current()||!ready()||!mobileSpectrum()){mobileGesture=null;return;}
+      const gesture=mobileGesture,value=Number(range.value);mobileGesture=null;
+      if(!gesture.changed)setPosition(gesture.workId,value);else if(gesture.mode==='pointer')saveDraft();
+      if(advance&&gesture.fresh)cycle(1,true,gesture.workId);else paintSelection();
+    };
+    range.addEventListener('pointerdown',event=>{if(!ready()||!mobileSpectrum()||event.button!==0||event.isPrimary===false)return;begin('pointer');});
+    range.addEventListener('input',()=>{if(!ready()||!mobileSpectrum())return;if(!mobileGesture)begin('keyboard');if(!current()){mobileGesture=null;return;}mobileGesture.changed=true;setPosition(mobileGesture.workId,Number(range.value),mobileGesture.mode!=='pointer');});
+    range.addEventListener('change',()=>{if(mobileGesture?.mode==='pointer')finish(true);});
+    range.addEventListener('pointerup',()=>{if(mobileGesture?.mode==='pointer')finish(true);});
+    range.addEventListener('pointercancel',()=>{if(current()&&mobileGesture.changed&&mobileGesture.mode==='pointer')saveDraft();mobileGesture=null;paintSelection();});
+    range.addEventListener('blur',()=>{if(mobileGesture?.mode==='keyboard')finish(false);});
+    range.addEventListener('keydown',event=>{if(event.key==='Enter'&&ready()&&mobileSpectrum()){event.preventDefault();if(!mobileGesture)begin('keyboard');finish(true);}});
+  }
   function attachPad() {
     const pad = app.querySelector('#response-pad'); let dragging = false,fresh=false,padWork=null;
     pad.addEventListener('pointerdown', e => { if (!ready() || e.button !== 0 || e.target.closest('[data-drag-work]')) return; fresh=!placed(selected);padWork=selected;dragging = true; pad.setPointerCapture(e.pointerId); setPoint(selected, gridPoint(e.clientX, e.clientY), false); });
@@ -222,7 +248,7 @@ export function createInteractions({ app, getRound, getDraft, ready, image, esc,
   });
   return {
     markup() { selected = initial(); return getRound().kind === 'spectrum' ? spectrumMarkup() : getRound().kind === 'grid' ? gridMarkup() : matchMarkup(); },
-    attach() { if (getRound().kind === 'spectrum') paintSpectrum(); if (getRound().kind === 'grid') { paintGrid(); attachPad(); } if (getRound().kind === 'match') paintMatches(); bindSources(); },
+    attach() { if (getRound().kind === 'spectrum') {paintSpectrum();bindMobileSpectrum();} if (getRound().kind === 'grid') { paintGrid(); attachPad(); } if (getRound().kind === 'match') paintMatches(); bindSources(); },
     refresh() { paintSelection(); },
     click(action, control, event) {
       if (!['select-art','next-art','previous-art','place-spectrum','place-match','nudge'].includes(action)) return false;

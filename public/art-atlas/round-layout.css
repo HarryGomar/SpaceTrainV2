@@ -56,6 +56,56 @@ body:has(.journey-question) { overflow: hidden; }
 .overall-appeal-labels > span:last-child { text-align: right; }
 .appeal-quarter { position: absolute; bottom: -3px; width: 1px; height: 7px; background: #bcb5aa; pointer-events: none; }
 
+/* Phone spectra keep one large work and one compact, precise rating control. */
+.mobile-spectrum-controls,.reference-rating,.focus-index-mobile { display: none; }
+@media (max-width: 700px) {
+  .journey-question.deep-question .placement-layout.mobile-spectrum-mode {
+    grid-template-columns: minmax(0,1fr);
+    grid-template-rows: minmax(0,1fr) 112px 76px;
+    gap: 8px;
+    align-items: stretch;
+  }
+  .journey-question.deep-question .placement-layout.mobile-spectrum-mode > .focus-column { grid-row: 1; grid-column: 1; grid-template-rows: 44px minmax(0,1fr); }
+  .journey-question .mobile-spectrum-mode .focus-meta { height: 44px; margin: 0; font-size: 11px; }
+  .journey-question .mobile-spectrum-mode .focus-meta .text-button { min-height: 44px; padding: 8px 0 8px 12px; font-size: 11px; }
+  .journey-question .mobile-spectrum-mode .focus-index-desktop { display: none; }
+  .journey-question .mobile-spectrum-mode .focus-index-mobile { display: inline; }
+  .journey-question.deep-question .placement-layout.mobile-spectrum-mode > .focus-column .focus-art .art-visual > img { height: 100%; max-height: 100%; width: 100%; object-fit: contain; }
+  .journey-question .mobile-spectrum-mode > .placement-column { grid-row: 2; grid-column: 1; align-self: center; min-height: 0; }
+  .journey-question .mobile-spectrum-mode #spectrum-target,
+  .journey-question .mobile-spectrum-mode .spectrum-labels,
+  .journey-question .mobile-spectrum-mode #fine-controls { display: none; }
+  .journey-question .mobile-spectrum-mode .mobile-spectrum-controls { display: grid; grid-template-rows: 22px 44px minmax(24px,auto); gap: 6px; width: 100%; min-width: 0; color: var(--ink); }
+  .journey-question .mobile-spectrum-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding-inline: 2px; }
+  .journey-question .mobile-spectrum-heading > label { font-size: 11px; color: var(--soft); }
+  .journey-question .mobile-spectrum-heading > output { font-size: 18px; line-height: 22px; font-variant-numeric: tabular-nums; }
+  .journey-question .mobile-spectrum-track { display: grid; grid-template-columns: 44px minmax(0,1fr) 44px; gap: 10px; align-items: center; min-width: 0; }
+  .journey-question .mobile-spectrum-track > button { width: 44px; height: 44px; min-height: 44px; padding: 0; border: 0; border-radius: 50%; background: #eae6df; color: var(--ink); font-size: 23px; line-height: 1; touch-action: manipulation; }
+  .journey-question .mobile-spectrum-track > button:disabled { opacity: .35; }
+  .journey-question #mobile-spectrum-range { -webkit-appearance: none; appearance: none; display: block; margin: 0; padding: 0; width: 100%; min-width: 0; height: 44px; border: 0; background: transparent; touch-action: none; cursor: ew-resize; accent-color: var(--task-ink,#706154); }
+  .journey-question #mobile-spectrum-range::-webkit-slider-runnable-track { height: 3px; background: #bdb6aa; border: 0; border-radius: 0; }
+  .journey-question #mobile-spectrum-range::-webkit-slider-thumb { -webkit-appearance: none; width: 28px; height: 28px; margin-top: -12.5px; border: 2px solid var(--paper); border-radius: 50%; background: var(--task-ink,#706154); box-shadow: 0 0 0 1px var(--task-ink,#706154); }
+  .journey-question #mobile-spectrum-range::-moz-range-track { height: 3px; background: #bdb6aa; border: 0; }
+  .journey-question #mobile-spectrum-range::-moz-range-thumb { box-sizing: border-box; width: 28px; height: 28px; border: 2px solid var(--paper); border-radius: 50%; background: var(--task-ink,#706154); box-shadow: 0 0 0 1px var(--task-ink,#706154); }
+  .journey-question .mobile-spectrum-controls[data-rated=false] #mobile-spectrum-range::-webkit-slider-thumb { background: var(--paper); }
+  .journey-question .mobile-spectrum-controls[data-rated=false] #mobile-spectrum-range::-moz-range-thumb { background: var(--paper); }
+  .journey-question #mobile-spectrum-range:focus-visible { outline: 1px solid var(--task-ink,#706154); outline-offset: 3px; }
+  .journey-question .mobile-spectrum-labels { display: grid; grid-template-columns: 1fr 1fr 1fr; align-items: start; gap: 6px; font-size: 10px; line-height: 1.3; }
+  .journey-question .mobile-spectrum-labels > span:nth-child(2) { text-align: center; color: var(--soft); }
+  .journey-question .mobile-spectrum-labels > span:last-child { text-align: right; }
+  .journey-question.deep-question .placement-layout.mobile-spectrum-mode > .work-overview { grid-row: 3; grid-column: 1; height: 76px; gap: 14px; margin: 0; align-items: center; }
+  .journey-question.deep-question .mobile-spectrum-mode .work-overview .reference-work { width: min(76px,22%); }
+  .journey-question .mobile-spectrum-mode .reference-art { min-height: 70px; }
+  .journey-question.deep-question .mobile-spectrum-mode .reference-art .art-visual > img { height: 52px; width: 100%; object-fit: contain; }
+  .journey-question .mobile-spectrum-mode .reference-art .drag-caption { display: none; }
+  .journey-question .mobile-spectrum-mode .reference-rating { display: block; margin-top: 5px; text-align: center; font-size: 12px; line-height: 16px; font-variant-numeric: tabular-nums; color: var(--soft); }
+  .journey-question.deep-question .mobile-spectrum-mode .reference-work.has-placement > .reference-art .art-visual > img { filter: grayscale(.3); opacity: .75; }
+  .journey-question.deep-question .mobile-spectrum-mode .reference-work > .reference-art[aria-pressed=true] .art-visual > img { filter: none; opacity: 1; }
+  .journey-question .mobile-spectrum-mode .reference-art[aria-pressed=true] .reference-rating { color: var(--ink); }
+  .journey-question:has(.mobile-spectrum-mode) > .journey-chrome button { min-width: 44px; min-height: 44px; }
+  .journey-question:has(.mobile-spectrum-mode) > .round-actions .primary-button { min-height: 44px; }
+}
+
 /* Matching uses the same bounded task area before and after checking. */
 .journey-question.deep-question .matching-input { position: relative; display: grid; grid-template-rows: minmax(0,1fr) minmax(0,1fr) 82px; gap: 12px; width: 100%; max-width: 1180px; height: 100%; min-height: 0; min-width: 0; margin: 0 auto; align-self: stretch; }
 .journey-question .matching-input > .input-status { position: absolute; left: 0; top: 0; width: 1px; height: 1px; min-height: 0; margin: 0; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
