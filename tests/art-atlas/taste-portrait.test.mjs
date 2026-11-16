@@ -153,7 +153,7 @@ test('The visual reading retains old comparison evidence without promoting a two
   const html=renderTastePortrait({portrait,works:f.works,image:work=>'<img data-art="'+work.id+'">',esc:String});
   assert.match(html,/Visual profile/);assert.match(html,/View the choices/);
   assert.doesNotMatch(html,/<section class="tp-avenues">|class="taste-quality-section"/);
-  assert.match(html,/More evidence needed|Too few contrasting sets/);
+  assert.match(html,/More comparisons needed/);
 });
 
 test('The same supporting pair in otherwise different sets is not four supporting artworks',()=>{

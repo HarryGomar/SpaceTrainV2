@@ -210,10 +210,12 @@ body:has(.journey-question) { overflow: hidden; }
 .embedded-exercise .gallery-pan { height: 100%; min-height: 0; overflow: hidden; }
 .embedded-exercise .gallery-pan:has(.gallery-zoomed) { overflow: auto; }
 .embedded-exercise .gallery-plan-board:not(.gallery-zoomed) { min-height: 0; }
-.embedded-exercise .gallery-art-tray { flex: 0 0 128px; min-height: 0; margin-top: 8px; }
+/* Reserve the library's full height, including its horizontal scrollbar. */
+.embedded-exercise .gallery-art-tray { flex: 0 0 auto; min-height: 0; margin-top: 8px; }
 .embedded-exercise .gallery-focus-image { height: 110px; width: 140px; flex-basis: 140px; }
 .embedded-exercise .gallery-source .art-visual { height: 60px; }
 .embedded-exercise .gallery-bottom { flex: 0 0 52px; margin-top: 2px; }
+.embedded-exercise .gallery-studio:not(.gallery-walkthrough) .gallery-bottom { margin-top: 12px; }
 .embedded-exercise .gallery-names { flex: 0 0 auto; margin-top: 0; }
 .embedded-exercise .gallery-walkthrough-answer { margin-top: 8px; flex: 0 0 100px; }
 
@@ -323,7 +325,7 @@ body:has(.journey-question) { overflow: hidden; }
   .embedded-exercise .difficult-comparison-art img { height: 80px; }
   .embedded-exercise .difficult-comparison-art span { font-size: 8px; margin-top: 4px; }
   .embedded-exercise .difficult-equal-choice { font-size: 10px; margin: 6px auto; }
-  .embedded-exercise .gallery-art-tray { flex-basis: 120px; display: grid; grid-template-columns: 105px minmax(0,1fr); gap: 13px; margin-inline: 0; }
+  .embedded-exercise .gallery-art-tray { flex-basis: auto; display: grid; grid-template-columns: 105px minmax(0,1fr); gap: 13px; margin-inline: 0; }
   .embedded-exercise .gallery-active-work { flex-direction: column; gap: 3px; }
   .embedded-exercise .gallery-focus-image { width: 90px; height: 65px; flex-basis: auto; }
   .embedded-exercise .gallery-active-work > div > p { font-size: 8px; }

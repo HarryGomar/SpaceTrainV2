@@ -14,17 +14,20 @@ function qualityExplanation(item){
   return item.text;
 }
 
+const axisStrength=axis=>axis.presentationStatus||axis.assessment?.status||(axis.status==='leaning'?'recurring':axis.status==='tentative'?'tentative':axis.status==='mixed'?'balanced':'insufficient');
+const axisCount=axis=>count(axis.negativeSetCount)+count(axis.positiveSetCount)+count(axis.mixedSetCount);
 function comparisonTally(part,esc){
   const low=count(part.negativeSetCount),high=count(part.positiveSetCount),split=count(part.mixedSetCount),total=low+high+split;
-  if(!total)return '<p class="taste-axis-no-contrast">More contrasting paintings needed</p>';
-  const direction=part.direction||part.candidateDirection||0;
-  const dots=number=>`<span class="taste-axis-votes" aria-hidden="true">${Array.from({length:number},()=>'<i></i>').join('')}</span>`;
-  return `<div class="taste-axis-counts" aria-label="${total} comparison groups"><div data-side="low" data-leading="${direction<0}"><strong>${low}</strong>${dots(low)}<span>${esc(part.leftLabel||'Lower end')}</span></div><div data-side="high" data-leading="${direction>0}"><strong>${high}</strong>${dots(high)}<span>${esc(part.rightLabel||'Higher end')}</span></div><div data-side="split"><strong>${split}</strong>${dots(split)}<span>Close or split</span></div></div>`;
+  if(!total)return '<p class="taste-axis-no-contrast">No contrasting groups yet</p>';
+  const direction=part.direction||0,left=part.leftLabel||'Lower end',right=part.rightLabel||'Higher end';
+  const segment=(side,number)=>Array.from({length:number},()=>`<i data-side="${side}"></i>`).join('');
+  const summary=direction?`<strong>${direction<0?low:high} of ${total}</strong> groups favoured <em>${esc(direction<0?left:right)}</em>.`:`<strong>${total} painting ${total===1?'group':'groups'}</strong> compared. ${low&&high?'Choices went both ways.':'No consistent direction yet.'}`;
+  return `<div class="taste-axis-balance" data-direction="${direction<0?'low':direction>0?'high':'balanced'}"><p class="taste-axis-balance-summary">${summary}</p><div class="taste-axis-endpoints"><span><b>${low}</b> ${esc(left)}</span><span><b>${high}</b> ${esc(right)}</span></div><div class="taste-axis-segments" style="--comparison-count:${total}" role="img" aria-label="${low} groups favoured ${esc(left)}; ${high} favoured ${esc(right)}; ${split} mixed or close">${segment('low',low)}${segment('split',split)}${segment('high',high)}</div>${split?`<p class="taste-axis-split"><span aria-hidden="true"></span>${split} ${split===1?'group was':'groups were'} mixed or close</p>`:''}</div>`;
 }
 
 export function renderTasteAxisIndex({profile={},esc}={}){
   if(!Array.isArray(profile.axes)||!profile.axes.length||!(profile.coverage?.distinctSets>=2))return '';
-  return `<nav class="taste-axis-index" aria-label="Visual profile axes">${profile.axes.map(axis=>`<a href="#axis-${esc(axis.key)}" style="--axis-colour:${tones[axis.key]||'#76695d'}"><span>${esc(axis.title)}</span><strong>${esc(axisDirection(axis))}</strong></a>`).join('')}</nav>`;
+  return `<nav class="taste-axis-index" aria-label="Visual profile axes">${profile.axes.map(axis=>`<a href="#axis-${esc(axis.key)}" style="--axis-colour:${tones[axis.key]||'#76695d'}"><span>${esc(axis.title)}</span><strong>${esc(['insufficient','not-tested'].includes(axisStrength(axis))?'More comparisons needed':axisDirection(axis))}</strong></a>`).join('')}</nav>`;
 }
 
 /** This view receives findings; it never fits a preference model from pictures. */
@@ -32,14 +35,18 @@ export function renderTasteAxisProfile({profile={},works=[],image,esc,evidence=(
   const axes=Array.isArray(profile.axes)?profile.axes:[];
   if(!axes.length)return '';
   const byId=new Map(works.map(work=>[work.id,work]));
-  return `<section class="taste-axis-profile" id="profile-axes"><div class="tp-section-heading"><p class="tp-kicker">Across your comparisons</p><h2>Visual profile</h2><p class="taste-axis-legend"><i aria-hidden="true"></i> One dot per painting group</p></div><div class="taste-axis-grid">${axes.map(axis=>{
+  const established=axes.filter(axis=>!['insufficient','not-tested'].includes(axisStrength(axis))),pending=axes.filter(axis=>!established.includes(axis));
+  const sourceFor=axis=>({...axis,id:'axis-'+axis.key,module:'visual-axis',title:axis.title,text:axis.summary,alternatives:axis.alternatives||profile.limits||[]});
+  function exampleFor(axis){
+    const example=axis.support?.find(item=>item.workIds?.length===2&&item.workIds.every(id=>byId.has(id))),ids=unique(example?.workIds||axis.displayWorkIds||[]).filter(id=>byId.has(id)).slice(0,2);
+    if(!ids.length)return '';
+    return `<div class="taste-axis-example"><p>${example?'One of your comparisons':'Paintings compared'}</p><div class="taste-axis-example-pair">${ids.map((id,index)=>{const work=byId.get(id);return `<figure><span class="taste-axis-example-role" data-preferred="${!!example&&index===0}">${example?(index===0?'Preferred':'Compared with'):'Rated painting'}</span><button type="button" data-action="deep-art" data-work="${esc(id)}" aria-label="View ${esc(short(work))}">${image(work)}</button><figcaption>${esc(short(work))}</figcaption></figure>`;}).join('')}</div></div>`;
+  }
+  return `<section class="taste-axis-profile" id="profile-axes"><div class="tp-section-heading"><p class="tp-kicker">Across your comparisons</p><h2>Visual profile</h2>${established.length?'<p class="taste-axis-legend"><i aria-hidden="true"></i>One block per painting group</p>':''}</div><div class="taste-axis-grid">${established.map(axis=>{
     const selected=axisDirection(axis),parts=Array.isArray(axis.components)&&axis.components.length>1?axis.components:[axis];
-    const source={...axis,id:'axis-'+axis.key,module:'visual-axis',title:axis.title,text:axis.summary,alternatives:axis.alternatives||profile.limits||[]};
-    const example=axis.support?.find(item=>item.workIds?.filter(id=>byId.has(id)).length===2),ids=unique(example?.workIds||axis.displayWorkIds||[]).filter(id=>byId.has(id)).slice(0,2);
-    const strength=axis.presentationStatus||axis.assessment?.status||(axis.status==='leaning'?'recurring':axis.status==='mixed'?'balanced':'insufficient');
-    const strengthLabel={recurring:'Recurring tendency',tentative:'Early tendency',balanced:'No dominant direction',insufficient:'Still open','not-tested':'Still open'}[strength]||'Still open';
-    return `<article class="taste-axis-reading" id="axis-${esc(axis.key)}" data-axis-status="${esc(axis.status)}" style="--axis-colour:${tones[axis.key]||'#76695d'}"><header><h3>${esc(axis.title)}</h3><p class="taste-axis-direction">${esc(selected||'Still open')}</p><small>${strengthLabel}</small></header><div class="taste-axis-tallies">${parts.map(part=>`<div>${parts.length>1?`<p class="taste-axis-component-name">${esc(componentNames[part.feature]||part.feature)}</p>`:''}${comparisonTally(part,esc)}</div>`).join('')}</div><div class="taste-axis-source"><div class="taste-axis-examples">${ids.map(id=>{const work=byId.get(id);return `<button type="button" data-action="deep-art" data-work="${esc(id)}" aria-label="View ${esc(short(work))}">${image(work)}</button>`;}).join('')}</div>${evidence(source)}</div></article>`;
-  }).join('')}</div></section>`;
+    const strength=axisStrength(axis),strengthLabel={recurring:'Recurring pattern',tentative:'Early tendency',balanced:'No single rule'}[strength]||'More comparisons needed';
+    return `<article class="taste-axis-reading" id="axis-${esc(axis.key)}" data-axis-status="${esc(axis.status)}" style="--axis-colour:${tones[axis.key]||'#76695d'}"><header><h3>${esc(axis.title)}</h3><p class="taste-axis-direction">${esc(selected||'No clear direction')}</p><small data-strength="${esc(strength)}">${strengthLabel}</small>${axis.counter?.some(item=>/later|repeated/.test(item.sourceRole||''))?'<p class="taste-axis-later">Later choices included exceptions.</p>':''}</header><div class="taste-axis-tallies">${parts.map(part=>`<div>${parts.length>1?`<p class="taste-axis-component-name">${esc(componentNames[part.feature]||part.feature)}</p>`:''}${comparisonTally(part,esc)}</div>`).join('')}</div><div class="taste-axis-source">${exampleFor(axis)}${evidence(sourceFor(axis))}</div></article>`;
+  }).join('')}</div>${pending.length?`<section class="taste-axis-pending"><header><h3>More comparisons needed</h3><p>These axes do not have enough contrasting choices yet.</p></header>${pending.map(axis=>`<article id="axis-${esc(axis.key)}" style="--axis-colour:${tones[axis.key]||'#76695d'}"><h4>${esc(axis.title)}</h4><span>${axisCount(axis)} ${axisCount(axis)===1?'group':'groups'} compared</span>${evidence(sourceFor(axis))}</article>`).join('')}</section>`:''}</section>`;
 }
 
 export function renderTasteQualityProfile({profile={},works=[],image,esc,evidence=()=>''}={}){

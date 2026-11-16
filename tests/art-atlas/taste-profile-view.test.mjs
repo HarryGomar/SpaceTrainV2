@@ -32,10 +32,10 @@ test('Pattern text stays escaped, and recommendation paintings need actual catal
   assert.doesNotMatch(routes,/Do not render/);assert.match(routes,/data-work="c"/);assert.match(routes,/Shares a reviewed quality/);
 });
 
-test('Visual groups show exact dot counts once, without a repeated score disclaimer or hidden unqualified association',()=>{
+test('Visual balance names the counted groups and preserves mixed evidence without inventing a score',()=>{
   const axis={key:'colour',title:'Colour',status:'tentative',presentationStatus:'tentative',readingLabel:'Stronger colour',direction:1,positiveSetCount:5,negativeSetCount:1,mixedSetCount:3,leftLabel:'Restrained',rightLabel:'Intense'};
   const html=renderTasteAxisProfile({...helpers,profile:{axes:[axis]}});
-  assert.equal((html.match(/<i><\/i>/g)||[]).length,9);assert.match(html,/Early tendency/);assert.doesNotMatch(html,/Comparison groups, not a personality score|Both directions recur/);
+  assert.equal((html.match(/<i data-side=/g)||[]).length,9);assert.match(html,/<strong>5 of 9<\/strong> groups favoured <em>Intense<\/em>/);assert.match(html,/3 groups were mixed or close/);assert.match(html,/Early tendency/);assert.doesNotMatch(html,/Comparison groups, not a personality score|Both directions recur|\d+%/);
   const profile=renderTasteQualityProfile({...helpers,profile:{patterns:[{id:'unqualified',channel:'overall-appeal',status:'descriptive-association',summaryEligible:false,title:'Not a supported result',text:'Open question.'}]}});
   assert.equal(profile.includes('class="taste-quality-section"'),false);
 });
