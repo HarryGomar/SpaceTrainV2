@@ -4,7 +4,7 @@ const readings=catalogue.filter(item=>item.status==='implemented'&&item.availabi
 const app=document.querySelector('#profile-explorer');
 const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const short=work=>work.shortTitle||work.title;
-const labels={'visual-patterns':'Visual patterns','different-reactions':'Preference & feeling','meaning-and-context':'Symbols & meaning','revisiting-choices':'Choices & returns','curating-and-grouping':'Curating','finding-more':'Discovering more'};
+const labels={'visual-patterns':'Visual patterns','different-reactions':'Taste & feeling','meaning-and-context':'Symbols & meaning','revisiting-choices':'Choices & returns','curating-and-grouping':'Curating','finding-more':'Discovering more'};
 const evidenceCopy={
   'human-figures':['At least two preference groups using four different paintings.','Clear differences in human presence, with choices for and against the proposed pattern.'],
   'representation':['At least two preference groups using four different paintings.','Clear differences between representation and abstraction, with opposing choices retained.'],

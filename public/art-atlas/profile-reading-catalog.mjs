@@ -44,7 +44,7 @@ export const PROFILE_READING_LENSES=Object.freeze([
   },
   {
     "id": "different-reactions",
-    "title": "Preference & feeling",
+    "title": "Taste & feeling",
     "description": "Personal appeal, admiration and the wish to return.",
     "readingIds": [
       "admiration-and-appeal",

@@ -18,7 +18,7 @@ export function taskSignal(round={}){
     return {key:'emotion',label:'Emotional response',icon:'response',terms:['tension','emotion','story','feel','attention']};
   }
   if(round.evidence?.construct==='curiosity'||round.criterion==='interest')return {key:'curiosity',label:'Curiosity',icon:'eye',terms:['understand','investigate','curious','return']};
-  if(round.evidence?.measurementScope==='overall-appeal'&&round.evidence?.appealProtocol==='overall-appeal-v1')return {key:'preference',label:'Personal appeal',icon:'choice',terms:['appeal']};
+  if(round.evidence?.measurementScope==='overall-appeal'&&round.evidence?.appealProtocol==='overall-appeal-v1')return {key:'preference',label:'Overall rating',icon:'choice',terms:['like','overall','appeal']};
   return {key:'preference',label:'Preference',icon:'choice',terms:['prefer','like','rank','choose']};
 }
 export function applyTaskSignals(app,round){
