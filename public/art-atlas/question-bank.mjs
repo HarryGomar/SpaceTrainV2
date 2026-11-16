@@ -6,7 +6,11 @@ export const STUDY_LENGTHS = Object.freeze([50,100,150,200,250,300]);
 export const STUDY_BANK_REVISION = 'art-study-300-v3';
 export const MAX_STUDY_LENGTH=300;
 const FEATURES=['abstraction','energy','complexity','humanity','narrative','atmosphere','color'];
-const f=(w,key)=>isReviewedVisualDescriptor(w,key)?w.features[key]:null;
+let reviewedValues=new WeakMap();
+const f=(work,key)=>{
+  if(!reviewedValues.has(work))reviewedValues.set(work,Object.fromEntries(FEATURES.map(name=>[name,isReviewedVisualDescriptor(work,name)?work.features[name]:null])));
+  return reviewedValues.get(work)[key];
+};
 const mean=xs=>xs.reduce((sum,x)=>sum+x,0)/(xs.length||1);
 const signature=ws=>ws.map(w=>w.id).sort().join('|');
 const idList=ws=>ws.map(w=>w.id);
@@ -60,24 +64,37 @@ const SELF_DESCRIPTIONS = [
 function hash(text) {let result=2166136261;for(const c of text)result=Math.imul(result^c.charCodeAt(0),16777619)>>>0;return result;}
 function random(seed) {let state=seed>>>0;return()=>{state=(Math.imul(state,1664525)+1013904223)>>>0;return state/4294967296;};}
 function shuffle(items,seed) {const result=[...items],next=random(seed);for(let i=result.length-1;i>0;i--){const j=Math.floor(next()*(i+1));[result[i],result[j]]=[result[j],result[i]];}return result;}
+// The panel plan depends only on these reviewed planning inputs. Cache IDs,
+// rather than catalogue objects, so later calls still use their own artwork data.
+const quartetPlanCache=new Map();
 function quartetSets(pool,count=32) {
+  const cacheKey=JSON.stringify([count,pool.map(work=>[work.id,work.artist,...FEATURES.map(key=>f(work,key))])]);
+  if(quartetPlanCache.has(cacheKey)){
+    const byId=new Map(pool.map(work=>[work.id,work]));
+    return quartetPlanCache.get(cacheKey).map(group=>group.map(id=>byId.get(id)));
+  }
   const available=new Map(),next=random(hash(pool.map(w=>w.id).join('|'))),desired=Math.min(1000,pool.length*(pool.length-1)*(pool.length-2)*(pool.length-3)/24);
   for(let attempt=0;attempt<24000&&available.size<desired;attempt++) {
     const chosen=new Set();while(chosen.size<4)chosen.add(Math.floor(next()*pool.length));
     const works=[...chosen].map(i=>pool[i]);available.set(signature(works),works);
   }
-  const candidates=[...available.entries()].sort(([a],[b])=>a.localeCompare(b)),seen=new Map(pool.map(w=>[w.id,0])),result=[];
+  const featureValues=new Map(pool.map(work=>[work.id,Object.fromEntries(FEATURES.map(key=>[key,f(work,key)]))]));
+  const candidates=[...available.entries()].sort(([a],[b])=>a.localeCompare(b)).map(([signature,works])=>{
+    const contrast=Object.fromEntries(FEATURES.map(key=>{const values=works.map(work=>featureValues.get(work.id)[key]).filter(value=>value!==null);return [key,values.length>=2?Math.max(...values)-Math.min(...values):0];}));
+    const spread=mean(works.flatMap((a,index)=>works.slice(index+1).map(b=>{const av=featureValues.get(a.id),bv=featureValues.get(b.id);return mean(FEATURES.filter(key=>av[key]!==null&&bv[key]!==null).map(key=>Math.abs(av[key]-bv[key])));})));
+    return [signature,works,{contrast,spread,artists:new Set(works.map(work=>work.artist)).size}];
+  }),seen=new Map(pool.map(w=>[w.id,0])),result=[];
   for(let index=0;index<count;index++) {
     const key=FEATURES[index%FEATURES.length];let best=-Infinity,bestIndex=-1;
     for(let i=0;i<candidates.length;i++) {
-      const [,works]=candidates[i],values=works.map(w=>f(w,key)).filter(value=>value!==null),contrast=values.length>=2?Math.max(...values)-Math.min(...values):0;
-      const coverage=works.reduce((sum,w)=>sum+1/(1+seen.get(w.id)),0),artists=new Set(works.map(w=>w.artist)).size;
-      const spread=mean(works.flatMap((a,i)=>works.slice(i+1).map(b=>separation(a,b))));
-      const score=coverage*2+contrast*.5+spread*.5+artists*.04;
+      const [,works,stats]=candidates[i],coverage=works.reduce((sum,w)=>sum+1/(1+seen.get(w.id)),0);
+      const score=coverage*2+stats.contrast[key]*.5+stats.spread*.5+stats.artists*.04;
       if(score>best+1e-9){best=score;bestIndex=i;}
     }
     const [,chosen]=candidates.splice(bestIndex,1)[0];chosen.forEach(w=>seen.set(w.id,seen.get(w.id)+1));result.push(shuffle(chosen,hash('panel-'+index)));
   }
+  if(quartetPlanCache.size>=12)quartetPlanCache.delete(quartetPlanCache.keys().next().value);
+  quartetPlanCache.set(cacheKey,result.map(idList));
   return result;
 }
 function exactPreferenceAnswer(round,answer) {
@@ -89,15 +106,30 @@ function provisionalDirection(rounds,answers,key) {
   const value=mean(values),enough=new Set(tasks.map(r=>signature(r.works))).size>=3&&new Set(tasks.flatMap(r=>r.works.map(w=>w.artist))).size>=4;
   return {direction:enough&&Math.abs(value)>=.025?Math.sign(value):0,trainingRoundIds:tasks.map(r=>r.id)};
 }
-function checkPair(pool,key,used,rounds,answers,index) {
-  const estimate=provisionalDirection(rounds,answers,key),pairs=[];
+const pairPlanCache=new Map();
+function rankedCheckPairs(pool,key,{complete=false}={}){
+  const cacheKey=JSON.stringify([key,pool.map(work=>[work.id,...FEATURES.map(name=>f(work,name))])]),cached=pairPlanCache.get(cacheKey);
+  if(cached&&(!complete||cached.complete)){
+    const byId=new Map(pool.map(work=>[work.id,work]));
+    return {pairs:cached.pairs.map(({workIds,...pair})=>({...pair,works:workIds.map(id=>byId.get(id))})),complete:cached.complete};
+  }
+  const pairs=[];
   for(let i=0;i<pool.length;i++)for(let j=i+1;j<pool.length;j++) {
     const a=pool[i],b=pool[j],pairKey=signature([a,b]);
     const contrast=f(a,key)!==null&&f(b,key)!==null?Math.abs(f(a,key)-f(b,key)):null,other=mean(FEATURES.filter(k=>k!==key&&f(a,k)!==null&&f(b,k)!==null).map(k=>Math.abs(f(a,k)-f(b,k))));
     pairs.push({works:[a,b],key:pairKey,contrast,other,score:contrast===null?-2-.6*other:contrast-.6*other});
   }
-  const unseen=pairs.filter(p=>!used.has(p.key)),eligible=unseen.length?unseen:pairs;
-  eligible.sort((a,b)=>b.score-a.score||a.key.localeCompare(b.key));
+  pairs.sort((a,b)=>b.score-a.score||a.key.localeCompare(b.key));
+  if(pairPlanCache.size>=14)pairPlanCache.delete(pairPlanCache.keys().next().value);
+  // Retain a small leading window. If a captured history exhausts it, the
+  // caller requests the full ranking, preserving the original selection.
+  pairPlanCache.set(cacheKey,{complete:pairs.length<=512,pairs:pairs.slice(0,512).map(({works,...pair})=>({...pair,workIds:idList(works)}))});
+  return {pairs,complete:true};
+}
+function checkPair(pool,key,used,rounds,answers,index) {
+  const estimate=provisionalDirection(rounds,answers,key);let ranked=rankedCheckPairs(pool,key),unseen=ranked.pairs.filter(pair=>!used.has(pair.key));
+  if(!unseen.length&&!ranked.complete){ranked=rankedCheckPairs(pool,key,{complete:true});unseen=ranked.pairs.filter(pair=>!used.has(pair.key));}
+  const eligible=unseen.length?unseen:ranked.pairs;
   const selected=eligible[0],comparisonNovel=!used.has(selected.key);
   const works=shuffle(selected.works,hash('check-'+index)),prediction=comparisonNovel&&estimate.direction&&selected.contrast>=.2?selected.works.slice().sort((a,b)=>estimate.direction*(f(b,key)-f(a,key)))[0].id:null;
   return {works,contrastKey:key,contrast:selected.contrast,otherFeatureDistance:selected.other,provisionalPrediction:prediction,trainingRoundIds:estimate.trainingRoundIds,comparisonNovel,holdoutUnit:comparisonNovel?'new-comparison':null,artworksMayBeFamiliar:true,selectionMethod:selected.contrast===null?'comparison-coverage-without-reviewed-target':'annotated-feature-contrast',...(['narrative','atmosphere'].includes(key)&&selected.contrast!==null?{featureSemanticVersion:FEATURE_SEMANTIC_VERSION}:{}),...(selected.contrast===null?{targetDescriptorUnavailable:true}:{} )};
@@ -115,6 +147,7 @@ function matchingWorks(pool,field,index) {
 
 /** Later checks can use earlier answers. The UI must freeze a round when first shown. */
 export function buildStudyRounds(works,target=50,answers={},options={}) {
+  reviewedValues=new WeakMap();
   if(!STUDY_LENGTHS.includes(target))throw Error('Choose a 50, 100, 150, 200, 250 or 300-interaction path.');
   if(!answers||typeof answers!=='object'||Array.isArray(answers))answers={};
   const pool=[...works].filter(w=>isStudyEligibleArtwork(w)&&typeof w.id==='string'&&w.features&&w.title&&w.image).sort((a,b)=>a.id.localeCompare(b.id));

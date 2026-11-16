@@ -28,7 +28,7 @@ test('Every fresh continuous refinement binds on entry from actual earlier sourc
     assert.ok(data.answers[round.id].skipped||validStudyAnswer(round,data.answers[round.id]),round.id);
     if(isOrdinalRefinementRound(round)){closing.push(round);assert.equal(round.evidence.finalRefinement.binding,'bound');assert.ok(round.evidence.finalRefinement.sourceRoundIds.every(id=>Number(id.slice(8))<index+1));}
   }
-  assert.equal(closing.length,8);assert.equal(data.shown['journey-046'].workIds.length,72);assert.deepEqual(data.shown['journey-049'].workIds,data.shown['journey-046'].workIds);assert.equal(data.shown['journey-049'].evidence.explicitDislikes,true);
+  assert.equal(closing.length,7);assert.equal(data.shown['journey-046'].workIds.length,72);assert.deepEqual(data.shown['journey-049'].workIds,data.shown['journey-046'].workIds);assert.equal(data.shown['journey-049'].evidence.explicitDislikes,true);
   assert.deepEqual(data.plan,beforePlan,'Entering stores the shown snapshot; it does not replace pending historical definitions.');
   const shown=structuredClone(data.shown),changed=structuredClone(data);changed.answers['journey-001'].positions=Object.fromEntries(changed.shown['journey-001'].workIds.map((id,i)=>[id,100-i]));
   for(const round of sessionJourneyRounds(changed))assert.deepEqual(snapshotStudyRound(round),shown[round.id]);
@@ -48,6 +48,20 @@ test('Completed comparison blocks continue at 51/100 and 101/150 rather than req
       const first=sessionJourneyRounds(data)[target-50];data.answers[first.id]=ordered(first);data.screen='reading';data.finishedAt=200;localStorage.setItem('art-profile-journey-v1',JSON.stringify(data));
       const study=makeStudy(app);await study.restore();study.render();assert.ok(app.querySelector('[data-action="deep-extend"]'));assert.match(app.textContent,/Continue with 50 more/);assert.doesNotMatch(app.textContent,/Start updated quiz/);study.handle('deep-extend');study.render();assert.match(app.querySelector('.journey-chrome').textContent,new RegExp((target+1)+' / '+(target+50)));await study.flush();data=extendJourneySession(data,foundation,300+target);await study.clear();
     }
+  });
+});
+
+test('Explicit familiarity controls save all three responses and enable the next question only when complete',async()=>{
+  await browser(async(app,dom)=>{
+    Object.defineProperty(dom.window.HTMLImageElement.prototype,'complete',{configurable:true,get:()=>true});
+    Object.defineProperty(dom.window.HTMLImageElement.prototype,'naturalWidth',{configurable:true,get:()=>600});
+    const data=prepareJourneySession(null,foundation,100),first=sessionJourneyRounds(data)[0];data.startedAt=100;data.index=1;data.screen='question';data.shown[first.id]=snapshotStudyRound(first);data.answers[first.id]=ordered(first);
+    localStorage.setItem('art-profile-journey-v1',JSON.stringify(data));const study=makeStudy(app);await study.restore();study.render();
+    const round=study.exportData().rounds.find(round=>round.id==='journey-002');assert.equal(round.evidence.familiarityProtocol,'prior-encounter-v2');assert.equal(app.querySelector('[data-action="deep-next"]').disabled,true);
+    for(const [index,id]of round.workIds.slice(0,2).entries())study.handle('deep-familiarity',{dataset:{work:id,value:index===0?'seen':'unsure'}});
+    study.handle('deep-familiarity-rest');
+    assert.equal(app.querySelector('[data-action="deep-next"]').disabled,false);study.handle('deep-next');
+    const saved=study.exportData().answers['journey-002'];assert.equal(saved.familiarity[round.workIds[0]],'seen');assert.equal(saved.familiarity[round.workIds[1]],'unsure');assert.equal(saved.familiarity[round.workIds[2]],'new');assert.deepEqual(saved.selectedIds,[round.workIds[0]]);assert.equal(saved.confirmed,true);assert.equal(study.exportData().index,2);await study.clear();
   });
 });
 

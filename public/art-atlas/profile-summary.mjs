@@ -14,6 +14,7 @@ const qualityPhrases={
   'scenes-within-scenes':'narrative clues spread through layered spaces','precisely-imagined':'impossible imagery rendered with precision','light-and-figures':'selective lighting around closely framed figures','distortion-and-gesture':'distorted forms and emphatic gestures','structure-and-rhythm':'geometric order and repeated shapes','staged-relationships':'relationships between people staged as encounters','stories-and-worlds':'narrative clues within fantastical worlds','precise-materials':'precise rendering of fabric, metal and other surfaces'
 };
 function qualitySummary(pattern,fallback){
+  if(pattern.text)return pattern.text;
   const phrase=qualityPhrases[pattern.qualityKey];if(!phrase)return fallback;
   if(pattern.channel==='explicit-favourites')return `Several of your favourites share ${phrase}.`;
   if(pattern.channel==='admiration-of-making')return `Your admiration repeatedly favours ${phrase}.`;

@@ -1,0 +1,6 @@
+/** Show uncertainty as a useful next question, without inventing confidence. */
+export function renderProfileIntelligence({intelligence={},esc,evidence=()=>''}={}){
+  const categories=Array.isArray(intelligence.categories)?intelligence.categories:[];
+  if(!categories.length)return '';
+  return `<section class="tp-intelligence" id="profile-refine"><div class="tp-section-heading"><p class="tp-kicker">What is taking shape</p><h2>Your reading, and what would refine it</h2><p>Some connections recur. Others remain early, mixed, or unexplored. Each has a next comparison.</p></div><div class="tp-category-grid">${categories.map(category=>`<article id="profile-category-${esc(category.id)}" data-evidence-status="${esc(category.status)}"><p class="tp-category-status">${esc(category.statusLabel)}</p><h3>${esc(category.title)}</h3><p>${esc(category.conclusion)}</p><p class="tp-category-next"><strong>Next:</strong> ${esc(category.nextComparison.title)}</p>${category.support.length?evidence({id:'category-'+category.id,title:category.title,text:category.conclusion,support:category.support,counter:category.counter,sourceRoundIds:category.sourceRoundIds,alternatives:category.limits}):''}</article>`).join('')}</div></section>`;
+}

@@ -1,3 +1,4 @@
+import {isDiagnosticRound,bindDiagnosticRound} from '../../public/art-atlas/explanation-followups.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -15,6 +16,11 @@ const works=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/artworks.
 const active=routeCollection(works).studyWorks;
 const notes=journeyCurationNotes(works),rounds=buildJourneyRounds(works),ids=round=>round.works.map(work=>work.id),main=rounds.filter(round=>round.kind==='spectrum'&&round.evidence.construct==='preference'&&round.evidence.role==='discovery'),eligible=works.filter(work=>work.eligibleForStudy!==false&&work.studyEligible!==false&&work.decorativeOnly!==true);
 
+test('The Bosch panel separates secondary story clues from impossible imagery and receives a matched return map',()=>{
+  const panel=main.find(round=>round.evidence.panelNumber===13),cells=panel.works.map(work=>{const review=resolveArtworkAttributes(work,{annotationReviews:reviews,currentWorks:works});return ['narrative-detail','imagined-world'].map(key=>review.attributes[key].status).join('|');});
+  assert.deepEqual(new Set(cells),new Set(['present|present','present|absent','absent|present','absent|absent']));assert.ok(ids(panel).includes('goya-saturn'));assert.ok(ids(main.find(round=>round.evidence.panelNumber===14)).includes('add-bruegel-triumph-death'));assert.deepEqual(new Set(ids(rounds[37])),new Set(ids(panel)));assert.equal(rounds[37].axis,'returnResponse');assert.ok(panel.evidence.pairedRoundIds.includes(rounds[37].id));
+});
+
 test('The actual expanded route keeps Western/Americas classics and requested anchors early while staging Asian collections accurately',()=>{
   assert.ok(eligible.length>=450);assert.equal(main.length,18);const first=main.flatMap(round=>round.works);assert.equal(new Set(first.map(work=>work.id)).size,72);
   assert.ok(first.filter(work=>isWesternAmericasWork(work,notes)).length>=68);assert.ok(first.every(work=>!isLaterCurationWork(work,notes)));assert.ok(first.some(work=>work.id==='study-hokusai-great-wave'));
@@ -28,12 +34,12 @@ test('The actual expanded route keeps Western/Americas classics and requested an
   assert.ok(works.filter(work=>work.eligibleForStudy===false||work.studyEligible===false).every(work=>!partition.includes(work.id)));
 });
 
-test('The fresh72 offer repeated source-bound quality contrasts, and admiration keeps five exact earlier painting sets',()=>{
+test('The fresh72 offer repeated source-bound quality contrasts, and admiration keeps three exact earlier painting sets and two separate response maps',()=>{
   const attributes=new Map(main.flatMap(round=>round.works).map(work=>[work.id,resolveArtworkAttributes(work,{annotationReviews:reviews,currentWorks:works})]));
   const contrastCount=(questions,key)=>questions.filter(round=>{const statuses=round.works.map(work=>attributes.get(work.id)?.attributes?.[key]?.status);return statuses.includes('present')&&statuses.includes('absent');}).length;
   const keys=Object.keys(ARTWORK_ATTRIBUTE_DEFINITIONS);assert.equal(keys.length,16);
   for(const key of keys)assert.ok(contrastCount(main,key)>=3,key+' requires several actual present/absent artwork sets.');
-  const admiration=rounds.filter(round=>round.axis==='achievement');assert.equal(admiration.length,5);assert.equal(new Set(admiration.flatMap(ids)).size,20);assert.ok(keys.filter(key=>contrastCount(admiration,key)>=3).length>=12);
+  const admiration=rounds.filter(round=>round.axis==='achievement');assert.equal(admiration.length,3);assert.equal(new Set(admiration.flatMap(ids)).size,12);assert.ok(keys.filter(key=>contrastCount(admiration,key)>=2).length>=8);assert.equal(rounds.filter(round=>round.axis==='attention').length,1);assert.equal(rounds.filter(round=>round.axis==='connection').length,1);
   for(const map of admiration){const source=main.find(round=>round.evidence.panelNumber===map.evidence.panelNumber);assert.ok(source);assert.ok(rounds.indexOf(source)<rounds.indexOf(map));assert.deepEqual(new Set(ids(map)),new Set(ids(source)));}
 });
 
@@ -42,6 +48,7 @@ function finish(data){
   for(let index=0;index<data.plan.length;index++){
     let round=fixed[index];if(data.shown[round.id])continue;
     if(isFinalRefinementRound(round))round=bindFinalRefinementRound({round:restoreStudyRound(data.plan[index],data.manifest.catalogue),works:data.manifest.catalogue,rounds:Object.values(data.shown).map(snapshot=>restoreStudyRound(snapshot,data.manifest.catalogue)).filter(Boolean),answers:data.answers});
+    if(isDiagnosticRound(round)&&!data.shown[round.id])round=bindDiagnosticRound({round:restoreStudyRound(data.plan[index],data.manifest.catalogue),works:data.manifest.catalogue,rounds:Object.values(data.shown).map(snapshot=>restoreStudyRound(snapshot,data.manifest.catalogue)).filter(Boolean),answers:data.answers});
     if(round.unavailable)continue;
     data.shown[round.id]=snapshotStudyRound(round);
     if(round.kind==='spectrum'&&round.evidence.construct==='preference')data.answers[round.id]={confirmed:true,workIds:ids(round),criterion:'preference',positions:Object.fromEntries(round.works.map((work,i)=>[work.id,Math.round(i*100/(round.works.length-1))]))};

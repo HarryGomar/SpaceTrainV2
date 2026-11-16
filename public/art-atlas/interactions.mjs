@@ -154,7 +154,8 @@ export function createInteractions({ app, getRound, getDraft, ready, image, esc,
     if (locked()) return;
     const d = getDraft(), old = d.guesses[id];
     const displaced = Object.keys(d.guesses).find(key => key !== id && d.guesses[key] === option && option !== 'unsure');
-    if (displaced) { if (old) d.guesses[displaced] = old; else delete d.guesses[displaced]; }
+    if (displaced) { if (old) d.guesses[displaced] = old; else delete d.guesses[displaced];if(d.certainty)delete d.certainty[displaced]; }
+    if(isRecognitionWithCertainty(getRound())){d.certainty||={};delete d.certainty[id];if(option==='unsure')d.certainty[id]='unsure';}
     d.guesses[id] = option; selected = getRound().works.find(w=>d.guesses[w.id]===undefined)?.id||id; d.confirmed = false; saveDraft(); paintMatches(); sync();
   }
   function paintMatches() {
@@ -165,7 +166,8 @@ export function createInteractions({ app, getRound, getDraft, ready, image, esc,
     }
     const painting = id => {
       const result = results.find(item => item.workId === id);
-      return `${source(workById(id), 'matched-art')}${d.confirmed ? `<p class="match-feedback ${result.status}">${result.status === 'correct' ? 'Matched' : (result.status === 'unsure' ? 'Answer: ' : 'Correct: ') + esc(result.label)}</p>` : ''}`;
+      const certainty=isRecognitionWithCertainty(r)&&!d.confirmed&&d.guesses[id]!=='unsure'?`<fieldset class="match-certainty"><legend>How did you choose?</legend>${[['recognised','Recognised it'],['inferred','Worked it out'],['guessed','Guessed']].map(([value,label])=>`<button type="button" data-action="match-certainty" data-work="${esc(id)}" data-value="${value}" aria-pressed="${d.certainty?.[id]===value}">${label}</button>`).join('')}</fieldset>`:'';
+      return `${source(workById(id), 'matched-art')}${certainty}${d.confirmed ? `<p class="match-feedback ${result.status}">${result.status === 'correct' ? 'Matched' : (result.status === 'unsure' ? 'Answer: ' : 'Correct: ') + esc(result.label)}</p>` : ''}`;
     };
     for (const target of app.querySelectorAll('[data-option-art]')) {
       const id = Object.keys(d.guesses).find(id => d.guesses[id] === target.dataset.optionArt);
@@ -276,8 +278,13 @@ export function createInteractions({ app, getRound, getDraft, ready, image, esc,
     mobileMapAction(){if(!mobileMap()||mobileMapStage==='review')return null;return {label:mobileMapStage==='painting'?'Place on map':getRound().works.some(work=>work.id!==selected&&!placed(work.id))?'Next painting':'Review map',disabled:mobileMapStage==='map'&&!placed(selected)};},
     advanceMobileMap(){if(!mobileMap()||mobileMapStage==='review')return false;if(!ready())return true;if(mobileMapStage==='painting')mobileMapStage='map';else if(placed(selected)){const next=getRound().works.find(work=>!placed(work.id));if(next){mobileMapStage='painting';select(next.id);}else mobileMapStage='review';}paintGrid();sync();return true;},
     click(action, control, event) {
-      if (!['select-art','next-art','previous-art','place-spectrum','place-match','nudge'].includes(action)) return false;
+      if (!['select-art','next-art','previous-art','place-spectrum','place-match','match-certainty','nudge'].includes(action)) return false;
       if (!ready() || locked() || suppressClick) return true;
+      if(action==='match-certainty'){
+        const d=getDraft(),id=control.dataset.work,value=control.dataset.value;
+        if(isRecognitionWithCertainty(getRound())&&getRound().works.some(work=>work.id===id)&&d.guesses[id]&&['recognised','inferred','guessed'].includes(value)){d.certainty||={};d.certainty[id]=value;d.confirmed=false;saveDraft();paintMatches();sync();}
+        return true;
+      }
       if (action === 'select-art') {
         // Every artwork thumbnail selects that work. Revisiting a placed work
         // must not give the currently unplaced painting an unintended rating.
@@ -297,3 +304,4 @@ export function createInteractions({ app, getRound, getDraft, ready, image, esc,
     }
   };
 }
+import {isRecognitionWithCertainty} from './recognition-evidence.mjs';

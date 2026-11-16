@@ -2,6 +2,7 @@ import {validChoiceGrid,sanitizeChoiceGrid} from './discovery-grid.mjs';
 import {validContrastAnswer,sanitizeContrastDraft} from './contrast-rounds.mjs';
 import {isSymbolismRound,validSymbolismAnswer,sanitizeSymbolismDraft} from './symbolism-rounds.mjs';
 import {isContextChangeRound,validContextChangeAnswer,sanitizeContextChangeDraft} from './context-change.mjs';
+import {isRecognitionWithCertainty,sanitizeRecognitionCertainty,validRecognitionCertainty} from './recognition-evidence.mjs';
 export const SCHEMA = 5;
 export const FEATURES = ['abstraction', 'energy', 'complexity', 'humanity', 'narrative', 'atmosphere', 'color'];
 export const ROUND_IDS = ['preferenceRank', 'closer', 'feeling', 'interestRank', 'connection', 'probe', 'selfView', 'artistMatch', 'styleMatch', 'context', 'contextSecond', 'lastLook'];
@@ -19,6 +20,7 @@ export const STATEMENTS = [
 ];
 export const AGREEMENT = ['Disagree', 'Lean against', 'In between', 'Lean towards', 'Agree'];
 export const AXES = {
+  attention: {xName:'Personal appeal',yName:'Reported attention',left:'Not for me',right:'For me',top:'Holds my attention',bottom:'Little pull to keep looking',xWords:['not for me','little personal appeal','some personal appeal','strong personal appeal','very much for me'],yWords:['little pull to keep looking','some pull to keep looking','holds some attention','holds my attention','strongly holds my attention']},
   achievement: {xName:'Personal appeal',yName:'Admiration of making',left:'Not for me',right:'For me',top:'Much to admire',bottom:'Little to admire',xWords:['not for me','little personal appeal','some personal appeal','strong personal appeal','very much for me'],yWords:['little to admire in the making','some admiration of the making','moderate admiration','much to admire','a great deal to admire']},
   reading: {xName:'Scene clarity',yName:'Interpretive openness',left:'Unclear scene',right:'Clear scene',top:'Several readings',bottom:'One reading',xWords:['unclear scene','mostly unclear scene','partly clear scene','mostly clear scene','clear scene'],yWords:['one clear reading','a fairly settled reading','some possible readings','several possible readings','many possible readings']},
   returnResponse: {xName:'Felt tension',yName:'Wish to return',left:'Comforting',right:'Unsettling',top:'Would return',bottom:'Once is enough',xWords:['comforting','mostly comforting','neither comforting nor unsettling','somewhat unsettling','unsettling'],yWords:['once is enough','little wish to return','might return','would return','strong wish to return']},
@@ -57,7 +59,7 @@ export function validAnswer(round, a) {
   if (round.kind === 'statements') {const statements=round.statements||STATEMENTS;return exact && a.claims && Object.keys(a.claims).length === statements.length && statements.every(s => Number.isInteger(a.claims[s.id]) && a.claims[s.id] >= 0 && a.claims[s.id] <= 4);}
   if (round.kind === 'match') {
     const guesses = a.guesses || {}, used = Object.values(guesses).filter(v => v !== 'unsure');
-    return a.confirmed === true && exact && a.field === round.field && Object.keys(guesses).length === presented.length && presented.every(id => guesses[id] === 'unsure' || round.options.some(o => o.id === guesses[id])) && new Set(used).size === used.length;
+    return a.confirmed === true && exact && a.field === round.field && Object.keys(guesses).length === presented.length && presented.every(id => guesses[id] === 'unsure' || round.options.some(o => o.id === guesses[id])) && new Set(used).size === used.length && validRecognitionCertainty(round,a);
   }
   if (round.kind === 'context') {
     if(round.contextMode==='preference-before-after-v1')return exact&&a.workId===presented[0]&&a.storySeen===true&&[0,25,50,75,100].includes(a.before)&&[0,25,50,75,100].includes(a.after);
@@ -78,7 +80,7 @@ export function sanitizeDraft(round, answer) {
   if (round.kind === 'match') {
     const guesses = {}, used = new Set();
     for (const id of workIds) { const value = answer?.field === round.field && answer.guesses?.[id]; if (value === 'unsure' || round.options.some(o => o.id === value) && !used.has(value)) { guesses[id] = value; if (value !== 'unsure') used.add(value); } }
-    return { ...base, field: round.field, guesses, confirmed: false };
+    return { ...base, field: round.field, guesses, confirmed: false,...(isRecognitionWithCertainty(round)?{certainty:sanitizeRecognitionCertainty(round,answer)}:{}) };
   }
   if(round.kind==='context'&&round.contextMode==='preference-before-after-v1')return {...base,workId:workIds[0],...(answer?.workId===workIds[0]&&[0,25,50,75,100].includes(answer.before)?{before:answer.before}:{}),...(answer?.workId===workIds[0]&&answer.storySeen===true?{storySeen:true,stage:'after',...([0,25,50,75,100].includes(answer.after)?{after:answer.after}:{})}:{storySeen:false,stage:'before'})};
   return { ...base, workId: workIds[0] };

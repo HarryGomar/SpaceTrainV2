@@ -66,10 +66,10 @@ test('Fresh seeds use the supplied cryptographic source once per call',()=>{
   let sequence=500,calls=0;const crypto={getRandomValues(bytes){calls++;bytes[0]=sequence++;return bytes;}};assert.equal(createOpeningSeed(crypto),500);assert.equal(createOpeningSeed(crypto),501);assert.equal(calls,2);
 });
 
-test('Pointer motion is smoothed, energy stays bounded and settles when motion stops',()=>{
+test('Pointer position latches to the cursor while energy stays bounded and fades on leave',()=>{
   const pointer={x:0,y:0,energy:0,time:0};
   updateFieldPointer(pointer,{x:1,y:-1,time:1});
-  assert.ok(pointer.x>0&&pointer.x<.1);
+  assert.equal(pointer.x,1);assert.equal(pointer.y,-1);
   assert.ok(pointer.energy>0&&pointer.energy<=1);
   for(let i=0;i<120;i++)updateFieldPointer(pointer,{x:i%2?1:-1,y:0,time:2+i/60});
   assert.ok(pointer.energy<=1);
@@ -79,11 +79,11 @@ test('Pointer motion is smoothed, energy stays bounded and settles when motion s
 
 test('Stationary presence is prominent and stable; tiny input jitter does not spike its force',()=>{
   const pointer={x:0,y:0,energy:0,time:0};for(let i=0;i<240;i++)updateFieldPointer(pointer,{x:.35,y:.2,time:i/60},1/60);assert.ok(Math.abs(pointer.energy-FIELD_MOTION.presence)<.00001);const energy=pointer.energy;
-  for(let i=0;i<120;i++)updateFieldPointer(pointer,{x:.35+(i%2?.001:-.001),y:.2,time:4+i/60},1/60);assert.ok(Math.abs(pointer.energy-energy)<.00001);assert.ok(Math.abs(pointer.x-.35)<.0002);
+  for(let i=0;i<120;i++)updateFieldPointer(pointer,{x:.35+(i%2?.001:-.001),y:.2,time:4+i/60},1/60);assert.ok(Math.abs(pointer.energy-energy)<.00001);assert.ok(Math.abs(pointer.x-.351)<1e-10);
   const moved=interactFieldPoint([.62,.2],pointer,{aspect:1.6,z:.4}),pixels=Math.hypot((moved[0]-.62)*720,(moved[1]-.2)*450);assert.ok(pixels>25&&pixels<100,'Visible yet bounded displacement');
 });
 
-test('Pointer smoothing is frame-rate independent,and leaving returns to the original geometry',()=>{
+test('Pointer presence is frame-rate independent,and leaving returns to the original geometry',()=>{
   const a={x:0,y:0,energy:0,time:0},b={...a};for(let i=0;i<60;i++)updateFieldPointer(a,{x:.8,y:-.4,time:i/60},1/60);for(let i=0;i<120;i++)updateFieldPointer(b,{x:.8,y:-.4,time:i/120},1/120);assert.ok(Math.abs(a.x-b.x)<1e-10);assert.ok(Math.abs(a.energy-b.energy)<1e-10);
   for(let i=0;i<240;i++)updateFieldPointer(a,{x:0,y:0,time:1+i/60,active:false},1/60);const point=[.6,.4],settled=interactFieldPoint(point,a,{aspect:1.6,z:.4});assert.ok(Math.hypot(settled[0]-point[0],settled[1]-point[1])<1e-6);assert.deepEqual(interactFieldPoint(point,{x:.8,y:.4,energy:0},{aspect:1.6}),point);
 });

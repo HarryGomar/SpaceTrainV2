@@ -36,12 +36,19 @@ export function createArtField({mobile=false,workCount=1,seed=9317}={}){
   return {paintings,particles,mobile};
 }
 
-export function updateFieldPointer(pointer,{x,y,time,active=true},dt=1/60){
-  const step=clamp(Number.isFinite(dt)?dt:1/60,0,.05),amount=1-Math.exp(-step*FIELD_MOTION.pointerFollow);
+export function fieldPointerFromClient({clientX,clientY},bounds){
+  if(!bounds||![clientX,clientY,bounds.left,bounds.top,bounds.width,bounds.height].every(Number.isFinite)||bounds.width<=0||bounds.height<=0)return null;
+  return {x:clamp((clientX-bounds.left)/bounds.width*2-1,-1.2,1.2),y:clamp(1-(clientY-bounds.top)/bounds.height*2,-1.2,1.2),active:clientX>=bounds.left&&clientX<=bounds.left+bounds.width&&clientY>=bounds.top&&clientY<=bounds.top+bounds.height};
+}
+
+export function updateFieldPointer(pointer,{x,y,time,active=true,strength=1},dt=1/60){
+  const step=clamp(Number.isFinite(dt)?dt:1/60,0,.05);
   pointer.x=Number.isFinite(pointer.x)?pointer.x:0;pointer.y=Number.isFinite(pointer.y)?pointer.y:0;pointer.energy=Number.isFinite(pointer.energy)?clamp(pointer.energy,0,1):0;
   const targetX=Number.isFinite(x)?clamp(x,-1.2,1.2):pointer.x,targetY=Number.isFinite(y)?clamp(y,-1.2,1.2):pointer.y;
-  pointer.x+=(targetX-pointer.x)*amount;pointer.y+=(targetY-pointer.y)*amount;
-  const target=active?FIELD_MOTION.presence:0,rate=active?FIELD_MOTION.presenceRise:FIELD_MOTION.presenceFall;
+  // The force centre follows the actual cursor. Only its presence fades; easing
+  // the coordinates makes the interaction trail and detach during fast motion.
+  if(active||pointer.energy<.0001){pointer.x=targetX;pointer.y=targetY;}
+  const target=active?FIELD_MOTION.presence*clamp(Number.isFinite(strength)?strength:1,0,1):0,rate=active?FIELD_MOTION.presenceRise:FIELD_MOTION.presenceFall;
   pointer.energy+=(target-pointer.energy)*(1-Math.exp(-step*rate));
   if(Number.isFinite(time))pointer.time=time;return pointer;
 }

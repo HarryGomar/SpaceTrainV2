@@ -28,6 +28,7 @@ import {buildTastePatterns} from './taste-patterns.mjs';
 import {buildTasteBoundaries} from './taste-boundaries.mjs';
 import ARTWORK_ATTRIBUTE_REVIEWS from './artwork-attribute-reviews.json' with {type:'json'};
 import {buildRecommendationMemory,wasPreviouslyPresented} from './recommendation-memory.mjs';
+import {buildProfileIntelligence} from './profile-intelligence.mjs';
 
 export const TASTE_PORTRAIT_VERSION=1;
 export const TASTE_THRESHOLDS=Object.freeze({clearPreferenceGap:15,featureContrast:.3,minimumSets:2,minimumWorks:4,taskDirection:.12,meanDirection:.15});
@@ -316,7 +317,7 @@ export function buildTastePortrait({works=[],rounds=[],answers={},records=[],sav
   recommendations.paintings=recommendations.paintings.filter(route=>!wasPreviouslyPresented(works.find(work=>work.id===route.workId),recommendationMemory));
   for(const route of recommendations.artists)route.availableWorkIds=(route.availableWorkIds||[]).filter(id=>!wasPreviouslyPresented(works.find(work=>work.id===id),recommendationMemory));
   const heroes=preferenceBasis.heroSeeds;
-  return {
+  const portrait={
     version:TASTE_PORTRAIT_VERSION,
     observations:orderedObservations,
     heroWorks:heroes.slice(0,5).map(seed=>({workId:seed.work.id,support:seed.support,counter:seed.counter||[],basis:seed.basis,score:seed.score??null,sourceRoundIds:seed.sourceRoundIds||unique(seed.support.map(item=>item.roundId)),positive:seed.positive??null})),
@@ -333,4 +334,9 @@ export function buildTastePortrait({works=[],rounds=[],answers={},records=[],sav
     curatorialObservations,arrangementQualities,nextSteps:nextSteps.slice(0,4),unavailable,
     method:'A local descriptive portrait of validated answers and sourced catalogue links. Thresholds are provisional design rules; no population model, personality type, causal explanation or calibrated preference probability is claimed.'
   };
+  portrait.intelligence=buildProfileIntelligence({works,rounds,answers,tastePatterns,responsePortrait,reportedContextChanges,preferenceEvidence:portrait.preferenceEvidence,arrangementQualities,saved,records:validRecords,existingObservations:portrait.observations});
+  portrait.observations.push(...portrait.intelligence.observations);
+  portrait.observations.sort((a,b)=>b.priority-a.priority);
+  portrait.nextSteps=unique([...portrait.intelligence.nextSteps,...portrait.nextSteps].map(item=>JSON.stringify(item))).map(item=>JSON.parse(item));
+  return portrait;
 }

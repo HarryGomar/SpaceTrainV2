@@ -14,15 +14,17 @@ import {CONTINUOUS_PROTOCOL,withContinuousPreference,isContinuousPreferenceRound
 import {withContextChange} from './context-change.mjs';
 import {buildOrdinalClosingRounds,buildOrdinalRefinementRound} from './ordinal-refinement.mjs';
 import {buildFinalRefinementRounds} from './final-refinement.mjs';
-import {choiceGridExposure} from './discovery-grid.mjs';
+import {choiceGridExposure,FAMILIARITY_PROTOCOL} from './discovery-grid.mjs';
 import {isStudyEligibleArtwork} from './study-eligibility.mjs';
 import {CURATION_SEQUENCE,hasRegionalCuration,allowedInCurationStage,isWesternAmericasWork} from './curation-sequence.mjs';
 import {isReviewedVisualDescriptor} from './visual-descriptor-semantics.mjs';
 import {routeCollection} from './collection-routing.mjs';
 import {PANEL_OBJECTIVES} from './curation-panel-objectives.mjs';
+import {buildDiagnosticRound} from './explanation-followups.mjs';
+import {RECOGNITION_PROTOCOL} from './recognition-evidence.mjs';
 
 export const JOURNEY_PROTOCOL='art-profile-50-v1';
-export const JOURNEY_REVISION='art-profile-50-v13';
+export const JOURNEY_REVISION='art-profile-50-v14';
 export const JOURNEY_VARIETY_POLICY='specific-question-variety-v2';
 export const JOURNEY_LENGTH=50;
 export const JOURNEY_MAX_LENGTH=JOURNEY_BLOCK_LIMIT*JOURNEY_LENGTH;
@@ -93,7 +95,7 @@ export function journeyCurationNotes(works,reservationPlan,{firstWorkIds,startBa
   const regional=hasRegionalCuration(works);
   if(regional)Object.assign(replacements,{5:['mondrian-composition','study-kandinsky-composition-eight','add-gerzso-water-mansion','add-pollock-convergence'],11:['cezanne-mountain','friedrich-wanderer','velasco-valley-mexico','req-birkhauser-worlds-wound'],12:['req-brueghel-hearing','req-caravaggio-david-borghese','req-dore-quixote-library','req-rivera-controller-universe'],14:['study-posada-catrina','goya-saturn','ethiopian-apostles','req-patinir-massys-temptations']});
   const canonicalReady=regional&&['canon-leonardo-last-supper','canon-caravaggio-calling-matthew','canon-siqueiros-collective-suicide','canon-siqueiros-echo-scream','canon-kahlo-two-fridas','canon-varo-creation-birds'].every(id=>available.has(id));
-  if(canonicalReady)Object.assign(replacements,{2:['study-vermeer-pearl','study-vermeer-milkmaid','study-rembrandt-night-watch','add-rivera-portrait-frida'],7:['study-raphael-school-athens','canon-leonardo-last-supper','canon-caravaggio-calling-matthew','add-orozco-buffoons'],9:['velazquez-las-meninas','holbein-ambassadors','add-van-eyck-arnolfini','add-hammershoi-room-wife'],14:['study-posada-catrina','goya-saturn','brueghel-sight','req-patinir-massys-temptations'],15:['turner-burning-parliament','study-delacroix-liberty','bonheur-horses','canon-siqueiros-collective-suicide'],16:['millais-ophelia','canon-siqueiros-echo-scream','van-gogh-night-cafe','canon-kahlo-two-fridas'],17:['study-matisse-dance','study-seurat-grande-jatte','study-tanner-banjo-lesson','add-izquierdo-sorrowful-friday'],18:['canon-varo-creation-birds','add-carrington-dagobert','add-miro-harlequin-carnival','add-rivera-zapatista-landscape']});
+  if(canonicalReady)Object.assign(replacements,{13:['bosch-garden-delights','study-bruegel-hunters-snow','goya-saturn','add-kandinsky-composition-seven'],2:['study-vermeer-pearl','study-vermeer-milkmaid','study-rembrandt-night-watch','add-rivera-portrait-frida'],7:['study-raphael-school-athens','canon-leonardo-last-supper','canon-caravaggio-calling-matthew','add-orozco-buffoons'],9:['velazquez-las-meninas','holbein-ambassadors','add-van-eyck-arnolfini','add-hammershoi-room-wife'],14:['study-posada-catrina','add-bruegel-triumph-death','brueghel-sight','req-patinir-massys-temptations'],15:['turner-burning-parliament','study-delacroix-liberty','bonheur-horses','canon-siqueiros-collective-suicide'],16:['millais-ophelia','canon-siqueiros-echo-scream','van-gogh-night-cafe','canon-kahlo-two-fridas'],17:['study-matisse-dance','study-seurat-grande-jatte','study-tanner-banjo-lesson','add-izquierdo-sorrowful-friday'],18:['canon-varo-creation-birds','add-carrington-dagobert','add-miro-harlequin-carnival','add-rivera-zapatista-landscape']});
   for(const panel of notes.proposedFirst18Panels){if(replacements[panel.panel]){panel.workIds=replacements[panel.panel];panel.primaryQuestion='Record each painting’s overall appeal; compare different treatments without forcing a rank.';panel.targetFeature=null;panel.targetContrast=null;panel.sharedGround='A deliberate set of different treatments for separate overall liking ratings.';panel.confounds=['Artist, subject, period, material, reproduction and several visual qualities can vary together.'];panel.sourceUrls=panel.workIds.map(id=>works.find(work=>work.id===id)?.sourceUrl).filter(Boolean);delete panel.contrastPairs;}}
   if(canonicalReady){notes.qualityDesign='predeclared-source-quality-crossings-v1';for(const panel of notes.proposedFirst18Panels){const objective=PANEL_OBJECTIVES[panel.panel];panel.galleryTitle=objective.title;panel.comparisonObjectives=structuredClone(objective);panel.primaryQuestion=objective.purposes.join(' ');panel.questionUse='Continuous personal appeal, followed by separately reported judgments where planned.';panel.confounds=uniqueIds([...(panel.confounds||[]),'These are deliberately crossed examples, not randomized isolation of a single visual cause.']);}}
   const first=new Set(notes.proposedFirst18Panels.flatMap(panel=>panel.workIds));
@@ -207,6 +209,7 @@ export function buildJourneyRounds(works,answers={},options={}){
   if(![CONTINUOUS_PROTOCOL,COMPARISON_PROTOCOL,APPEAL_PROTOCOL].includes(preferenceProtocol))throw Error('Unknown painting-preference protocol.');
   if(!Number.isInteger(offset)||offset<0||offset%JOURNEY_LENGTH||!Number.isInteger(batchIndex)||batchIndex<0)throw Error('Journey batches need a non-negative batch index and an offset in steps of fifty.');
   const at=index=>idAt(offset+index),selectionSeed=String(options.seed??'journey-batch-'+batchIndex);
+  const schedule=SCHEDULE.map((spec,index)=>preferenceProtocol!==CONTINUOUS_PROTOCOL?spec:index===5?V(2,'attention'):index===33?U(12):index===37?V(13,'returnResponse'):spec);
   const pool=[...works].filter(work=>isStudyEligibleArtwork(work)&&typeof work.id==='string'&&work.title&&work.image&&work.sourceUrl).sort((a,b)=>a.id.localeCompare(b.id));
   if(pool.length<12||new Set(ids(pool)).size!==pool.length)throw Error('The journey needs at least twelve distinct, sourced artworks.');
   const regional=hasRegionalCuration(pool),curationNotes=journeyCurationNotes(pool,options.reservationPlan),activeIds=curationNotes.collectionRouting?new Set(curationNotes.collectionRouting.activeStudyWorkIds):null,activeSourcePool=activeIds?pool.filter(work=>activeIds.has(work.id)):pool,stagePool=regional?activeSourcePool.filter(work=>allowedInCurationStage(work,batchIndex,curationNotes)):activeSourcePool,westernPool=stagePool.filter(work=>isWesternAmericasWork(work,curationNotes)||work.id==='study-hokusai-great-wave'),activityPool=regional&&batchIndex<4&&westernPool.length>=12?westernPool:stagePool,initialFamiliarityIds=regional?INITIAL_FAMILIARITY_IDS.map(id=>id==='hokusai-mount-fuji'?'study-van-gogh-self-portrait':id==='study-rembrandt-night-watch'?'study-monet-japanese-footbridge':id):INITIAL_FAMILIARITY_IDS;
@@ -246,7 +249,7 @@ export function buildJourneyRounds(works,answers={},options={}){
     if(!sourceIndex||Number(sourceIndex[1])<=offset)registerSpecificQuestion(round,sourceIndex?Number(sourceIndex[1])-1:null);
     if(sourceIndex&&Number(sourceIndex[1])<=offset&&round.kind!=='statements')round.works.forEach(work=>lastSeen.set(work.id,Math.max(lastSeen.get(work.id)??-Infinity,Number(sourceIndex[1])-1)));
     const legacyPanel=/^panel-(\d+)$/.exec(round.evidence?.setId||''),number=round.evidence?.panelNumber||(legacyPanel?Number(legacyPanel[1]):null),sourceBatch=round.evidence?.batchIndex??Math.floor((Number(sourceIndex?.[1]||1)-1)/JOURNEY_LENGTH);
-    if((['art-profile-50-v2','art-profile-50-v3','art-profile-50-v4','art-profile-50-v5','art-profile-50-v6','art-profile-50-v7','art-profile-50-v8','art-profile-50-v9','art-profile-50-v10','art-profile-50-v11','art-profile-50-v12',JOURNEY_REVISION].includes(round.evidence?.journeyRevision)||legacyPanel)&&sourceBatch===batchIndex&&Number.isInteger(number)&&number>=1&&number<=18&&round.works.every(work=>pool.some(item=>item.id===work.id))&&!panels.has(number)){
+    if((['art-profile-50-v2','art-profile-50-v3','art-profile-50-v4','art-profile-50-v5','art-profile-50-v6','art-profile-50-v7','art-profile-50-v8','art-profile-50-v9','art-profile-50-v10','art-profile-50-v11','art-profile-50-v12','art-profile-50-v13',JOURNEY_REVISION].includes(round.evidence?.journeyRevision)||legacyPanel)&&sourceBatch===batchIndex&&Number.isInteger(number)&&number>=1&&number<=18&&round.works.every(work=>pool.some(item=>item.id===work.id))&&!panels.has(number)){
       panels.set(number,round.works.map(work=>pool.find(item=>item.id===work.id)));
       if(round.evidence?.setId)panelSetIds.set(number,round.evidence.setId);
       round.works.forEach(work=>panelUses.set(work.id,(panelUses.get(work.id)||0)+1));
@@ -269,11 +272,11 @@ export function buildJourneyRounds(works,answers={},options={}){
     return contrastReservations.get(localIndex);
   };
   const knownIdsAt=localIndex=>{
-    if(localIndex<0||localIndex>=SCHEDULE.length)return [];
+    if(localIndex<0||localIndex>=schedule.length)return [];
     const bound=history.get(at(localIndex))||sequence[localIndex];if(bound)return specificQuestionIds(bound);
     if(earlyRefinements.has(localIndex)||localIndex>=45)return [];
     if(CONTRAST_SLOTS.has(localIndex)){const content=contrastContentAt(localIndex);return content?.status==='ready'?uniqueIds([...(content.workIds||[]),...(content.anchorWorks||[]).map(work=>work.id),...(content.anchorIds||[])]):[];}
-    const spec=SCHEDULE[localIndex];
+    const spec=schedule[localIndex];
     if(spec.panel&&panels.has(spec.panel))return ids(panels.get(spec.panel));
     if(spec.task==='context'||spec.task==='symbolism')return [symbolismRounds.get(localIndex)?.works[0]?.id||noteWork.id];
     if(spec.task==='choice-grid'){const group='batch-'+batchIndex+'-grid-'+spec.group;if(gridPanels.has(group))return ids(gridPanels.get(group));if(batchIndex===0&&spec.group==='a'&&initialFamiliarityIds.every(id=>pool.some(work=>work.id===id)))return [...initialFamiliarityIds];}
@@ -281,11 +284,11 @@ export function buildJourneyRounds(works,answers={},options={}){
     return [];
   };
   const avoidFor=(localIndex,gridGroup)=>{
-    const occurrences=gridGroup?SCHEDULE.flatMap((spec,i)=>spec.task==='choice-grid'&&spec.group===gridGroup&&!CONTRAST_SLOTS.has(i)?[i]:[]):[localIndex];
-    const neighbours=[...new Set(occurrences.flatMap(i=>[i-1,i+1]).filter(i=>i>=0&&i<SCHEDULE.length))];
+    const occurrences=gridGroup?schedule.flatMap((spec,i)=>spec.task==='choice-grid'&&spec.group===gridGroup&&!CONTRAST_SLOTS.has(i)?[i]:[]):[localIndex];
+    const neighbours=[...new Set(occurrences.flatMap(i=>[i-1,i+1]).filter(i=>i>=0&&i<schedule.length))];
     return {ids:new Set(neighbours.flatMap(i=>knownIdsAt(i))),roundIds:neighbours.filter(i=>knownIdsAt(i).length).map(at)};
   };
-  for(const [index,scheduled] of SCHEDULE.entries()){
+  for(const [index,scheduled] of schedule.entries()){
     let spec=scheduled;
     const id=at(index),globalIndex=offset+index,previous=history.get(id);
     if(previous){
@@ -293,6 +296,10 @@ export function buildJourneyRounds(works,answers={},options={}){
       if(previous.kind!=='statements')[...previous.works,...(previous.anchorWorks||[])].forEach(work=>lastSeen.set(work.id,globalIndex));
       registerSpecificQuestion(previous,globalIndex);
       continue;
+    }
+    if(preferenceProtocol===CONTINUOUS_PROTOCOL){
+      const diagnosticKind=index===31?'grouping':([14,17,26].includes(index)&&batchIndex<2?'quality':null);
+      if(diagnosticKind){const pending=buildDiagnosticRound({works:activeSourcePool,id,kind:diagnosticKind,seed:selectionSeed});sequence.push({...pending,evidence:{...pending.evidence,journeyRevision:JOURNEY_REVISION,batchIndex,selectionSeed}});continue;}
     }
     if(index>=45||earlyRefinements.has(index)){const pending=index>=45?closing[index-45]:buildOrdinalRefinementRound({works:activeSourcePool,id,role:earlyRefinements.get(index),slot:0,offset,seed:selectionSeed,preferenceProtocol});sequence.push({...pending,evidence:{...pending.evidence,journeyRevision:JOURNEY_REVISION,batchIndex,selectionSeed}});continue;}
     const contrastKind=CONTRAST_SLOTS.get(index),contrastContent=contrastKind?contrastContentAt(index):null;
@@ -325,7 +332,7 @@ export function buildJourneyRounds(works,answers={},options={}){
         }else evidence.role=planMatches&&['probe','recontextualization','challenge'].includes(plannedPanel.role)?'probe':'discovery';
       }
     }else if(spec.task==='appraisal-map'){
-      const definitions={achievement:{title:'What do you like? What do you admire?',hint:'Across: how much you like the whole painting. Up: how much you admire the way it was made.',construct:'perceived-achievement',sources:['https://journals.sagepub.com/doi/10.1177/0956797611400915','https://online.ucpress.edu/collabra/article/9/1/87489/197632/The-Effort-Heuristic-Revisited-Mixed-Results-for']},reading:{title:'What is clear? What is left open?',hint:'How clear the scene feels runs across. The number of possible readings runs up.',construct:'scene-and-meaning',sources:['https://pmc.ncbi.nlm.nih.gov/articles/PMC3210939/']},returnResponse:{title:'How does it feel? Would you return?',hint:'Comforting to unsettling runs across. Your wish to return runs up.',construct:'tension-and-return',sources:['https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0178899']}};
+      const definitions={attention:{title:'What draws you in? What holds your attention?',hint:'Across: your personal appeal. Up: how much the painting holds your attention right now. Attention can differ from liking.',construct:'reported-attention',sources:['https://doi.org/10.1371/journal.pone.0178899']},achievement:{title:'What do you like? What do you admire?',hint:'Across: how much you like the whole painting. Up: how much you admire the way it was made.',construct:'perceived-achievement',sources:['https://journals.sagepub.com/doi/10.1177/0956797611400915','https://online.ucpress.edu/collabra/article/9/1/87489/197632/The-Effort-Heuristic-Revisited-Mixed-Results-for']},reading:{title:'What is clear? What is left open?',hint:'How clear the scene feels runs across. The number of possible readings runs up.',construct:'scene-and-meaning',sources:['https://pmc.ncbi.nlm.nih.gov/articles/PMC3210939/']},returnResponse:{title:'How does it feel? Would you return?',hint:'Comforting to unsettling runs across. Your wish to return runs up.',construct:'tension-and-return',sources:['https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0178899']}};
       const definition=definitions[spec.axis];round={kind:'grid',axis:spec.axis,axisDefinition:structuredClone(AXES[spec.axis]),title:definition.title,hint:definition.hint,works:[...art].reverse()};
       evidence={construct:definition.construct,family:'reported-appraisal',role:'check',newInstrument:true,instrumentRevision:spec.axis+'-v1',sourceUrls:definition.sources,limits:['Research informs the separate judgments. These exact questions and thresholds remain unvalidated prototype instruments.','These are personal reports about the reproduction; admiration is not objective skill, and return is an intention rather than observed behaviour.',...LIMITS]};
     }else if(spec.task==='choice-grid'){
@@ -353,15 +360,16 @@ export function buildJourneyRounds(works,answers={},options={}){
       evidence={construct,family:'looking-appraisal',role:'check',questionTarget:target,limits:[...limits,...LIMITS]};
     }else if(spec.task==='statement'){
       template=templateFor(item=>item.kind==='statements');
-      round={kind:'statements',title:'Agree or disagree.',hint:'',works:[noteWork],statements:[{...CONTEXT_CLAIM}]};
+      round={kind:'statements',title:'Agree or disagree.',hint:'',works:[noteWork],statements:[{...CONTEXT_CLAIM,...(preferenceProtocol===CONTINUOUS_PROTOCOL?{text:'Learning the story behind a painting rarely changes how much I appreciate it.'}:{})}]};
       evidence={construct:'self-description',family:'reported-rule',role:'check',statementTest:'contextEffect',checkId:'journey-context-effect-'+batchIndex,contextRoundId:at(34),referenceOnlyWorkIds:[noteWork.id],stimulusVisibility:'not-shown',limits:['This broad claim is compared with the later response about the note for one painting, under its captured instructions. A single exception does not establish a general trait.',...LIMITS]};
     }else if(spec.task==='artist'||spec.task==='movement'){
       const field=spec.task==='artist'?'artist':'movement';
       template=templateFor(item=>item.kind==='match'&&item.field===field);
-      const eligible=activityPool.filter(work=>work[field]&&(field!=='artist'||work.artistKnown!==false&&!/unknown|unidentified|anonymous|workshop|circle/i.test(work.artist)));
+      const earlierAppeal=new Set(sequence.filter(item=>!item.unavailable&&item.kind==='spectrum'&&item.criterion==='preference').flatMap(item=>ids(item.works))),tasteLinked=preferenceProtocol===CONTINUOUS_PROTOCOL&&field==='artist';
+      const available=activityPool.filter(work=>work[field]&&(field!=='artist'||work.artistKnown!==false&&!/unknown|unidentified|anonymous|workshop|circle/i.test(work.artist))),linked=available.filter(work=>earlierAppeal.has(work.id)),eligible=tasteLinked&&new Set(linked.map(work=>work[field])).size>=4?linked:available;
       const avoid=avoidFor(index),audit={independentNeighbourRoundIds:avoid.roundIds},chosen=selectWorks(eligible,4,{uses:recognitionUses,lastSeen,index:globalIndex,seed:selectionSeed,mode:'match',distinctField:field,plannedUses:plannedSpecificUses,plannedLastSeen:plannedSpecificLastSeen,avoidIds:avoid.ids,audit});
       round={kind:'match',field,title:field==='artist'?'Match the paintings to the artists.':'Match the paintings to a style or tradition.',hint:'Move each painting to a label. Use Not sure when you do not know.',works:chosen,options:[...chosen].reverse().map((work,i)=>({id:field+'-'+i,label:work[field]}))};
-      evidence={construct:field==='artist'?'recognition-artist':'recognition-movement',family:'cued-recognition',role:'check',varietyPolicy:JOURNEY_VARIETY_POLICY,varietySelection:audit,limits:[...template.evidence.limits]};
+      evidence={construct:field==='artist'?'recognition-artist':'recognition-movement',family:'cued-recognition',role:'check',varietyPolicy:JOURNEY_VARIETY_POLICY,varietySelection:audit,...(preferenceProtocol===CONTINUOUS_PROTOCOL?{instrumentRevision:RECOGNITION_PROTOCOL,selectionMethod:tasteLinked?'taste-linked-artist-check':'cued-label-check'}:{}),limits:[...template.evidence.limits]};
     }else if(spec.task==='context'||spec.task==='symbolism'){
       template=templateFor(item=>item.kind==='context');
       round={kind:'context',contextMode:'preference-before-after-v1',title:'Look, then read.',hint:'Rate how much you like the painting before reading its story, then rate it again.',works:[noteWork]};
@@ -379,8 +387,12 @@ export function buildJourneyRounds(works,answers={},options={}){
       round={kind:'exercise',exerciseKind:kind,title:kind==='sorting'?'Group the paintings.':kind==='curate'?'Arrange the rooms.':'Remove one painting.',hint:kind==='sorting'?'Drag related paintings together. You can stack them.':kind==='curate'?'Group the paintings across the rooms.':'Keep three paintings on the wall.',works:kind==='curate'?museumLibraryOrder(chosen):chosen};
       evidence={construct:kind,family:'contextual-arrangement',role:index===31?'repeat':'discovery',...(index===31?{repeatOf:at(7)}:{}),...(arrangementPlan?.status==='ready'&&matchingIds(arrangementPlan.workIds,ids(chosen))?{arrangementSelection:structuredClone(arrangementPlan)}:arrangementPlan?{arrangementFallback:arrangementPlan.reason||'The preserved source set remains authoritative.'}:{}),limits:['Grouping or omitting a painting in this arrangement does not establish liking or dislike.']};
     }
-    const paired=spec.panel?SCHEDULE.flatMap((item,i)=>item.panel===spec.panel&&i!==index?[at(i)]:[]):[];
+    const paired=spec.panel?schedule.flatMap((item,i)=>item.panel===spec.panel&&i!==index?[at(i)]:[]):[];
     const earlier=sequence.filter(item=>spec.panel&&item.evidence.setId===setId).map(item=>item.id);
+    if(preferenceProtocol===CONTINUOUS_PROTOCOL&&round.kind==='choice-grid'&&round.selectionMode==='familiarity'){
+      round={...round,title:'Which paintings had you seen before today?',hint:'For each painting, choose Seen before, New to me or Not sure. Think about before Art Atlas.'};
+      evidence={...evidence,familiarityProtocol:FAMILIARITY_PROTOCOL};
+    }
     const priorIds=ids(round.works).filter(workId=>lastSeen.has(workId));
     const adaptiveSelection=metadataPanel?Object.fromEntries(['focus','provisionalHypothesis','provisionalPrediction','holdoutUnit','comparisonNovel','artworksMayBeFamiliar','delay','dependencyGroup'].filter(key=>metadataPanel[key]!==undefined).map(key=>[key,structuredClone(metadataPanel[key])])):null;
     let full={...round,id,format:round.kind,...(template?{bankRoundId:template.id}:{}),evidence:{

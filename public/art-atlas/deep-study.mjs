@@ -1,4 +1,6 @@
 import {isReviewedVisualDescriptor,FEATURE_SEMANTIC_VERSION} from './visual-descriptor-semantics.mjs';
+import {isDiagnosticRound,bindDiagnosticRound} from './explanation-followups.mjs';
+import {captureArtworkExposure} from './recognition-evidence.mjs';
 import {museumOffer,restrictMuseumDraft,MUSEUM_OFFER_SCOPE} from './museum-offer.mjs';
 import {isOverallAppealRound} from './appeal-scale.mjs';
 import {CONTINUOUS_PROTOCOL} from './continuous-preference.mjs';
@@ -6,7 +8,7 @@ import {COMPARISON_PROTOCOL,isComparisonPreferenceRound} from './comparison-prot
 import {isFinalRefinementRound,bindFinalRefinementRound} from './final-refinement.mjs';
 import {createStudyArchiveStore,storeStudyArchives,loadStudyArchives,encodeStudyWithArchives} from './study-archives.mjs';
 import {createActiveStudyPersistence,loadActiveStudy,isActiveStudyReference} from './active-study-storage.mjs';
-import {discoveryGridMarkup,toggleGridChoice,expandKeepSelectionRound,setChoiceGridPage,PAGED_FAVOURITES} from './discovery-grid.mjs';
+import {discoveryGridMarkup,toggleGridChoice,expandKeepSelectionRound,setChoiceGridPage,PAGED_FAVOURITES,isExplicitFamiliarity,setFamiliarityChoice} from './discovery-grid.mjs';
 import {isSymbolismRound,validSymbolismDefinition,reduceSymbolismDraft} from './symbolism-rounds.mjs';
 import {isContextChangeRound,validContextChangeDefinition,bindContextChangeRound,reduceContextChangeDraft,CONTEXT_CHANGE_PROMPT,CONTEXT_CHANGE_OPTIONS} from './context-change.mjs';
 import {createContrastController,validContrastDefinition,upgradeActiveNeighbourRound} from './contrast-rounds.mjs';
@@ -275,7 +277,7 @@ export function prepareJourneySession(saved,works,now=Date.now()){
           // A shown legacy map can pin a different set than the saved selector.
           // Keep its real works without carrying a prediction or repeat onto them.
           const bindings=new Map();
-          for(const round of history){const match=/^journey-(\d+)$/.exec(round.id),legacy=/^panel-(\d+)$/.exec(round.evidence?.setId||''),number=round.evidence?.panelNumber||(legacy?Number(legacy[1]):null),sourceBatch=round.evidence?.batchIndex??Math.floor((Number(match?.[1]||1)-1)/JOURNEY_LENGTH);if((['art-profile-50-v2','art-profile-50-v3','art-profile-50-v4','art-profile-50-v5','art-profile-50-v6','art-profile-50-v7','art-profile-50-v8','art-profile-50-v9','art-profile-50-v10','art-profile-50-v11','art-profile-50-v12',JOURNEY_REVISION].includes(round.evidence?.journeyRevision)||legacy)&&sourceBatch===batchIndex&&Number.isInteger(number)&&number>=1&&number<=18&&!bindings.has(number))bindings.set(number,ids(round));}
+          for(const round of history){const match=/^journey-(\d+)$/.exec(round.id),legacy=/^panel-(\d+)$/.exec(round.evidence?.setId||''),number=round.evidence?.panelNumber||(legacy?Number(legacy[1]):null),sourceBatch=round.evidence?.batchIndex??Math.floor((Number(match?.[1]||1)-1)/JOURNEY_LENGTH);if((['art-profile-50-v2','art-profile-50-v3','art-profile-50-v4','art-profile-50-v5','art-profile-50-v6','art-profile-50-v7','art-profile-50-v8','art-profile-50-v9','art-profile-50-v10','art-profile-50-v11','art-profile-50-v12','art-profile-50-v13',JOURNEY_REVISION].includes(round.evidence?.journeyRevision)||legacy)&&sourceBatch===batchIndex&&Number.isInteger(number)&&number>=1&&number<=18&&!bindings.has(number))bindings.set(number,ids(round));}
           for(const [number,binding] of bindings){const panel=options.panels[number-1];if(!Array.isArray(panel?.workIds)||!sameWorks(panel.workIds,binding)){options.panels[number-1]={workIds:[...binding],construct:'preference',role:'exploration',selectionReason:'Preserve the artwork set in the recorded question. Conflicting repeat or prediction metadata has been removed.',evidenceRoundIds:[]};demotedPanels.push(number);}}
         }
         try{
@@ -338,6 +340,13 @@ export function sessionJourneyRounds(data,{regenerateBlock=buildJourneyRounds}={
     const shown=data.shown[planned.id],round=restoreStudyRound(shown||planned,works);
     if(!round)return unavailableRound(shown||planned,index,'This saved round is unavailable.');
     if(!shown&&data.answers[planned.id])return unavailableRound(planned,index,'The original presentation record is unavailable.');
+    if(!shown&&isDiagnosticRound(round)){
+      if(index>data.index)return round;
+      indices??=new Map(data.plan.map((snapshot,position)=>[snapshot.id,position]));
+      shownHistory??=Object.values(data.shown).map(snapshot=>restoreStudyRound(snapshot,works)).filter(Boolean);
+      const earlier=shownHistory.filter(item=>indices.has(item.id)&&indices.get(item.id)<index);
+      return bindDiagnosticRound({round,works,rounds:earlier,answers:data.answers});
+    }
     if(!shown&&isFinalRefinementRound(round)){
       indices??=new Map(data.plan.map((snapshot,position)=>[snapshot.id,position]));
       shownHistory??=Object.values(data.shown).map(snapshot=>restoreStudyRound(snapshot,works)).filter(Boolean);
@@ -479,6 +488,7 @@ export function createDeepStudy({app,getWorks,image,esc,keepButtons,navigate,sho
     }
     if(round.kind==='match'&&!data.shown[r.id]){try{const galleryPreview=captureGalleryPreview(JSON.parse(localStorage.getItem(GALLERY_CONTEXT_KEY)||'null'),ids(round));if(galleryPreview)round={...round,evidence:{...round.evidence,galleryPreview}};}catch{}}
     if(isContextChangeRound(round)&&!data.shown[r.id])round=bindContextChangeRound({round,rounds:actualRounds().slice(0,data.index).filter(item=>data.shown[item.id]),answers:data.answers});
+    if(!data.shown[r.id])round={...round,evidence:{...round.evidence,exposureHistory:captureArtworkExposure(round,actualRounds().slice(0,data.index).filter(item=>data.shown[item.id]),data.answers)}};
     if(!data.shown[r.id])data.shown[r.id]=snapshotStudyRound(round);
     const a=data.answers[round.id];draft=a&&!a.skipped?(validStudyAnswer(round,a)?structuredClone(a):sanitizeStudyDraft(round,a)):sanitizeStudyDraft(round,{});
     if(round.kind==='choice-grid'&&round.evidence?.instrumentRevision===PAGED_FAVOURITES)data.answers[round.id]=structuredClone(draft);
@@ -523,7 +533,7 @@ export function createDeepStudy({app,getWorks,image,esc,keepButtons,navigate,sho
       if(!ready)for(const button of app.querySelectorAll('.contrast-round button'))button.disabled=true;
       const proceed=app.querySelector('[data-action=deep-next]');if(proceed)proceed.textContent=round.contrastKind==='chronology'&&!draft.confirmed?'Check dates':data.index===data.target-1?'View profile':'Continue';
     }
-    for(const button of app.querySelectorAll('.drag-art,.match-label,[data-action=place-match],.spectrum-hit,.discovery-work,.discovery-none,.deep-agreement-choice,[data-action=deep-context],[data-action=deep-liking],[data-action=deep-context-change]'))button.disabled=!ready||round.kind==='match'&&draft.confirmed;
+    for(const button of app.querySelectorAll('.drag-art,.match-label,[data-action=place-match],[data-action=match-certainty],[data-action=deep-familiarity],[data-action=deep-familiarity-rest],.spectrum-hit,.discovery-work,.discovery-none,.deep-agreement-choice,[data-action=deep-context],[data-action=deep-liking],[data-action=deep-context-change]'))button.disabled=!ready||round.kind==='match'&&draft.confirmed;
     for(const button of app.querySelectorAll('[data-action=nudge]'))if(!ready)button.disabled=true;
     const next=app.querySelector('[data-action=deep-next]');if(next)next.disabled=!ready||(isContextChangeRound(round)&&!draft.storySeen?false:round.contextMode==='preference-before-after-v1'&&!draft.storySeen?![0,25,50,75,100].includes(draft.before):!validStudyAnswer(round,['grid','spectrum','match','choice-grid','contrast','context'].includes(round.kind)?{...draft,confirmed:true}:draft));
     const flow=inputs.mobileMapAction?.();if(next&&flow){next.textContent=flow.label;next.disabled=!ready||flow.disabled;}
@@ -557,7 +567,7 @@ export function createDeepStudy({app,getWorks,image,esc,keepButtons,navigate,sho
     }
     if(!skip&&(!ready||!validStudyAnswer(round,['spectrum','grid','match','choice-grid','contrast','context'].includes(round.kind)?{...draft,confirmed:true}:draft)))return;
     if(!skip&&round.kind==='contrast'&&!draft.confirmed){const answer=contrastController?.confirm();if(!answer)return;draft=answer;if(round.contrastKind==='chronology'){syncImages();return;}}
-    if(!skip&&round.kind==='match'&&!draft.confirmed){draft.confirmed=true;data.answers[round.id]=structuredClone(draft);save();render();focus();return;}
+    if(!skip&&round.kind==='match'&&!draft.confirmed){draft.confirmed=true;draft.feedbackSeen=true;data.answers[round.id]=structuredClone(draft);save();render();focus();return;}
     if(skip)data.answers[round.id]={skipped:true,workIds:ids(round)};else{if(['spectrum','grid','choice-grid','contrast','context'].includes(round.kind))draft.confirmed=true;data.answers[round.id]={...structuredClone(draft),answeredAt:Date.now()};}
     if(data.index===data.target-1){data.finishedAt=Date.now();data.screen='reading';}else data.index++;
     save();render();focus();
@@ -595,6 +605,11 @@ export function createDeepStudy({app,getWorks,image,esc,keepButtons,navigate,sho
       if(action==='lab-home'){changeScreen('home');return true;}
       if(action==='lab-reading'){changeScreen('reading');return true;}
       if(embedded[round.exerciseKind].handle(action,control,event))return true;
+    }
+    if(round?.kind==='choice-grid'&&isExplicitFamiliarity(round)&&['deep-familiarity','deep-familiarity-rest','deep-grid-unsure'].includes(action)){
+      if(!ready)return true;
+      if(action==='deep-familiarity-rest'){for(const work of round.works)if(!draft.familiarity?.[work.id])draft=setFamiliarityChoice(round,draft,work.id,'new');}
+      else draft=action==='deep-familiarity'?setFamiliarityChoice(round,draft,control.dataset.work,control.dataset.value):{...draft,familiarity:{},selectedIds:[],unsure:true,explicitNone:false,confirmed:false};data.answers[round.id]=structuredClone(draft);save();const grid=app.querySelector('.discovery-grid');if(grid)grid.outerHTML=discoveryGridMarkup(round,draft,{image,esc});syncImages();return true;
     }
     if(round?.kind==='choice-grid'&&['deep-grid-pick','deep-grid-none','deep-grid-unsure'].includes(action)){if(!ready)return true;expandKeepSelection();draft=action==='deep-grid-pick'?toggleGridChoice(round,draft,control.dataset.work):{...draft,selectedIds:[],explicitNone:action==='deep-grid-none',unsure:action==='deep-grid-unsure',confirmed:false};data.answers[round.id]=structuredClone(draft);save();for(const button of app.querySelectorAll('.discovery-work'))button.setAttribute('aria-pressed',String(draft.selectedIds.includes(button.dataset.work)));app.querySelector('[data-action=deep-grid-none]')?.setAttribute('aria-pressed',String(draft.explicitNone));app.querySelector('[data-action=deep-grid-unsure]')?.setAttribute('aria-pressed',String(draft.unsure));const count=app.querySelector('.discovery-count');if(count)count.textContent=draft.selectedIds.length+(round.selectionMode==='shortlist'&&(round.maxChoices||3)<round.works.length?' / '+(round.maxChoices||3):'')+' selected';syncImages();return true;}
     if(round?.kind==='contrast'&&app.querySelector('.deep-question')&&action?.startsWith('contrast-')){if(ready)contrastController?.handle(action,control,event);return true;}

@@ -6,7 +6,8 @@ import {CONTINUOUS_PROTOCOL,isContinuousPreferenceRound,continuousPairSignal} fr
 const unique=values=>[...new Set(values)],ids=round=>round.works.map(work=>work.id),key=(a,b)=>JSON.stringify([a,b].sort());
 const plain=value=>!!value&&typeof value==='object'&&!Array.isArray(value);
 const LIMITS=['Only orders and exact ties from the captured comparison protocol supply edges. Distances along the line are not liking intensity or confidence.','A quartet supplies related pair observations from one question, not six independent measurements. Repeats remain response history.','A component frontier describes only its recorded comparisons. No order is inferred between disconnected components, and a local winner is not automatically liked.','Explicit favourites and dislikes are separate declarations. Unselected, skipped and unsure works never become their opposites.'];
-const hashes=work=>[work?.sha256,work?.previewSha256,work?.provenance?.thumbnailSha256,work?.provenance?.sha256,work?.provenance?.download?.sha256].filter(value=>value!==undefined);
+export const artworkPreviewHashes=work=>[work?.sha256,work?.previewSha256,work?.provenance?.thumbnailSha256,work?.provenance?.sha256,work?.provenance?.download?.sha256].filter(value=>value!==undefined);
+const hashes=artworkPreviewHashes;
 export function sameOrdinalArtworkIdentity(left,right,{requireSource=false}={}){if(!left||!right||left.id!==right.id)return false;for(const field of ['sourceUrl','image']){if(requireSource&&(typeof left[field]!=='string'||typeof right[field]!=='string'))return false;if(left[field]!==undefined&&right[field]!==undefined&&left[field]!==right[field])return false;}const a=hashes(left),b=hashes(right);return !a.length||!b.length||[...a,...b].every(value=>typeof value==='string'&&/^[a-f0-9]{64}$/i.test(value)&&value.toLowerCase()===a[0].toLowerCase());}
 
 export function ordinalPreferenceEntries({works=[],rounds=[],answers={}}={}){

@@ -21,7 +21,7 @@ test('Frozen study definitions retain shown works, anchors, scales and evidence 
 });
 
 test('Every actual contrast survives serialization with its original candidates, anchor, metadata and categorical answer',()=>{
-  for(const [label,source,kinds] of [['captured-v11',legacyV11Rounds(),['chronology','neighbour','keep-leave','same-subject']],['current-v12',buildJourneyRounds(real),['chronology','same-subject']]]){
+  for(const [label,source,kinds] of [['captured-v11',legacyV11Rounds(),['chronology','neighbour','keep-leave','same-subject']],['current-v14',buildJourneyRounds(real),['same-subject']]]){
   const contrasts=source.filter(round=>round.kind==='contrast');assert.deepEqual(contrasts.map(round=>round.contrastKind),kinds,label);const responses={};
   for(const original of contrasts){
     const round=structuredClone(original),saved=snapshotStudyRound(round),frozen=structuredClone(saved),workIds=round.works.map(work=>work.id),base={workIds,contrastKind:round.contrastKind,confirmed:true};

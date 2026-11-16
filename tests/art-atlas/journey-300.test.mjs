@@ -1,3 +1,4 @@
+import {isDiagnosticRound,bindDiagnosticRound} from '../../public/art-atlas/explanation-followups.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -20,8 +21,9 @@ const preferenceAnswer=round=>({workIds:ids(round),criterion:'preference',confir
 function finish(data){
   const fixed=sessionJourneyRounds(data);
   for(let index=0;index<data.plan.length;index++){
-    let round=fixed[index];if(data.shown[round.id]||round.unavailable&&!isFinalRefinementRound(round))continue;
+    let round=fixed[index];if(data.shown[round.id]||round.unavailable&&!isFinalRefinementRound(round)&&!isDiagnosticRound(round))continue;
     if(isFinalRefinementRound(round))round=bindFinalRefinementRound({round:restoreStudyRound(data.plan[index],data.manifest.catalogue),works:data.manifest.catalogue,rounds:fixed.slice(0,index).filter(source=>data.shown[source.id]).map(source=>restoreStudyRound(data.shown[source.id],data.manifest.catalogue)),answers:data.answers});
+    if(isDiagnosticRound(round)&&!data.shown[round.id])round=bindDiagnosticRound({round:restoreStudyRound(data.plan[index],data.manifest.catalogue),works:data.manifest.catalogue,rounds:Object.values(data.shown).map(snapshot=>restoreStudyRound(snapshot,data.manifest.catalogue)).filter(Boolean),answers:data.answers});
     if(round.unavailable)continue;
     data.shown[round.id]=snapshotStudyRound(round);
     if(round.kind==='spectrum'&&round.evidence.construct==='preference')data.answers[round.id]=preferenceAnswer(round);

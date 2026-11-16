@@ -26,6 +26,17 @@ test('The opening autoplays on a new visit even when an older visit stored Pause
   const f=fixture({paused:false,storedMotion:'pause'});try{await f.flush();assert.equal(f.app.querySelector('[data-art-scene]').dataset.sceneStatus,'running');assert.equal(f.app.querySelector('[data-scene-motion]').getAttribute('aria-label'),'Pause animation');assert.equal(f.frames.size,1);}finally{f.close();}
 });
 
+test('The opening force stays latched to the cursor in full and reduced motion and after resizing',async()=>{
+  for(const paused of [false,true]){const f=fixture({paused,width:900,height:650});try{
+    await f.flush();const canvas=f.app.querySelector('[data-art-scene]'),root=f.app.querySelector('.opening-screen');
+    root.dispatchEvent(new f.window.MouseEvent('pointermove',{clientX:720,clientY:130,bubbles:true}));f.step();
+    assert.equal(Number(canvas.dataset.scenePointerX),.6);assert.equal(Number(canvas.dataset.scenePointerY),.6);
+    f.resize(1800,650);assert.equal(Number(canvas.dataset.scenePointerX),-.2);assert.equal(Number(canvas.dataset.scenePointerY),.6);
+    root.dispatchEvent(new f.window.MouseEvent('pointermove',{clientX:90,clientY:520,bubbles:true}));f.resize(1800,650);
+    assert.equal(Number(canvas.dataset.scenePointerX),-.9);assert.equal(Number(canvas.dataset.scenePointerY),-.6);
+  }finally{f.close();}}
+});
+
 test('Reduced motion starts a gentle moving scene, and Pause remains an immediate session control',async()=>{
   const gentle=fixture(),full=fixture({paused:false,storedMotion:'play'});try{
     await gentle.flush();await full.flush();gentle.step();full.step();

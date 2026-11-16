@@ -4,6 +4,8 @@ import {validatedProfileEntries,artworkSetKey,isUnconditionalPreference,profileE
 const unique=values=>[...new Set(values)];
 const short=work=>work.shortTitle||work.title;
 const EXPECTED={
+  attention:{construct:'reported-attention',xName:'Personal appeal',yName:'Reported attention',left:'Not for me',right:'For me',bottom:'Little pull to keep looking',top:'Holds my attention'},
+  connection:{construct:'connection',xName:'Understanding',yName:'Connection',left:'Hard to understand',right:'Easy to understand',bottom:'Feels distant',top:'Feels personal'},
   achievement:{construct:'perceived-achievement',xName:'Personal appeal',yName:'Admiration of making',left:'Not for me',right:'For me',bottom:'Little to admire',top:'Much to admire'},
   reading:{construct:'scene-and-meaning',xName:'Scene clarity',yName:'Interpretive openness',left:'Unclear scene',right:'Clear scene',bottom:'One reading',top:'Several readings'},
   returnResponse:{construct:'tension-and-return',xName:'Felt tension',yName:'Wish to return',left:'Comforting',right:'Unsettling',bottom:'Once is enough',top:'Would return'}

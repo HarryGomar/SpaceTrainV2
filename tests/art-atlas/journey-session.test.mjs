@@ -1,3 +1,4 @@
+import {isDiagnosticRound,bindDiagnosticRound} from '../../public/art-atlas/explanation-followups.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -19,9 +20,10 @@ function completeAnswer(round){
   const workIds=ids(round);
   if(round.kind==='spectrum')return {workIds,criterion:round.criterion,positions:Object.fromEntries(round.works.map((work,index)=>[work.id,Math.round(index/(round.works.length-1)*100)])),confirmed:true};
   if(round.kind==='grid')return {workIds,axis:round.axis,points:Object.fromEntries(round.works.map((work,index)=>[work.id,[10+index*20,90-index*20]])),confirmed:true};
+  if(round.kind==='choice-grid'&&round.evidence.familiarityProtocol==='prior-encounter-v2')return {workIds,selectionMode:'familiarity',familiarity:Object.fromEntries(workIds.map((id,i)=>[id,i<2?'seen':'new'])),selectedIds:workIds.slice(0,2),explicitNone:false,unsure:false,confirmed:true};
   if(round.kind==='choice-grid')return {workIds,selectionMode:round.selectionMode,selectedIds:workIds.slice(0,Math.min(round.selectionMode==='familiarity'?2:round.maxChoices||3,round.evidence?.instrumentRevision==='paged-favourites-v1'?18:Infinity)),explicitNone:false,unsure:false,confirmed:true,...(round.evidence?.instrumentRevision==='paged-favourites-v1'?{presentation:{protocol:'paged-favourites-v1',pageSize:18,visitedPages:[0],activePage:0}}:{})};
   if(round.kind==='statements')return {workIds,claims:Object.fromEntries(round.statements.map(statement=>[statement.id,3]))};
-  if(round.kind==='match')return {workIds,field:round.field,guesses:Object.fromEntries(round.works.map(work=>[work.id,round.options.find(option=>option.label===work[round.field]).id])),confirmed:true};
+  if(round.kind==='match')return {workIds,field:round.field,...(round.evidence.instrumentRevision==='recognition-certainty-v1'?{certainty:Object.fromEntries(workIds.map(id=>[id,'recognised']))}:{}),guesses:Object.fromEntries(round.works.map(work=>[work.id,round.options.find(option=>option.label===work[round.field]).id])),confirmed:true};
   if(round.kind==='context'&&round.contextMode==='reported-context-change-v1')return {workIds,workId:workIds[0],contextProtocol:round.contextProtocol,contentId:round.contextNote.id,storySeen:true,reportedChange:50,uncertain:false,confirmed:true};
   if(round.kind==='context')return round.contextMode==='preference-before-after-v1'?{workIds,workId:workIds[0],before:25,after:75,storySeen:true}:{workIds,workId:workIds[0],change:'same'};
   if(round.kind==='contrast'){
@@ -41,7 +43,8 @@ function finish(data){const fixed=sessionJourneyRounds(data);for(let index=0;ind
   let round=fixed[index];
   if(isFinalRefinementRound(round)&&!data.shown[round.id])round=bindFinalRefinementRound({round:restoreStudyRound(data.plan[index],data.manifest.catalogue),works:data.manifest.catalogue,rounds:fixed.slice(0,index).filter(source=>data.shown[source.id]).map(source=>restoreStudyRound(data.shown[source.id],data.manifest.catalogue)).filter(Boolean),answers:data.answers});
   if(data.answers[round.id]?.skipped||validStudyAnswer(round,data.answers[round.id]))continue;
-  if(round.unavailable){assert.ok(isFinalRefinementRound(round),round.id);continue;}
+  if(isDiagnosticRound(round)&&!data.shown[round.id])round=bindDiagnosticRound({round:restoreStudyRound(data.plan[index],data.manifest.catalogue),works:data.manifest.catalogue,rounds:Object.values(data.shown).map(snapshot=>restoreStudyRound(snapshot,data.manifest.catalogue)).filter(Boolean),answers:data.answers});
+  if(round.unavailable){assert.ok(isFinalRefinementRound(round)||isDiagnosticRound(round),round.id);continue;}
   assert.equal(round.unavailable,undefined,round.id);
   data.shown[round.id]=snapshotStudyRound(round);data.answers[round.id]=completeAnswer(round);
   assert.ok(data.answers[round.id].skipped||validStudyAnswer(round,data.answers[round.id]),round.id);
@@ -68,7 +71,7 @@ test('Journey extends 50 → 100 → 150 → 200 without rewriting prior respons
     assert.deepEqual(data,before,'Extension must not mutate the supplied saved session');
     assert.equal(extended.target,target);assert.equal(extended.plan.length,target);assert.equal(extended.index,prefixLength);assert.equal(extended.screen,'question');assert.equal(extended.finishedAt,null);
     assert.equal(extended.manifest.id,before.manifest.id);assert.deepEqual(extended.manifest.catalogue,before.manifest.catalogue);assert.deepEqual(extended.plan.slice(0,prefixLength),before.plan);assert.deepEqual(extended.answers,before.answers);assert.deepEqual(extended.shown,before.shown);
-    const resolved=sessionJourneyRounds(extended);assert.equal(resolved.length,target);assert.equal(new Set(resolved.map(round=>round.id)).size,target);assert.ok(resolved.filter(round=>round.unavailable).every(isFinalRefinementRound),'Only future answer-bound refinement questions may remain deferred');assert.ok(resolved.every(round=>round.works.every(work=>extended.manifest.catalogueIds.includes(work.id))));
+    const resolved=sessionJourneyRounds(extended);assert.equal(resolved.length,target);assert.equal(new Set(resolved.map(round=>round.id)).size,target);assert.ok(resolved.filter(round=>round.unavailable).every(round=>isFinalRefinementRound(round)||isDiagnosticRound(round)),'Only future answer-bound refinement and diagnostic questions may remain deferred');assert.ok(resolved.every(round=>round.works.every(work=>extended.manifest.catalogueIds.includes(work.id))));
     const batch=extended.batches.at(-1);assert.equal(batch.offset,prefixLength);assert.equal(batch.index,prefixLength/50);assert.equal(batch.selection.panels.length,18);assert.ok(batch.selection.coverage.eligiblePreferenceRoundIds.length);
     for(const round of resolved.slice(prefixLength).filter(round=>round.kind==='spectrum'&&round.evidence.role==='repeat')){
       const source=resolved.find(previous=>previous.id===round.evidence.repeatOf);assert.ok(source);assert.ok(resolved.indexOf(source)<resolved.indexOf(round));if(!round.evidence.lateExactReturn)assert.ok(resolved.indexOf(source)<prefixLength);assert.equal(round.title,source.title);assert.equal(round.hint,source.hint);assert.deepEqual(round.scale,source.scale);assert.deepEqual([...ids(round)].sort(),[...ids(source)].sort());
