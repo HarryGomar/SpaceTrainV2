@@ -85,7 +85,7 @@ test('A phone painting can be dragged onto the shared line and advances only aft
 });
 
 
-test('A started quiz has an accessible restart action before any answer is confirmed',()=>{
+test('The opening keeps a single primary action for a fresh or started quiz',()=>{
   const fresh=new JSDOM(renderOpening()),started=new JSDOM(renderOpening({started:true,profileAvailable:false}));
-  try{assert.equal(fresh.window.document.querySelector('[data-action=deep-retake]'),null);const restart=started.window.document.querySelector('[data-action=deep-retake]');assert.equal(restart.getAttribute('aria-label'),'Start a new quiz');assert.equal(started.window.document.querySelector('.opening-start').textContent,'Continue');assert.equal(started.window.document.querySelector('[data-action=deep-reading]'),null);}finally{fresh.window.close();started.window.close();}
+  try{for(const dom of [fresh,started])assert.equal(dom.window.document.querySelector('[data-action=deep-retake]'),null);assert.equal(fresh.window.document.querySelector('.opening-start').textContent,'Start');assert.equal(started.window.document.querySelector('.opening-start').textContent,'Continue');assert.equal(started.window.document.querySelector('[data-action=deep-reading]'),null);}finally{fresh.window.close();started.window.close();}
 });
