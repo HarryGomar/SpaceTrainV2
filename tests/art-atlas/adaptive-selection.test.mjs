@@ -39,7 +39,7 @@ test('Default later batch keeps the exploration floor and stratifies delayed rep
   assert.equal(plan.panels.length,18);
   assert.deepEqual(plan.coverage.actualRoles,{exploration:11,repeat:3,recontextualization:2,challenge:2});
   assert(plan.coverage.explorationShare>=.6);
-  assert.deepEqual(plan.panels.filter(p=>p.role==='repeat').map(p=>p.focus.band),['relative-high','relative-low','middle']);
+  assert.deepEqual(plan.panels.filter(p=>p.role==='repeat').map(p=>p.focus.band),['relative-low','middle','relative-high'],'Batch3 starts with the next delayed focus while retaining all three bands');
   assert(Math.max(...Object.values(plan.coverage.plannedUses))<=2);
 });
 
@@ -73,8 +73,9 @@ test('Ties remain level responses and never become high/low liking or a directio
 
 test('Relative extremes use within-set gaps rather than pooled scale positions',()=>{
   const works=artworks(),rounds=[source(works,0),source(works,1)];
+  rounds.forEach(round=>round.evidence.batchIndex=0);
   const answers={[rounds[0].id]:answer(rounds[0],[0,10,20]),[rounds[1].id]:answer(rounds[1],[80,80,80])};
-  const plan=planAdaptivePanels({works,rounds,answers,batchIndex:2,panelCount:4,quotas:{exactRepeats:1,recontextualizations:0,challenges:0}});
+  const plan=planAdaptivePanels({works,rounds,answers,batchIndex:1,panelCount:4,quotas:{exactRepeats:1,recontextualizations:0,challenges:0}});
   const repeated=plan.panels.find(p=>p.role==='repeat');
   assert.equal(repeated.focus.workId,rounds[0].works[2].id);
   assert.equal(repeated.focus.positionWithinSource,20);

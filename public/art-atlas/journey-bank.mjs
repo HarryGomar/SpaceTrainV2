@@ -3,7 +3,7 @@ import {recognitionTier,preferredTier,museumLibraryOrder} from './curation-prior
 import {AXES} from './engine.mjs';
 import {buildStudyRounds} from './question-bank.mjs';
 import {SORTING_WORKS} from './sorting-table.mjs';
-import {planStimulusPanels} from './stimulus-planner.mjs';
+import {planStimulusPanels,extendStimulusReservations,JOURNEY_BLOCK_LIMIT} from './stimulus-planner.mjs';
 import CURATION_NOTES from './curation-notes.json' with {type:'json'};
 import {selectContrastContent,selectSubjectBaselinePair} from './contrast-content.mjs';
 import {buildContrastRound} from './contrast-rounds.mjs';
@@ -11,20 +11,32 @@ import {selectArrangementStimuli} from './arrangement-stimuli.mjs';
 import {withOverallAppeal,isOverallAppealRound} from './appeal-scale.mjs';
 import {buildFinalRefinementRounds} from './final-refinement.mjs';
 import {choiceGridExposure} from './discovery-grid.mjs';
+import {isStudyEligibleArtwork} from './study-eligibility.mjs';
+import {CURATION_SEQUENCE,hasRegionalCuration,allowedInCurationStage,isWesternAmericasWork} from './curation-sequence.mjs';
+import {isReviewedVisualDescriptor} from './visual-descriptor-semantics.mjs';
 
 export const JOURNEY_PROTOCOL='art-profile-50-v1';
-export const JOURNEY_REVISION='art-profile-50-v10';
+export const JOURNEY_REVISION='art-profile-50-v11';
 export const JOURNEY_VARIETY_POLICY='specific-question-variety-v2';
 export const JOURNEY_LENGTH=50;
+export const JOURNEY_MAX_LENGTH=JOURNEY_BLOCK_LIMIT*JOURNEY_LENGTH;
 const FEATURES=['abstraction','energy','complexity','humanity','narrative','atmosphere','color'];
 const idAt=index=>'journey-'+String(index+1).padStart(3,'0');
 const panelId=(panel,batchIndex)=>'journey-'+(batchIndex?'batch-'+String(batchIndex+1).padStart(3,'0')+'-':'')+'panel-'+String(panel).padStart(2,'0');
 const ids=works=>works.map(work=>work.id);
 const signature=works=>ids(works).sort().join('|');
 const matchingIds=(a,b)=>Array.isArray(a)&&Array.isArray(b)&&a.length===b.length&&JSON.stringify([...a].sort())===JSON.stringify([...b].sort());
-const reviewed=work=>FEATURES.every(key=>Number.isFinite(work.features?.[key])&&work.features[key]>=0&&work.features[key]<=1);
+const reviewed=work=>FEATURES.every(key=>Number.isFinite(work.features?.[key])&&work.features[key]>=0&&work.features[key]<=1||['narrative','atmosphere'].includes(key)&&work.features?.[key]===null);
+function instrumentPool(works){
+  const eligible=works.filter(reviewed),chosen=new Map();
+  // These works bind source-question templates only. Actual journey stimuli are
+  // selected independently below and remain attached to their own snapshots.
+  for(const field of ['artist','movement']){const labels=new Set();for(const work of eligible){if(!work[field]||labels.has(work[field])||field==='artist'&&(work.artistKnown===false||/unidentified|unknown|anonymous|workshop|circle/i.test(work.artist)))continue;labels.add(work[field]);chosen.set(work.id,work);if(labels.size===4)break;}}
+  for(const work of eligible){if(chosen.size>=32)break;chosen.set(work.id,work);}
+  return [...chosen.values()].sort((a,b)=>a.id.localeCompare(b.id));
+}
 const knownDistance=(a,b)=>{
-  const keys=FEATURES.filter(key=>Number.isFinite(a.features?.[key])&&Number.isFinite(b.features?.[key]));
+  const keys=FEATURES.filter(key=>isReviewedVisualDescriptor(a,key)&&isReviewedVisualDescriptor(b,key));
   return keys.length?keys.reduce((sum,key)=>sum+Math.abs(a.features[key]-b.features[key]),0)/keys.length:0;
 };
 
@@ -40,32 +52,43 @@ const X=task=>({task});
 const V=(panel,axis)=>({task:'appraisal-map',panel,axis});
 const G=(mode,group)=>({task:'choice-grid',mode,group});
 const SCHEDULE=[
-  P(1),G('familiarity','a'),G('shortlist','c'),V(1,'achievement'),P(5),P(2),P(4),X('sorting'),G('shortlist','a'),P(3),
+  P(1),G('familiarity','a'),P(2),V(1,'achievement'),P(5),V(2,'achievement'),P(4),X('sorting'),G('shortlist','a'),P(3),
   G('familiarity','b'),P(6),P(7),P(8),V(5,'reading'),P(9),X('artist'),X('movement'),V(8,'returnResponse'),P(10),
   V(6,'achievement'),X('difficult-edit'),G('shortlist','b'),P(11),X('symbolism'),P(12),A(10,'surprise'),P(13),V(9,'reading'),P(14),
-  X('statement'),X('sorting'),P(15),V(11,'achievement'),X('context'),X('curate'),P(16),V(14,'returnResponse'),P(17),X('symbolism'),
-  P(18),G('shortlist','d'),V(8,'reading'),V(15,'returnResponse'),A(14,'surface'),X('closing'),X('closing'),X('closing'),X('closing'),X('closing')
+  X('statement'),X('sorting'),P(15),V(12,'achievement'),X('context'),X('curate'),P(16),V(14,'returnResponse'),P(17),X('symbolism'),
+  P(18),G('shortlist','d'),V(8,'reading'),V(15,'returnResponse'),V(17,'achievement'),X('closing'),X('closing'),X('closing'),X('closing'),X('closing')
 ];
 const CONTRAST_SLOTS=new Map([[14,'chronology'],[18,'neighbour'],[26,'keep-leave'],[41,'same-subject']]);
-const INITIAL_FAMILIARITY_IDS=['study-vermeer-pearl','study-rembrandt-night-watch','friedrich-wanderer','study-munch-scream','study-wood-american-gothic','study-raphael-school-athens','study-botticelli-birth-venus','millais-ophelia','study-posada-catrina','velazquez-las-meninas','study-bruegel-hunters-snow','hokusai-mount-fuji'];
+const INITIAL_FAMILIARITY_IDS=['add-van-eyck-arnolfini','study-rembrandt-night-watch','friedrich-wanderer','study-munch-scream','study-wood-american-gothic','study-raphael-school-athens','study-botticelli-birth-venus','millais-ophelia','study-posada-catrina','velazquez-las-meninas','study-bruegel-hunters-snow','hokusai-mount-fuji'];
 
 /** Propose new, unshown panels. Existing saved definitions remain the caller's authority. */
-export function createJourneyStimulusPlan({works,rounds=[],answers={},batchIndex=0,seed='journey-batch-'+batchIndex,reservationPlan,adaptivePlan,quotas}={}){
-  const notes=journeyCurationNotes(works,reservationPlan),plannedQuotas=quotas||journeyAdaptiveQuotas(batchIndex,reservationPlan||notes.reservePools);
-  return planStimulusPanels({works,rounds,answers,batchIndex,seed,reservationPlan,adaptivePlan,curationNotes:notes,quotas:plannedQuotas});
+export function createJourneyStimulusPlan({works,rounds=[],answers={},batchIndex=0,seed='journey-batch-'+batchIndex,reservationPlan,adaptivePlan,quotas,firstWorkIds}={}){
+  const capturedFirstIds=firstWorkIds||uniqueIds(rounds.filter(round=>round?.evidence?.construct==='preference'&&Number.isInteger(round.evidence.panelNumber)&&(round.evidence.batchIndex??Math.floor((Number(round.id?.slice(8)||1)-1)/50))===0).flatMap(round=>ids(round.works||[])));
+  const notes=journeyCurationNotes(works,reservationPlan,{firstWorkIds:capturedFirstIds.length?capturedFirstIds:undefined,startBatch:Math.max(1,batchIndex)}),plannedQuotas=quotas||journeyAdaptiveQuotas(batchIndex,notes.reservePools);
+  return planStimulusPanels({works,rounds,answers,batchIndex,seed,reservationPlan:reservationPlan?notes.reservePools:undefined,adaptivePlan,curationNotes:notes,quotas:plannedQuotas});
 }
-export function journeyAdaptiveQuotas(batchIndex,reservationPlan){return (reservationPlan?.['batch'+(batchIndex+1)]?.length||0)>44?{exactRepeats:2,recontextualizations:1,challenges:3}:batchIndex===2?{exactRepeats:2,recontextualizations:1,challenges:4}:{};}
+export function journeyAdaptiveQuotas(batchIndex,reservationPlan){
+  const target=reservationPlan?.['batch'+(batchIndex+1)]?.length||0;
+  if(target>60)return {exactRepeats:1,recontextualizations:0,challenges:1,minExplorationShare:16/18};
+  if(target>48)return {exactRepeats:2,recontextualizations:0,challenges:1,minExplorationShare:15/18};
+  return target>44?{exactRepeats:2,recontextualizations:1,challenges:3}:batchIndex===2?{exactRepeats:2,recontextualizations:1,challenges:4}:{};
+}
 
 /** Fresh classical/Mexican comparisons; an existing reservation remains authoritative. */
-export function journeyCurationNotes(works,reservationPlan){
+export function journeyCurationNotes(works,reservationPlan,{firstWorkIds,startBatch=1}={}){
   const available=new Set(works.map(work=>work.id)),newIds=['add-caravaggio-judith-barberini','add-caravaggio-supper-emmaus-1601','add-caravaggio-taking-christ','add-bruegel-triumph-death','add-velazquez-spinners','add-van-eyck-arnolfini','add-renoir-boating-party','add-marc-animal-destinies'];
-  if(!newIds.every(id=>available.has(id))||reservationPlan&&reservationPlan.batch2?.length===42&&reservationPlan.batch3?.length===42)return CURATION_NOTES;
+  if(!newIds.every(id=>available.has(id))||reservationPlan&&reservationPlan.batch2?.length===42&&reservationPlan.batch3?.length===42){
+    if(!reservationPlan)return CURATION_NOTES;
+    const notes=structuredClone(CURATION_NOTES);notes.reservePools=extendStimulusReservations({works,firstWorkIds:firstWorkIds||notes.proposedFirst18Panels.flatMap(panel=>panel.workIds),reservationPlan,startBatch,deferEastAsian:hasRegionalCuration(works),curationNotes:notes});return notes;
+  }
   const notes=structuredClone(CURATION_NOTES),replacements={3:['study-cassatt-child-bath','study-morisot-cradle','add-siqueiros-madre-nina','cassatt-omnibus'],6:['add-caravaggio-judith-barberini','add-caravaggio-taking-christ','opening-cma-92937','almeida-junior-saudade'],7:['study-seurat-grande-jatte','study-raphael-school-athens','add-caravaggio-supper-emmaus-1601','add-orozco-buffoons'],9:['velazquez-las-meninas','holbein-ambassadors','add-velazquez-spinners','add-van-eyck-arnolfini'],13:['bosch-garden-delights','study-bruegel-hunters-snow','add-bruegel-triumph-death','add-kandinsky-composition-seven'],15:['turner-burning-parliament','study-delacroix-liberty','bonheur-horses','add-marc-animal-destinies'],17:['study-matisse-dance','add-renoir-boating-party','study-tanner-banjo-lesson','add-izquierdo-sorrowful-friday'],18:['add-dali-transparent-simulacrum','add-carrington-dagobert','add-miro-harlequin-carnival','add-rivera-zapatista-landscape']};
-  for(const panel of notes.proposedFirst18Panels){if(replacements[panel.panel]){panel.workIds=replacements[panel.panel];panel.primaryQuestion='Record each painting’s overall appeal; compare different treatments without forcing a rank.';delete panel.contrastPairs;}}
+  const regional=hasRegionalCuration(works);
+  if(regional)Object.assign(replacements,{5:['mondrian-composition','study-kandinsky-composition-eight','add-gerzso-water-mansion','add-pollock-convergence'],11:['cezanne-mountain','friedrich-wanderer','velasco-valley-mexico','req-birkhauser-worlds-wound'],12:['req-brueghel-hearing','req-caravaggio-david-borghese','req-dore-quixote-library','req-rivera-controller-universe'],14:['study-posada-catrina','goya-saturn','ethiopian-apostles','req-patinir-massys-temptations']});
+  for(const panel of notes.proposedFirst18Panels){if(replacements[panel.panel]){panel.workIds=replacements[panel.panel];panel.primaryQuestion='Record each painting’s overall appeal; compare different treatments without forcing a rank.';panel.targetFeature=null;panel.targetContrast=null;panel.sharedGround='A deliberate set of different treatments for separate overall liking ratings.';panel.confounds=['Artist, subject, period, material, reproduction and several visual qualities can vary together.'];panel.sourceUrls=panel.workIds.map(id=>works.find(work=>work.id===id)?.sourceUrl).filter(Boolean);delete panel.contrastPairs;}}
   const first=new Set(notes.proposedFirst18Panels.flatMap(panel=>panel.workIds));
   if(first.size!==72||[...first].some(id=>!available.has(id)))return CURATION_NOTES;
-  const remaining=works.map(work=>work.id).filter(id=>!first.has(id)),ordered=uniqueIds([...(CURATION_NOTES.reservePools?.batch2||[]).filter(id=>remaining.includes(id)),...remaining.sort()]),secondSize=Math.ceil(remaining.length/2);
-  notes.reservePools={batch2:ordered.slice(0,secondSize),batch3:ordered.slice(secondSize),batch4:[]};notes.maximumLandmarksPerPanel=4;notes.studyDesignRevision='overall-appeal-classics-mexico-v1';return notes;
+  const remaining=works.map(work=>work.id).filter(id=>!first.has(id)),ordered=uniqueIds([...(CURATION_NOTES.reservePools?.batch2||[]).filter(id=>remaining.includes(id)),...remaining.sort()]);
+  notes.reservePools=extendStimulusReservations({works,firstWorkIds:firstWorkIds||[...first],reservationPlan,startBatch,preferredOrder:ordered,deferEastAsian:regional,curationNotes:notes});notes.maximumLandmarksPerPanel=4;notes.studyDesignRevision=regional?'overall-appeal-classics-mexico-v2':'overall-appeal-classics-mexico-v1';if(regional)notes.curationSequence=CURATION_SEQUENCE;return notes;
 }
 const uniqueIds=values=>[...new Set(values)];
 
@@ -151,7 +174,7 @@ function selectWorks(pool,size,{uses,lastSeen,index,distinctField,focus,mode='ma
       const place=country(work)&&!selected.some(other=>country(other)===country(work))?2:0;
       const movement=selected.some(other=>other.movement===work.movement)?0:1;
       const spread=selected.length?selected.reduce((sum,other)=>sum+knownDistance(work,other),0)/selected.length:0;
-      const value=focus&&work.features?.[focus];
+      const value=focus&&isReviewedVisualDescriptor(work,focus)?work.features[focus]:undefined;
       const contrast=Number.isFinite(value)&&desired?(desired==='low'?1-value:value)*4:0;
       const recognitionTiePreference=varietyMode&&recognitionTier(work)===desiredTier ? .5 : 0;
       return recent*2+artist+place+movement+spread*3+contrast+recognitionTiePreference;
@@ -169,10 +192,11 @@ export function buildJourneyRounds(works,answers={},options={}){
   const offset=options.offset??0,batchIndex=options.batchIndex??Math.floor(offset/JOURNEY_LENGTH);
   if(!Number.isInteger(offset)||offset<0||offset%JOURNEY_LENGTH||!Number.isInteger(batchIndex)||batchIndex<0)throw Error('Journey batches need a non-negative batch index and an offset in steps of fifty.');
   const at=index=>idAt(offset+index),selectionSeed=String(options.seed??'journey-batch-'+batchIndex);
-  const pool=[...works].filter(work=>work&&typeof work.id==='string'&&work.title&&work.image&&work.sourceUrl).sort((a,b)=>a.id.localeCompare(b.id));
+  const pool=[...works].filter(work=>isStudyEligibleArtwork(work)&&typeof work.id==='string'&&work.title&&work.image&&work.sourceUrl).sort((a,b)=>a.id.localeCompare(b.id));
   if(pool.length<12||new Set(ids(pool)).size!==pool.length)throw Error('The journey needs at least twelve distinct, sourced artworks.');
+  const regional=hasRegionalCuration(pool),curationNotes=journeyCurationNotes(pool,options.reservationPlan),stagePool=regional?pool.filter(work=>allowedInCurationStage(work,batchIndex,curationNotes)):pool,westernPool=stagePool.filter(work=>isWesternAmericasWork(work,curationNotes)||work.id==='study-hokusai-great-wave'),activityPool=regional&&batchIndex<4&&westernPool.length>=12?westernPool:stagePool,initialFamiliarityIds=regional?INITIAL_FAMILIARITY_IDS.map(id=>id==='hokusai-mount-fuji'?'study-van-gogh-self-portrait':id):INITIAL_FAMILIARITY_IDS;
   // Bank IDs are backlinks to source instruments, not claims that their old bindings were shown.
-  const bank=buildStudyRounds(pool.filter(reviewed),200);
+  const bank=buildStudyRounds(instrumentPool(pool),200);
   const usedTemplates=new Set();
   const templateFor=predicate=>{
     const template=bank.find(round=>!usedTemplates.has(round.id)&&predicate(round));
@@ -186,11 +210,11 @@ export function buildJourneyRounds(works,answers={},options={}){
   }
   const noteCandidates=['holbein-ambassadors','matejko-stanczyk','bosch-garden-delights','redon-violette','tanner-waters'].map(id=>pool.find(work=>work.id===id)).filter(Boolean);
   const priorNotes=new Set([...history.values()].filter(round=>round.kind==='context').flatMap(round=>ids(round.works)));
-  const symbolismRounds=new Map(),plannedReveals=[...history.values()],availableNotes=availableSymbolismContent(pool);
-  for(const [slot,preferredId] of [[24,'green-tara'],[34,'add-watts-hope'],[39,'holbein-ambassadors']]){
+  const symbolismRounds=new Map(),plannedReveals=[...history.values()],availableNotes=availableSymbolismContent(stagePool);
+  for(const [slot,preferredId] of [[24,regional?'add-varo-harmony':'green-tara'],[34,'add-watts-hope'],[39,'holbein-ambassadors']]){
     const used=new Set(plannedReveals.filter(item=>item.kind==='context').flatMap(item=>ids(item.works)));
     const fresh=availableNotes.filter(note=>!used.has(note.workId)),content=(batchIndex===0?fresh.find(note=>note.workId===preferredId):null)||fresh[0];
-    const built=buildSymbolismRound({id:at(slot),works:pool,rounds:plannedReveals,...(content?{contentId:content.id}:{allowRevisit:true})});
+    const built=buildSymbolismRound({id:at(slot),works:stagePool,rounds:plannedReveals,...(content?{contentId:content.id}:{allowRevisit:true})});
     if(built){symbolismRounds.set(slot,built);plannedReveals.push(built);}
   }
   const noteWork=symbolismRounds.get(34)?.works[0]||noteCandidates.find(work=>!priorNotes.has(work.id))||noteCandidates[batchIndex%noteCandidates.length];
@@ -207,7 +231,7 @@ export function buildJourneyRounds(works,answers={},options={}){
     if(!sourceIndex||Number(sourceIndex[1])<=offset)registerSpecificQuestion(round,sourceIndex?Number(sourceIndex[1])-1:null);
     if(sourceIndex&&Number(sourceIndex[1])<=offset&&round.kind!=='statements')round.works.forEach(work=>lastSeen.set(work.id,Math.max(lastSeen.get(work.id)??-Infinity,Number(sourceIndex[1])-1)));
     const legacyPanel=/^panel-(\d+)$/.exec(round.evidence?.setId||''),number=round.evidence?.panelNumber||(legacyPanel?Number(legacyPanel[1]):null),sourceBatch=round.evidence?.batchIndex??Math.floor((Number(sourceIndex?.[1]||1)-1)/JOURNEY_LENGTH);
-    if((['art-profile-50-v2','art-profile-50-v3','art-profile-50-v4','art-profile-50-v5','art-profile-50-v6','art-profile-50-v7','art-profile-50-v8','art-profile-50-v9',JOURNEY_REVISION].includes(round.evidence?.journeyRevision)||legacyPanel)&&sourceBatch===batchIndex&&Number.isInteger(number)&&number>=1&&number<=18&&round.works.every(work=>pool.some(item=>item.id===work.id))&&!panels.has(number)){
+    if((['art-profile-50-v2','art-profile-50-v3','art-profile-50-v4','art-profile-50-v5','art-profile-50-v6','art-profile-50-v7','art-profile-50-v8','art-profile-50-v9','art-profile-50-v10',JOURNEY_REVISION].includes(round.evidence?.journeyRevision)||legacyPanel)&&sourceBatch===batchIndex&&Number.isInteger(number)&&number>=1&&number<=18&&round.works.every(work=>pool.some(item=>item.id===work.id))&&!panels.has(number)){
       panels.set(number,round.works.map(work=>pool.find(item=>item.id===work.id)));
       if(round.evidence?.setId)panelSetIds.set(number,round.evidence.setId);
       round.works.forEach(work=>panelUses.set(work.id,(panelUses.get(work.id)||0)+1));
@@ -219,14 +243,14 @@ export function buildJourneyRounds(works,answers={},options={}){
     if(!panels.has(index+1))panels.set(index+1,panel.workIds.map(id=>pool.find(work=>work.id===id)));
   }
   for(const previous of history.values())if(previous.kind==='choice-grid'&&previous.evidence?.batchIndex===batchIndex&&previous.evidence?.gridGroup&&previous.works.every(work=>pool.some(other=>other.id===work.id))){gridPanels.set(previous.evidence.gridGroup,previous.works.map(work=>pool.find(other=>other.id===work.id)));gridSelectionAudits.set(previous.evidence.gridGroup,previous.evidence.varietySelection?structuredClone(previous.evidence.varietySelection):{policy:JOURNEY_VARIETY_POLICY,preservedCachedBinding:true,scope:'A previously bound grid identity is preserved before applying new spacing choices.'});}
-  const sequence=[],closing=buildFinalRefinementRounds({works:pool,offset,seed:selectionSeed}),curationNotes=journeyCurationNotes(pool,options.reservationPlan);
+  const sequence=[],closing=buildFinalRefinementRounds({works:pool,offset,seed:selectionSeed});
   const firstSortingPlan=()=>{
-    const earlier=sequence.filter(source=>source.kind==='spectrum'&&source.evidence?.construct==='preference'&&source.evidence.unconditional!==false),offered=new Map(earlier.flatMap(source=>source.works.map(work=>[work.id,work]))),preferred=['van-gogh-starry-night','klimt-kiss','study-hokusai-great-wave','study-vermeer-milkmaid','blanchard-still-life','add-tamayo-still-life-foot','add-rivera-portrait-frida','hiroshige-sudden-shower','add-siqueiros-madre-nina','study-cassatt-child-bath'],chosen=uniqueIds([...preferred.filter(id=>offered.has(id)),...offered.keys()]).slice(0,8);
-    if(chosen.length<8){const fallback=selectArrangementStimuli({works:pool,batchIndex,kind:'sorting'});return {...fallback,fallback:true,fallbackReason:'Fewer than eight distinct earlier appeal paintings were available; the reviewed arrangement rotation was retained.'};}
+    const earlier=sequence.filter(source=>source.kind==='spectrum'&&source.evidence?.construct==='preference'&&source.evidence.unconditional!==false),offered=new Map(earlier.flatMap(source=>source.works.map(work=>[work.id,work]))),preferred=regional?['van-gogh-starry-night','klimt-kiss','study-hokusai-great-wave','study-vermeer-milkmaid','mondrian-composition','study-kandinsky-composition-eight','add-rivera-portrait-frida','add-tamayo-still-life-foot']:['van-gogh-starry-night','klimt-kiss','study-hokusai-great-wave','study-vermeer-milkmaid','blanchard-still-life','add-tamayo-still-life-foot','add-rivera-portrait-frida','hiroshige-sudden-shower','add-siqueiros-madre-nina','study-cassatt-child-bath'],chosen=uniqueIds([...preferred.filter(id=>offered.has(id)),...offered.keys()]).slice(0,8);
+    if(chosen.length<8){const fallback=selectArrangementStimuli({works:activityPool,batchIndex,kind:'sorting'});return {...fallback,fallback:true,fallbackReason:'Fewer than eight distinct earlier appeal paintings were available; the reviewed arrangement rotation was retained.'};}
     return {status:'ready',kind:'sorting',contentId:'earlier-appeal-sorting-'+batchIndex,revision:'earlier-appeal-sorting-v1',batchIndex,workIds:chosen,sourceRoundIds:earlier.filter(source=>source.works.some(work=>chosen.includes(work.id))).map(source=>source.id),sourceUrls:chosen.map(id=>offered.get(id).sourceUrl),curationNotes:['Group eight paintings from the earlier appeal questions. The offered set is linked by exact identities; completed preference evidence remains separate.'],fallback:false,reuseRule:'The later sorting question reuses this exact eight-work set.',scope:'Previously offered appeal paintings, not an inferred favourite set or proof of a completed appeal rating.'};
   };
   const contrastReservations=new Map(),contrastContentAt=localIndex=>{
-    if(!contrastReservations.has(localIndex))contrastReservations.set(localIndex,selectContrastContent({works:pool,rounds:[...[...history.values()].filter(source=>!/^journey-\d+$/.test(source.id)||Number(source.id.slice(8))<=offset),...sequence],answers,seed:selectionSeed+'-contrast-'+localIndex,kind:CONTRAST_SLOTS.get(localIndex),batchIndex,notes:curationNotes}));
+    if(!contrastReservations.has(localIndex))contrastReservations.set(localIndex,selectContrastContent({works:activityPool,rounds:[...[...history.values()].filter(source=>!/^journey-\d+$/.test(source.id)||Number(source.id.slice(8))<=offset),...sequence],answers,seed:selectionSeed+'-contrast-'+localIndex,kind:CONTRAST_SLOTS.get(localIndex),batchIndex,notes:curationNotes}));
     return contrastReservations.get(localIndex);
   };
   const knownIdsAt=localIndex=>{
@@ -236,8 +260,8 @@ export function buildJourneyRounds(works,answers={},options={}){
     const spec=SCHEDULE[localIndex];
     if(spec.panel&&panels.has(spec.panel))return ids(panels.get(spec.panel));
     if(spec.task==='context'||spec.task==='symbolism')return [symbolismRounds.get(localIndex)?.works[0]?.id||noteWork.id];
-    if(spec.task==='choice-grid'){const group='batch-'+batchIndex+'-grid-'+spec.group;if(gridPanels.has(group))return ids(gridPanels.get(group));if(batchIndex===0&&spec.group==='a'&&INITIAL_FAMILIARITY_IDS.every(id=>pool.some(work=>work.id===id)))return [...INITIAL_FAMILIARITY_IDS];}
-    if(['sorting','difficult-edit'].includes(spec.task)){const source=spec.task==='sorting'&&localIndex===31?(history.get(at(7))||sequence[7]):null;if(source)return specificQuestionIds(source);const plan=spec.task==='sorting'?firstSortingPlan():selectArrangementStimuli({works:pool,batchIndex,kind:spec.task});if(plan.status==='ready')return [...plan.workIds];}
+    if(spec.task==='choice-grid'){const group='batch-'+batchIndex+'-grid-'+spec.group;if(gridPanels.has(group))return ids(gridPanels.get(group));if(batchIndex===0&&spec.group==='a'&&initialFamiliarityIds.every(id=>pool.some(work=>work.id===id)))return [...initialFamiliarityIds];}
+    if(['sorting','difficult-edit'].includes(spec.task)){const source=spec.task==='sorting'&&localIndex===31?(history.get(at(7))||sequence[7]):null;if(source)return specificQuestionIds(source);const plan=spec.task==='sorting'?firstSortingPlan():selectArrangementStimuli({works:activityPool,batchIndex,kind:spec.task});if(plan.status==='ready')return [...plan.workIds];}
     return [];
   };
   const avoidFor=(localIndex,gridGroup)=>{
@@ -291,7 +315,7 @@ export function buildJourneyRounds(works,answers={},options={}){
     }else if(spec.task==='choice-grid'){
       const group='batch-'+batchIndex+'-grid-'+spec.group;
       const reusedGrid=gridPanels.has(group);
-      if(!reusedGrid){const avoid=avoidFor(index,spec.group),audit={independentNeighbourRoundIds:avoid.roundIds},anchors=spec.mode==='familiarity'&&spec.group==='a'&&batchIndex===0?INITIAL_FAMILIARITY_IDS.map(id=>pool.find(work=>work.id===id)).filter(Boolean):[];if(anchors.length===12){gridPanels.set(group,anchors);anchors.forEach(work=>gridUses.set(work.id,(gridUses.get(work.id)||0)+1));Object.assign(audit,{policy:JOURNEY_VARIETY_POLICY,fixedFirstFamiliarity:true,scope:'A curated twelve-landmark familiarity set; its paired shortlist preserves exact identities.',avoidWorkIds:[...avoid.ids].sort(),selectedAvoidedIds:anchors.filter(work=>avoid.ids.has(work.id)).map(work=>work.id),fallback:false,plannedUseCountsBefore:Object.fromEntries(anchors.map(work=>[work.id,plannedSpecificUses.get(work.id)||0]))});}else gridPanels.set(group,selectWorks(pool,12,{uses:gridUses,lastSeen,index:globalIndex,mode:'grid',seed:selectionSeed+'-'+group,plannedUses:plannedSpecificUses,plannedLastSeen:plannedSpecificLastSeen,avoidIds:avoid.ids,audit}));gridSelectionAudits.set(group,audit);}
+      if(!reusedGrid){const avoid=avoidFor(index,spec.group),audit={independentNeighbourRoundIds:avoid.roundIds},anchors=spec.mode==='familiarity'&&spec.group==='a'&&batchIndex===0?initialFamiliarityIds.map(id=>pool.find(work=>work.id===id)).filter(Boolean):[];if(anchors.length===12){gridPanels.set(group,anchors);anchors.forEach(work=>gridUses.set(work.id,(gridUses.get(work.id)||0)+1));Object.assign(audit,{policy:JOURNEY_VARIETY_POLICY,fixedFirstFamiliarity:true,scope:'A curated twelve-landmark familiarity set; its paired shortlist preserves exact identities.',avoidWorkIds:[...avoid.ids].sort(),selectedAvoidedIds:anchors.filter(work=>avoid.ids.has(work.id)).map(work=>work.id),fallback:false,plannedUseCountsBefore:Object.fromEntries(anchors.map(work=>[work.id,plannedSpecificUses.get(work.id)||0]))});}else gridPanels.set(group,selectWorks(activityPool,12,{uses:gridUses,lastSeen,index:globalIndex,mode:'grid',seed:selectionSeed+'-'+group,plannedUses:plannedSpecificUses,plannedLastSeen:plannedSpecificLastSeen,avoidIds:avoid.ids,audit}));gridSelectionAudits.set(group,audit);}
       const chosen=gridPanels.get(group),shown=spec.mode==='shortlist'?[...chosen.slice(5),...chosen.slice(0,5)].reverse():chosen;
       round={kind:'choice-grid',selectionMode:spec.mode,maxChoices:shown.length,title:spec.mode==='familiarity'?'Before today, which had you seen?':'Which would you keep?',hint:spec.mode==='familiarity'?'Select the paintings you recognise.':'Select any paintings you would keep. Tap again to change a choice.',works:shown};
       const familiarId=spec.mode==='shortlist'&&['a','b'].includes(spec.group)?at(spec.group==='a'?1:10):null;
@@ -318,7 +342,7 @@ export function buildJourneyRounds(works,answers={},options={}){
     }else if(spec.task==='artist'||spec.task==='movement'){
       const field=spec.task==='artist'?'artist':'movement';
       template=templateFor(item=>item.kind==='match'&&item.field===field);
-      const eligible=pool.filter(work=>work[field]&&(field!=='artist'||work.artistKnown!==false&&!/unknown|unidentified|anonymous|workshop|circle/i.test(work.artist)));
+      const eligible=activityPool.filter(work=>work[field]&&(field!=='artist'||work.artistKnown!==false&&!/unknown|unidentified|anonymous|workshop|circle/i.test(work.artist)));
       const avoid=avoidFor(index),audit={independentNeighbourRoundIds:avoid.roundIds},chosen=selectWorks(eligible,4,{uses:recognitionUses,lastSeen,index:globalIndex,seed:selectionSeed,mode:'match',distinctField:field,plannedUses:plannedSpecificUses,plannedLastSeen:plannedSpecificLastSeen,avoidIds:avoid.ids,audit});
       round={kind:'match',field,title:field==='artist'?'Match the paintings to the artists.':'Match the paintings to a style or tradition.',hint:'Move each painting to a label. Use Not sure when you do not know.',works:chosen,options:[...chosen].reverse().map((work,i)=>({id:field+'-'+i,label:work[field]}))};
       evidence={construct:field==='artist'?'recognition-artist':'recognition-movement',family:'cued-recognition',role:'check',varietyPolicy:JOURNEY_VARIETY_POLICY,varietySelection:audit,limits:[...template.evidence.limits]};
@@ -332,7 +356,7 @@ export function buildJourneyRounds(works,answers={},options={}){
 
     }else{
       const kind=spec.task;
-      const arrangementPlan=kind==='sorting'?index===31?sequence[7].evidence?.arrangementSelection:firstSortingPlan():kind==='difficult-edit'?selectArrangementStimuli({works:pool,batchIndex,kind}):null;
+      const arrangementPlan=kind==='sorting'?index===31?sequence[7].evidence?.arrangementSelection:firstSortingPlan():kind==='difficult-edit'?selectArrangementStimuli({works:activityPool,batchIndex,kind}):null;
       const sortingAnchors=['van-gogh-starry-night','study-hokusai-great-wave','study-vermeer-pearl','study-munch-scream','klimt-kiss','velazquez-las-meninas','velasco-valley-mexico','study-abanindranath-bharat-mata'].map(id=>pool.find(work=>work.id===id)).filter(Boolean);const editAnchors=['van-gogh-starry-night','monet-water-lilies','study-hokusai-great-wave','study-monet-japanese-footbridge'].map(id=>pool.find(work=>work.id===id)).filter(Boolean);
       const chosen=kind==='sorting'&&index===31?sequence[7].works:arrangementPlan?.status==='ready'?arrangementPlan.workIds.map(id=>pool.find(work=>work.id===id)):kind==='sorting'?sortingAnchors.length===8?sortingAnchors:SORTING_WORKS.map(workId=>pool.find(work=>work.id===workId)).filter(Boolean):kind==='difficult-edit'?editAnchors.length===4?editAnchors:['velasco-valley-mexico','cezanne-mountain','shen-clouds','hokusai-mount-fuji'].map(workId=>pool.find(work=>work.id===workId)).filter(Boolean):pool;
       if(chosen.length<(kind==='curate'?12:kind==='sorting'?8:4))throw Error('This collection cannot supply the planned exercise.');
@@ -344,7 +368,7 @@ export function buildJourneyRounds(works,answers={},options={}){
     const priorIds=ids(round.works).filter(workId=>lastSeen.has(workId));
     const adaptiveSelection=metadataPanel?Object.fromEntries(['focus','provisionalHypothesis','provisionalPrediction','holdoutUnit','comparisonNovel','artworksMayBeFamiliar','delay','dependencyGroup'].filter(key=>metadataPanel[key]!==undefined).map(key=>[key,structuredClone(metadataPanel[key])])):null;
     let full={...round,id,format:round.kind,...(template?{bankRoundId:template.id}:{}),evidence:{
-      bankRevision:template?.evidence.bankRevision||JOURNEY_PROTOCOL,journeyRevision:JOURNEY_REVISION,batchIndex,selectionSeed,
+      bankRevision:template?.evidence.bankRevision||JOURNEY_PROTOCOL,journeyRevision:JOURNEY_REVISION,batchIndex,selectionSeed,...(regional?{curationSequence:CURATION_SEQUENCE}:{}),
       ...(template?{sourceBankRoundId:template.id,sourceBinding:'journey-selected-works'}:{}),
       setId,...(spec.panel?{panelNumber:spec.panel,pairedRoundIds:paired,priorMeasureRoundIds:earlier}:{}),
       ...evidence,...(contrastContent&&!contrastRound?{contrastFallback:{kind:contrastKind,reason:contrastContent.reason||'The reviewed content did not bind to this catalogue.'}}:{}),labelExposure:batchIndex?'after-earlier-batch-label-games':index<16?'before-journey-label-games':index===16?'first-cued-label-game':'after-journey-label-games',

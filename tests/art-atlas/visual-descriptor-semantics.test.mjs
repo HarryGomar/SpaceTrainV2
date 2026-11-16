@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import {isReviewedVisualDescriptor,FEATURE_SEMANTIC_VERSION} from '../../public/art-atlas/visual-descriptor-semantics.mjs';
 import {planAdaptivePanels} from '../../public/art-atlas/adaptive-selection.mjs';
 
@@ -12,12 +13,32 @@ function fixture(feature,reviewed=true){
 }
 
 test('Literal action and setting require the exact semantic marker, including when the value is zero',()=>{
+  assert.equal(FEATURE_SEMANTIC_VERSION,'literal-action-setting-v2');
   for(const key of ['narrative','atmosphere']){
     assert.equal(isReviewedVisualDescriptor({features:{[key]:0}},key),false);
     assert.equal(isReviewedVisualDescriptor({features:{[key]:0},featureSemanticVersion:FEATURE_SEMANTIC_VERSION},key),true);
     assert.equal(isReviewedVisualDescriptor({features:{[key]:1},featureSemanticVersion:'old-or-unknown'},key),false);
+    assert.equal(isReviewedVisualDescriptor({features:{[key]:1},featureSemanticVersion:'literal-action-setting-v1'},key),false,'A frozen v1 number never acquires the stricter definition.');
+    for(const value of [null,undefined,'0',NaN,Infinity])assert.equal(isReviewedVisualDescriptor({features:{[key]:value},featureSemanticVersion:FEATURE_SEMANTIC_VERSION},key),false);
     assert.equal(isReviewedVisualDescriptor({features:{[key]:.5},featureAnnotationVersion:'visible-action-setting-review-v1',featureSource:'Manually reviewed literal action'},key),false,'Free text and another revision cannot certify this semantic definition');
   }
+});
+
+test('Per-field unknown, pending, stale numeric and source mismatches cannot be promoted by a v2 marker',()=>{
+  const source={sourceUrl:'https://museum.example/reviewed',image:'assets/reviewed.jpg'},work={...source,featureSemanticVersion:FEATURE_SEMANTIC_VERSION,features:{narrative:.75,atmosphere:.5,color:.25},featureLiteralReview:{version:FEATURE_SEMANTIC_VERSION,reviewed:true,sourceIdentity:source,fields:{narrative:{status:'unknown',value:null},atmosphere:{status:'reviewed',value:.5}}}};
+  assert.equal(isReviewedVisualDescriptor(work,'narrative'),false,'A retained raw draft remains unknown.');assert.equal(isReviewedVisualDescriptor(work,'atmosphere'),true);assert.equal(isReviewedVisualDescriptor(work,'color'),true);
+  const pending=structuredClone(work);pending.featureLiteralReview.reviewed=false;assert.equal(isReviewedVisualDescriptor(pending,'atmosphere'),false);
+  const stale=structuredClone(work);stale.features.atmosphere=.75;assert.equal(isReviewedVisualDescriptor(stale,'atmosphere'),false);
+  const moved=structuredClone(work);moved.image='another-image.jpg';assert.equal(isReviewedVisualDescriptor(moved,'atmosphere'),false);
+  const missing=structuredClone(work);delete missing.featureLiteralReview.fields.atmosphere;assert.equal(isReviewedVisualDescriptor(missing,'atmosphere'),false);
+});
+
+test('The actual463 collection respects258 exact v2 reviews,202 pending records and17 independent field unknowns',()=>{
+  const works=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/artworks.json',import.meta.url),'utf8')),ledger=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/literal-descriptor-reviews.json',import.meta.url),'utf8')),byId=new Map(works.map(work=>[work.id,work]));
+  assert.equal(ledger.version,FEATURE_SEMANTIC_VERSION);assert.equal(Object.keys(ledger.reviews).length,258);assert.equal(Object.keys(ledger.withheld).length,202);let unknowns=0;
+  for(const [id,record] of Object.entries(ledger.reviews)){const work=byId.get(id);assert.ok(work);assert.equal(work.featureSemanticVersion,FEATURE_SEMANTIC_VERSION);for(const key of ['narrative','atmosphere']){const field=record.fields[key],known=field.status==='reviewed';assert.equal(work.features[key],field.value);assert.equal(isReviewedVisualDescriptor(work,key),known,id+' '+key);if(!known){unknowns++;assert.equal(field.status,'unknown');assert.equal(work.features[key],null);}}}
+  assert.equal(unknowns,17);for(const id of Object.keys(ledger.withheld)){const work=byId.get(id);assert.equal(work.featureSemanticVersion,'pending-literal-action-setting-review');for(const key of ['narrative','atmosphere'])assert.equal(isReviewedVisualDescriptor(work,key),false);for(const key of FEATURES.filter(key=>!['narrative','atmosphere'].includes(key)))assert.equal(isReviewedVisualDescriptor(work,key),true);}
+  const record=Object.values(ledger.reviews)[0],frozen={features:structuredClone(record.before),featureSemanticVersion:'literal-action-setting-v1'},before=structuredClone(frozen);for(const key of ['narrative','atmosphere'])assert.equal(isReviewedVisualDescriptor(frozen,key),false);assert.deepEqual(frozen,before);
 });
 
 test('The other five dimensions retain their original numeric-only requirements',()=>{

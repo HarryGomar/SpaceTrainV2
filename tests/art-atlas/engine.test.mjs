@@ -30,7 +30,8 @@ test('The expanded catalogue keeps the original sixteen and verifies local image
     assert.ok(typeof w.rights==='string'&&w.rights.trim());
     if(w.rights==='CC0') assert.match(w.sourceUrl, /^https:\/\/(www\.)?(?:clevelandart\.org\/art\/|metmuseum\.org\/art\/collection\/search\/|nga\.gov\/artworks\/)/);
     else if(w.rights==='Public domain')assert.match(w.rightsUrl,/^https:\/\/commons\.wikimedia\.org\/wiki\//);
-    else{assert.match(w.rightsUrl,/^https:\/\//);assert.ok(w.creditLine);assert.equal(w.provenance.reuseStatus,'permission-not-established');}
+    else if(w.provenance?.reuseStatus==='institutional-open-access'){assert.match(w.rightsUrl,/^https:\/\/www\.nga\.gov\//);assert.equal(w.provenance.openaccess,1);assert.equal(w.provenance.publishedImage.openaccess,'1');assert.equal(w.provenance.publishedImage.viewtype,'primary');}
+    else{assert.match(w.rightsUrl,/^https:\/\//);assert.ok(w.creditLine);assert.ok(['permission-not-established','permission-not-established-for-underlying-work'].includes(w.provenance.reuseStatus));}
     const bytes = fs.readFileSync(new URL('../../public/art-atlas/' + w.image, import.meta.url));
     assert.equal(bytes[0], 0xff); assert.equal(bytes[1], 0xd8); assert.ok(bytes.length > 1000);
   }
@@ -81,6 +82,17 @@ test('Matching validates complete, unique options and scores actual labels', () 
   b.guesses[x] = 'unsure'; assert.ok(validAnswer(r, b)); assert.equal(matchResults(r, b).find(item => item.workId === x).status, 'unsure');
   b.guesses[x] = b.guesses[y]; assert.equal(validAnswer(r, b), false);
   assert.equal(validAnswer(r, { ...a.artistMatch, confirmed: false }), false);
+});
+
+test('Matching stays solvable when the preference quartet repeats a movement',()=>{
+  const rounds=buildRounds(works),preference=rounds.find(round=>round.id==='preferenceRank');
+  assert.ok(new Set(preference.works.map(work=>work.movement)).size<preference.works.length);
+  for(const round of rounds.filter(item=>item.kind==='match')){
+    assert.equal(round.works.length,4);assert.equal(round.options.length,4);
+    assert.equal(new Set(round.works.map(work=>correctOption(round,work))).size,4);
+    const answer={field:round.field,workIds:round.works.map(work=>work.id),guesses:Object.fromEntries(round.works.map(work=>[work.id,correctOption(round,work)])),confirmed:true};
+    assert.ok(validAnswer(round,answer));assert.ok(matchResults(round,answer).every(result=>result.status==='correct'));
+  }
 });
 test('Curiosity, affect, matching and context stay outside the preference fit', () => {
   const a = session(), b = structuredClone(a);

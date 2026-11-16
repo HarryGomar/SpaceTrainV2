@@ -7,6 +7,7 @@ import {createAtlasNavigation,clampAtlasView,atlasScreenToWorld} from './atlas-n
 import {buildResponseAtlas} from './response-atlas-data.mjs';
 import {restoreStudyRound} from './deep-study.mjs';
 import {AXES} from './engine.mjs';
+import {loadActiveStudy} from './active-study-storage.mjs';
 const app=document.querySelector('#atlas'),esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const picker=createAtlasPicker(app);
 const short=work=>work?.shortTitle||work?.title||'';
@@ -113,7 +114,7 @@ app.addEventListener('change',event=>{const {id,value}=event.target;if(id==='atl
 app.addEventListener('keydown',event=>{const point=event.target.closest('[data-point]');if(point&&['Enter',' '].includes(event.key)){event.preventDefault();selectedId=point.dataset.point;renderPlot();[...app.querySelectorAll('[data-point]')].find(el=>el.dataset.point===selectedId)?.focus({preventScroll:true});}});
 const method=document.querySelector('#atlas-method');method.querySelector('button').addEventListener('click',()=>method.close());
 try{
-  const response=await fetch('./artworks.json');if(!response.ok)throw Error('Catalogue unavailable');const current=await response.json();let saved=null;try{saved=JSON.parse(localStorage.getItem('art-profile-journey-v1'));}catch{}
+  const response=await fetch('./artworks.json');if(!response.ok)throw Error('Catalogue unavailable');const current=await response.json(),saved=await loadActiveStudy('art-profile-journey-v1');
   const captured=Array.isArray(saved?.manifest?.catalogue)?saved.manifest.catalogue:[];currentWorks=current;personalWorks=captured;works=[...new Map([...captured,...current].map(work=>[work.id,work])).values()];
   const rounds=Object.values(saved?.shown||{}).map(snapshot=>restoreStudyRound(snapshot.kind==='grid'&&!snapshot.axisDefinition&&saved?.manifest?.axisDefinitions?.[snapshot.axis]?{...snapshot,axisDefinition:saved.manifest.axisDefinitions[snapshot.axis]}:snapshot,personalWorks)).filter(Boolean);
   atlas=buildResponseAtlas({works:personalWorks,rounds,answers:saved?.answers||{}});atlas.dimensions=buildResponseAtlas({works:currentWorks,rounds:[],answers:{}}).dimensions;if(atlas.maps.length||atlas.matchedPanels.length)mode='responses';shell();

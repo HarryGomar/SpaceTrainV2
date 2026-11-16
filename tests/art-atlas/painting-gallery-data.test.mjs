@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {buildPaintingGallery,filterPaintingGallery,nextGalleryContext,captureGalleryPreview,GALLERY_CONTEXT_SCOPE} from '../../public/art-atlas/painting-gallery-data.mjs';
 import {journeyCurationNotes,createJourneyStimulusPlan,buildJourneyRounds} from '../../public/art-atlas/journey-bank.mjs';
-const works=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/artworks.json',import.meta.url),'utf8')),notes=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/curation-notes.json',import.meta.url),'utf8'));
+const expandedWorks=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/artworks.json',import.meta.url),'utf8')),works=expandedWorks.slice(0,164),notes=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/curation-notes.json',import.meta.url),'utf8'));
 const legacyWorks=works.filter(work=>!work.image.startsWith('assets/classics-20261115/'));
 const view=(gallery,id)=>gallery.views.find(view=>view.id===id),items=view=>view.groups.flatMap(group=>group.items);
 function oldSession(){
@@ -71,4 +71,14 @@ test('A later match records available gallery context without claiming labels we
 
 test('Absent, malformed and future gallery visits cannot become earlier match exposure',()=>{
   for(const context of [null,{}, {firstOpenedAt:2,lastOpenedAt:1,workIds:[]},{firstOpenedAt:1000,lastOpenedAt:3000,workIds:['a']}])assert.equal(captureGalleryPreview(context,['a'],2000),null);
+});
+
+test('An expanded collection exposes the reserved fourth, fifth and sixth blocks without losing source identities',()=>{
+  const currentNotes=journeyCurationNotes(expandedWorks),gallery=buildPaintingGallery({works:expandedWorks,notes:currentNotes});
+  assert.equal(view(gallery,'all').workCount,expandedWorks.length);
+  for(const block of [4,5,6]){
+    const reserved=currentNotes.reservePools['batch'+block]||[],actual=view(gallery,'block'+block);
+    if(reserved.length)assert.deepEqual(actual.groups[0].workIds,reserved);
+    else assert.equal(actual,undefined);
+  }
 });

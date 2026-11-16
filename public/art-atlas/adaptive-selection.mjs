@@ -3,6 +3,7 @@ import { validAnswer } from './engine.mjs';
 import {isReviewedVisualDescriptor,FEATURE_SEMANTIC_VERSION} from './visual-descriptor-semantics.mjs';
 import {APPEAL_PROTOCOL,isOverallAppealRound} from './appeal-scale.mjs';
 import {choiceGridExposure} from './discovery-grid.mjs';
+import {isStudyEligibleArtwork} from './study-eligibility.mjs';
 
 const FAMILIES = new Set(['individual-choice', 'feature-check', 'unconditional-preference', 'adaptive-preference']);
 const FEATURES = ['abstraction', 'energy', 'complexity', 'humanity', 'narrative', 'atmosphere', 'color'];
@@ -99,7 +100,7 @@ export function summarizePreferenceHypotheses({works=[],rounds=[],answers={},mea
  * definitions in chronological order, never an unshown future plan.
  */
 export function planAdaptivePanels({ works, rounds = [], answers = {}, batchIndex = 1, seed = 'art-profile', panelCount = 18, quotas = {}, measurementScope } = {}) {
-  const pool = [...new Map((Array.isArray(works) ? works : []).filter(w => w && typeof w.id === 'string' && w.id).map(w => [w.id, w])).values()].sort((a, b) => a.id.localeCompare(b.id));
+  const pool = [...new Map((Array.isArray(works) ? works : []).filter(w => isStudyEligibleArtwork(w) && typeof w.id === 'string' && w.id).map(w => [w.id, w])).values()].sort((a, b) => a.id.localeCompare(b.id));
   const byId = new Map(pool.map(w => [w.id, w]));
   const shown = Array.isArray(rounds) ? rounds : [];
   const answerMap = answers && typeof answers === 'object' ? answers : {};
@@ -144,7 +145,7 @@ export function planAdaptivePanels({ works, rounds = [], answers = {}, batchInde
   const repeatRecords = [], repeatUsed = new Set(), repeatWorks = new Set();
   const repeatBands = ['relative-high', 'relative-low', 'middle'];
   for (let i = 0; i < targets.repeat; i++) {
-    const band = repeatBands[i % repeatBands.length];
+    const band = repeatBands[(i+Math.max(0,batch-1)) % repeatBands.length];
     const candidates = records.filter(r => delayed(r) && !repeatUsed.has(r.signature) && !r.workIds.some(id => repeatWorks.has(id)));
     candidates.sort((a, b) => (focusFor(b, band) ? 100 : 0) - (focusFor(a, band) ? 100 : 0) || mean(a.workIds.map(id => exposures[id])) - mean(b.workIds.map(id => exposures[id])) || jitter(a.round.id, 'repeat') - jitter(b.round.id, 'repeat'));
     const source = candidates[0];
@@ -231,6 +232,7 @@ export function planAdaptivePanels({ works, rounds = [], answers = {}, batchInde
   for (let index = 0; index < count && pool.length >= 2; index++) {
     const requestedRole = slots.get(index) || 'exploration';
     let panel = requestedRole === 'repeat' ? repeat(index) : requestedRole === 'recontextualization' ? recontextualization(index) : requestedRole === 'challenge' ? challenge(index) : exploration(index);
+    if(panel&&panel.role!==requestedRole&&requestedRole!=='exploration')fallbackReasons.push({panelIndex:index,requestedRole,actualRole:panel.role,reason:requestedRole==='challenge'?'Earlier evidence did not support a reviewed feature-direction prediction; used a new comparison as exploration instead.':panel.selectionReason});
     if (!panel) { if (requestedRole !== 'exploration') fallbackReasons.push({ panelIndex: index, requestedRole, reason: 'No eligible delayed source or safe available comparison; used exploration instead.' }); panel = exploration(index); }
     if (!panel) break;
     panel.panelIndex = index;

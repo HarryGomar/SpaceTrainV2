@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
+import {canonicalOpeningPool} from '../public/art-atlas/opening-pool.mjs';
 
 const root=new URL('../public/art-atlas/',import.meta.url);
 const read=name=>fs.readFileSync(new URL(name,root),'utf8');
@@ -17,8 +18,8 @@ test('Art Atlas has its own directory route without taking over personal-site ro
   for(const route of ['/art-atlas/maps.html','/art-atlas/assets/example.jpg','/art-atlas/missing.mjs'])assert.equal(matches.test(route),false,route);
 });
 
-test('All four Art Atlas entry pages resolve their local files under the route',()=>{
-  for(const page of ['index.html','paintings.html','maps.html','profiles.html']){
+test('All Art Atlas entry pages resolve their local files under the route',()=>{
+  for(const page of ['index.html','paintings.html','maps.html','profiles.html','galleries.html']){
     const html=read(page);assert.match(html,/Art Atlas/);
     for(const [,reference] of html.matchAll(/(?:src|href)="(\.\/[^"#]+)"/g)){
       const file=new URL(reference,new URL(page,root));assert.ok(fs.existsSync(file),page+' → '+reference);
@@ -27,11 +28,11 @@ test('All four Art Atlas entry pages resolve their local files under the route',
   }
 });
 
-test('The published study and opening keep all419 unique artwork records and local images',()=>{
-  const study=JSON.parse(read('artworks.json')),opening=JSON.parse(read('opening-artworks.json')),all=[...study,...opening];
-  assert.equal(study.length,164);assert.equal(opening.length,255);assert.equal(new Set(all.map(work=>work.id)).size,419);
-  assert.equal(new Set(all.map(work=>work.image)).size,419);
-  for(const work of all){
+test('The expanded collection preserves its records and supplies480 canonical opening artworks',()=>{
+  const study=JSON.parse(read('artworks.json')),opening=JSON.parse(read('opening-artworks.json')),all=[...study,...opening],canonical=canonicalOpeningPool(all);
+  assert.equal(study.length,463);assert.equal(opening.length,255);assert.equal(new Set(all.map(work=>work.id)).size,483);
+  assert.equal(canonical.length,480);assert.equal(new Set(canonical.map(work=>work.image)).size,480);
+  for(const work of new Map(all.map(work=>[work.id,work])).values()){
     const file=new URL(work.image,root);assert.ok(file.pathname.startsWith(root.pathname),work.id);
     const bytes=fs.readFileSync(file);assert.equal(bytes[0],255,work.id);assert.equal(bytes[1],216,work.id);
     assert.ok(/^https?:\/\//.test(work.sourceUrl),work.id+' source');

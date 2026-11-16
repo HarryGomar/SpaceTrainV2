@@ -13,7 +13,7 @@ import {buildResponseAtlas} from '../../public/art-atlas/response-atlas-data.mjs
 import {planAdaptivePanels} from '../../public/art-atlas/adaptive-selection.mjs';
 import {legacyV8Rounds} from './helpers/legacy-v8.mjs';
 import {isFinalRefinementRound} from '../../public/art-atlas/final-refinement.mjs';
-const works=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/artworks.json',import.meta.url),'utf8'));
+const works=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/artworks.json',import.meta.url),'utf8')).slice(0,164);
 const workIds=r=>r.works.map(w=>w.id);
 const preferencePanels=rounds=>rounds.filter(r=>r.evidence.construct==='preference'&&Number.isInteger(r.evidence.panelNumber));
 
@@ -22,8 +22,8 @@ test('One 50-round sequence includes comparisons, maps, statements, matching, no
   assert.equal(rounds.length,50);assert.equal(new Set(rounds.map(r=>r.id)).size,50);
   assert.deepEqual(rounds.flatMap((r,i)=>r.kind==='exercise'?[[i+1,r.exerciseKind]]:[]),[[8,'sorting'],[22,'difficult-edit'],[32,'sorting'],[36,'curate']]);
   assert.deepEqual(new Set(rounds.map(r=>r.kind)),new Set(['spectrum','grid','choice-grid','contrast','statements','match','context','exercise']));
-  assert.equal(rounds.filter(r=>r.kind==='choice-grid').length,6);
-  assert.equal(rounds.filter(r=>r.kind==='grid').length,7);
+  assert.equal(rounds.filter(r=>r.kind==='choice-grid').length,5);
+  assert.equal(rounds.filter(r=>r.kind==='grid').length,9);
   assert.deepEqual(rounds.flatMap((r,i)=>r.kind==='contrast'?[[i+1,r.contrastKind]]:[]),[[15,'chronology'],[19,'neighbour'],[27,'keep-leave'],[42,'same-subject']]);
   assert.deepEqual(rounds.filter(r=>r.kind==='match').map(r=>r.field),['artist','movement']);
   assert.ok(rounds.every(r=>restoreStudyRound(snapshotStudyRound(r),works)));
@@ -161,7 +161,7 @@ test('The expanded collection appears across small preference panels without ove
 
 test('Concrete appraisals and the one prospective claim retain distinct meanings',()=>{
   const rounds=buildJourneyRounds(works),appraisals=rounds.filter(r=>r.evidence.family==='looking-appraisal');
-  assert.deepEqual(appraisals.map(r=>r.evidence.construct),['attention-to-making']);
+  assert.deepEqual(appraisals.map(r=>r.evidence.construct),[],'Fresh first50 spends the isolated surface self-rating on a fifth matched admiration map');
   assert.ok(appraisals.every(r=>r.scale.left&&r.scale.right&&r.evidence.questionTarget&&!r.evidence.heldOut));
   assert.deepEqual(new Set(rounds.filter(r=>r.kind==='grid').map(r=>r.axis)),new Set(['achievement','reading','returnResponse']));
   for(const round of rounds.filter(r=>r.kind==='grid'))assert.deepEqual(round.axisDefinition,AXES[round.axis]);
@@ -181,7 +181,7 @@ test('Concrete appraisals and the one prospective claim retain distinct meanings
 
 test('Familiarity and later keep grids share exact identities without limiting or ranking the new selections',()=>{
   const rounds=buildJourneyRounds(works),grids=rounds.filter(r=>r.kind==='choice-grid'&&!isFinalRefinementRound(r));
-  assert.deepEqual(grids.map(r=>[r.id,r.selectionMode]),[['journey-002','familiarity'],['journey-003','shortlist'],['journey-009','shortlist'],['journey-011','familiarity'],['journey-023','shortlist']]);
+  assert.deepEqual(grids.map(r=>[r.id,r.selectionMode]),[['journey-002','familiarity'],['journey-009','shortlist'],['journey-011','familiarity'],['journey-023','shortlist']]);
   for(const round of grids){assert.equal(round.works.length,12);assert.equal(new Set(workIds(round)).size,12);assert.equal(round.evidence.family,'selection-grid');assert.notEqual(round.evidence.construct,'preference');assert.equal(round.criterion,undefined);assert.equal(round.bankRoundId,undefined);}
   for(const [beforeId,afterId] of [['journey-002','journey-009'],['journey-011','journey-023']]){
     const before=rounds.find(r=>r.id===beforeId),after=rounds.find(r=>r.id===afterId);
@@ -246,7 +246,7 @@ test('Source backlinks identify real instruments without importing unrelated pre
     for(const key of ['heldOut','provisionalPrediction','trainingRoundIds','comparisonNovel','contrastKey'])assert.equal(round.evidence[key],undefined);
   }
   for(const round of banked){assert.ok(source.has(round.bankRoundId));assert.equal(source.get(round.bankRoundId).kind,round.kind);assert.equal(round.evidence.sourceBankRoundId,round.bankRoundId);assert.equal(round.evidence.sourceBinding,'journey-selected-works');}
-  assert.equal(newInstruments.length+banked.length,41);assert.equal(banked.length,22);assert.equal(newInstruments.length,19);
+  assert.equal(newInstruments.length+banked.length,41);assert.equal(banked.length,21);assert.equal(newInstruments.length,20);
   for(const round of newInstruments){assert.ok(['grid','choice-grid','contrast','context'].includes(round.kind));assert.equal(round.evidence.newInstrument,true);assert.ok(round.evidence.instrumentRevision);assert.equal(round.evidence.sourceBankRoundId,undefined);assert.equal(round.evidence.sourceBinding,undefined);assert.ok(round.evidence.sourceUrls.length);for(const url of round.evidence.sourceUrls)assert.equal(new URL(url).protocol,'https:');assert.ok(round.evidence.limits.length);}
 });
 

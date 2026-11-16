@@ -1,0 +1,81 @@
+{
+  "add-watts-hope":[{
+    "kind":"documented-symbolism",
+    "claim":"Tate's published note describes the blindfold, globe and lyre with one surviving string as an allegorical treatment of hope, whose apparent futility also prompted darker readings.",
+    "sourceUrl":"https://artsandculture.google.com/asset/hope/CgGv3RqPFUZk4A",
+    "sourcePublisher":"Tate Britain, museum-provided Google Arts & Culture record",
+    "sourceLocator":"Description accompanying the 1886 painting",
+    "evidenceKind":"primary-source-context"
+  }],
+  "holbein-ambassadors":[{
+    "kind":"documented-symbolism",
+    "claim":"The National Gallery identifies the oblique shape as an anamorphic skull and a reminder of mortality. It discusses the broken lute string and other objects as possible signs of discord.",
+    "sourceUrl":"https://www.nationalgallery.org.uk/paintings/hans-holbein-the-younger-the-ambassadors",
+    "sourcePublisher":"The National Gallery, London",
+    "sourceLocator":"About the work, in-depth discussion of objects and anamorphosis",
+    "evidenceKind":"primary-source-context"
+  }],
+  "add-van-eyck-arnolfini":[{
+    "kind":"documented-symbolism",
+    "claim":"The National Gallery explains that selected furnishings and expensive oranges advertise wealth and social position. It cautions against treating the gathered dress as evidence of pregnancy.",
+    "sourceUrl":"https://www.nationalgallery.org.uk/paintings/jan-van-eyck-the-arnolfini-portrait",
+    "sourcePublisher":"The National Gallery, London",
+    "sourceLocator":"About the work, discussion of furnishings and clothing",
+    "evidenceKind":"primary-source-context"
+  }],
+  "add-caravaggio-supper-emmaus-1601":[{
+    "kind":"documented-narrative",
+    "claim":"The National Gallery identifies the subject as the disciples recognising the resurrected Christ during supper, after his blessing of bread.",
+    "sourceUrl":"https://www.nationalgallery.org.uk/paintings/michelangelo-merisi-da-caravaggio-the-supper-at-emmaus",
+    "sourcePublisher":"The National Gallery, London",
+    "sourceLocator":"About the work, overview",
+    "evidenceKind":"primary-source-context"
+  },{
+    "kind":"documented-symbolism",
+    "claim":"The museum connects a disciple's outstretched arms with the Crucifixion and identifies his shell brooch as a pilgrim's emblem.",
+    "sourceUrl":"https://www.nationalgallery.org.uk/paintings/michelangelo-merisi-da-caravaggio-the-supper-at-emmaus",
+    "sourcePublisher":"The National Gallery, London",
+    "sourceLocator":"In-depth discussion and audio-description transcript",
+    "evidenceKind":"primary-source-context"
+  }],
+  "green-tara":[{
+    "kind":"documented-symbolism",
+    "claim":"Cleveland's collection note explains Tara's protective role and connects the green colour and hand gesture with the cosmic Buddha of the North. This is the work's documented iconography, not an inferred viewer response.",
+    "sourceUrl":"https://www.clevelandart.org/art/1970.156",
+    "sourcePublisher":"Cleveland Museum of Art",
+    "sourceLocator":"Description",
+    "evidenceKind":"primary-source-context"
+  }],
+  "add-kahlo-borderline":[{
+    "kind":"documented-symbolism",
+    "claim":"The Detroit Institute of Arts' published note reads the plants and indigenous forms at left as ancient Mexico, contrasting with industrial America at right and the artist between them.",
+    "sourceUrl":"https://artsandculture.google.com/asset/self-portrait-on-the-borderline-between-mexico-and-the-united-states-frida-kahlo/JwHDw-_2L73Nzw",
+    "sourcePublisher":"Detroit Institute of Arts, museum-provided Google Arts & Culture record",
+    "sourceLocator":"Description",
+    "evidenceKind":"primary-source-context"
+  }],
+  "study-waterhouse-shalott":[{
+    "kind":"documented-narrative",
+    "claim":"Tate's print label identifies Tennyson's poem as the source and explains that the cloth on the boat is the fabric the Lady wove in her tower.",
+    "sourceUrl":"https://shop.tate.org.uk/waterhouse-the-lady-of-shalott-mini-print/4765.html",
+    "sourcePublisher":"Tate, museum-published print label",
+    "sourceLocator":"Description",
+    "evidenceKind":"primary-source-context"
+  }],
+  "farmer-autumn":[{
+    "kind":"documented-narrative",
+    "claim":"Cleveland's description identifies the farmer as chastising a crow eating his grain while the water buffalo crosses a stream. The native-size reproduction also resolves these separate incidents.",
+    "sourceUrl":"https://www.clevelandart.org/art/1970.77",
+    "sourcePublisher":"Cleveland Museum of Art",
+    "sourceLocator":"Collection description and official Open Access API record",
+    "evidenceKind":"primary-source-context"
+  }],
+  "velazquez-las-meninas":[{
+    "kind":"documented-narrative",
+    "claim":"The Prado's visual guide identifies the figures reflected in the back-wall mirror as the king and queen.",
+    "sourceUrl":"https://content.cdnprado.net/doclinks/pdf/aprende/educacion/accesibles/guia_visual_museo-del-prado_en.pdf",
+    "sourcePublisher":"Museo Nacional del Prado",
+    "sourceLocator":"Las Meninas section of the visual guide",
+    "evidenceKind":"primary-source-context"
+  }]
+}

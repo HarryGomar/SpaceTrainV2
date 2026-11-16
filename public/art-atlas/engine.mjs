@@ -175,9 +175,16 @@ export function buildRounds(works, answers = {}) {
   const scores = finalWorks.map(w => dot(beforeFinal.beta, FEATURES.map(k => feature(w, k))));
   const predicted = Math.abs(scores[0] - scores[1]) < 1e-8 ? null : finalWorks[scores[0] > scores[1] ? 0 : 1].id;
   const matching = (id, field, title, art) => {
-    const labels = unique(art.map(w => w[field])).sort((a, b) => a.localeCompare(b));
+    // Each label has one space. Repeated styles in a preference set must not
+    // turn the matching game into an impossible one-to-one assignment.
+    const seen=new Set(),matchingArt=[...art,...quizWorks].filter(work=>{
+      const label=typeof work[field]==='string'?work[field].trim():'';
+      if(!label||/^(unknown|unidentified|anonymous)(\b|$)/i.test(label)||field==='artist'&&work.artistKnown===false||seen.has(label))return false;
+      seen.add(label);return true;
+    }).slice(0,4);
+    const labels = unique(matchingArt.map(w => w[field])).sort((a, b) => a.localeCompare(b));
     const options = labels.map((label, i) => ({ id: `${field}-${i}`, label }));
-    return { id, kind: 'match', format: 'match', field, title, hint: 'Drag each painting to a label. Or tap a painting, then its label. Leave any you are unsure about.', works: art, options: [options[2], options[0], options[3], options[1]].filter(Boolean) };
+    return { id, kind: 'match', format: 'match', field, title, hint: 'Drag each painting to a label. Or tap a painting, then its label. Leave any you are unsure about.', works: matchingArt, options: [options[2], options[0], options[3], options[1]].filter(Boolean) };
   };
   return [rank, closer,
     { id: 'feeling', kind: 'grid', format: 'grid', axis: answers.feeling?.axis==='feeling'?'feeling':'response', title: answers.feeling?.axis==='feeling'?'How do these works leave you feeling?':'How does each work affect you?', hint: answers.feeling?.axis==='feeling'?'Your saved map uses pleasantness and activation.':'How much tension do you feel, and how much does the work hold your attention?', works: gallery }, interest,

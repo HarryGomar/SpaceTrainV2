@@ -1,6 +1,7 @@
+import {TASTE_FAMILY_DEFINITIONS} from './taste-family-definitions.mjs';
 // Evidence-led reading families, not personality types.
 // All artwork examples are illustrative and never findings about the visitor.
-export const PROFILE_READING_CATALOG_VERSION=4;
+export const PROFILE_READING_CATALOG_VERSION=5;
 export const PROFILE_READING_CATALOG_SCOPE=Object.freeze({
   "subject": "Patterns in art choices and arrangements",
   "exampleMode": "illustrative",
@@ -27,9 +28,18 @@ export const PROFILE_READING_CATALOG_SCOPE=Object.freeze({
 export const PROFILE_READING_LENSES=Object.freeze([
   {
     "id": "visual-patterns",
-    "title": "Visual patterns",
-    "description": "What recurs across different art choices.",
+    "title": "Taste connections",
+    "description": "Specific connections across paintings, alongside broader visual comparisons.",
     "readingIds": [
+      "stories-within-scenes",
+      "light-and-drama",
+      "fantastical-worlds",
+      "relationships-in-scenes",
+      "expressive-figures",
+      "pattern-and-structure",
+      "brushwork-and-marks",
+      "precision-and-materials",
+      "space-and-setting",
       "human-figures",
       "representation",
       "colour-intensity",
@@ -63,6 +73,7 @@ export const PROFILE_READING_LENSES=Object.freeze([
     "title": "Symbols & meaning",
     "description": "Scenes, interpretations and the response to context.",
     "readingIds": [
+      "symbols-and-allegory",
       "story-rating-change",
       "scene-and-interpretation",
       "claim-and-story-comparison",
@@ -114,6 +125,7 @@ const portrait=(resultPath,match={})=>({module:'taste-portrait',file:'public/art
 const connections=(resultPath,match={})=>({module:'taste-connections',file:'public/art-atlas/taste-connections.mjs',export:'buildTasteConnections',resultPath,match});
 const refined=match=>({module:'reading-patterns-v2',file:'public/art-atlas/reading-patterns-v2.mjs',export:'buildRefinedReadings',resultPath:'$',resultType:'array',match});
 const contrast=match=>({module:'contrast-readings',file:'public/art-atlas/contrast-readings.mjs',export:'buildContrastReadings',resultPath:'$',resultType:'array',match});
+const axis=key=>({module:'taste-axes',file:'public/art-atlas/taste-axes.mjs',export:'buildTasteAxes',resultPath:'axes',match:{key}});
 const example=(text,workIds)=>({text,workIds,illustrative:true});
 
 // Product copy is separate from the detailed analytical requirements below.
@@ -237,12 +249,13 @@ const userCopy={
 };
 
 export const PROFILE_READING_CATALOG=Object.freeze([
+  ...TASTE_FAMILY_DEFINITIONS,
   {
     id:"human-figures",lensId:"visual-patterns",title:"Human presence",status:"implemented",availability:"current",
     description:"Whether work centred on people recurs in preference comparisons, and where other subjects win instead.",
     example:example("Mona Lisa and Girl with a Pearl Earring led separate comparisons with Black Square and The Great Wave. A later choice of The Great Wave over Mona Lisa challenged a simple rule about figures.",["study-leonardo-mona-lisa","study-vermeer-pearl","study-malevich-black-square","study-hokusai-great-wave"]),
-    requiredSignals:["At least two completed preference groups using four different paintings.","Reviewed descriptions of human presence with clear differences between the compared works.","Supporting and opposing choices, with repeated sets counted separately."],
-    sources:[portrait("patternCandidates",{"id":"taste-pattern-humanity","feature":"humanity"})],
+    requiredSignals:["At least three distinct discovery sets, six different paintings and three named artists among preferred examples.","Reviewed descriptions of human presence, with clear response and image contrasts. Repeats and probes remain dependent checks.","Supporting, opposing and mixed sets retain their actual balance. A tentative direction is not promoted to a recurring summary."],
+    sources:[axis('human-presence')],
     implementationNote:"Humanity describes the prominence of human presence. It is not a count of people and does not include animals merely because they are figurative subjects.",
     limits:["Human figures, narrative, emotion and style can vary together. The comparisons do not isolate which feature caused a choice."]
   },
@@ -250,8 +263,8 @@ export const PROFILE_READING_CATALOG=Object.freeze([
     id:"representation",lensId:"visual-patterns",title:"Representation & abstraction",status:"implemented",availability:"current",
     description:"A recurring preference direction across more representational or more abstract paintings, with exceptions retained.",
     example:example("The Birth of Venus came ahead of Black Square, and Girl with a Pearl Earring ahead of Composition 8. Those separate comparisons share a direction towards representation.",["study-botticelli-birth-venus","study-malevich-black-square","study-vermeer-pearl","study-kandinsky-composition-eight"]),
-    requiredSignals:["Validated unconditional preference spectra with clear pair gaps.","Known abstraction annotations with contrasts of at least 0.3.","At least two distinct supporting sets using at least four different paintings."],
-    sources:[portrait("patternCandidates",{"id":"taste-pattern-abstraction","feature":"abstraction"})],
+    requiredSignals:["Validated unconditional preference spectra with clear pair gaps.","Known abstraction differences of at least0.25, and a response difference of at least15 on the original scale.","At least three distinct discovery sets, six different paintings and three named preferred-work artists. Tentative directions and opposing sets retain their status."],
+    sources:[axis('representation-abstraction')],
     implementationNote:"Every qualifying feature candidate remains available, with supporting, opposing and mixed set counts. Candidates sharing the same supporting pairs can share one displayed observation; neither their pair counts nor display priority are confidence.",
     limits:["This describes image annotations accompanying choices. Subject, colour and other differences are not held constant."]
   },
@@ -259,8 +272,8 @@ export const PROFILE_READING_CATALOG=Object.freeze([
     id:"colour-intensity",lensId:"visual-patterns",title:"Colour intensity",status:"implemented",availability:"current",
     description:"A recurring direction towards more intense or more restrained colour in separate preference sets.",
     example:example("The Kiss came ahead of Mona Lisa, and The Starry Night ahead of La Catrina. More intense annotated colour accompanies both choices; it is not the only difference.",["klimt-kiss","study-leonardo-mona-lisa","van-gogh-starry-night","study-posada-catrina"]),
-    requiredSignals:["Validated unconditional preference spectra.","Known features.color values and clear contrasts.","The same recurring-set and four-work requirements used for other visual associations."],
-    sources:[portrait("patternCandidates",{"id":"taste-pattern-color","feature":"color"})],
+    requiredSignals:["Validated unconditional preference spectra.","Known colour-intensity values and clear contrasts.","Three distinct discovery sets, six different paintings and three named preferred-work artists. Supporting, mixed and opposing sets remain visible."],
+    sources:[axis('colour')],
     implementationNote:"The current feature is colour intensity. This does not identify a favourite hue, palette or colour harmony.",
     limits:["Digital reproductions and coarse editorial descriptors limit the colour comparison. A hue-specific profile needs a different analysis."]
   },
@@ -268,8 +281,8 @@ export const PROFILE_READING_CATALOG=Object.freeze([
     id:"density-and-activity",lensId:"visual-patterns",title:"Detail & composition",status:"implemented",availability:"current",
     description:"Whether denser compositions or greater visual activity accompany repeated choices, with the two descriptions kept separate.",
     example:example("The Garden of Earthly Delights came ahead of Girl with a Pearl Earring, and The Night Watch ahead of Black Square. Denser compositions connect these choices; other comparisons can challenge that description.",["bosch-garden-delights","study-vermeer-pearl","study-rembrandt-night-watch","study-malevich-black-square"]),
-    requiredSignals:["Distinct validated preference sets with clear pair orders.","Known features.complexity or features.energy values.","At least two supporting sets and four different works for the selected feature."],
-    sources:[portrait("patternCandidates",{"idIn":["taste-pattern-complexity","taste-pattern-energy"]})],
+    requiredSignals:["Distinct validated preference sets with clear pair orders.","Known complexity and visual-activity values assessed separately.","At least three distinct discovery sets, six different paintings and three named preferred-work artists. A combined direction needs agreement between the components; exceptions and tentative results remain visible."],
+    sources:[axis('detail-composition')],
     implementationNote:"Complexity and energy are tested separately; all qualified candidates retain their own balance. Positive overall choices at both ends qualify a one-ended direction rather than being hidden by it. No density identity or combined score is assigned.",
     limits:["Visual density, depicted action and felt tension are different measurements. They can vary together without explaining one another."]
   },
@@ -277,8 +290,8 @@ export const PROFILE_READING_CATALOG=Object.freeze([
     id:"depicted-action",lensId:"visual-patterns",title:"Action & stillness",status:"implemented",availability:"current",
     description:"Whether scenes with more depicted action recur among your choices.",
     example:example("The Night Watch led a comparison with Girl with a Pearl Earring; The School of Athens led another with Black Square. Depicted action is one possible connection, alongside other differences.",["study-rembrandt-night-watch","study-vermeer-pearl","study-raphael-school-athens","study-malevich-black-square"]),
-    requiredSignals:["Several preference comparisons using different paintings.","Known descriptions of depicted action.","At least two supporting groups and four different works, with exceptions retained."],
-    sources:[portrait("patternCandidates",{"id":"taste-pattern-narrative","feature":"narrative"})],
+    requiredSignals:["Several preference comparisons using different paintings.","Known literal descriptions of depicted action, rather than inferred symbolism.","At least three distinct discovery sets, six different paintings and three named preferred-work artists, with opposing and mixed sets retained."],
+    sources:[axis('action-stillness')],
     implementationNote:"The narrative annotation is depicted action, not symbolism, a viewer’s life story or general narrative preference.",
     limits:["A dramatic subject and a busy composition can overlap. One comparison cannot distinguish them."]
   },
@@ -286,8 +299,8 @@ export const PROFILE_READING_CATALOG=Object.freeze([
     id:"setting-and-atmosphere",lensId:"visual-patterns",title:"Setting & atmosphere",status:"implemented",availability:"current",
     description:"Whether work with a stronger emphasis on its setting recurs in your choices.",
     example:example("The Starry Night led a comparison with Black Square, and Early Spring led another with Composition 8. A stronger emphasis on setting connects those choices, despite their different colours and methods.",["van-gogh-starry-night","study-malevich-black-square","study-guo-xi-early-spring","study-kandinsky-composition-eight"]),
-    requiredSignals:["At least two completed preference groups using four different paintings.","Reviewed descriptions of emphasis on setting, with clear contrasts.","Supporting choices and the comparisons that go against that direction."],
-    sources:[portrait("patternCandidates",{"id":"taste-pattern-atmosphere","feature":"atmosphere"})],
+    requiredSignals:["At least three distinct discovery sets, six different paintings and three named preferred-work artists.","Reviewed literal descriptions of emphasis on setting, with clear contrasts.","Supporting, opposing and mixed choices retained. A tentative direction is separate from a recurring summary."],
+    sources:[axis('setting-atmosphere')],
     implementationNote:"This annotation describes emphasis on setting in the reproduction. It does not measure how atmospheric the viewer feels.",
     limits:["Atmosphere is an editorial image description. It is not a measured emotional response."]
   },

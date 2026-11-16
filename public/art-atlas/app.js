@@ -1,5 +1,6 @@
 import { createInteractions } from './interactions.mjs';
 import {artworkImageAttributes} from './artwork-image.mjs';
+import {renderArtworkContext} from './artwork-context.mjs';
 import { createCurationLab } from './curation.mjs';
 import { createDeepStudy } from './deep-study.mjs';
 import { analyzeScenarios } from './scenarios.mjs';
@@ -181,7 +182,7 @@ function toggleKeep(id, purpose) {
 }
 function showArtwork(id, reveal = false) {
   const w = workById(id); if (!w) return;
-  document.getElementById('art-dialog-content').innerHTML = `<div class="art-dialog-image">${image(w,"",{large:true})}</div><footer>${reveal ? `<h2>${esc(w.title)}</h2><p>${esc(w.artist)} · ${esc(w.date)}${reveal === 'artist' ? '' : ' · ' + esc(w.movement)}</p>${reveal === 'artist' ? '' : `<p>${esc(w.note)}</p>${keepButtons(w)}`}<p><a href="${esc(w.sourceUrl)}" target="_blank" rel="noopener noreferrer">${esc(w.museum)} ↗</a> · ${w.rightsUrl ? '<a href="' + esc(w.rightsUrl) + '" target="_blank" rel="noopener noreferrer">' + esc(w.rights) + ' ↗</a>' : esc(w.rights)}</p>` : `<p>Shown in full. The artist and context will be revealed later.</p><p>${esc(w.museum)} · ${esc(w.rights)}</p>`}</footer>`;
+  document.getElementById('art-dialog-content').innerHTML = `<div class="art-dialog-image">${image(w,"",{large:true})}</div><footer>${reveal ? `<h2>${esc(w.title)}</h2><p>${esc(w.artist)} · ${esc(w.date)}${reveal === 'artist' ? '' : ' · ' + esc(w.movement)}</p>${reveal === 'artist' ? '' : `<p>${esc(w.note)}</p>${keepButtons(w)}`}<p><a href="${esc(w.sourceUrl)}" target="_blank" rel="noopener noreferrer">${esc(w.museum)} ↗</a> · ${w.rightsUrl ? '<a href="' + esc(w.rightsUrl) + '" target="_blank" rel="noopener noreferrer">' + esc(w.rights) + ' ↗</a>' : esc(w.rights)}</p>` : `<p>Shown in full. The artist and context will be revealed later.</p><p>${esc(w.museum)} · ${esc(w.rights)}</p>`}${reveal===true?`<details class="painting-metadata"><summary>Painting details</summary>${renderArtworkContext(w,{esc})}</details>`:''}</footer>`;
   document.getElementById('art-dialog').showModal();
 }
 function downloadFile(filename, text, type) {

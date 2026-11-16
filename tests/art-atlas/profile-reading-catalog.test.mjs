@@ -13,7 +13,7 @@ const get=id=>{assert.ok(byId.has(id),'Real illustrative artwork '+id);return by
 const sourcesFor=id=>catalogue.find(item=>item.id===id).sources;
 
 test('Every family belongs to exactly one existing lens and illustrates only real sourced artwork identities',()=>{
-  assert.equal(PROFILE_READING_CATALOG_VERSION,4);assert.equal(catalogue.length,41);assert.equal(new Set(catalogue.map(item=>item.id)).size,catalogue.length);const membership=lenses.flatMap(lens=>lens.readingIds.map(id=>[id,lens.id]));assert.equal(new Set(membership.map(([id])=>id)).size,membership.length);assert.equal(membership.length,catalogue.length);
+  assert.equal(PROFILE_READING_CATALOG_VERSION,5);assert.equal(catalogue.length,51);assert.equal(new Set(catalogue.map(item=>item.id)).size,catalogue.length);const membership=lenses.flatMap(lens=>lens.readingIds.map(id=>[id,lens.id]));assert.equal(new Set(membership.map(([id])=>id)).size,membership.length);assert.equal(membership.length,catalogue.length);
   for(const item of catalogue){assert.deepEqual(membership.find(([id])=>id===item.id),[item.id,item.lensId]);assert.equal(item.example.illustrative,true);assert.ok(item.example.workIds.length);for(const id of item.example.workIds){const work=get(id);assert.ok(work.image&&work.sourceUrl);}assert.ok(item.requiredSignals.length&&item.limits.length);assert.ok(item.title&&item.description);}
 });
 
@@ -29,13 +29,13 @@ test('Implemented source declarations point to real analytical exports and actua
 
 test('Current and retained instruments stay distinct, without presenting removed appraisals as fresh v10 questions',()=>{
   const availability=id=>catalogue.find(item=>item.id===id).availability;for(const id of ['reported-density','people-and-reaction','unexpectedness-and-preference','openness-and-preference'])assert.equal(availability(id),'legacy');for(const id of ['attention-to-making','chosen-work-connections','range-in-positive-choices','favourites-and-ratings','prospective-feature-check'])assert.equal(availability(id),'current');
-  assert.ok(sourcesFor('human-figures').some(source=>source.resultPath==='patternCandidates'));assert.ok(sourcesFor('prospective-feature-check').some(source=>source.resultPath==='closingRefinement.checks'));assert.ok(sourcesFor('admiration-and-appeal').some(source=>source.match.idIn?.includes('response-making')));assert.ok(sourcesFor('tension-and-return').some(source=>source.match.idIn?.includes('response-return-range')));
-  assert.deepEqual(Object.fromEntries(['current','legacy','planned'].map(value=>[value,catalogue.filter(item=>item.availability===value).length])),{current:29,legacy:7,planned:5});for(const item of catalogue.filter(item=>item.status==='planned'))assert.deepEqual(item.sources,[]);
+  assert.ok(sourcesFor('human-figures').some(source=>source.export==='buildTasteAxes'&&source.resultPath==='axes'&&source.match.key==='human-presence'));assert.ok(sourcesFor('prospective-feature-check').some(source=>source.resultPath==='closingRefinement.checks'));assert.ok(sourcesFor('admiration-and-appeal').some(source=>source.match.idIn?.includes('response-making')));assert.ok(sourcesFor('tension-and-return').some(source=>source.match.idIn?.includes('response-return-range')));
+  assert.deepEqual(Object.fromEntries(['current','legacy','planned'].map(value=>[value,catalogue.filter(item=>item.availability===value).length])),{current:39,legacy:7,planned:5});for(const item of catalogue.filter(item=>item.status==='planned'))assert.deepEqual(item.sources,[]);
 });
 
 test('Every current family supplies short art-facing requirements and limits without exposing implementation rules',()=>{
   const current=catalogue.filter(item=>item.availability==='current'),technical=/checksum|sha256|features\.|measurementScope|protocol|criterion|qualified|descriptor|unassigned tag|editorial non-assignment/i;
-  assert.equal(current.length,29);
+  assert.equal(current.length,39);
   for(const item of current){
     assert.ok(Array.isArray(item.userSignals)&&item.userSignals.length>=2&&item.userSignals.length<=4,item.id+' has concise product requirements');
     assert.ok(Array.isArray(item.userLimits)&&item.userLimits.length===2,item.id+' has two plain limits');

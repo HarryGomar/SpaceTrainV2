@@ -55,7 +55,7 @@ export function createAtlasPicker(root){
       const selected=field.selectedOptions[0],info=previews[selected?.value],title=doc.createElement('span');title.className='atlas-current-choice';
       if(field.id==='atlas-paired'&&info)button.append(preview(info.images,'atlas-mini-group'));
       else{title.textContent=shortLabel(selected?.textContent||'Choose');button.append(title);}
-      const change=doc.createElement('span');change.className='atlas-edit-action';change.textContent='Change ↗';button.append(change);
+      const chevron=doc.createElement('span');chevron.className='atlas-edit-action';chevron.setAttribute('aria-hidden','true');chevron.innerHTML='<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="m4.5 6.25 3.5 3.5 3.5-3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';button.append(chevron);
       button.setAttribute('aria-label',(names[field.id]||'Choose')+': '+(field.id==='atlas-paired'?info?.label||'Paintings':title.textContent));field.after(button);
     }
   }};

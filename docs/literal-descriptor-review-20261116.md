@@ -1,0 +1,19 @@
+# Literal action and setting review
+
+The `literal-action-setting-v2` review separates visible bodily action from implied story, emotional intensity and paint movement. It separates a depicted surrounding place from mood, ornamental fields and the photographed architecture supporting a mural. These are coarse assistant editorial judgements, not museum-authored labels or calibrated psychological measurements.
+
+The review covers all 164 original core works, all 16 study-eligible required additions and 78 inspected bulk additions. All 30 NGA additions are in the inspected bulk sample. Every current first-72 work is covered. Of the 258 reviewed records, 211 have a changed action or setting value and 47 were inspected and retained. There are 17 explicit unknown field values across 16 works. Unknown is stored as `null`, never zero.
+
+The remaining 202 bulk works retain their seven raw draft numbers for provenance. Their semantic marker is `pending-literal-action-setting-review`; action and setting cannot support current inference, maps or feature targeting. Three partial required views remain gallery-only with no numeric scores. The other five numeric descriptors and all sixteen qualitative attribute reviews were left unchanged by this audit.
+
+Actual local reproductions were inspected on whole-work contact sheets at up to 384 by 440 displayed pixels per work. Selected difficult bulk works were also opened at larger native size. Tiny or ambiguous bodies that could not be resolved are unknown. This review does not claim microscopic paint examination or independent human validation. It uses neither an artist's name nor a movement as a visual default.
+
+Examples of the corrected distinction include the Great Wave's crouching boat crews at action 0.25 despite the moving sea; the dead Marat at action 0; Political Drama's rings at setting 0; and Orozco's Man of Fire at setting 0 because the photographed dome is the mural's support. Clear bodily fighting, cutting and biting remain high. Tiny Turner crowds cannot receive an action score from the fire or title.
+
+The public ledger is `public/art-atlas/literal-descriptor-reviews.json`. Each inspected record stores all seven before/after values, explicit status and reasons for the two reviewed fields, source URL, preview path and actual SHA-256, plus the inspected reproduction's path, SHA-256 and dimensions. Source URLs establish work identity; they do not imply institutional approval of the scores. Current hashes do not establish what an old unhashed export contained.
+
+The committed manual observations and frozen source bindings are in `tools/literal-core-audit-20261116.json`, `tools/literal-required-audit-20261116.json`, `tools/literal-bulk-audit-20261116.json` and `tools/literal-review-source-bindings-20261116.json`. `tools/build-literal-descriptor-review-20261116.mjs` reproduces the review package and rejects changed source identity or inspected bytes. It preserves the original before-values when run after integration. It does not edit the catalogue or participant history.
+
+The current catalogue uses `featureSemanticVersion` and `featureLiteralReview`. Its review record includes version, reviewer type, exact source identity, inspected asset, per-field status, reason and prior literal values. Old saved v1 records remain unchanged and cannot certify the current literal meaning. Source mismatch or a pending review is unknown for that purpose.
+
+`tests/art-atlas/literal-descriptor-review-20261116.test.mjs` reads committed public data and fixtures, with no dependency on ignored staging artifacts. It verifies the 258/202/3 partition, actual source/hash bindings and image dimensions, the unknown values, preservation of the other five descriptors, counterexamples to the old broad interpretation and the integrated catalogue markers.

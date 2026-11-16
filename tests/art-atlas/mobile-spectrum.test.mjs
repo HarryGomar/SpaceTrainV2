@@ -53,3 +53,16 @@ test('Mobile edits retain all101 values and the original question and answer sha
 test('A cancelled touch preserves the last visible point once without advancing',()=>{
   const f=fixture();try{const range=f.app.querySelector('#mobile-spectrum-range');range.dispatchEvent(f.pointer('pointerdown'));for(const value of [20,30,40]){range.value=String(value);range.dispatchEvent(new f.dom.window.Event('input',{bubbles:true}));}assert.equal(f.saves,0);range.dispatchEvent(f.pointer('pointercancel'));assert.equal(f.saves,1);assert.deepEqual(f.draft.positions,{'painting-0':40});assert.equal(f.app.querySelector('.focus-art').dataset.work,'painting-0');range.dispatchEvent(new f.dom.window.Event('change',{bubbles:true}));assert.equal(f.saves,1);}finally{f.close();}
 });
+
+test('Revisiting a placed desktop painting never silently assigns its rating to an unplaced painting',()=>{
+  const f=fixture({width:1280,positions:{'painting-0':51}});try{
+    f.app.querySelector('.reference-art[data-work="painting-1"]').click();
+    const before=structuredClone(f.draft),saves=f.saves;
+    f.app.querySelector('.placed-art[data-work="painting-0"]').click();
+    assert.equal(f.app.querySelector('.focus-art').dataset.work,'painting-0');
+    assert.deepEqual(f.draft,before);assert.equal(f.saves,saves);
+    f.app.querySelector('#fine-controls [data-dx="1"]').click();
+    assert.equal(f.draft.positions['painting-0'],52);
+    assert.equal(f.draft.positions['painting-1'],undefined);
+  }finally{f.close();}
+});

@@ -1,3 +1,5 @@
+import {FIELD_MOTION} from './art-field.mjs';
+
 const COMMON=`
 uniform float u_time;
 uniform vec2 u_pointer;
@@ -7,22 +9,23 @@ uniform vec2 u_resolution;
 float hash(vec3 p){p=fract(p*.3183099+vec3(.1,.2,.3));p*=17.;return fract(p.x*p.y*p.z*(p.x+p.y+p.z));}
 float noise(vec3 p){vec3 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(mix(hash(i),hash(i+vec3(1,0,0)),f.x),mix(hash(i+vec3(0,1,0)),hash(i+vec3(1,1,0)),f.x),f.y),mix(mix(hash(i+vec3(0,0,1)),hash(i+vec3(1,0,1)),f.x),mix(hash(i+vec3(0,1,1)),hash(i+vec3(1,1,1)),f.x),f.y),f.z);}
 vec3 flow(vec3 base,float seed){
- vec3 p=base;float t=u_time*.055;
+ vec3 p=base;float t=u_time*.04;
  float wave=noise(base*1.25+vec3(t,0.,-t))-.5;
- p.x+=sin(t*.64+base.y*2.8+seed)*.018+wave*.032;
- p.y+=cos(t*.58+base.x*3.1+seed*.13)*.019+wave*.027;
- p.z+=sin(t*.71+seed+base.x*1.4)*.045;
- float yaw=sin(u_time*.02)*.015+u_pointer.x*.008;
+ p.x+=sin(t*.64+base.y*2.8+seed)*.012+wave*.020;
+ p.y+=cos(t*.58+base.x*3.1+seed*.13)*.012+wave*.018;
+ p.z+=sin(t*.71+seed+base.x*1.4)*.028;
+ float yaw=sin(u_time*.02)*.010;
  p.x=p.x*cos(yaw)+p.z*sin(yaw)*.15;
  return p;
 }
 vec2 project(vec3 p){float d=3.6/(3.6-p.z);return vec2(p.x,p.y)*d;}
 vec2 interact(vec2 p,float z,float seed){
+ float depth=clamp((z+2.)/3.,0.,1.);
+ p+=u_pointer*u_energy*vec2(${FIELD_MOTION.parallaxX},${FIELD_MOTION.parallaxY})*(.55+depth*.45);
  vec2 delta=(p-u_pointer)*vec2(u_aspect,1.);float distance=length(delta);
- float envelope=exp(-distance*distance/ .20)*u_energy;
- vec2 direction=delta/max(distance,.04);
- vec2 tangent=vec2(-direction.y,direction.x);
- return p+(direction*.08+tangent*sin(distance*6.-u_time*.65)*.015)*envelope*mix(.45,.9,clamp((z+2.)/3.,0.,1.))/vec2(u_aspect,1.);
+ float envelope=exp(-distance*distance/${FIELD_MOTION.radiusSquared})*u_energy;
+ vec2 direction=delta/(distance+${FIELD_MOTION.directionSoftness});
+ return p+direction*${FIELD_MOTION.repulsion}*envelope*mix(.45,.9,depth)/vec2(u_aspect,1.);
 }
 float clearing(vec2 p){return smoothstep(.34,.70,length(p*vec2(1.65,2.6)));}
 `;
@@ -101,6 +104,6 @@ export function createOpeningRenderer(canvas){
       for(const [object,m,mode] of [[dots,dotMesh,gl.POINTS],[art,artMesh,gl.TRIANGLES]]){if(!m?.count)continue;gl.useProgram(object.p);const u=object.uniforms;gl.uniform1f(u.u_time,time);gl.uniform2f(u.u_pointer,pointer.x,pointer.y);gl.uniform1f(u.u_energy,pointer.energy);gl.uniform1f(u.u_aspect,width/Math.max(height,1));gl.uniform2f(u.u_resolution,canvas.width,canvas.height);gl.uniform1i(u.u_atlas,0);gl.bindVertexArray(m.vao);gl.drawArrays(mode,0,m.count);}gl.bindVertexArray(null);
       output.fillStyle='#f5f4f1';output.fillRect(0,0,canvas.width,canvas.height);output.drawImage(surface,0,0);
     },
-    destroy(){releaseMesh(artMesh);releaseMesh(dotMesh);gl.deleteTexture(texture);gl.deleteProgram(art.p);gl.deleteProgram(dots.p);}
+    destroy(){releaseMesh(artMesh);releaseMesh(dotMesh);gl.deleteTexture(texture);gl.deleteProgram(art.p);gl.deleteProgram(dots.p);artMesh=null;dotMesh=null;surface.width=1;surface.height=1;gl.getExtension('WEBGL_lose_context')?.loseContext();}
   };
 }

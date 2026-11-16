@@ -217,9 +217,10 @@ export function selectSubjectBaselinePair({works=[],rounds=[],answers={},seed='s
 function sameSubjectReleased(entry, notes, batchIndex) {
   const annotations = new Map((Array.isArray(notes?.annotations) ? notes.annotations : []).filter(row => text(row?.workId)).map(row => [row.workId, row]));
   const firstIds = unique((Array.isArray(notes?.proposedFirst18Panels) ? notes.proposedFirst18Panels : []).flatMap(panel => Array.isArray(panel.workIds) ? panel.workIds : []));
-  const hasExplicitPools = firstIds.length > 0;
+  const hasExplicitPools = firstIds.length > 0 || Object.entries(notes?.reservePools||{}).some(([name,value])=>/^batch\d+$/.test(name)&&Number(name.slice(5))>=2&&Array.isArray(value));
   if (hasExplicitPools) {
-    const available = new Set([...firstIds, ...(batchIndex >= 1 && Array.isArray(notes?.reservePools?.batch2) ? notes.reservePools.batch2 : []), ...(batchIndex >= 2 && Array.isArray(notes?.reservePools?.batch3) ? notes.reservePools.batch3 : []), ...(batchIndex >= 3 && Array.isArray(notes?.reservePools?.batch4) ? notes.reservePools.batch4 : [])]);
+    const released=Object.entries(notes?.reservePools||{}).filter(([name,value])=>/^batch\d+$/.test(name)&&Number(name.slice(5))>=2&&Number(name.slice(5))-1<=batchIndex&&Array.isArray(value)).flatMap(([,value])=>value);
+    const available = new Set([...firstIds,...released]);
     if (entry.workIds.some(id => !available.has(id))) return false;
   } else if (Number.isInteger(entry.fallbackReleaseBatch) && entry.fallbackReleaseBatch > batchIndex) return false;
   return entry.workIds.every(id => !Number.isInteger(annotations.get(id)?.reserveUntilBatch) || annotations.get(id).reserveUntilBatch <= batchIndex);

@@ -6,7 +6,7 @@ import {APPEAL_PROTOCOL,isOverallAppealRound,withOverallAppeal} from '../../publ
 import {summarizePreferenceHypotheses,planAdaptivePanels} from '../../public/art-atlas/adaptive-selection.mjs';
 import {buildJourneyRounds,createJourneyStimulusPlan,journeyAdaptiveQuotas,JOURNEY_REVISION} from '../../public/art-atlas/journey-bank.mjs';
 import {validAnswer} from '../../public/art-atlas/engine.mjs';
-const works=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/artworks.json',import.meta.url),'utf8'));
+const works=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/artworks.json',import.meta.url),'utf8')).slice(0,164);
 const ids=round=>round.works.map(work=>work.id),sig=values=>JSON.stringify([...values].sort());
 const answer=(round,values)=>({confirmed:true,criterion:'preference',workIds:ids(round),positions:Object.fromEntries(round.works.map((work,index)=>[work.id,values[index]]))});
 const source=(offered,index,values=[10,40,70,100],overall=true)=>{const round={id:'journey-'+String(index+1).padStart(3,'0'),kind:'spectrum',criterion:'preference',title:'Which do you prefer?',hint:'Place the paintings by preference.',scale:{left:'Less preferred',right:'More preferred'},works:offered,evidence:{construct:'preference',family:'individual-choice',role:'discovery',panelNumber:index+2,setId:'source-'+index,journeyRevision:overall?'art-profile-50-v10':'art-profile-50-v9'}};const r=overall?withOverallAppeal(round):round;return {round:r,answer:answer(r,values)};};
@@ -14,10 +14,10 @@ function fixture(){const history=[],answers={};for(let i=0;i<8;i++){const item=s
 
 test('The fresh164 journey uses18 appeal quartets,3 Caravaggios, Mexico and deferred closing questions',()=>{
   const plan=createJourneyStimulusPlan({works}),rounds=buildJourneyRounds(works,{}, {panels:plan}),main=rounds.filter(r=>r.evidence.panelNumber&&r.evidence.construct==='preference');
-  assert.equal(JOURNEY_REVISION,'art-profile-50-v10');assert(plan.complete);assert.equal(main.length,18);assert.equal(new Set(main.flatMap(ids)).size,72);assert(main.every(isOverallAppealRound));assert.deepEqual([plan.reservations.batch2.length,plan.reservations.batch3.length],[46,46]);
+  assert.equal(JOURNEY_REVISION,'art-profile-50-v11');assert(plan.complete);assert.equal(main.length,18);assert.equal(new Set(main.flatMap(ids)).size,72);assert(main.every(isOverallAppealRound));assert.deepEqual([plan.reservations.batch2.length,plan.reservations.batch3.length],[46,46]);
   const chosen=new Set(main.flatMap(ids));for(const id of ['add-caravaggio-judith-barberini','add-caravaggio-supper-emmaus-1601','add-caravaggio-taking-christ','add-siqueiros-madre-nina','add-varo-harmony','add-carrington-dagobert','add-kahlo-borderline'])assert(chosen.has(id),id);
   assert.deepEqual(rounds.slice(-5).map(r=>r.evidence.finalRefinement.slot),[1,2,3,4,5]);assert(rounds.slice(-5).every(r=>isFinalRefinementRound(r)&&r.unavailable));
-  assert.equal(rounds[24].kind,'context');assert.equal(rounds[31].evidence.repeatOf,rounds[7].id);assert.equal(rounds[42].axis,'reading');assert.equal(rounds[44].evidence.construct,'attention-to-making');
+  assert.equal(rounds[24].kind,'context');assert.equal(rounds[31].evidence.repeatOf,rounds[7].id);assert.equal(rounds[42].axis,'reading');assert.equal(rounds[44].axis,'achievement');
   const earlier=new Set(rounds.slice(0,7).filter(r=>r.evidence.construct==='preference').flatMap(ids));assert(rounds[7].works.every(w=>earlier.has(w.id)));for(const id of ['blanchard-still-life','add-tamayo-still-life-foot','add-rivera-portrait-frida'])assert(ids(rounds[7]).includes(id));assert.equal(rounds[7].evidence.arrangementSelection.revision,'earlier-appeal-sorting-v1');assert.equal(sig(ids(rounds[31])),sig(ids(rounds[7])));assert(ids(rounds[9]).includes('add-siqueiros-madre-nina'));
 });
 

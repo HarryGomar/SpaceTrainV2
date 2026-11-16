@@ -1,0 +1,91 @@
+{
+  "van-gogh-starry-night":{
+    "medium":{"value":"Oil on canvas","sourceUrl":"https://www.moma.org/collection/works/79802","sourceLocator":"Medium"},
+    "creationPlace":{"value":"Saint-Rémy, France","sourceUrl":"https://www.moma.org/collection/works/79802","sourceLocator":"Place/date heading and work description"},
+    "labels":[{"label":"Expressive landscape painting","kind":"visual-treatment","reason":"The reviewed landscape retains recognisable terrain while curling strokes and altered sky contours remain conspicuous."}]
+  },
+  "study-van-gogh-sunflowers":{
+    "creationPlace":{"value":"Arles, France","sourceUrl":"https://www.nationalgallery.org.uk/paintings/vincent-van-gogh-sunflowers","sourceLocator":"In-depth account of the1888 sunflower group painted in Arles"},
+    "labels":[{"label":"Painterly floral still life","kind":"visual-treatment","reason":"The object arrangement combines differentiated flower surfaces with conspicuous individual paint marks."}]
+  },
+  "holbein-ambassadors":{
+    "medium":{"value":"Oil on wood, identified as Baltic/Polish oak","sourceUrl":"https://www.nationalgallery.org.uk/paintings/hans-holbein-the-younger-the-ambassadors","sourceLocator":"Medium and support"},
+    "labels":[{"label":"Detailed double portrait with anamorphosis","kind":"visual-treatment","reason":"Fine materials and instruments surround the two sitters, while the elongated skull introduces a conspicuous perspectival distortion."}]
+  },
+  "add-van-eyck-arnolfini":{
+    "medium":{"value":"Oil on wood, probably oak","sourceUrl":"https://www.nationalgallery.org.uk/paintings/jan-van-eyck-the-arnolfini-portrait","sourceLocator":"Medium and support"},
+    "labels":[{"label":"Early Netherlandish domestic double portrait","kind":"tradition","reason":"The existing historical grouping is refined by this work's paired figures, detailed domestic objects and mirror."}]
+  },
+  "add-caravaggio-supper-emmaus-1601":{
+    "medium":{"value":"Oil on canvas","sourceUrl":"https://www.nationalgallery.org.uk/paintings/michelangelo-merisi-da-caravaggio-the-supper-at-emmaus","sourceLocator":"Medium and support"},
+    "labels":[{"label":"Baroque","kind":"movement","reason":"Broader historical grouping for the existing Italian Baroque catalogue label."},{"label":"Chiaroscuro narrative figure painting","kind":"visual-treatment","reason":"The museum explicitly discusses light-and-shadow staging, outward gestures and the recognition narrative."}]
+  },
+  "add-caravaggio-taking-christ":{
+    "medium":{"value":"Oil on canvas","sourceUrl":"https://onlinecollection.nationalgallery.ie/objects/2882/the-taking-of-christ","sourceLocator":"Medium"},
+    "creationPlace":{"value":"Rome, Italy","sourceUrl":"https://onlinecollection.nationalgallery.ie/objects/2882/the-taking-of-christ","sourceLocator":"Provenance: painted for Ciriaco Mattei, Rome,1602"},
+    "labels":[{"label":"Baroque","kind":"movement","reason":"Broader historical grouping for the existing Italian Baroque catalogue label."},{"label":"Compressed chiaroscuro figure group","kind":"visual-treatment","reason":"The museum describes three-quarter-length figures brought close to the picture plane with almost no surrounding setting."}]
+  },
+  "add-caravaggio-judith-barberini":{
+    "medium":{"value":"Oil on canvas","sourceUrl":"https://barberinicorsini.org/wp-content/uploads/2021/11/2021_12_Barberini_Giuditta_CartellaStampa.pdf","sourceLocator":"Caravaggio, Giuditta decapita Oloferne, c.1599,145×195cm catalogue entry"},
+    "labels":[{"label":"Baroque","kind":"movement","reason":"Broader historical grouping for the existing Italian Baroque catalogue label."},{"label":"Curtain-framed chiaroscuro narrative","kind":"visual-treatment","reason":"A red curtain frames closely presented action isolated through selective illumination."}]
+  },
+  "add-renoir-boating-party":{
+    "medium":{"value":"Oil on canvas","sourceUrl":"https://www.phillipscollection.org/collection/luncheon-boating-party","sourceLocator":"Materials"},
+    "labels":[{"label":"Impressionist social figure painting","kind":"visual-treatment","reason":"A social group and table objects are treated with separate light and colour strokes within the existing Impressionist context."}]
+  },
+  "add-marc-animal-destinies":{
+    "medium":{"value":"Oil on canvas","sourceUrl":"https://kunstmuseumbasel.ch/de/sammlung/schwerpunkte","sourceLocator":"Franz Marc, Tierschicksale,1913 collection entry"},
+    "labels":[{"label":"Fragmented expressionist animal landscape","kind":"visual-treatment","reason":"Recognisable animals and trees are altered through angular coloured planes within the existing Expressionist grouping."}]
+  },
+  "cassatt-omnibus":{"labels":[{"label":"Colour intaglio printmaking","kind":"format","reason":"Cleveland identifies this object as colour drypoint and aquatint, rather than an oil painting."},{"label":"Japanese-print-influenced domestic imagery","kind":"source-described-treatment","reason":"The object description explicitly discusses Japanese woodblock influence on flat colour planes and domestic subject matter."}]},
+  "hokusai-mount-fuji":{"labels":[{"label":"Ukiyo-e landscape print","kind":"tradition","reason":"The existing ukiyo-e grouping is refined by the documented colour woodblock medium and mountain subject."}]},
+  "study-hokusai-great-wave":{"labels":[{"label":"Ukiyo-e landscape print","kind":"tradition","reason":"The documented woodblock medium and wave-and-mountain composition refine the existing ukiyo-e grouping."}]},
+  "hiroshige-sudden-shower":{"labels":[{"label":"Ukiyo-e city-and-river print","kind":"tradition","reason":"The documented woodblock print depicts travellers, a bridge and a riverside setting within the Edo-period context."}]},
+  "japanese-waves":{"labels":[{"label":"Decorative fan painting","kind":"format","reason":"Cleveland explicitly identifies a fan painting later mounted as a hanging scroll."}]},
+  "farmer-autumn":{"labels":[{"label":"Ink-and-light-colour narrative landscape scroll","kind":"visual-treatment","reason":"The documented ink-and-light-colour scroll contains a farmer, crow and stream-crossing animal within the landscape."}]},
+  "shen-clouds":{"labels":[{"label":"Ming literati landscape album painting","kind":"tradition","reason":"The existing Ming/Wu School context is combined with the documented album-leaf medium and this landscape subject."}]},
+  "egypt-man-portrait":{"labels":[{"label":"Antonine Roman Egyptian funerary portraiture","kind":"tradition","reason":"The institutional culture field explicitly names Antonine-era Roman Egypt; the medium is encaustic on linen."}]},
+  "ethiopian-apostles":{"labels":[{"label":"Ethiopian Orthodox devotional diptych","kind":"tradition","reason":"The source identifies the work's church or elite-home function and two-panel format."},{"label":"Ethiopian royal-court-workshop style","kind":"source-described-treatment","reason":"The collection description associates this bold coloured treatment with royal court workshops from the early1600s to mid1700s."}]},
+  "green-tara":{"labels":[{"label":"Tibetan Buddhist thangka painting","kind":"tradition","reason":"The source identifies Central Tibet and a devotional thangka made with tempera, ink and gold on cotton."}]},
+  "nepal-chakrasamvara-mandala":{"labels":[{"label":"Buddhist mandala painting","kind":"tradition","reason":"The documented title and reviewed concentric diagram distinguish this work from a generic figurative picture."}]},
+  "opening-cma-141639":{
+    "creationPlace":{"value":"New York studio","sourceLocator":"Cleveland collection description"},
+    "depictedPlace":{"value":"Wilderness near Mount Katahdin, Maine","sourceLocator":"Cleveland collection description"},
+    "labels":[{"label":"Panoramic American landscape painting","kind":"visual-treatment","reason":"The source describes a studio-composed Maine view; the reviewed painting combines successive terrain zones and selective sunset light."}]
+  },
+  "cezanne-mountain":{
+    "creationPlace":{"value":"Road east of Aix-en-Provence toward Mount Sainte-Victoire, France","sourceLocator":"Cleveland description of the site where the easel was set up"},
+    "depictedPlace":{"value":"Mount Sainte-Victoire near Aix-en-Provence, France","sourceLocator":"Cleveland collection description"},
+    "labels":[{"label":"Constructed painterly landscape","kind":"visual-treatment","reason":"Recognisable terrain is reorganised through broken colour patches and altered contours, rather than sharply finished detail."}]
+  },
+  "turner-burning-parliament":{
+    "depictedPlace":{"value":"Houses of Parliament and River Thames, London","sourceLocator":"Cleveland collection description"},
+    "labels":[{"label":"Romantic event landscape","kind":"visual-treatment","reason":"The museum identifies an actual fire event while discussing enlarged flames and near-abstract atmospheric colour."}]
+  },
+  "opening-cma-92937":{"labels":[{"label":"Ashcan-era urban action painting","kind":"visual-treatment","reason":"The documented boxing-club subject is treated with visible strokes, near figures and strongly selective light. Action here names depicted boxing, not the later abstract movement."}]},
+  "blanchard-still-life":{"labels":[{"label":"Cubist mixed-media still life","kind":"source-described-treatment","reason":"The object record documents oil, sand and collage, and discusses simultaneous viewpoints and flat geometric planes."}]},
+  "study-seurat-grande-jatte":{"labels":[{"label":"Pointillist figure landscape","kind":"visual-treatment","reason":"The reviewed park scene uses conspicuous repeated small dabs within its existing Neo-Impressionist grouping."}]},
+  "klimt-kiss":{"labels":[{"label":"Decorative figural painting","kind":"visual-treatment","reason":"The near human group is wrapped in conspicuous repeated geometric ornament within the Vienna Secession context."}]},
+  "study-matisse-dance":{"labels":[{"label":"Flat-colour rhythmic figure painting","kind":"visual-treatment","reason":"Large unmodulated colour fields and altered linked bodies refine the broad Fauvist/modern context without assigning a later movement."}]},
+  "study-kandinsky-composition-eight":{"labels":[{"label":"Bauhaus-period geometric abstraction","kind":"editorial-historical-context","reason":"The existing1923 Bauhaus/geometric grouping is refined by the visible measured circles, lines and divisions."}]},
+  "add-kandinsky-composition-seven":{"labels":[{"label":"Prewar nonfigurative painting","kind":"editorial-historical-context","reason":"The1913 date predates postwar Abstract Expressionism; no postwar movement is assigned here."},{"label":"Expressive gestural abstraction","kind":"visual-treatment","reason":"Irregular interlaced strokes and washes dominate without regular geometric divisions."}]},
+  "mondrian-composition":{"labels":[{"label":"Orthogonal geometric abstraction","kind":"visual-treatment","reason":"The museum describes a restricted grid of horizontal and vertical divisions with primary colours, black and white."}]},
+  "add-rothko-orange-yellow":{"labels":[{"label":"Colour-field abstraction","kind":"visual-treatment","reason":"Large softly bounded rectangular colour fields dominate; irregular gestural trails do not."}]},
+  "add-newman-prometheus-bound":{"labels":[{"label":"Monochrome colour-field treatment","kind":"visual-treatment","reason":"The reviewed reproduction is dominated by a dark field. Its fine internal structure remains explicitly unresolved."}]},
+  "add-herrera-cobalt-white":{"labels":[{"label":"Hard-edged geometric abstraction","kind":"visual-treatment","reason":"Crisp straight blue-and-white divisions distinguish the work from softly edged colour fields and all-over gestural marks."}]},
+  "add-pollock-convergence":{"labels":[{"label":"Gestural abstraction","kind":"visual-treatment","reason":"Interlaced irregular drips and trails dominate rather than a regular geometric grid."}]},
+  "add-thomas-etude-blue":{"labels":[{"label":"Gestural abstraction","kind":"visual-treatment","reason":"This particular reproduction has broad irregular dark-and-blue marks. A later artist-associated mosaic treatment is not assigned by default."}]},
+  "add-krasner-icarus":{"labels":[{"label":"Gestural abstraction","kind":"visual-treatment","reason":"Irregular sweeping and crossed marks create a dense all-over rhythm; the title alone does not establish a winged figure."}]},
+  "add-merida-time-space":{"labels":[{"label":"Geometric abstraction","kind":"visual-treatment","reason":"Regular triangles, rectangles and straight divisions organise this particular work."}]},
+  "add-af-klint-dove-two":{"labels":[{"label":"Diagrammatic geometric abstraction","kind":"visual-treatment","reason":"A measured spiral, circle and divided colour fields are visible. A specific spiritual meaning is not inferred from the artist's reputation."}]},
+  "add-gerzso-water-mansion":{"labels":[{"label":"Interlocking geometric planes","kind":"visual-treatment","reason":"Crisp stepped boundaries and broad olive planes refine the existing geometric-abstraction grouping."}]},
+  "add-rivera-zapatista-landscape":{"labels":[{"label":"Cubist object composition","kind":"visual-treatment","reason":"Recognisable objects are fragmented into altered viewpoints and sharply divided planes; Mexican context is not treated as a technique."}]},
+  "add-rivera-portrait-frida":{"labels":[{"label":"Mexican modernist easel portraiture","kind":"format","reason":"The source documents a portrait on an asbestos-cement shingle, so the object is not classified as a wall mural."}]},
+  "add-orozco-buffoons":{"labels":[{"label":"Expressively distorted figure group","kind":"visual-treatment","reason":"Broad dark marks and conspicuously altered faces and proportions distinguish this object within the broad Mexican-modernist context."}]},
+  "add-siqueiros-madre-nina":{"labels":[{"label":"Mexican modernist graphic figure treatment","kind":"visual-treatment","reason":"The actual monochrome reproduction has strong drawn marks and altered bodies. The undocumented physical medium remains unknown."},{"label":"Muralist-associated artist context","kind":"artist-context","reason":"The inherited Mexican-muralism label is retained as broader artist context, not proof that this particular object is a mural."}]},
+  "add-kahlo-borderline":{"labels":[{"label":"Symbolic self-portrait","kind":"source-described-treatment","reason":"The museum's object note explicitly connects the central figure and contrasting surroundings with personal and national identity."}]},
+  "add-izquierdo-sorrowful-friday":{"labels":[{"label":"Altar-like still-life and portrait arrangement","kind":"visual-treatment","reason":"A framed head, parted curtains and ordered offerings are visible; a particular ritual meaning is not inferred without documentation."}]},
+  "add-varo-harmony":{"labels":[{"label":"Precisely delineated fantastic interior","kind":"visual-treatment","reason":"Fine apparatus and furniture occupy a layered room containing physically uncanny wall figures."}]},
+  "add-carrington-dagobert":{"labels":[{"label":"Episodic fantastic painting","kind":"visual-treatment","reason":"Many separate uncanny incidents occupy distinct architectural and terrain compartments."}]},
+  "study-malevich-black-square":{"labels":[{"label":"Suprematist geometric abstraction","kind":"movement","reason":"The existing Suprematist context is retained at work level and distinguished from later colour-field painting by date and visible form."}]}
+}

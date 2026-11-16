@@ -1,14 +1,16 @@
 // Item instances have stable IDs. Longer paths extend the same earlier path.
 // A repeated artwork is not an independent new stimulus or a personality measure.
-export const STUDY_LENGTHS = Object.freeze([50,100,150,200]);
-export const STUDY_BANK_REVISION = 'art-study-200-v2';
+import {isStudyEligibleArtwork} from './study-eligibility.mjs';
+import {isReviewedVisualDescriptor,FEATURE_SEMANTIC_VERSION} from './visual-descriptor-semantics.mjs';
+export const STUDY_LENGTHS = Object.freeze([50,100,150,200,250,300]);
+export const STUDY_BANK_REVISION = 'art-study-300-v3';
+export const MAX_STUDY_LENGTH=300;
 const FEATURES=['abstraction','energy','complexity','humanity','narrative','atmosphere','color'];
-const clamp=n=>Math.max(0,Math.min(1,Number(n)||0));
-const f=(w,key)=>clamp(w.features?.[key]);
+const f=(w,key)=>isReviewedVisualDescriptor(w,key)?w.features[key]:null;
 const mean=xs=>xs.reduce((sum,x)=>sum+x,0)/(xs.length||1);
 const signature=ws=>ws.map(w=>w.id).sort().join('|');
 const idList=ws=>ws.map(w=>w.id);
-const separation=(a,b)=>mean(FEATURES.map(key=>Math.abs(f(a,key)-f(b,key))));
+const separation=(a,b)=>mean(FEATURES.filter(key=>f(a,key)!==null&&f(b,key)!==null).map(key=>Math.abs(f(a,key)-f(b,key))));
 const CHOICE_LIMITS=['The artwork attributes are provisional annotations; several properties change together.','These are repeated decisions using one small catalogue, not independent replications or population norms.'];
 const MAP_LIMITS=['The map records a reported response to these reproductions. It does not establish a stable trait or a causal motive.','Tension and involvement are distinct from pleasantness and arousal.'];
 const CONTEXT_LIMITS=['This is a choice under an explicit brief. It is not automatically an unconditional preference, curiosity score or dislike.','The offered alternatives, repeated viewing and imagined setting can affect the choice.'];
@@ -58,17 +60,17 @@ const SELF_DESCRIPTIONS = [
 function hash(text) {let result=2166136261;for(const c of text)result=Math.imul(result^c.charCodeAt(0),16777619)>>>0;return result;}
 function random(seed) {let state=seed>>>0;return()=>{state=(Math.imul(state,1664525)+1013904223)>>>0;return state/4294967296;};}
 function shuffle(items,seed) {const result=[...items],next=random(seed);for(let i=result.length-1;i>0;i--){const j=Math.floor(next()*(i+1));[result[i],result[j]]=[result[j],result[i]];}return result;}
-function quartetSets(pool) {
+function quartetSets(pool,count=32) {
   const available=new Map(),next=random(hash(pool.map(w=>w.id).join('|'))),desired=Math.min(1000,pool.length*(pool.length-1)*(pool.length-2)*(pool.length-3)/24);
   for(let attempt=0;attempt<24000&&available.size<desired;attempt++) {
     const chosen=new Set();while(chosen.size<4)chosen.add(Math.floor(next()*pool.length));
     const works=[...chosen].map(i=>pool[i]);available.set(signature(works),works);
   }
   const candidates=[...available.entries()].sort(([a],[b])=>a.localeCompare(b)),seen=new Map(pool.map(w=>[w.id,0])),result=[];
-  for(let index=0;index<32;index++) {
+  for(let index=0;index<count;index++) {
     const key=FEATURES[index%FEATURES.length];let best=-Infinity,bestIndex=-1;
     for(let i=0;i<candidates.length;i++) {
-      const [,works]=candidates[i],values=works.map(w=>f(w,key)),contrast=Math.max(...values)-Math.min(...values);
+      const [,works]=candidates[i],values=works.map(w=>f(w,key)).filter(value=>value!==null),contrast=values.length>=2?Math.max(...values)-Math.min(...values):0;
       const coverage=works.reduce((sum,w)=>sum+1/(1+seen.get(w.id)),0),artists=new Set(works.map(w=>w.artist)).size;
       const spread=mean(works.flatMap((a,i)=>works.slice(i+1).map(b=>separation(a,b))));
       const score=coverage*2+contrast*.5+spread*.5+artists*.04;
@@ -82,7 +84,7 @@ function exactPreferenceAnswer(round,answer) {
   return answer?.confirmed===true&&answer.criterion==='preference'&&Array.isArray(answer.workIds)&&answer.workIds.join('|')===idList(round.works).join('|')&&answer.positions&&Object.keys(answer.positions).length===round.works.length&&round.works.every(w=>Number.isInteger(answer.positions[w.id])&&answer.positions[w.id]>=0&&answer.positions[w.id]<=100);
 }
 function provisionalDirection(rounds,answers,key) {
-  const tasks=rounds.filter(r=>r.evidence.construct==='preference'&&r.evidence.role==='discovery'&&exactPreferenceAnswer(r,answers[r.id]));
+  const tasks=rounds.filter(r=>r.evidence.construct==='preference'&&r.evidence.role==='discovery'&&r.works.every(work=>f(work,key)!==null)&&exactPreferenceAnswer(r,answers[r.id]));
   const values=tasks.map(r=>{const a=answers[r.id];return mean(r.works.flatMap((left,i)=>r.works.slice(i+1).map(right=>((a.positions[left.id]-a.positions[right.id])/100)*(f(left,key)-f(right,key)))));});
   const value=mean(values),enough=new Set(tasks.map(r=>signature(r.works))).size>=3&&new Set(tasks.flatMap(r=>r.works.map(w=>w.artist))).size>=4;
   return {direction:enough&&Math.abs(value)>=.025?Math.sign(value):0,trainingRoundIds:tasks.map(r=>r.id)};
@@ -91,14 +93,14 @@ function checkPair(pool,key,used,rounds,answers,index) {
   const estimate=provisionalDirection(rounds,answers,key),pairs=[];
   for(let i=0;i<pool.length;i++)for(let j=i+1;j<pool.length;j++) {
     const a=pool[i],b=pool[j],pairKey=signature([a,b]);
-    const contrast=Math.abs(f(a,key)-f(b,key)),other=mean(FEATURES.filter(k=>k!==key).map(k=>Math.abs(f(a,k)-f(b,k))));
-    pairs.push({works:[a,b],key:pairKey,contrast,other,score:contrast-.6*other});
+    const contrast=f(a,key)!==null&&f(b,key)!==null?Math.abs(f(a,key)-f(b,key)):null,other=mean(FEATURES.filter(k=>k!==key&&f(a,k)!==null&&f(b,k)!==null).map(k=>Math.abs(f(a,k)-f(b,k))));
+    pairs.push({works:[a,b],key:pairKey,contrast,other,score:contrast===null?-2-.6*other:contrast-.6*other});
   }
   const unseen=pairs.filter(p=>!used.has(p.key)),eligible=unseen.length?unseen:pairs;
   eligible.sort((a,b)=>b.score-a.score||a.key.localeCompare(b.key));
   const selected=eligible[0],comparisonNovel=!used.has(selected.key);
   const works=shuffle(selected.works,hash('check-'+index)),prediction=comparisonNovel&&estimate.direction&&selected.contrast>=.2?selected.works.slice().sort((a,b)=>estimate.direction*(f(b,key)-f(a,key)))[0].id:null;
-  return {works,contrastKey:key,contrast:selected.contrast,otherFeatureDistance:selected.other,provisionalPrediction:prediction,trainingRoundIds:estimate.trainingRoundIds,comparisonNovel,holdoutUnit:comparisonNovel?'new-comparison':null,artworksMayBeFamiliar:true,selectionMethod:'annotated-feature-contrast'};
+  return {works,contrastKey:key,contrast:selected.contrast,otherFeatureDistance:selected.other,provisionalPrediction:prediction,trainingRoundIds:estimate.trainingRoundIds,comparisonNovel,holdoutUnit:comparisonNovel?'new-comparison':null,artworksMayBeFamiliar:true,selectionMethod:selected.contrast===null?'comparison-coverage-without-reviewed-target':'annotated-feature-contrast',...(['narrative','atmosphere'].includes(key)&&selected.contrast!==null?{featureSemanticVersion:FEATURE_SEMANTIC_VERSION}:{}),...(selected.contrast===null?{targetDescriptorUnavailable:true}:{} )};
 }
 function anchorsFor(pool,choices,count,index) {
   const rest=pool.filter(w=>!choices.some(c=>c.id===w.id));
@@ -113,13 +115,13 @@ function matchingWorks(pool,field,index) {
 
 /** Later checks can use earlier answers. The UI must freeze a round when first shown. */
 export function buildStudyRounds(works,target=50,answers={},options={}) {
-  if(!STUDY_LENGTHS.includes(target))throw Error('Choose a 50, 100, 150 or 200-interaction path.');
+  if(!STUDY_LENGTHS.includes(target))throw Error('Choose a 50, 100, 150, 200, 250 or 300-interaction path.');
   if(!answers||typeof answers!=='object'||Array.isArray(answers))answers={};
-  const pool=[...works].filter(w=>w&&typeof w.id==='string'&&w.features&&w.title&&w.image).sort((a,b)=>a.id.localeCompare(b.id));
+  const pool=[...works].filter(w=>isStudyEligibleArtwork(w)&&typeof w.id==='string'&&w.features&&w.title&&w.image).sort((a,b)=>a.id.localeCompare(b.id));
   if(pool.length<12||new Set(pool.map(w=>w.id)).size!==pool.length)throw Error('The study needs at least twelve distinct, sourced artworks.');
-  if(pool.some(w=>FEATURES.some(key=>!Number.isFinite(w.features[key])||w.features[key]<0||w.features[key]>1)))throw Error('Study planning needs reviewed numeric artwork descriptors; unknown values cannot be treated as zero.');
+  if(pool.some(w=>FEATURES.some(key=>!(['narrative','atmosphere'].includes(key)&&w.features[key]===null)&&(!Number.isFinite(w.features[key])||w.features[key]<0||w.features[key]>1))))throw Error('Study planning needs finite supplied descriptors or explicit literal-field nulls; unknown values cannot be treated as zero.');
   const history=new Map((Array.isArray(options?.history)?options.history:[]).filter(r=>r&&typeof r.id==='string'&&Array.isArray(r.works)&&r.works.length&&r.works.every(w=>pool.some(item=>item.id===w.id))).map(r=>[r.id,r]));
-  const sets=quartetSets(pool),rounds=[],usedPairs=new Set();let repeatIndex=0,checkIndex=0;
+  const sets=quartetSets(pool,target>200?57:32),rounds=[],usedPairs=new Set();let repeatIndex=0,checkIndex=0;
   const append=(round,evidence)=>{
     const id='study-'+String(rounds.length+1).padStart(3,'0'),actual=history.get(id)||{...round,id,format:round.kind,evidence:{bankRevision:STUDY_BANK_REVISION,role:'discovery',labelExposure:'before-this-path-label-games',priorExposure:'unknown',...evidence}};
     rounds.push(actual);
@@ -160,6 +162,16 @@ export function buildStudyRounds(works,target=50,answers={},options={}) {
         append({kind:'context',title:'What does this note change?',hint:'Read the source note, then report any change in your curiosity.',works:[art]},{setId:'note-'+i,construct:'context-change',family:'reported-context-effect',role:'check',labelExposure:'after-cued-labels',priorMeasureRoundIds:rounds.filter(r=>r.evidence.construct==='curiosity'&&r.works.some(w=>w.id===art.id)).map(r=>r.id),limits:['This is a reported change after reading. New information, repeated viewing and label exposure happen together.','Without a matched control, the note\'s causal effect is unresolved.']});
       }
     }
+  }
+  // Preserve the established first200-question instruments. The additional100
+  // are a suffix with new panel identities, under the original relative scale.
+  // They come after the label games, rather than pretending to be blind views.
+  if(target>200)for(let panel=32;panel<57;panel++){
+    const art=sets[panel],setId='panel-'+String(panel+1).padStart(2,'0'),common={setId,labelExposure:'after-this-path-label-games',limits:CHOICE_LIMITS};
+    append({kind:'spectrum',criterion:'preference',title:'Which do you prefer?',hint:'Place each work from less preferred to more preferred. Equal positions are fine.',works:art},{...common,construct:'preference',family:'individual-choice'});
+    append({kind:'spectrum',criterion:'interest',title:'Which would you like to understand?',hint:'Place each work by how much you want to understand it.',works:art},{...common,construct:'curiosity',family:'interest',limits:['Wanting to understand a work is distinct from preferring it.',...CHOICE_LIMITS]});
+    append({kind:'grid',axis:'response',title:'How does each work affect you?',hint:'Tension runs across. How much it holds your attention runs up.',works:art},{...common,construct:'response',family:'felt-response',limits:MAP_LIMITS});
+    append({kind:'grid',axis:'connection',title:'Understanding and connection.',hint:'Ease of understanding runs across. Personal connection runs up.',works:art},{...common,construct:'connection',family:'appraisal',limits:['Reported understanding is not a test of correct interpretation.',...MAP_LIMITS.slice(0,1)]});
   }
   return rounds.slice(0,target);
 }

@@ -12,6 +12,12 @@ import {buildPreferenceBasis} from './profile-evidence.mjs';
 import {buildResponsePortrait} from './response-portrait.mjs';
 import {buildFacetReadings} from './facet-readings.mjs';
 import {buildClosingReadings} from './closing-readings.mjs';
+import {buildTasteAxes} from './taste-axes.mjs';
+import {composeTasteSummary} from './profile-summary.mjs';
+import {buildTastePatterns} from './taste-patterns.mjs';
+import {buildTasteBoundaries} from './taste-boundaries.mjs';
+import ARTWORK_ATTRIBUTE_REVIEWS from './artwork-attribute-reviews.json' with {type:'json'};
+import {buildRecommendationMemory,wasPreviouslyPresented} from './recommendation-memory.mjs';
 
 export const TASTE_PORTRAIT_VERSION=1;
 export const TASTE_THRESHOLDS=Object.freeze({clearPreferenceGap:15,featureContrast:.3,minimumSets:2,minimumWorks:4,taskDirection:.12,meanDirection:.15});
@@ -250,7 +256,7 @@ function discoveryRoutes(works,discovery,seeds,patterns,allPreference=discovery)
 }
 
 /** All calculations are local descriptions. No population model is implied. */
-export function buildTastePortrait({works=[],rounds=[],answers={},records=[],saved={}}={}){
+export function buildTastePortrait({works=[],rounds=[],answers={},records=[],saved={},recommendationHistory=[]}={}){
   works=Array.isArray(works)?works:[];rounds=Array.isArray(rounds)?rounds:[];answers=plain(answers)?answers:{};records=Array.isArray(records)?records:[];saved=plain(saved)?saved:{};
   const valid=entriesFor(works,rounds,answers),preferences=valid.filter(explicitPreference),discovery=distinctSets(valid.filter(discoveryEntry)),preferenceBasis=buildPreferenceBasis(valid),patterns=associations(discovery,preferences,preferenceBasis),curiosity=curiosityReading(discovery,valid),meaning=meaningReading(discovery,valid),ratings=contextRatings(valid),ratingReading=contextRatingReading(ratings),repeats=repeatComparisons(preferences),contexts=contextComparisons(discovery,valid),seeds=preferredSeeds(discovery,preferenceBasis),lookingAppraisals=buildLookingAppraisals({works,rounds,answers}),symbolism=analyzeSymbolism({works,rounds,answers}),responsePortrait=buildResponsePortrait({works,rounds,answers}),facets=buildFacetReadings({works,rounds,answers});
   const refined=buildRefinedReadings({works,rounds,answers}).filter(item=>!(item.id==='refined-achievement'&&responsePortrait.observations.some(observation=>observation.id==='response-making')));
@@ -279,14 +285,17 @@ export function buildTastePortrait({works=[],rounds=[],answers={},records=[],sav
   let curatorialObservations=[];try{curatorialObservations=analyzeScenarios(works,validRecords).findings.filter(item=>item.evidence?.every(id=>known.has(id))).sort((a,b)=>(b.priority||0)-(a.priority||0));}catch{/* The portrait remains available if a separate curatorial module cannot be read. */}
   const themes=[...facets.themes,...responsePortrait.themes].sort((a,b)=>(b.favouriteWorkCount||0)-(a.favouriteWorkCount||0)||b.priority-a.priority),leadingThemes=themes.slice(0,2),orderedObservations=observations.sort((a,b)=>b.priority-a.priority),summaryFinding=leadingThemes.length?orderedObservations.find(item=>item.id===leadingThemes[0].findingIds[0]):orderedObservations.find(item=>item.module!=='exceptions')||curatorialObservations[0];
   const summaryBasis=!leadingThemes.length?'observed-comparisons':preferenceBasis.absoluteScaleAvailable||preferenceBasis.favourites.length?'qualified-positive-patterns':leadingThemes.some(theme=>['exact-set-local-choices','matched-preference'].includes(theme.basis))?'qualified-local-comparisons':'qualified-response-patterns';
-  const profileSummary={title:leadingThemes.length?leadingThemes.map(theme=>theme.title).join(' · '):'Patterns in your choices',text:summaryFinding?.text?.split(/(?<=[.!?])\s+/)[0]||'',findingIds:leadingThemes.length?unique(leadingThemes.flatMap(theme=>theme.findingIds)):summaryFinding?[summaryFinding.id]:[],workIds:leadingThemes.length?unique(leadingThemes.flatMap(theme=>theme.workIds)):summaryFinding?.evidence||[],basis:summaryBasis};
+  const axesProfile=buildTasteAxes({works,rounds,answers}),tastePatterns=buildTastePatterns({works,rounds,answers,annotationReviews:ARTWORK_ATTRIBUTE_REVIEWS,recommendationHistory}),tasteBoundaries=buildTasteBoundaries({works,rounds,answers,annotationReviews:ARTWORK_ATTRIBUTE_REVIEWS}),profileSummary=composeTasteSummary({tastePatterns,axesProfile,themes:leadingThemes,observations:orderedObservations,legacyBasis:summaryBasis});
+  const recommendationMemory=buildRecommendationMemory(recommendationHistory);
+  recommendations.paintings=recommendations.paintings.filter(route=>!wasPreviouslyPresented(works.find(work=>work.id===route.workId),recommendationMemory));
+  for(const route of recommendations.artists)route.availableWorkIds=(route.availableWorkIds||[]).filter(id=>!wasPreviouslyPresented(works.find(work=>work.id===id),recommendationMemory));
   const heroes=preferenceBasis.absoluteScaleAvailable||preferenceBasis.favouriteRoundIds.length?preferenceBasis.heroSeeds:seeds;
   return {
     version:TASTE_PORTRAIT_VERSION,
     observations:orderedObservations,
     heroWorks:heroes.slice(0,5).map(seed=>({workId:seed.work.id,support:seed.support,counter:seed.counter||[],basis:seed.basis,score:seed.score??null,sourceRoundIds:seed.sourceRoundIds||unique(seed.support.map(item=>item.roundId)),positive:seed.positive??null})),
     preferenceEvidence:{basis:preferenceBasis.basis,absoluteScaleAvailable:preferenceBasis.absoluteScaleAvailable,sourceRoundIds:preferenceBasis.sourceRoundIds,overallRoundIds:preferenceBasis.overallRoundIds,favouriteRoundIds:preferenceBasis.favouriteRoundIds,overallRatings:preferenceBasis.ratings.map(item=>({workId:item.work.id,score:item.score,sourceRoundIds:item.sourceRoundIds,history:item.history})),positiveBand:preferenceBasis.positiveBand,limits:preferenceBasis.limits},
-    patternCandidates:patterns.map(pattern=>({...pattern.finding,display:pattern.display})),themes,profileSummary,reportedGridMaps:responsePortrait.reportedGridMaps,responsePortrait,facets,closingRefinement,
+    patternCandidates:patterns.map(pattern=>({...pattern.finding,display:pattern.display})),themes,axesProfile,tastePatterns,tasteBoundaries,profileSummary,reportedGridMaps:responsePortrait.reportedGridMaps,responsePortrait,facets,closingRefinement,
     coverage:{validRounds:valid.length,preferenceTasks:preferences.length,distinctPreferenceSets:discovery.length,uniquePreferenceWorks:seenPreference.size,uniquePreferredWorks:seeds.length,repeatedSets:repeats.length,contextualTasks:contexts.length,curatorialRecords:validRecords.length,curiosityTasks:valid.filter(entry=>entry.round.kind==='spectrum'&&entry.round.criterion==='interest').length,meaningTasks:valid.filter(entry=>entry.round.kind==='grid'&&entry.round.axis==='meaning').length,contextRatingTasks:ratings.length,symbolismTasks:symbolism.summary.responseCount,recognitionTasks:valid.filter(entry=>entry.round.kind==='match').length,lookingAppraisalTasks:lookingAppraisals.coverage.validResponses,catalogueWorks:works.length,scope},
     discovery:recommendations,
     consistency:{comparisons:repeats,repeatedSets:repeats.length,...counts,clearGap:TASTE_THRESHOLDS.clearPreferenceGap,contextualDifferences:contexts,limits:['Counts refer to the exact repeated sets, not an independent sample of pairs or a personality measure.']},

@@ -1,0 +1,18 @@
+{
+ "req-brueghel-hearing":[0.25,1,"The seated figure quietly plays an instrument. Room, furnishings, displayed objects and the view outside form an extensive surrounding place."],
+ "req-brueghel-smell":[0.25,1,"The foreground figures quietly handle or examine flowers. Garden paths, planted beds, architecture and distant grounds dominate the environment."],
+ "req-brueghel-taste":[0.25,1,"Figures quietly reach around the laden table and birds forage. Interior, terrace and deep garden create an extensive surrounding place."],
+ "req-brueghel-touch":[0.25,1,"The foreground figures quietly touch or handle objects. Armoured displays, room, drapery and the outdoor opening construct an extensive place."],
+ "req-patinir-massys-temptations":[0.5,1,"Figures reach, offer objects, bend and handle vessels across the scene. Rocks, terrain, buildings and water create an extensive landscape."],
+ "req-caravaggio-david-borghese":[0.25,0,"The standing figure quietly holds a severed head and lowered blade after the violence. The dark field does not depict an environmental place."],
+ "req-dore-quixote-library":[0.75,0.75,"Many imagined figures visibly fight, reach and ride around the seated reader. Books, walls and furnishings establish a substantial interior."],
+ "req-birkhauser-worlds-wound":[0,0,"The divided portrait holds a still pose. The unlocated dark field does not establish an environmental place."],
+ "req-rivera-controller-universe":[0.5,0.5,"Painted figures reach, operate machinery and handle objects. Fragmentary city, crowd and natural passages give some surrounding place within the montage."],
+ "req-rivera-alameda":[0.25,0.75,"Most painted figures stand with quiet gestures. Trees and park grounds create a substantial setting; photographed museum visitors are excluded from this judgement."],
+ "req-siqueiros-new-democracy":[0.75,0,"Painted bodies thrust their arms, strain and break restraints. Abstract planes and flames do not establish an extended physical place."],
+ "req-orozco-prometheus":[0.75,0,"The large figure extends both arms overhead and surrounding bodies reach and bend. Flames and colour fields do not depict a developed environmental place; photographed architectural framing is excluded."],
+ "req-orozco-man-fire":[0.75,0,"The painted bodies twist and tumble. Surrounding photographed dome architecture is the mural's support, not a place depicted inside the painting."],
+ "req-orozco-cortes-malinche":[0.25,0,"One seated figure extends an arm across the other while a lower body lies still. Abstract support planes do not establish a surrounding place; photographed vault and stair architecture are excluded."],
+ "req-orozco-katharsis":[1,0.25,"Many painted figures grapple, struggle and handle objects. Fragmentary machinery and ground give limited place around the dense bodies."],
+ "req-camarena-liberacion":[0.75,0,"Painted figures strain, reach and extend their arms across broken restraints. Geometric planes and symbolic structures do not establish a surrounding physical place."]
+}

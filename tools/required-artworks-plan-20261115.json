@@ -1,0 +1,523 @@
+[
+  {
+    "artist": "Jan Brueghel the Elder and Peter Paul Rubens",
+    "museum": "Museo Nacional del Prado",
+    "country": "Southern Netherlands",
+    "movement": "Flemish Baroque",
+    "medium": "Oil on panel",
+    "rightsMode": "public-domain-faithful",
+    "recognitionTier": "established",
+    "viewScope": "whole-work",
+    "id": "req-brueghel-hearing",
+    "title": "The Sense of Hearing",
+    "date": "1617–1618",
+    "yearRange": [
+      1617,
+      1618
+    ],
+    "sourceUrl": "https://www.museodelprado.es/en/the-collection/art-work/hearing/074adedf-40f0-476f-b132-fe450e71e0f3",
+    "sourceId": "P001395",
+    "commonsTitle": "File:Jan Brueghel I & Peter Paul Rubens - Hearing (Museo del Prado).jpg",
+    "sourceUrls": [
+      "https://content3.cdnprado.net/doclinks/pdf/expos/esencia-cuadro-en.pdf"
+    ],
+    "curationRole": "required-anchor",
+    "curationRoleSource": "Editorial required-collection priority; not a visitor liking or population familiarity label.",
+    "compositionScope": "whole-work"
+  },
+  {
+    "artist": "Jan Brueghel the Elder and Peter Paul Rubens",
+    "museum": "Museo Nacional del Prado",
+    "country": "Southern Netherlands",
+    "movement": "Flemish Baroque",
+    "medium": "Oil on panel",
+    "rightsMode": "public-domain-faithful",
+    "recognitionTier": "established",
+    "viewScope": "whole-work",
+    "id": "req-brueghel-smell",
+    "title": "The Sense of Smell",
+    "date": "1617–1618",
+    "yearRange": [
+      1617,
+      1618
+    ],
+    "sourceUrl": "https://www.museodelprado.es/en/the-collection/art-work/the-sense-of-smell/adff981e-a317-4152-9e04-05ada13be226",
+    "sourceId": "P001396",
+    "commonsTitle": "File:Jan Brueghel I & Peter Paul Rubens - Smell (Museo del Prado).jpg",
+    "sourceUrls": [
+      "https://content3.cdnprado.net/doclinks/pdf/expos/esencia-cuadro-en.pdf"
+    ],
+    "curationRole": "required-anchor",
+    "curationRoleSource": "Editorial required-collection priority; not a visitor liking or population familiarity label.",
+    "compositionScope": "whole-work"
+  },
+  {
+    "artist": "Jan Brueghel the Elder and Peter Paul Rubens",
+    "museum": "Museo Nacional del Prado",
+    "country": "Southern Netherlands",
+    "movement": "Flemish Baroque",
+    "medium": "Oil on panel",
+    "rightsMode": "public-domain-faithful",
+    "recognitionTier": "established",
+    "viewScope": "whole-work",
+    "id": "req-brueghel-taste",
+    "title": "The Sense of Taste",
+    "date": "1618",
+    "yearRange": [
+      1618,
+      1618
+    ],
+    "sourceUrl": "https://www.museodelprado.es/en/the-collection/art-work/taste/2a722256-2d07-4082-8a32-7caee0a04b95",
+    "sourceId": "P001397",
+    "commonsTitle": "File:Jan Brueghel I & Peter Paul Rubens - Taste (Museo del Prado).jpg",
+    "sourceUrls": [
+      "https://content3.cdnprado.net/doclinks/pdf/expos/esencia-cuadro-en.pdf"
+    ],
+    "curationRole": "required-anchor",
+    "curationRoleSource": "Editorial required-collection priority; not a visitor liking or population familiarity label.",
+    "compositionScope": "whole-work"
+  },
+  {
+    "artist": "Jan Brueghel the Elder and Peter Paul Rubens",
+    "museum": "Museo Nacional del Prado",
+    "country": "Southern Netherlands",
+    "movement": "Flemish Baroque",
+    "medium": "Oil on panel",
+    "rightsMode": "public-domain-faithful",
+    "recognitionTier": "established",
+    "viewScope": "whole-work",
+    "id": "req-brueghel-touch",
+    "title": "The Sense of Touch",
+    "date": "1617–1618",
+    "yearRange": [
+      1617,
+      1618
+    ],
+    "sourceUrl": "https://www.museodelprado.es/en/the-collection/art-work/touch/c7b96909-44f6-4e3c-9e29-7d1ef33e23ad",
+    "sourceId": "P001398",
+    "commonsTitle": "File:Jan Brueghel Touch Prado.jpg",
+    "sourceUrls": [
+      "https://content3.cdnprado.net/doclinks/pdf/expos/esencia-cuadro-en.pdf"
+    ],
+    "curationRole": "required-anchor",
+    "curationRoleSource": "Editorial required-collection priority; not a visitor liking or population familiarity label.",
+    "compositionScope": "whole-work"
+  },
+  {
+    "id": "req-patinir-massys-temptations",
+    "title": "The Temptations of Saint Anthony the Abbot",
+    "artist": "Joachim Patinir and Quinten Massys",
+    "date": "1520–1524",
+    "yearRange": [
+      1520,
+      1524
+    ],
+    "museum": "Museo Nacional del Prado",
+    "country": "Southern Netherlands",
+    "movement": "Early Netherlandish painting / world landscape",
+    "medium": "Oil on panel",
+    "sourceUrl": "https://www.museodelprado.es/en/the-collection/art-work/the-temptations-of-saint-anthony-the-abbot/b93e9da4-8a77-44ae-ba29-1811cc546fd8",
+    "sourceId": "P001615",
+    "commonsTitle": "File:Joachim Patinier, Tentation de saint Antoine, musée du Prado, Madrid, inv. P 1615.jpg",
+    "rightsMode": "public-domain-faithful",
+    "recognitionTier": "established",
+    "viewScope": "whole-work",
+    "curationRole": "required-anchor",
+    "curationRoleSource": "Editorial required-collection priority; not a visitor liking or population familiarity label.",
+    "compositionScope": "whole-work"
+  },
+  {
+    "id": "req-caravaggio-david-borghese",
+    "title": "David with the Head of Goliath",
+    "artist": "Caravaggio",
+    "date": "1606–1607 or 1609–1610",
+    "yearRange": [
+      1606,
+      1610
+    ],
+    "dateBasis": "Borghese catalogue explicitly retains two alternative intervals,1606–07 or1609–10. Enclosing1606–1610 is a display envelope, not a continuous or exact date.",
+    "museum": "Galleria Borghese",
+    "country": "Italy",
+    "movement": "Italian Baroque",
+    "medium": "Oil on canvas",
+    "sourceUrl": "https://www.collezionegalleriaborghese.it/en/opere/david-with-the-head-of-goliath",
+    "sourceId": "455",
+    "commonsTitle": "File:David with the Head of Goliath-Caravaggio (1610).jpg",
+    "rightsMode": "public-domain-faithful",
+    "recognitionTier": "landmark",
+    "viewScope": "whole-work",
+    "metadataQualification": "The museum date alternatives take precedence over the older Commons display date and filename. This is the Borghese canvas, not the Vienna or Prado version.",
+    "curationRole": "required-anchor",
+    "curationRoleSource": "Editorial required-collection priority; not a visitor liking or population familiarity label.",
+    "compositionScope": "whole-work"
+  },
+  {
+    "id": "req-dore-quixote-library",
+    "title": "Don Quixote in his library",
+    "artist": "Gustave Doré, engraved by Héliodore Pisan",
+    "date": "Design first published1863; reproduced in1906 edition",
+    "yearRange": [
+      1863,
+      1863
+    ],
+    "dateBasis": "1863 is the date of first publication of the Doré design. The downloaded public-domain scan is from a1906 edition, separately identified in image provenance.",
+    "museum": "Bibliothèque nationale de France, design and print record; later-edition scan via Wikimedia Commons",
+    "country": "France",
+    "movement": "19th-century book illustration",
+    "medium": "Wood engraving, reproduced in a printed book",
+    "sourceUrl": "https://catalogue.bnf.fr/ark:/12148/cb41937730b",
+    "sourceId": "FRBNF41937730",
+    "commonsTitle": "File:Gustave Doré - Miguel de Cervantes - Don Quixote - Part 1 - Chapter 1 - Plate 1 \"A world of disorderly notions, picked out of his books, crowded into his imagination\".jpg",
+    "rightsMode": "public-domain-faithful",
+    "recognitionTier": "landmark",
+    "viewScope": "whole-illustration",
+    "sourceUrls": [
+      "https://catalogue.bnf.fr/ark:/12148/cb30213108p",
+      "https://cirque-cnac.bnf.fr/es/node/229"
+    ],
+    "metadataQualification": "Representative library/frontispiece illustration for the Don Quixote series; no claim that an unspecified series reference identified this exact impression.",
+    "curationRole": "required-anchor",
+    "curationRoleSource": "Editorial required-collection priority; not a visitor liking or population familiarity label.",
+    "compositionScope": "whole-work"
+  },
+  {
+    "id": "req-birkhauser-worlds-wound",
+    "title": "The World's Wound (Der Gespaltene)",
+    "artist": "Peter Birkhäuser",
+    "date": "1953",
+    "yearRange": [
+      1953,
+      1953
+    ],
+    "museum": "Stiftung Peter und Sibylle Birkhäuser-Oeri",
+    "country": "Switzerland",
+    "movement": "Dream imagery / visionary painting",
+    "sourceUrl": "https://www.birkhaeuser-oeri.ch/peter/malerei",
+    "sourceId": "Der-Gespaltene",
+    "downloadUrl": "https://images.squarespace-cdn.com/content/v1/668bd14390333d0f657727e7/b619ce83-e3af-4949-a55e-e6cb17df824b/Der-Gespaltene.jpg",
+    "rightsMode": "institution-permission-unestablished",
+    "recognitionTier": "established",
+    "viewScope": "whole-work",
+    "sourceUrls": [
+      "https://www.birkhaeuser-oeri.ch/peter/biografie",
+      "https://www.sgdf.ch/de/oeuvres/peter-birkhaeuser",
+      "https://jungpage.org/learn/resources/images-of-the-unconscious/888-peter-birkhuser-gallery"
+    ],
+    "metadataQualification": "The foundation supplies the reproduction as Der-Gespaltene; its biography dates the work1953. The Jung Center gallery documents the alternate English title. Object-specific medium not verified.",
+    "curationRole": "required-anchor",
+    "curationRoleSource": "Editorial required-collection priority; not a visitor liking or population familiarity label.",
+    "compositionScope": "whole-work"
+  },
+  {
+    "country": "Mexico",
+    "movement": "Mexican muralism",
+    "rightsMode": "institution-permission-unestablished",
+    "recognitionTier": "landmark",
+    "id": "req-rivera-controller-universe",
+    "title": "El hombre controlador del universo",
+    "artist": "Diego Rivera",
+    "date": "1934",
+    "yearRange": [
+      1934,
+      1934
+    ],
+    "medium": "Fresco on a metal support",
+    "museum": "Museo del Palacio de Bellas Artes",
+    "sourceUrl": "https://museopalaciodebellasartes.inba.gob.mx/wp-content/uploads/2023/06/Folleto-digital.pdf#page=3",
+    "sourceId": "MPBA-Rivera-1934",
+    "viewScope": "whole-work",
+    "curationRole": "required-anchor",
+    "curationRoleSource": "Editorial required-collection priority; not a visitor liking or population familiarity label.",
+    "sourceDocumentUrl": "https://museopalaciodebellasartes.inba.gob.mx/wp-content/uploads/2023/06/Folleto-digital.pdf",
+    "documentImage": {
+      "cachedDocument": "bellas-murals.pdf",
+      "page": 3,
+      "index": 0
+    },
+    "compositionScope": "whole-work"
+  },
+  {
+    "country": "Mexico",
+    "movement": "Mexican muralism",
+    "rightsMode": "photo-underlying-permission-unestablished",
+    "recognitionTier": "landmark",
+    "id": "req-rivera-alameda",
+    "title": "Sueño de una tarde dominical en la Alameda Central",
+    "artist": "Diego Rivera",
+    "date": "1947",
+    "yearRange": [
+      1947,
+      1947
+    ],
+    "medium": "Fresco",
+    "museum": "Museo Mural Diego Rivera",
+    "sourceUrl": "https://museomuraldiegorivera.inba.gob.mx/images/PDF/-HOJA-DE-SALA-MMDR.pdf",
+    "sourceId": "MMDR-1947",
+    "commonsTitle": "File:'Dream of a Sunday Afternoon in the Alameda' - Museo Mural Diego Rivera - Mexico 2024.jpg",
+    "viewScope": "whole-mural-in-situ-with-visitors",
+    "sourceUrls": [
+      "https://inba.gob.mx/prensa/15490/museo-mural-diego-rivera-exhibira-obra-grafica-del-siglo-xx-que-explora-la-nocion-de-diversidad"
+    ],
+    "curationRole": "required-anchor",
+    "curationRoleSource": "Editorial required-collection priority; not a visitor liking or population familiarity label.",
+    "compositionScope": "whole-work",
+    "metadataQualification": "The whole mural is photographed in its museum setting. Visitors partly obscure a few lower foreground figures; they are not figures painted by Rivera."
+  },
+  {
+    "country": "Mexico",
+    "movement": "Mexican muralism",
+    "rightsMode": "photo-underlying-permission-unestablished",
+    "recognitionTier": "landmark",
+    "id": "req-rivera-history-mexico",
+    "title": "Epopeya del pueblo mexicano, central wall",
+    "artist": "Diego Rivera",
+    "date": "1929–1935, mural cycle",
+    "yearRange": [
+      1929,
+      1935
+    ],
+    "medium": "Fresco",
+    "museum": "Palacio Nacional, Mexico City",
+    "sourceUrl": "https://museopalaciodebellasartes.inba.gob.mx/wp-content/uploads/2024/08/Pinta-la-Revolucion-tomo-III.pdf",
+    "sourceId": "Palacio-Nacional-Epopeya-central",
+    "commonsTitle": "File:History of Mexico mural by Diego Rivera (Mexico City).jpg",
+    "viewScope": "central-wall-of-mural-cycle",
+    "metadataQualification": "The photograph represents a central wall/section of the stairway cycle, not all three walls or the entire later corridor programme. Photographer public-domain dedication does not establish public-domain status of the Rivera painting.",
+    "sourceUrls": [
+      "https://cid-albertobeltran.cultura.gob.mx/catalogo-en-linea-fototeca/historia-de-mexico-10/"
+    ],
+    "curationRole": "required-anchor",
+    "curationRoleSource": "Editorial required-collection priority; not a visitor liking or population familiarity label.",
+    "compositionScope": "section",
+    "eligibleForStudy": false,
+    "studyEligible": false,
+    "curationStatus": "gallery-research-only-partial-view",
+    "underlyingWorkId": "rivera-epopeya-pueblo-mexicano-1929-1935"
+  },
+  {
+    "country": "Mexico",
+    "movement": "Mexican muralism",
+    "rightsMode": "institution-permission-unestablished",
+    "recognitionTier": "landmark",
+    "id": "req-siqueiros-new-democracy",
+    "title": "México por la democracia y la independencia, central panel of Nueva democracia",
+    "artist": "David Alfaro Siqueiros",
+    "date": "1944",
+    "yearRange": [
+      1944,
+      1944
+    ],
+    "medium": "Pyroxylin on Celotex",
+    "museum": "Museo del Palacio de Bellas Artes",
+    "sourceUrl": "https://museopalaciodebellasartes.inba.gob.mx/wp-content/uploads/2023/06/Folleto-digital.pdf#page=5",
+    "sourceId": "MPBA-Siqueiros-Nueva-Democracia",
+    "viewScope": "whole-panel",
+    "metadataQualification": "Complete central panel, painted1944; two companion panels completed the ensemble in1945. The title identifies the panel rather than claiming to show the entire triptych.",
+    "curationRole": "required-anchor",
+    "curationRoleSource": "Editorial required-collection priority; not a visitor liking or population familiarity label.",
+    "sourceDocumentUrl": "https://museopalaciodebellasartes.inba.gob.mx/wp-content/uploads/2023/06/Folleto-digital.pdf",
+    "documentImage": {
+      "cachedDocument": "bellas-murals.pdf",
+      "page": 5,
+      "index": 0
+    },
+    "sourceUrls": [
+      "https://cenidiap.net/minisitio/siq-herencia-viva/material/cat-6._La_Ruta_de_Siqueiros.pdf"
+    ],
+    "compositionScope": "whole-panel"
+  },
+  {
+    "country": "Mexico",
+    "movement": "Mexican muralism",
+    "rightsMode": "photo-underlying-permission-unestablished",
+    "recognitionTier": "landmark",
+    "id": "req-siqueiros-bourgeoisie",
+    "title": "Retrato de la burguesía, detail of the left wall",
+    "artist": "David Alfaro Siqueiros, Josep Renau and collaborators",
+    "date": "1939–1940",
+    "yearRange": [
+      1939,
+      1940
+    ],
+    "medium": "Pyroxylin on dry cement plaster",
+    "museum": "Sindicato Mexicano de Electricistas; photograph in MIT Libraries Visual Collections",
+    "sourceUrl": "https://dome.mit.edu/entities/picture/d72ffac4-ecad-4ecf-9e2a-fb3935d793bf",
+    "sourceId": "MIT-165827",
+    "downloadUrl": "https://dome.mit.edu/server/api/core/bitstreams/d5e19fd7-8e89-4011-9e3f-9278dfc092b4/content",
+    "viewScope": "detail-left-wall",
+    "metadataQualification": "The primary archive explicitly identifies a left-wall detail photographed from an acute downward angle. This is a partial view, not the complete stairwell mural. MIT labels its image all rights reserved.",
+    "sourceUrls": [
+      "https://inba.gob.mx/prensa/12630/renau-y-el-muralismo-en-el-exilio-dialogos-con-siqueiros-muestra-a-dos-grandes-de-las-vanguardias-espanola-y-mexicana",
+      "https://cenidiap.net/minisitio/siq-herencia-viva/material/cat-6._La_Ruta_de_Siqueiros.pdf"
+    ],
+    "curationRole": "required-anchor",
+    "curationRoleSource": "Editorial required-collection priority; not a visitor liking or population familiarity label.",
+    "compositionScope": "section",
+    "eligibleForStudy": false,
+    "studyEligible": false,
+    "curationStatus": "gallery-research-only-partial-view",
+    "underlyingWorkId": "siqueiros-retrato-burguesia-1939-1940"
+  },
+  {
+    "country": "Mexico",
+    "movement": "Mexican muralism",
+    "rightsMode": "photo-underlying-permission-unestablished",
+    "recognitionTier": "landmark",
+    "id": "req-siqueiros-march-humanity-section",
+    "title": "La marcha de la humanidad (interior section)",
+    "artist": "David Alfaro Siqueiros and workshop",
+    "date": "1965–1971",
+    "yearRange": [
+      1965,
+      1971
+    ],
+    "museum": "Polyforum Cultural Siqueiros",
+    "sourceUrl": "https://sic.gob.mx/ficha.php?estado_id=9&table=centro_cultural&table_id=1242",
+    "sourceId": "Polyforum-interior-section",
+    "commonsTitle": "File:Polyforum Siqueiros, Interior - panoramio (1).jpg",
+    "viewScope": "interior-section-of-surrounding-mural",
+    "metadataQualification": "A photograph of one portion of the surrounding interior mural, not a flat reproduction of the complete multiwall and ceiling work.",
+    "sourceUrls": [
+      "https://cenidiap.net/minisitio/siq-herencia-viva/material/cat-6._La_Ruta_de_Siqueiros.pdf",
+      "https://inba.gob.mx/prensa/13954/murales-para-un-cubo-blanco-nbspyuxtapone-obras-de-arte-contempor-aacuteneo-al-legado-pict-oacuterico-de-siqueiros"
+    ],
+    "curationRole": "required-anchor",
+    "curationRoleSource": "Editorial required-collection priority; not a visitor liking or population familiarity label.",
+    "compositionScope": "section",
+    "eligibleForStudy": false,
+    "studyEligible": false,
+    "curationStatus": "gallery-research-only-partial-view",
+    "underlyingWorkId": "siqueiros-marcha-humanidad-1965-1971"
+  },
+  {
+    "country": "Mexico / United States",
+    "movement": "Mexican muralism",
+    "rightsMode": "photo-underlying-permission-unestablished",
+    "recognitionTier": "landmark",
+    "id": "req-orozco-prometheus",
+    "title": "Prometheus",
+    "artist": "José Clemente Orozco",
+    "date": "1930",
+    "yearRange": [
+      1930,
+      1930
+    ],
+    "medium": "Fresco",
+    "museum": "Benton Museum of Art, Pomona College; Frary Dining Hall",
+    "sourceUrl": "https://www.pomona.edu/museum/collections/jos%C3%A9-clemente-orozcos-prometheus",
+    "sourceId": "Pomona-Prometheus1930",
+    "downloadUrl": "https://www.pomona.edu/museum/sites/default/files/2021-03/prometheus-1930-2017-ss-4.jpg",
+    "viewScope": "whole-main-wall-in-situ",
+    "metadataQualification": "The source reproduction is1100px wide. The surrounding wall and architectural arch remain visible; no invented pixels.",
+    "curationRole": "required-anchor",
+    "curationRoleSource": "Editorial required-collection priority; not a visitor liking or population familiarity label.",
+    "compositionScope": "whole-work"
+  },
+  {
+    "country": "Mexico",
+    "movement": "Mexican muralism",
+    "rightsMode": "photo-underlying-permission-unestablished",
+    "recognitionTier": "landmark",
+    "id": "req-orozco-man-fire",
+    "title": "El hombre de fuego, dome view",
+    "artist": "José Clemente Orozco",
+    "date": "1937–1939, mural cycle",
+    "yearRange": [
+      1937,
+      1939
+    ],
+    "medium": "Fresco",
+    "museum": "Museo Cabañas",
+    "sourceUrl": "https://museocabanas.jalisco.gob.mx/historia/",
+    "sourceId": "Cabanas-dome-Hombre-de-fuego",
+    "commonsTitle": "File:\"Hombre en llamas” Mural del Maestro José Clemente Orozco.jpg",
+    "viewScope": "dome-view-in-situ",
+    "metadataQualification": "The institution dates the57-fresco cycle1937–1939. The photograph looks upward into the curved dome, and is not a flattened painting or an unrelated Orozco easel study.",
+    "curationRole": "required-anchor",
+    "curationRoleSource": "Editorial required-collection priority; not a visitor liking or population familiarity label.",
+    "compositionScope": "whole-work"
+  },
+  {
+    "country": "Mexico",
+    "movement": "Mexican muralism",
+    "rightsMode": "photo-underlying-permission-unestablished",
+    "recognitionTier": "landmark",
+    "id": "req-orozco-cortes-malinche",
+    "title": "Cortés y la Malinche",
+    "artist": "José Clemente Orozco",
+    "date": "1926",
+    "yearRange": [
+      1926,
+      1926
+    ],
+    "medium": "Fresco",
+    "museum": "Antiguo Colegio de San Ildefonso",
+    "sourceUrl": "https://www.sanildefonso.org.mx/mural_cortes.php",
+    "sourceId": "San-Ildefonso-Cortes1926",
+    "commonsTitle": "File:Cortés y la Malinche.jpg",
+    "viewScope": "whole-fresco-in-architectural-setting",
+    "sourceUrls": [
+      "https://sanildefonso.org.mx/acervo.php",
+      "https://www.inah.gob.mx/foto-del-dia/cortes-y-la-malinche-la-pareja-primigenia-del-mestizaje-mexicano?highlight=WyJtdXJhbCJd"
+    ],
+    "curationRole": "required-anchor",
+    "curationRoleSource": "Editorial required-collection priority; not a visitor liking or population familiarity label.",
+    "compositionScope": "whole-work"
+  },
+  {
+    "country": "Mexico",
+    "movement": "Mexican muralism",
+    "rightsMode": "institution-permission-unestablished",
+    "recognitionTier": "landmark",
+    "id": "req-orozco-katharsis",
+    "title": "Katharsis",
+    "artist": "José Clemente Orozco",
+    "date": "1934",
+    "yearRange": [
+      1934,
+      1934
+    ],
+    "medium": "Fresco on a movable support",
+    "museum": "Museo del Palacio de Bellas Artes",
+    "sourceUrl": "https://museopalaciodebellasartes.inba.gob.mx/wp-content/uploads/2023/06/Folleto-digital.pdf#page=7",
+    "sourceId": "MPBA-Orozco-Katharsis",
+    "viewScope": "whole-work",
+    "curationRole": "required-anchor",
+    "curationRoleSource": "Editorial required-collection priority; not a visitor liking or population familiarity label.",
+    "sourceDocumentUrl": "https://museopalaciodebellasartes.inba.gob.mx/wp-content/uploads/2023/06/Folleto-digital.pdf",
+    "documentImage": {
+      "cachedDocument": "bellas-murals.pdf",
+      "page": 7,
+      "index": 0
+    },
+    "compositionScope": "whole-work"
+  },
+  {
+    "id": "req-camarena-liberacion",
+    "title": "Liberación",
+    "artist": "Jorge González Camarena",
+    "date": "1957–1963",
+    "yearRange": [
+      1957,
+      1963
+    ],
+    "medium": "Acrylic on canvas",
+    "museum": "Museo del Palacio de Bellas Artes",
+    "country": "Mexico",
+    "movement": "Mexican muralism",
+    "sourceUrl": "https://museopalaciodebellasartes.inba.gob.mx/wp-content/uploads/2023/06/Folleto-digital.pdf#page=4",
+    "sourceDocumentUrl": "https://museopalaciodebellasartes.inba.gob.mx/wp-content/uploads/2023/06/Folleto-digital.pdf",
+    "documentImage": {
+      "cachedDocument": "bellas-murals.pdf",
+      "page": 4,
+      "index": 0
+    },
+    "sourceId": "MPBA-Camarena-Liberacion",
+    "rightsMode": "institution-permission-unestablished",
+    "recognitionTier": "established",
+    "curationRole": "required-anchor",
+    "curationRoleSource": "Editorial required-collection priority; not a visitor liking or population familiarity label.",
+    "viewScope": "whole-work",
+    "compositionScope": "whole-work"
+  }
+]

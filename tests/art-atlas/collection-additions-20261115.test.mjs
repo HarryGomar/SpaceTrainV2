@@ -8,7 +8,7 @@ import {resolveArtworkMedia} from '../../public/art-atlas/artwork-media.mjs';
 const site = new URL('../../public/art-atlas/', import.meta.url);
 const additions = JSON.parse(fs.readFileSync(new URL('collection-additions-20261115.json', site), 'utf8'));
 const ids = new Set(additions.map(work => work.id));
-const study = JSON.parse(fs.readFileSync(new URL('artworks.json', site), 'utf8')).filter(work => !ids.has(work.id));
+const study = JSON.parse(fs.readFileSync(new URL('artworks.json', site), 'utf8')).slice(0,164).filter(work => !ids.has(work.id));
 const opening = JSON.parse(fs.readFileSync(new URL('opening-artworks.json', site), 'utf8'));
 const previous = [...study, ...opening];
 const byId = new Map(additions.map(work => [work.id, work]));

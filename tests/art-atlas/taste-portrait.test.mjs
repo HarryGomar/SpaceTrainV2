@@ -146,9 +146,14 @@ test('Visual empty state renders no favourite artwork, invented scale or fake ar
   const portrait=buildTastePortrait(),html=renderTastePortrait({portrait,works:[],image:()=>{throw Error('No artwork should render');},esc:String});assert.doesNotMatch(html,/data-work=/);assert.doesNotMatch(html,/tp-measure-row/);assert.match(html,/completed comparisons/);
 });
 
-test('The visual reading exposes a supported painting-type avenue with its actual works and evidence',()=>{
-  const f=fixture(),portrait=build(f);assert.equal(portrait.discovery.types.length,1);const route=portrait.discovery.types[0],html=renderTastePortrait({portrait,works:f.works,image:work=>'<img data-art="'+work.id+'">',esc:String}),avenues=html.match(/<section class="tp-avenues">([\s\S]*?)<\/section>/)?.[1];assert.ok(avenues);assert.ok(avenues.includes(route.title));assert.match(avenues,/Visual pattern/);assert.match(avenues,/<details class="tp-evidence">/);assert.ok(route.support.length>=2);for(const id of route.workIds)assert.ok(avenues.includes('data-work="'+id+'"'));
-  const withoutTypes=structuredClone(portrait);withoutTypes.discovery.types=[];withoutTypes.discovery.traditions=[];withoutTypes.discovery.eras=[];const absent=renderTastePortrait({portrait:withoutTypes,works:f.works,image:work=>'<img data-art="'+work.id+'">',esc:String});assert.doesNotMatch(absent,/<section class="tp-avenues">/);
+test('The visual reading retains old comparison evidence without promoting a two-set heuristic into a new taste family',()=>{
+  const f=fixture(),portrait=build(f);assert.equal(portrait.discovery.types.length,1);
+  const route=portrait.discovery.types[0];assert.ok(route.support.length>=2);
+  assert.ok(portrait.axesProfile.axes.every(axis=>!axis.summaryEligible));
+  const html=renderTastePortrait({portrait,works:f.works,image:work=>'<img data-art="'+work.id+'">',esc:String});
+  assert.match(html,/Visual profile/);assert.match(html,/View the choices/);
+  assert.doesNotMatch(html,/<section class="tp-avenues">|class="taste-quality-section"/);
+  assert.match(html,/More evidence needed|Too few contrasting sets/);
 });
 
 test('The same supporting pair in otherwise different sets is not four supporting artworks',()=>{

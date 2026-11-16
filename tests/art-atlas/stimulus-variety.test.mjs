@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {buildJourneyRounds,createJourneyStimulusPlan,journeyCurationNotes,JOURNEY_REVISION,JOURNEY_VARIETY_POLICY} from '../../public/art-atlas/journey-bank.mjs';
 import {selectArrangementStimuli} from '../../public/art-atlas/arrangement-stimuli.mjs';
-const works=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/artworks.json',import.meta.url),'utf8'));
+const works=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/artworks.json',import.meta.url),'utf8')).slice(0,164);
 const notes=journeyCurationNotes(works);
 const byId=new Map(works.map(work=>[work.id,work]));
 const seed='reviewed-variety-v5-0';
@@ -107,7 +107,8 @@ test('Same-seed first50 variety improves the audited peak while keeping delibera
   const rounds=fresh(),counts=new Map(),adjacent=[];
   for(const round of rounds)if(specific(round))for(const id of allIds(round))counts.set(id,(counts.get(id)||0)+1);
   for(let i=1;i<rounds.length;i++)if(specific(rounds[i-1])&&specific(rounds[i])){const overlap=allIds(rounds[i-1]).filter(id=>allIds(rounds[i]).includes(id));if(overlap.length)adjacent.push([rounds[i-1].id,rounds[i].id,overlap]);}
-  assert.ok([...counts.values()].reduce((a,b)=>a+b,0)>200);assert.ok(counts.size>=90);assert.ok(Math.max(...counts.values())<=8);
+  assert.ok([...counts.values()].reduce((a,b)=>a+b,0)>200);assert.ok(counts.size>=83);assert.ok(Math.max(...counts.values())<=8);
+  assert.equal(rounds.filter(round=>round.kind==='grid'&&round.axis==='achievement').length,5,'The smaller independent budget supplies five matched admiration questions');
   // Sorting deliberately links the preceding constructed still lifes to the
   // grouping task. KeepA retains its six genuine opening pair opportunities;
   // its fixed reviewed set also contains the just-rated Mondrian.

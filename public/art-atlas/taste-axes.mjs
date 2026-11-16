@@ -1,0 +1,137 @@
+import {validatedProfileEntries,isUnconditionalPreference,profileEvidence,artworkSetKey,buildPreferenceBasis,POSITIVE_APPEAL,LOW_APPEAL} from './profile-evidence.mjs';
+import {isOverallAppealRound,APPEAL_PROTOCOL} from './appeal-scale.mjs';
+import {preferenceMeasurementKey} from './adaptive-selection.mjs';
+import {isReviewedVisualDescriptor} from './visual-descriptor-semantics.mjs';
+
+export const TASTE_AXIS_VERSION='taste-axes-v1';
+export const TASTE_PATTERN_THRESHOLDS=Object.freeze({responseGap:15,descriptorGap:.25,minimumSets:3,minimumWorks:6,minimumPreferredArtists:3,dominanceRatio:2});
+export const TASTE_AXIS_DEFINITIONS=Object.freeze([
+  {key:'human-presence',title:'Human presence',leftLabel:'Less figure-focused',rightLabel:'More human presence',features:['humanity']},
+  {key:'representation-abstraction',title:'Representation & abstraction',leftLabel:'Recognisable subjects',rightLabel:'More abstract treatment',features:['abstraction']},
+  {key:'colour',title:'Colour',leftLabel:'Restrained colour',rightLabel:'Stronger colour',features:['color']},
+  {key:'detail-composition',title:'Detail & composition',leftLabel:'Spare / quiet',rightLabel:'Detailed / active',features:['complexity','energy']},
+  {key:'action-stillness',title:'Action & stillness',leftLabel:'Less depicted action',rightLabel:'More depicted action',features:['narrative']},
+  {key:'setting-atmosphere',title:'Setting & atmosphere',leftLabel:'Less emphasis on setting',rightLabel:'More emphasis on setting',features:['atmosphere']}
+]);
+const LABELS={humanity:['less figure-focused work','more human presence'],abstraction:['recognisable subjects','more abstract treatment'],color:['restrained colour','stronger colour'],complexity:['spare compositions','more detail'],energy:['quieter compositions','more visual activity'],narrative:['less depicted action','more depicted action'],atmosphere:['less emphasis on setting','more emphasis on setting']};
+const unique=values=>[...new Set(values)],ids=round=>round.works.map(work=>work.id),pairKey=(a,b)=>JSON.stringify([a,b].sort()),plain=value=>!!value&&typeof value==='object'&&!Array.isArray(value),short=work=>work.shortTitle||work.title;
+const FAMILY=new Set(['individual-choice','feature-check','unconditional-preference','adaptive-preference']),knownArtist=work=>work.artistKnown!==false&&typeof work.artist==='string'&&work.artist.trim()&&!/unknown|unidentified|anonymous/i.test(work.artist)?work.artist.trim().toLowerCase():null;
+const EXCLUDED_ROLES=new Set(['repeat','probe','check','counterexample','heldout','holdout']);
+export const TASTE_PATTERN_LIMITS=Object.freeze(['These are descriptions of the answered artwork comparisons, not population traits, psychological causes or calibrated preference probabilities.','The artworks, reproductions and questions are a selected sample. A repeated work or pair does not supply another independent artwork.','Descriptor contrasts, response gaps and minimum-example rules are provisional reporting rules. Correlated subject, artist, style, composition and prior knowledge can explain the same choices.']);
+
+/** Reusable, strict source collection for separate liking and admiration models. */
+export function collectTastePatternSources({works=[],rounds=[],answers={}}={}){
+  const valid=validatedProfileEntries({works,rounds,answers}).filter(entry=>{
+    const a=entry.answer,r=entry.round,workIds=ids(r),values=r.kind==='spectrum'?a.positions:r.kind==='grid'?a.points:null;
+    return (!Object.hasOwn(a,'roundId')||a.roundId===r.id)&&(!values||plain(values)&&Object.keys(values).length===workIds.length)&&a.confirmed===true;
+  }),preferences=valid.filter(entry=>isUnconditionalPreference(entry.round)&&FAMILY.has(entry.round.evidence?.family)),scopes=new Map();
+  for(const entry of preferences){const key=preferenceMeasurementKey(entry.round);scopes.set(key,[...(scopes.get(key)||[]),entry]);}
+  const makeSets=(entries,channel,coordinate)=>{
+    const seenSets=new Set(),seenWorks=new Set(),sets=[],checks=[];
+    for(const entry of entries){
+      const key=artworkSetKey(entry.round),dependent=entry.round.evidence?.repeatOf||channel!=='admiration-of-making'&&EXCLUDED_ROLES.has(entry.round.evidence?.role)||seenSets.has(key);
+      const items=entry.round.works.map(work=>({work,value:coordinate(entry,work.id),entry}));
+      if(dependent){checks.push({entry,items,channel,dependent:true});continue;}
+      seenSets.add(key);const fresh=items.filter(item=>!seenWorks.has(item.work.id));items.forEach(item=>seenWorks.add(item.work.id));
+      if(fresh.length>=2)sets.push({entry,items:fresh,channel,setKey:key});
+      if(fresh.length!==items.length)checks.push({entry,items,channel,dependent:true});
+    }
+    return {sets,checks,workCount:unique(sets.flatMap(set=>set.items.map(item=>item.work.id))).length};
+  };
+  const preferenceScopes=[...scopes].map(([key,entries])=>({key,channel:key===APPEAL_PROTOCOL?'overall-appeal':'relative-choice',...makeSets(entries,key===APPEAL_PROTOCOL?'overall-appeal':'relative-choice',(entry,id)=>entry.answer.positions[id])}));
+  const admirationEntries=valid.filter(({round:r})=>r.kind==='grid'&&r.axis==='achievement'&&r.evidence?.construct==='perceived-achievement'&&!r.brief&&!r.evidence.brief&&!r.anchorWorks?.length&&!r.anchorIds?.length&&(!r.axisDefinition||['xName','yName','left','right','bottom','top'].every(key=>r.axisDefinition[key]===({xName:'Personal appeal',yName:'Admiration of making',left:'Not for me',right:'For me',bottom:'Little to admire',top:'Much to admire'})[key])));
+  return {entries:valid,preferenceScopes,admiration:{key:'admiration-of-making:achievement-v1',channel:'admiration-of-making',...makeSets(admirationEntries,'admiration-of-making',(entry,id)=>entry.answer.points[id][1])},limits:[...TASTE_PATTERN_LIMITS]};
+}
+
+function evidence(pair,label){
+  return profileEvidence(pair.set.entry,[pair.winner.work.id,pair.loser.work.id],`${short(pair.winner.work)}: ${pair.winner.value}; ${short(pair.loser.work)}: ${pair.loser.value}. ${label}.`,pair.set.channel==='admiration-of-making'?'Admiration of making':pair.set.channel==='overall-appeal'?'Overall liking':'Preference within this set');
+}
+function diverseSupport(groups,direction){
+  const available=groups.filter(group=>group.status===(direction>0?'positive':'negative')).map(group=>({group,pairs:group.pairs.filter(pair=>pair.vote===direction).sort((a,b)=>b.responseGap-a.responseGap)}));
+  let found=null;
+  function visit(start,selected,used,artists){
+    if(selected.length===3){if(artists.size>=3)found=selected;return;}
+    for(let i=start;i<available.length&&!found;i++)for(const pair of available[i].pairs){
+      if(used.has(pair.winner.work.id)||used.has(pair.loser.work.id))continue;
+      const nextUsed=new Set([...used,pair.winner.work.id,pair.loser.work.id]),artist=knownArtist(pair.winner.work),nextArtists=new Set(artists);if(artist)nextArtists.add(artist);visit(i+1,[...selected,pair],nextUsed,nextArtists);if(found)break;
+    }
+  }
+  visit(0,[],new Set(),new Set());return found||[];
+}
+
+/** Each exact set contributes one direction; later responses remain checks. */
+export function analyzeTasteDimension({sets=[],checks=[]},read,{descriptorGap=TASTE_PATTERN_THRESHOLDS.descriptorGap}={}){
+  const seenPairs=new Set(),groups=[],allItems=[];
+  for(const set of sets){
+    const known=set.items.flatMap(item=>{const descriptor=read(item.work);return typeof descriptor==='number'&&Number.isFinite(descriptor)&&descriptor>=0&&descriptor<=1?[{...item,descriptor}]:[];});allItems.push(...known);
+    const comparisons=[];let opportunities=0,nearTies=0;
+    for(let i=0;i<known.length;i++)for(let j=i+1;j<known.length;j++){
+      const a=known[i],b=known[j],difference=a.descriptor-b.descriptor;if(Math.abs(difference)<descriptorGap)continue;opportunities++;
+      const responseGap=Math.abs(a.value-b.value);if(responseGap<TASTE_PATTERN_THRESHOLDS.responseGap){nearTies++;continue;}
+      const identity=pairKey(a.work.id,b.work.id);if(seenPairs.has(identity))continue;seenPairs.add(identity);
+      const winner=a.value>b.value?a:b,loser=winner===a?b:a;comparisons.push({set,winner,loser,responseGap,descriptorGap:Math.abs(difference),vote:Math.sign(winner.descriptor-loser.descriptor)});
+    }
+    if(!opportunities)continue;
+    const positive=comparisons.filter(pair=>pair.vote>0).length,negative=comparisons.filter(pair=>pair.vote<0).length,status=positive>0&&positive>=2*negative?'positive':negative>0&&negative>=2*positive?'negative':'mixed';
+    groups.push({set,pairs:comparisons,positivePairs:positive,negativePairs:negative,nearTies,opportunities,status});
+  }
+  const positive=groups.filter(group=>group.status==='positive').length,negative=groups.filter(group=>group.status==='negative').length,mixed=groups.filter(group=>group.status==='mixed').length,candidateDirection=Math.sign(positive-negative),supportingSetCount=candidateDirection<0?negative:positive,opposingSetCount=candidateDirection<0?positive:negative,representatives=candidateDirection?diverseSupport(groups,candidateDirection):[],dominant=groups.length>=3&&supportingSetCount>=3&&supportingSetCount>=2*(opposingSetCount+mixed),qualified=dominant&&representatives.length===3;
+  // Later, selected, and repeated responses are useful counterevidence. They
+  // never enlarge the independent discovery denominator or artist count.
+  const checkGroups=[];
+  for(const check of checks){
+    const set={...check,setKey:artworkSetKey(check.entry.round)},known=check.items.flatMap(item=>{const descriptor=read(item.work);return typeof descriptor==='number'&&Number.isFinite(descriptor)&&descriptor>=0&&descriptor<=1?[{...item,descriptor}]:[];}),pairs=[];
+    for(let i=0;i<known.length;i++)for(let j=i+1;j<known.length;j++){
+      const a=known[i],b=known[j];if(Math.abs(a.descriptor-b.descriptor)<descriptorGap||Math.abs(a.value-b.value)<TASTE_PATTERN_THRESHOLDS.responseGap)continue;
+      // A partially new discovery set may also have been filed as a check.
+      // Do not count its already-used pair twice under two source roles.
+      if(groups.some(group=>group.set.entry.round.id===check.entry.round.id&&group.pairs.some(pair=>pairKey(pair.winner.work.id,pair.loser.work.id)===pairKey(a.work.id,b.work.id))))continue;
+      const winner=a.value>b.value?a:b,loser=winner===a?b:a;pairs.push({set,winner,loser,responseGap:Math.abs(a.value-b.value),descriptorGap:Math.abs(a.descriptor-b.descriptor),vote:Math.sign(winner.descriptor-loser.descriptor)});
+    }
+    if(!pairs.length)continue;
+    const p=pairs.filter(pair=>pair.vote>0).length,n=pairs.filter(pair=>pair.vote<0).length;
+    checkGroups.push({set,pairs,status:p>0&&p>=2*n?'positive':n>0&&n>=2*p?'negative':'mixed',repeated:!!check.entry.round.evidence?.repeatOf||check.entry.round.evidence?.role==='repeat'});
+  }
+  const checkBalance={supporting:checkGroups.filter(group=>group.status===(candidateDirection<0?'negative':'positive')).length,opposing:checkGroups.filter(group=>group.status===(candidateDirection<0?'positive':'negative')).length,mixed:checkGroups.filter(group=>group.status==='mixed').length,distinctOpposingSets:unique(checkGroups.filter(group=>group.status===(candidateDirection<0?'positive':'negative')).map(group=>group.set.setKey)).length},checkConflict=checkBalance.distinctOpposingSets>=2&&checkBalance.opposing>checkBalance.supporting;
+  const supportPairs=groups.flatMap(group=>group.pairs).filter(pair=>pair.vote===(candidateDirection||1)).sort((a,b)=>b.responseGap-a.responseGap),counterPairs=groups.flatMap(group=>group.pairs).filter(pair=>pair.vote===-(candidateDirection||1)).sort((a,b)=>b.responseGap-a.responseGap),support=qualified?representatives:supportPairs.slice(0,3),counter=counterPairs.slice(0,3),laterCounter=checkGroups.flatMap(group=>group.pairs).filter(pair=>pair.vote===-(candidateDirection||1)).sort((a,b)=>b.responseGap-a.responseGap).slice(0,3);
+  const items=[...new Map(allItems.map(item=>[item.work.id,item])).values()],totalAnswered=unique(sets.flatMap(set=>set.items.map(item=>item.work.id))).length;
+  const status=qualified&&!checkConflict?'leaning':qualified&&checkConflict?'mixed':dominant?'insufficient':groups.length>=3?'mixed':groups.length?'insufficient':items.length?'not-tested':'insufficient';
+  return {status,direction:status==='leaning'?candidateDirection:0,candidateDirection,summaryEligible:status==='leaning',supportingSetCount,opposingSetCount,mixedSetCount:mixed,eligibleSetCount:groups.length,positiveSetCount:positive,negativeSetCount:negative,knownWorkCount:items.length,distinctSupportingWorkCount:unique(support.flatMap(pair=>[pair.winner.work.id,pair.loser.work.id])).length,supportingPreferredArtistCount:unique(support.map(pair=>knownArtist(pair.winner.work)).filter(Boolean)).length,evidenceDiversity:{disjointSupportingComparisons:representatives.length,preferredArtistCount:unique(representatives.map(pair=>knownArtist(pair.winner.work)).filter(Boolean)).length,distinctWorkCount:unique(representatives.flatMap(pair=>[pair.winner.work.id,pair.loser.work.id])).length},recurringSupport:representatives.map(pair=>evidence(pair,'An independent artwork-set example of the comparison direction')),support:support.map(pair=>evidence(pair,'Compared under the original question')),counter:[...counter.map(pair=>evidence(pair,'A comparison against this direction')),...laterCounter.map(pair=>({...evidence(pair,'A later dependent comparison against the discovery direction'),sourceRole:pair.set.entry.round.evidence?.repeatOf?'repeated response':'later comparison'}))],displayWorkIds:unique([support[0]?.winner.work.id,counter[0]?.winner.work.id,laterCounter[0]?.winner.work.id,support[0]?.loser.work.id].filter(Boolean)).slice(0,2),sourceRoundIds:unique([...groups.map(group=>group.set.entry.round.id),...checkGroups.map(group=>group.set.entry.round.id)]),groups:groups.map(group=>({roundId:group.set.entry.round.id,workIds:group.set.items.map(item=>item.work.id),status:group.status,positivePairs:group.positivePairs,negativePairs:group.negativePairs,nearTies:group.nearTies,opportunities:group.opportunities})),exposureBaseline:{totalAnswered,known:items.length,unknown:totalAnswered-items.length,low:items.filter(item=>item.descriptor<=.35).length,middle:items.filter(item=>item.descriptor>.35&&item.descriptor<.65).length,high:items.filter(item=>item.descriptor>=.65).length},laterCheckCount:checks.length,checkBalance,checkConflict,items,pairs:groups.flatMap(group=>group.pairs)};
+}
+function primaryScope(scopes){return [...scopes].sort((a,b)=>(b.key===APPEAL_PROTOCOL&&b.sets.length>=3?1000:0)-(a.key===APPEAL_PROTOCOL&&a.sets.length>=3?1000:0)||b.sets.length-a.sets.length||a.key.localeCompare(b.key))[0]||{key:null,channel:'relative-choice',sets:[],checks:[]};}
+function visualAssessment(result){
+  const diverse=result.evidenceDiversity.disjointSupportingComparisons>=3&&result.evidenceDiversity.preferredArtistCount>=3,directional=result.candidateDirection!==0&&result.supportingSetCount>=3&&result.supportingSetCount>=2*result.opposingSetCount&&result.supportingSetCount-result.opposingSetCount>=2&&diverse;
+  const recurring=directional&&result.supportingSetCount>=2*(result.opposingSetCount+result.mixedSetCount)&&!result.checkConflict,presentationStatus=recurring?'recurring':directional?'tentative':result.status==='mixed'?'balanced':'insufficient';
+  return {presentationStatus,status:recurring?'leaning':directional?'tentative':presentationStatus==='balanced'?'mixed':result.status==='not-tested'?'not-tested':'insufficient',direction:directional?result.candidateDirection:0,discoveryStatus:directional?'directional':presentationStatus==='balanced'?'balanced':'insufficient',laterStatus:result.checkConflict?'later-exceptions':result.checkBalance.opposing?'some-later-counterexamples':result.laterCheckCount?'checked-with-no-clear-opposition':'not-checked'};
+}
+function descriptorLedger(scope,key){
+  const definitions=new Map([...scope.sets,...scope.checks].map(set=>[set.entry.round.id,set])),discovery=new Map(scope.sets.map(set=>[set.entry.round.id,new Set(set.items.map(item=>item.work.id))]));
+  const responseLedger=[],setAssessments=[];
+  for(const set of definitions.values()){
+    const rows=set.entry.round.works.map(work=>{const descriptor=isReviewedVisualDescriptor(work,key)?work.features[key]:null,value=set.entry.answer.positions[work.id];return {workId:work.id,roundId:set.entry.round.id,value,descriptor,descriptorKnown:descriptor!==null,measurementScope:scope.key,responseBasis:scope.channel==='overall-appeal'?'overall-appeal-rating':'position-within-original-artwork-set',usedAsDiscovery:!!discovery.get(set.entry.round.id)?.has(work.id),sourceRole:set.entry.round.evidence?.repeatOf?'repeated response':discovery.has(set.entry.round.id)?'discovery':'later comparison'};}),values=rows.filter(row=>row.descriptorKnown).map(row=>row.descriptor),descriptorRange=values.length?[Math.min(...values),Math.max(...values)]:null,responseRange=[Math.min(...rows.map(row=>row.value)),Math.max(...rows.map(row=>row.value))],sufficient=values.length>=2&&descriptorRange[1]-descriptorRange[0]>=TASTE_PATTERN_THRESHOLDS.descriptorGap;
+    responseLedger.push(...rows);setAssessments.push({roundId:set.entry.round.id,workIds:rows.map(row=>row.workId),discovery:discovery.has(set.entry.round.id),descriptorRange,responseRange,knownDescriptorCount:values.length,homogeneous:values.length===rows.length&&descriptorRange[0]===descriptorRange[1],hasDescriptorContrast:sufficient,reason:values.length<2?'insufficient-reviewed-descriptors':!sufficient?'insufficient-descriptor-contrast':responseRange[1]-responseRange[0]<TASTE_PATTERN_THRESHOLDS.responseGap?'responses-near-tied':'comparison-opportunity'});
+  }
+  return {responseLedger,setAssessments,homogeneousSetCount:setAssessments.filter(set=>set.discovery&&set.homogeneous).length,uncontrastedSetCount:setAssessments.filter(set=>set.discovery&&!set.hasDescriptorContrast).length};
+}
+function component(scope,key,basis){
+  const result=analyzeTasteDimension(scope,work=>isReviewedVisualDescriptor(work,key)?work.features[key]:null),assessment=visualAssessment(result),label=LABELS[key],leaders=scope.sets.flatMap(set=>{const maximum=Math.max(...set.items.map(item=>item.value)),minimum=Math.min(...set.items.map(item=>item.value));if(maximum-minimum<TASTE_PATTERN_THRESHOLDS.responseGap)return [];return set.items.filter(item=>item.value>=maximum-10&&isReviewedVisualDescriptor(item.work,key)).map(item=>({...item,descriptor:item.work.features[key]}));}),low=unique(leaders.filter(item=>item.descriptor<=.35).map(item=>item.work.id)),high=unique(leaders.filter(item=>item.descriptor>=.65).map(item=>item.work.id));
+  const rangeEvidence={basis:scope.channel==='overall-appeal'?'leaders-within-overall-rating-sets':'local-set-leaders',lowWorkIds:low,highWorkIds:high,atBothEnds:low.length>=2&&high.length>=2};
+  const positive=basis.seeds.filter(item=>isReviewedVisualDescriptor(item.work,key)),positiveLow=positive.filter(item=>item.work.features[key]<=.35),positiveHigh=positive.filter(item=>item.work.features[key]>=.65),lowRatings=basis.ratings.filter(item=>isReviewedVisualDescriptor(item.work,key)&&item.score<=LOW_APPEAL),positiveChoiceRange={basis:'explicit-favourites-or-high-overall-ratings',lowWorkIds:positiveLow.map(item=>item.work.id),highWorkIds:positiveHigh.map(item=>item.work.id),atBothEnds:positiveLow.length>=2&&positiveHigh.length>=2};
+  const side=label[assessment.direction>0?1:0],readingLabel=assessment.presentationStatus==='recurring'?side[0].toUpperCase()+side.slice(1):assessment.presentationStatus==='tentative'?'Leans toward '+side:assessment.presentationStatus==='balanced'?({humanity:'People matter selectively',abstraction:'Both treatments compete',color:'No single colour rule',complexity:'Detail is not the dividing line',energy:'Activity is not the dividing line',narrative:'Action is not the dividing line',atmosphere:'Setting is not the dividing line'})[key]:result.knownWorkCount?'Too few contrasting sets':'More reviewed examples needed';
+  const briefConclusion=assessment.presentationStatus==='recurring'?`Your comparisons repeatedly favoured ${side}.`:assessment.presentationStatus==='tentative'?`The clear comparisons leaned toward ${side}${result.mixedSetCount?' while other sets remained unresolved':''}${result.checkBalance.opposing?', with counterexamples in later checks':''}.`:assessment.presentationStatus==='balanced'?`Your comparisons did not follow one broad rule around ${label[1]}.`:result.knownWorkCount?`These paintings did not provide enough distinct, contrasting sets for a recurring direction.`:`The available artwork annotations cannot support this reading yet.`;
+  const positiveCounter=(assessment.direction<0?positiveHigh:assessment.direction>0?positiveLow:[]).flatMap(item=>item.support.map(entry=>({...entry,sourceRole:'positive choice outside the comparison tendency'}))).slice(0,3),support=assessment.direction&&result.recurringSupport.length===3?result.recurringSupport:result.support;
+  const {items,pairs,...serial}=result;
+  return {feature:key,...serial,...assessment,summaryEligible:assessment.presentationStatus==='recurring'&&!positiveChoiceRange.atBothEnds,leftLabel:label[0],rightLabel:label[1],readingLabel,verdict:readingLabel,briefConclusion,summary:briefConclusion,support,counter:[...result.counter,...positiveCounter],counts:{towardLower:result.negativeSetCount,towardHigher:result.positiveSetCount,unresolved:result.mixedSetCount,discoverySets:result.eligibleSetCount},laterChecks:{...result.checkBalance,availableQuestions:result.laterCheckCount,relativeToDirection:result.candidateDirection||null,independentReplications:false},displayWorkIds:unique([support[0]?.workIds[0],result.counter[0]?.workIds[0],positiveCounter[0]?.workIds[0],support[0]?.workIds[1]].filter(Boolean)).slice(0,3),rangeEvidence,positiveChoiceRange,lowRatingEvidence:lowRatings.map(item=>({workId:item.work.id,score:item.score,descriptor:item.work.features[key],support:item.support})),...descriptorLedger(scope,key),measurementScope:scope.key,comparisonBasis:scope.channel==='overall-appeal'?'within-set-overall-appeal':'legacy-within-set-comparisons',alternatives:[...TASTE_PATTERN_LIMITS,'A tentative tendency compares only the directional sets. It needs three disjoint set examples from three preferred-work artists and at least twice as many supporting as opposing sets. Mixed sets and later exceptions remain visible; only a recurring direction passes the stricter summary rule.','Low positions are retained even when every work has the same descriptor. Such a question separates particular paintings but cannot separate that generic descriptor.',...(['narrative','atmosphere'].includes(key)?['Older descriptors without the literal action/setting review remain unknown. Setting is a represented place, not an inferred emotional atmosphere.']:[])]};
+}
+
+export function buildTasteAxes({works=[],rounds=[],answers={}}={}){
+  const sources=collectTastePatternSources({works,rounds,answers}),scope=primaryScope(sources.preferenceScopes),basis=buildPreferenceBasis(sources.entries),components=new Map(Object.values(TASTE_AXIS_DEFINITIONS).flatMap(axis=>axis.features).map(key=>[key,component(scope,key,basis)]));
+  const axes=TASTE_AXIS_DEFINITIONS.map(definition=>{
+    const parts=definition.features.map(key=>components.get(key));
+    if(parts.length===1){const p=parts[0];return {...p,...definition,components:[p],title:definition.title,supportingSetCount:p.supportingSetCount,opposingSetCount:p.opposingSetCount};}
+    const sourceRoundIds=unique(parts.flatMap(part=>part.sourceRoundIds)),discoveryRoundIds=unique(parts.flatMap(part=>part.groups.map(group=>group.roundId))),combined=discoveryRoundIds.map(id=>{const statuses=parts.map(part=>part.groups.find(group=>group.roundId===id)?.status);return statuses.every(status=>status==='positive')?'positive':statuses.every(status=>status==='negative')?'negative':'mixed';}),positive=combined.filter(status=>status==='positive').length,negative=combined.filter(status=>status==='negative').length,mixed=combined.filter(status=>status==='mixed').length,candidateDirection=Math.sign(positive-negative),supporting=candidateDirection<0?negative:positive,opposing=candidateDirection<0?positive:negative;
+    const sameDirection=parts.every(part=>part.presentationStatus==='recurring'&&part.direction===parts[0].direction)&&supporting>=3&&supporting>=2*(opposing+mixed),sameTentativeDirection=parts.every(part=>part.direction!==0&&part.direction===parts[0].direction)&&supporting>=3&&supporting>=2*opposing&&supporting-opposing>=2,tested=parts.some(part=>part.eligibleSetCount),status=sameDirection?'leaning':sameTentativeDirection?'tentative':combined.length>=3?'mixed':tested?'insufficient':parts.every(part=>part.status==='not-tested')?'not-tested':'insufficient',presentationStatus=sameDirection?'recurring':sameTentativeDirection?'tentative':combined.length>=3?'balanced':'insufficient',direction=sameDirection||sameTentativeDirection?parts[0].direction:0,briefConclusion=parts.map(part=>part.briefConclusion.replace(/\.$/,'')).join('; ')+'.',readingLabel=direction?(direction>0?'Leans toward detail and activity':'Leans toward spare and quiet'):'Detail and activity vary separately';
+    return {...definition,status,presentationStatus,direction,candidateDirection,summaryEligible:sameDirection&&parts.every(part=>part.summaryEligible),readingLabel,verdict:readingLabel,briefConclusion,summary:briefConclusion,components:parts,counts:{towardLower:negative,towardHigher:positive,unresolved:mixed,discoverySets:combined.length},supportingSetCount:supporting,opposingSetCount:opposing,mixedSetCount:mixed,eligibleSetCount:combined.length,positiveSetCount:positive,negativeSetCount:negative,knownWorkCount:Math.min(...parts.map(part=>part.knownWorkCount)),support:parts.flatMap(part=>part.support),counter:parts.flatMap(part=>part.counter),displayWorkIds:unique(parts.flatMap(part=>part.displayWorkIds)).slice(0,3),sourceRoundIds,comparisonBasis:parts[0].comparisonBasis,measurementScope:scope.key,rangeEvidence:parts.map(part=>part.rangeEvidence),positiveChoiceRange:parts.map(part=>part.positiveChoiceRange),responseLedger:parts.flatMap(part=>part.responseLedger.map(row=>({...row,feature:part.feature}))),setAssessments:parts.flatMap(part=>part.setAssessments.map(row=>({...row,feature:part.feature}))),laterChecks:parts.map(part=>({feature:part.feature,...part.laterChecks})),alternatives:[...TASTE_PATTERN_LIMITS,'Detail and visual activity are separate annotations. A combined set is mixed when the two directions differ or one component lacks a contrast; the components remain visible.']};
+  });
+  return {version:TASTE_AXIS_VERSION,axes,coverage:{preferenceScopes:sources.preferenceScopes.map(item=>({key:item.key,channel:item.channel,distinctSets:item.sets.length,distinctWorks:item.workCount,dependentChecks:item.checks.length})),activeScope:scope.key,activeChannel:scope.channel,distinctSets:scope.sets.length},limits:[...TASTE_PATTERN_LIMITS]};
+}

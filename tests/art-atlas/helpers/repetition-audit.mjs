@@ -3,7 +3,7 @@ import {buildJourneyRounds,createJourneyStimulusPlan} from '../../../public/art-
 import {bindFinalRefinementRound,isFinalRefinementRound} from '../../../public/art-atlas/final-refinement.mjs';
 import {choiceGridExposure} from '../../../public/art-atlas/discovery-grid.mjs';
 
-export const works=JSON.parse(fs.readFileSync(new URL('../../../public/art-atlas/artworks.json',import.meta.url),'utf8'));
+export const works=JSON.parse(fs.readFileSync(new URL('../../../public/art-atlas/artworks.json',import.meta.url),'utf8')).slice(0,164);
 const notes=JSON.parse(fs.readFileSync(new URL('../../../public/art-atlas/curation-notes.json',import.meta.url),'utf8'));
 export const questionIds=round=>[...new Set([...(round.works||[]).map(work=>work.id),...(round.anchorWorks||[]).map(work=>work.id),...(round.anchorIds||[])])];
 export const isSpecific=round=>!round.unavailable&&round.kind!=='statements'&&round.evidence?.stimulusVisibility!=='not-shown'&&!(round.kind==='exercise'&&!['sorting','difficult-edit','edit'].includes(round.exerciseKind));

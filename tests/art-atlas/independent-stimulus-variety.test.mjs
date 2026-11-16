@@ -11,13 +11,17 @@ const baselineBySeed={
   'independent-underuse-audit':{distinctIndependent:83,peakIndependent:4}
 };
 let paths;
+const v11DistinctBySeed={'reviewed-variety-v5-0':88,'editorial-release-audit':89,'independent-underuse-audit':91};
 const trajectories=()=>paths||=Object.keys(baselineBySeed).map(seed=>({seed,...auditTrajectory(seed)}));
 
 test('Three complete trajectories use independent slots more broadly while retaining the fresh72/46/46 preference route',()=>{
   for(const {seed,metrics,blocks} of trajectories()){
     assert.deepEqual(metrics.map(row=>row.firstRatings),[72,46,46]);
-    assert.equal(metrics[1].independentSlots,88);assert.equal(metrics[1].distinctIndependent,88);
-    const final=metrics[2];assert.equal(final.independentSlots,132);assert.ok(final.distinctIndependent>=100);assert.ok(final.distinctIndependent>baselineBySeed[seed].distinctIndependent);assert.ok(final.peakIndependent<baselineBySeed[seed].peakIndependent);assert.equal(final.near3Independent,0);
+    assert.equal(metrics[1].independentSlots,64);assert.equal(metrics[1].distinctIndependent,64);
+    // v11 replaces one unpaired12-image selection per block with matched
+    // admiration. Fewer independent slots must still cover more distinct
+    // works than the historical132-slot baseline, with no recent recycling.
+    const final=metrics[2];assert.equal(final.independentSlots,96);assert.equal(final.distinctIndependent,v11DistinctBySeed[seed]);assert.ok(final.distinctIndependent>baselineBySeed[seed].distinctIndependent);assert.ok(final.peakIndependent<baselineBySeed[seed].peakIndependent);assert.equal(final.near3Independent,0);
     assert.equal(final.distinctSpecific,works.length);
     for(const {rounds} of blocks)for(const round of rounds.filter(round=>round.kind==='match')){
       assert.equal(new Set(round.works.map(work=>work[round.field])).size,4,'Broader selection must retain four distinct answer labels');

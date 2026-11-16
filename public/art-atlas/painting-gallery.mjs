@@ -2,6 +2,8 @@ import {buildPaintingGallery,filterPaintingGallery,nextGalleryContext,GALLERY_CO
 import {updateArtworkCorners} from './artwork-corners.mjs';
 import {artworkImageAttributes,setArtworkImage} from './artwork-image.mjs';
 import {journeyCurationNotes} from './journey-bank.mjs';
+import {renderArtworkContext} from './artwork-context.mjs';
+import {loadActiveStudy} from './active-study-storage.mjs';
 
 const root=document.querySelector('#painting-gallery'),dialog=document.querySelector('#painting-view'),esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 let gallery=null,viewId='first',query='',selectedKey=null,visibleItems=[],selectedIndex=0,cornerFrame=null;
@@ -31,6 +33,7 @@ function selectView(id){
 function showPainting(index){
   if(!visibleItems.length)return;selectedIndex=(index+visibleItems.length)%visibleItems.length;const item=visibleItems[selectedIndex],work=item.work;selectedKey=item.key;
   const img=dialog.querySelector('#painting-image');setArtworkImage(img,work);
+  const context=renderArtworkContext(work,{esc}),details=dialog.querySelector('#painting-context');details.hidden=!context;details.querySelector('div').innerHTML=context;
   dialog.querySelector('#painting-title').textContent=work.title;dialog.querySelector('#painting-artist').textContent=[work.artist,work.date].filter(Boolean).join(' · ');dialog.querySelector('#painting-institution').textContent=work.museum||work.institution||'';dialog.querySelector('#painting-source').href=work.sourceUrl;dialog.querySelector('#painting-credit').textContent=work.imageCredit||(work.provenance?.sourceRightsStatement?.startsWith('©')?work.provenance.sourceRightsStatement:'')||(['CC0','Public domain'].includes(work.rights)?work.rights:'');dialog.querySelector('#painting-position').textContent=(selectedIndex+1)+' / '+visibleItems.length;
   for(const button of dialog.querySelectorAll('[data-painting-step]'))button.disabled=visibleItems.length<2;
   for(const button of root.querySelectorAll('[data-gallery-art]'))button.classList.toggle('is-selected',button.dataset.galleryArt===selectedKey);
@@ -51,7 +54,7 @@ dialog.addEventListener('close',()=>document.documentElement.classList.remove('p
 
 try{
   const artResponse=await fetch('./artworks.json');if(!artResponse.ok)throw Error('Collection unavailable');const works=await artResponse.json(),notes=journeyCurationNotes(works);
-  let saved=null;try{saved=JSON.parse(localStorage.getItem('art-profile-journey-v1'));}catch{}
+  const saved=await loadActiveStudy('art-profile-journey-v1');
   gallery=buildPaintingGallery({works,notes,saved});if(gallery.views.some(view=>view.id===location.hash.slice(1)))viewId=location.hash.slice(1);shell();
   // This records only that this gallery was opened, never which names were read.
   try{let previous=null;try{previous=JSON.parse(localStorage.getItem(GALLERY_CONTEXT_KEY));}catch{}const availableIds=gallery.views.find(view=>view.id==='all').groups.flatMap(group=>group.workIds);localStorage.setItem(GALLERY_CONTEXT_KEY,JSON.stringify(nextGalleryContext(previous,availableIds)));}catch{}

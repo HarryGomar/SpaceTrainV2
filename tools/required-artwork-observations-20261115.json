@@ -1,0 +1,148 @@
+{
+  "req-brueghel-hearing": {
+    "alt":"A woman and child sit among musical instruments, clocks and pictures beside three arched windows.",
+    "note":"One of the five Prado sense panels made by Brueghel and Rubens. Instruments and musical activity fill the room around the figures.",
+    "features":[0.1,0.3,0.95,0.4,0.3,0.9,0.6],
+    "reason":"Numerous instruments and pictures create density, while the small seated figures make quiet hand actions. The large room and window views are prominent; the mood is not the setting score.",
+    "present":{"N":"Instruments, written music, clocks and inset pictures provide secondary clues around the musical encounter.","S":"The near room, three arched windows and distant view make distinct spatial stages.","V":"The seated figures actively handle a musical instrument rather than merely posing with resting hands.","P":"Strings, instrument fittings, furniture and small pictures have controlled, finely separated edges.","R":"Repeated arched openings and upright instrument necks create a visible rhythm across the room.","H":"The adult and child are joined by attention and hand contact around the instrument.","T":"A red hanging drape and deliberately displayed instruments frame the seated encounter.","M":"Wood, metal strings, upholstery, cloth and polished instrument surfaces receive different local descriptions."},
+    "unknown":{"I":"The small child has an indistinct shape behind the shoulder, but an impossible body is not clear enough in this reproduction to assign the criterion."}
+  },
+  "req-brueghel-smell": {
+    "alt":"A woman and child examine flowers in a garden crowded with blossoms, pots, trees and garden buildings.",
+    "note":"The figures occupy a small part of an extensive cultivated garden. Containers, plants and a distant arcade extend the theme through the setting.",
+    "features":[0.1,0.25,1,0.3,0.25,1,0.7],
+    "reason":"Plants and garden architecture dominate. The figures make a small exchange with flowers, while fine botanical and object details make the view dense without much physical action.",
+    "present":{"N":"Flowers, vessels, small animals and garden equipment provide clues beyond the central pose.","S":"The flower-filled foreground opens into a path and recessed garden architecture.","V":"The adult raises a flower toward her face and the child reaches toward the flowers.","L":"Vegetation and garden terrain occupy most of the composition.","P":"Individual stems, petals, vessels and architectural details are finely separated.","R":"Recurring flower heads and rows of plants establish a conspicuous garden rhythm.","H":"The adult and child exchange attention and gestures around a flower.","M":"Petals, foliage, pottery and cloth receive visibly different local treatment."},
+    "unknown":{"I":"The small child's anatomy and any possible wing are not sufficiently clear to distinguish an impossible body from an ordinary figure."}
+  },
+  "req-brueghel-taste": {
+    "alt":"A woman sits at a laden table beside a serving figure, with food, dead game, vessels and pictures filling the room.",
+    "note":"A meal is surrounded by an unusually extensive display of food and game. The opened side of the room leads toward an outdoor view.",
+    "features":[0.1,0.4,1,0.5,0.4,0.85,0.6],
+    "reason":"Food and game cover much of the foreground. Serving and eating supply modest depicted action; the large interior and garden opening supply setting.",
+    "present":{"N":"The meal, game animals, background pictures and vessels offer separate clues around the central encounter.","S":"The loaded foreground, table and wall pictures lead into a distinct outdoor opening.","V":"Hands serve and handle items at the table.","P":"Feathers, tableware, food and small pictures have fine controlled contours.","H":"The seated woman and standing attendant visibly exchange attention and objects at the meal.","T":"The foreground food display and framed table present the encounter as an arranged tableau.","M":"Feathers, fur, vessels, fruit and table linen receive differentiated surface description."},
+    "unknown":{"I":"The standing figure may have hybrid anatomy, but the relevant small details are too uncertain to make this a positive visual assignment."}
+  },
+  "req-brueghel-touch": {
+    "alt":"A woman and child sit among armour, weapons, sculpture and pictures, with activity visible in the background.",
+    "note":"The close bodily contact is surrounded by objects associated with different surfaces and physical actions. The panel is one work within the five-sense series.",
+    "features":[0.1,0.4,1,0.45,0.35,0.85,0.6],
+    "reason":"Objects fill the view and background work adds physical activity. The central contact is quiet; literal action remains lower than the amount of potential story.",
+    "present":{"N":"Armour, weapons, sculpture and the small background activities provide secondary clues beyond the seated group.","S":"Foreground objects, the seated group and the distant architectural opening make separate physical stages.","V":"The adult and child touch and hold one another; background figures also work.","P":"Metal fittings, armour edges, sculptural contours and pictures are finely separated.","H":"The adult and child are visibly linked by close touch.","T":"A hanging canopy and the surrounding display frame the seated group.","M":"Metal armour, sculpture, cloth and skin have different local surface descriptions."},
+    "unknown":{"I":"Any wing or hybrid anatomical detail in the small child is unresolved at the reviewed scale."}
+  },
+  "req-patinir-massys-temptations": {
+    "alt":"Women approach a dark-robed man before an extensive rocky landscape of trees, water, buildings and smaller incidents.",
+    "note":"Patinir and Massys collaborated on this panel. The large foreground encounter sits within an extensive landscape containing further small episodes.",
+    "features":[0.15,0.5,0.95,0.65,0.55,0.95,0.6],
+    "reason":"The foreground figures reach and offer an object, while many smaller incidents occupy the distant setting. Rocks, water and wooded terrain retain substantial pictorial weight.",
+    "present":{"N":"Small incidents, buildings, animals and the offered object add clues beyond the main foreground group.","D":"Pale faces and garments stand out against the dark wooded bank and stormy sky.","S":"The close group, wooded middle ground, rocky settlement and distant water make distinct spatial stages.","V":"The women reach and offer an object toward the dark-robed figure.","F":"A compact group of near-view figures occupies a substantial lower area of the image.","L":"Recognisable terrain, trees, rocks and water organise most of the view.","P":"Garment edges, buildings, plants and distant incidents are finely differentiated.","H":"The foreground encounter is linked by directed gazes and an offered object.","M":"Robes, foliage, rocks and water are locally differentiated.","O":"Broad areas of water and sky leave open fields above the near encounter."},
+    "unknown":{"I":"Some tiny creatures may be hybrid beings, but their anatomy is not clear enough here to turn a fantastical title or subject into a positive visible assignment."}
+  },
+  "req-caravaggio-david-borghese": {
+    "alt":"A young man lit against darkness extends a severed head and holds a sword across his body.",
+    "note":"This is the Borghese canvas, not Caravaggio's other David versions. The museum retains two possible date ranges rather than one certain1610 date.",
+    "features":[0.1,0.35,0.5,1,0.25,0.05,0.4],
+    "reason":"The head, sword and extended arm make a compact encounter. This is the aftermath of violence, not an image of the beheading in progress; darkness supplies little depicted setting.",
+    "present":{"N":"The sword and severed head provide visible event clues beyond the young man's pose.","D":"Strong light selects face, torso, cloth and head against deep surrounding darkness.","V":"The extended arm grips and presents the head.","F":"The torso and head occupy most of the close foreground.","P":"Facial edges, fabric folds and the sword are carefully controlled.","M":"Skin, hair, cloth and metal receive different local treatments.","O":"A large uninterrupted dark field surrounds the figures."},
+    "unknown":{"B":"The reproduction shows modelling but does not reliably separate conspicuous paint strokes from surface condition.","H":"A living figure holds a severed head; this does not provide an unambiguous reciprocal human exchange under this criterion."}
+  },
+  "req-dore-quixote-library": {
+    "alt":"A seated reader is surrounded by books, armour and a rising swarm of imagined knights, creatures and battles.",
+    "note":"The design was first published in1863. This faithful scan comes from a later1906 edition; Doré's design and Pisan's engraving roles are kept separate.",
+    "features":[0.25,0.85,1,0.85,0.8,0.8,0],
+    "reason":"Fine engraved marks build a dense room and a swirl of figures. The imagery includes visible combat and physically uncanny creatures, while the reproduction is monochrome.",
+    "present":{"N":"Books, armour, a reader and many separate imagined incidents offer numerous event clues.","I":"A swarm of uncanny creatures and miniature battles appears within and above the ordinary room.","D":"Large dark hatched areas surround selected light passages around the reader and rising figures.","S":"The reader, shelves, room and rising imagined incidents occupy several distinct stages.","V":"The surrounding small figures strike, reach and fight.","F":"The seated reader is a large near-view human figure.","P":"Fine engraving differentiates faces, armour, books and many small objects.","R":"Repeated lances, limbs and curved directions form a rising visual rhythm.","H":"The miniature combatants visibly confront and act upon one another.","T":"Curtain-like framing and the arranged central reader stage the encounter.","M":"Armour, cloth, furniture and book pages receive different engraved descriptions."},
+    "unknown":{}
+  },
+  "req-birkhauser-worlds-wound": {
+    "alt":"A man in a hat looks out from beside a broad vertical partition, with one side of his face strongly lit.",
+    "note":"The foundation reproduces this image as Der Gespaltene. The Jung Center's slide archive explicitly connects the same composition with the alternate title The World's Wound.",
+    "features":[0.2,0.1,0.35,0.85,0.05,0.2,0.3],
+    "reason":"A still close figure and broad partition make a sparse composition. Selective facial light does not imply physical action, and the title is not treated as evidence of a viewer's psychology.",
+    "present":{"D":"The face is selectively illuminated against a deeply shadowed hat, coat and background.","S":"The vertical partition visibly separates the near plane from the figure in the recess.","F":"The head and upper body dominate the close view.","P":"The hat brim, facial contours, seams and clothing edges are controlled and distinct.","O":"The broad, relatively uninterrupted partition leaves an open field alongside the figure."},
+    "unknown":{"N":"The facial marks and partition may carry meanings, but visible secondary story clues cannot be confidently separated from the title and documentary context.","I":"The archive describes a dream image, but this does not by itself establish a visibly impossible body or object.","X":"Facial lines are accentuated; this reproduction does not make the difference between expressive alteration and conventionally rendered facial marks sufficiently clear."}
+  },
+  "req-rivera-controller-universe": {
+    "alt":"A worker operates a central machine between elliptical fields and many groups of people, plants and industrial forms.",
+    "note":"The1934 Bellas Artes mural is preserved here as a complete institutional reproduction. It is the surviving Mexican version, not a photograph of the destroyed Rockefeller Center mural.",
+    "features":[0.3,0.85,1,0.85,0.65,0.6,0.8],
+    "reason":"People work, gesture and gather around a large mechanical centre. Numerous small incidents and repeated circles make it dense; literal environmental space is less dominant than the montage.",
+    "present":{"N":"Workers, machinery, political crowds, plants and smaller activities supply many separate story clues.","I":"Enlarged biological forms and incompatible scales occupy a visibly constructed, nonordinary montage.","G":"Crossing elliptical fields, circular machinery and straight divisions strongly organise the composition.","V":"People operate machinery, gesture and act within the surrounding groups.","X":"Scale and the relative sizes of bodies and objects are conspicuously altered across the montage.","P":"Faces, plant forms, machine fittings and small incidents have controlled edges.","R":"Repeated circular parts, body groups and directional bands create a clear rhythm.","H":"Hands, gazes and coordinated actions connect people within several groups.","T":"A centrally presented operator is flanked by deliberately arranged opposing groups and displays.","M":"Plant forms, mechanical parts, skin and clothing receive differentiated local descriptions."},
+    "unknown":{}
+  },
+  "req-rivera-alameda": {
+    "alt":"A long painted procession of people, trees and a dressed skeleton stretches across the museum wall, with visitors in front.",
+    "note":"This photograph shows the complete mural in its museum setting. Real visitors partly obscure a few lower figures; they are not part of Rivera's painted scene.",
+    "features":[0.3,0.55,1,0.95,0.4,0.55,0.8],
+    "reason":"Many painted people stand, gesture and touch within a park-like setting. The crowd is dense but much of its bodily action is quiet; unpainted museum visitors are excluded from the content judgements.",
+    "present":{"N":"Painted costumes, signs, objects, the skeleton and small encounters offer many clues beyond an individual pose.","I":"A dressed skeleton stands among the painted people as an animate participant.","V":"Several painted figures hold objects, reach and make emphatic hand gestures.","L":"Substantial painted trees and park vegetation organise the upper setting.","X":"Several painted faces and bodies are conspicuously caricatured or altered in proportion.","P":"Painted faces, garments and small objects have controlled delineation.","R":"Repeated upright figures, faces and hats form a long horizontal rhythm.","H":"Painted figures hold hands, embrace and direct gazes toward one another.","M":"Painted hats, garments, feathers and objects have differentiated local descriptions."},
+    "unknown":{"B":"At the whole-mural photographic scale, distinct paint marks cannot be reliably separated from image texture or surface condition."}
+  },
+  "req-rivera-history-mexico": {
+    "alt":"A densely populated mural covers a curved stairway wall above a balustrade and museum visitors.",
+    "note":"This is a central-wall section of the larger Epopeya del pueblo mexicano cycle. It is retained for gallery research, with no whole-cycle visual scores.",
+    "scopeUnknown":true,
+    "reason":"Only one wall of a multiwall cycle is represented. Whole-cycle descriptors are unknown rather than inferred from this section."
+  },
+  "req-siqueiros-new-democracy": {
+    "alt":"A large woman thrusts chained arms outward, with a torch, flower, fallen figures and forceful faces around her.",
+    "note":"The complete central panel was painted in1944. The museum's Nueva democracia ensemble also includes two companion panels completed in1945.",
+    "features":[0.4,0.9,0.8,1,0.8,0.1,0.85],
+    "reason":"The thrusting arms and hands provide strong literal action. Bodies fill the field; the background supplies little environmental setting despite the dramatic effect.",
+    "present":{"N":"Chains, torch, flower and fallen figures supply separate visible clues around the main action.","I":"Oversized fists, heads and bodily scales form a physically uncanny montage rather than one ordinary encounter.","V":"The central body thrusts its arms outward and several surrounding figures strain or reach.","F":"A large near-view torso, hands and close bodily group occupy most of the panel.","X":"Hands, faces and bodies are conspicuously enlarged and altered in proportion.","R":"Repeated thrusting arms, rounded forms and sweeping directions organise the panel.","H":"Bodies are visibly linked by force, restraint and directed gestures.","T":"The central figure and flanking bodies are presented as a frontal staged encounter."},
+    "unknown":{"D":"Bright and dark modelling is visible, but a selective illuminating source is less clear than the high chromatic contrast.","B":"The institutional image does not reliably separate conspicuous paint marks from surface reproduction texture.","M":"Large modelled forms are clear; fine material differentiation is unresolved at this source scale."}
+  },
+  "req-siqueiros-bourgeoisie": {
+    "alt":"A monochrome archive photograph shows workers and industrial forms in a foreshortened detail of a mural.",
+    "note":"MIT identifies this as a left-wall detail photographed from an acute downward angle. It is not a full-colour or complete view of Retrato de la burguesía.",
+    "scopeUnknown":true,
+    "reason":"This monochrome, oblique fragment cannot support whole-mural colour, composition or content assignments. All whole-work descriptors remain unknown."
+  },
+  "req-siqueiros-march-humanity-section": {
+    "alt":"An interior section of a surrounding mural contains tall striped forms and a face-like motif, with lights reflecting above.",
+    "note":"Only one interior section of La marcha de la humanidad is shown. The large surrounding mural and ceiling cannot be assessed from this view.",
+    "scopeUnknown":true,
+    "reason":"A photographed section with glare is not a complete composition. Whole-mural descriptors remain unknown, and this view is excluded from ordinary study selection."
+  },
+  "req-orozco-prometheus": {
+    "alt":"A large nude man raises both arms before red flame-like forms as clustered people reach and turn below him.",
+    "note":"Orozco painted this fresco for Frary Dining Hall in1930. The institutional source shows the complete main wall and its surrounding arch at native1100px width.",
+    "features":[0.4,0.9,0.85,1,0.8,0.15,0.85],
+    "reason":"Emphatic reaching and turning bodies dominate the fresco. Fire-like fields and an arch surround them, but little natural or built setting is depicted within the painting.",
+    "present":{"N":"The raised central body, clustered reactions and fire-like forms create several visible event clues.","I":"The central body is visibly gigantic relative to the surrounding near figures, producing physically uncanny bodily scale.","D":"Bright bodily planes are selected against deep dark areas and red fire-like surroundings.","V":"The central figure reaches upward while surrounding people raise arms and turn.","F":"A very large near-view torso and compact bodily groups occupy most of the painting.","X":"The torso, arms and hands are elongated and enlarged in relation to surrounding bodies.","R":"Repeated arms, body contours and rising flame-like streaks form a conspicuous directional rhythm.","H":"Surrounding people direct coordinated attention and gestures toward the central action."},
+    "unknown":{"B":"The native1100px image cannot reliably resolve separate paint marks across the full fresco.","P":"Some contours are controlled, but the available whole-wall reproduction does not settle the fine-detail criterion.","M":"The available source is insufficient for a confident judgement about fine depicted material surfaces."}
+  },
+  "req-orozco-man-fire": {
+    "alt":"An upward view shows a painted dome with a twisting red figure inside a circular field and surrounding radial panels.",
+    "note":"The institution dates the Cabañas fresco cycle1937–1939. This architectural photograph preserves the dome view rather than flattening it into an invented rectangular painting.",
+    "features":[0.55,0.85,0.8,0.8,0.6,0.15,0.7],
+    "reason":"Painted bodies twist amid flame-like forms. The photographed ceiling architecture is distinct from depicted setting, and the small central figure does not become a close-up merely because it is monumental in person.",
+    "present":{"N":"The central figure, surrounding bodies and radial painted scenes provide secondary clues.","I":"Bodies appear suspended within a circular field of flame-like forms without a grounded physical setting.","G":"Concentric and radial divisions visibly organise the painted dome and its framing fields.","V":"The central body twists and stretches its limbs.","X":"The central anatomy is conspicuously elongated and twisted.","R":"Repeated radial compartments and circular bands form a strong visual rhythm."},
+    "unknown":{"D":"Painted contrast and the illumination of the actual ceiling are difficult to separate in this photograph.","P":"The distant dome photograph does not resolve fine contour and detail treatment confidently.","B":"The camera distance does not resolve distinct paint marks.","H":"Exchanges between the small painted bodies cannot be read confidently at this source scale.","M":"Fine material description is unresolved at the photographed scale."}
+  },
+  "req-orozco-cortes-malinche": {
+    "alt":"Two seated figures occupy a fresco above a prone figure, with dark drapery and an agave-like plant below.",
+    "note":"The complete fresco is photographed within its architectural setting. The lower prone figure is retained rather than silently cropping the image to the seated pair.",
+    "features":[0.4,0.25,0.55,1,0.2,0.1,0.45],
+    "reason":"The seated pair and lower body dominate a shallow pictorial space. An extended arm is visible, but the static pose is not scored as an active historical event.",
+    "present":{"N":"The prone figure, extended arm and plant below provide clues beyond the seated pair.","V":"The large extended forearm makes a conspicuous bodily gesture across the second seated figure.","F":"The two near-view seated bodies dominate the fresco.","X":"Angular torsos and altered bodily proportions conspicuously transform the anatomy.","P":"Strong controlled contours define the limbs, torsos and faces.","H":"Touch and the arm crossing the second figure visibly connect the seated pair.","T":"A painted hanging drape frames the seated pair and lower body as a staged tableau."},
+    "unknown":{"B":"The fresco surface and photographic exposure do not reliably identify distinct expressive paint marks."}
+  },
+  "req-orozco-katharsis": {
+    "alt":"Overlapping people, weapons and machines fill a mural with red, black and orange forms and a burning background.",
+    "note":"The complete mural is reproduced from the Bellas Artes museum guide. Its many bodily actions differ from a static posed group despite comparable human density.",
+    "features":[0.45,0.95,1,1,0.85,0.25,0.8],
+    "reason":"Fighting, reaching and collapsing bodies supply strong literal action. Machines and bodies fill the field; flames contribute to the scene without making environmental setting dominant.",
+    "present":{"N":"Weapons, machinery, fallen bodies and several separate encounters offer many event clues.","V":"Bodies fight, strain, reach and fall across the mural.","F":"Large near-view bodies and a compact foreground group occupy substantial pictorial space.","X":"Faces, bodies and mechanical forms are conspicuously fragmented and altered in proportion.","B":"Broken dark strokes and broad streaked modelling remain visible in faces and bodies.","R":"Repeated barrel openings, mechanical shapes and curved bodies establish a directional rhythm.","H":"Several bodies visibly confront, struggle with or act upon one another."},
+    "unknown":{"I":"Some bodies and machines merge visually, but the boundary between expressive fragmentation and a literally impossible hybrid is unresolved.","D":"The fiery palette and deep darks are clear, but selective illumination is difficult to distinguish from the colour organisation."}
+  },
+  "req-camarena-liberacion": {
+    "alt":"Angular figures and broken cross-like forms fill a red, green and purple mural, with a large back-facing body at the centre.",
+    "note":"The museum dates this mural1957–1963 and records acrylic on canvas. Sharp angular divisions offer a contrast with the sweeping bodies of the other new murals.",
+    "features":[0.5,0.8,0.8,0.95,0.65,0.15,0.85],
+    "reason":"A central body breaks or strains against cross-like forms. Geometric planes divide the close figurative scene, while little environmental setting is depicted.",
+    "present":{"N":"The cross-like forms, central action and differently treated flanking figures provide secondary clues.","G":"Large angular planes and clearly divided colour fields strongly organise the image.","V":"The central figure visibly strains and breaks away from cross-like forms.","F":"Large near-view bodies occupy most of the mural.","X":"Bodies and surrounding forms are conspicuously faceted and altered in proportion.","P":"Sharp controlled boundaries separate the geometric planes and bodily contours.","R":"Repeated angular directions and segmented planes establish a visible rhythm."},
+    "unknown":{}
+  }
+}

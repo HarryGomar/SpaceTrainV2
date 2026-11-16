@@ -4,11 +4,12 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
+import {canonicalOpeningPool} from '../../public/art-atlas/opening-pool.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../public/art-atlas');
 const base = JSON.parse(await fs.readFile(path.join(root, 'artworks.json'), 'utf8'));
 const added = JSON.parse(await fs.readFile(path.join(root, 'opening-artworks.json'), 'utf8'));
-const all = [...base, ...added];
+const raw = [...base, ...added],all=canonicalOpeningPool(raw),sourceRecords=[...new Map(raw.map(work=>[work.id,work])).values()],originalStudy=base.slice(0,164);
 const studyAdditions = JSON.parse(await fs.readFile(path.join(root, 'study-additions.json'), 'utf8'));
 const norm = value => String(value ?? '').normalize('NFKD').replace(/\p{Diacritic}/gu, '').toLowerCase().replace(/[^a-z0-9]/g, '');
 const family = accession => accession.split('.').slice(0, 2).join('.');
@@ -27,21 +28,21 @@ function jpegDimensions(bytes) {
   assert.fail('JPEG size marker missing');
 }
 
-test('419 distinct identities and paths across 164 study and 255 decorative works', () => {
-  assert.equal(base.length, 164); assert.equal(added.length, 255); assert.equal(all.length, 419);
-  for (const field of ['id', 'image']) assert.equal(new Set(all.map(a => a[field])).size, 419, field);
-  assert.equal(new Set(all.map(a => norm(a.title) + '|' + norm(a.artist) + '|' + norm(a.date))).size, 419, 'title + artist');
-  assert.equal(new Set(all.map(a => a.imageSourceUrl)).size, 419, 'source image URLs');
+test('463 study records and255 preserved opening records form480 canonical opening paintings', () => {
+  assert.equal(base.length, 463); assert.equal(added.length, 255); assert.equal(all.length, 480);assert.equal(sourceRecords.length,483);
+  for (const field of ['id', 'image']) assert.equal(new Set(all.map(a => a[field])).size, 480, field);
+  assert.equal(new Set(all.map(a => norm(a.title) + '|' + norm(a.artist) + '|' + norm(a.date))).size, 480, 'title + artist');
+  assert.equal(new Set(all.map(a => a.imageSourceUrl)).size, 480, 'source image URLs');
   const cma = all.filter(a => /clevelandart\.org/.test(a.sourceUrl));
   assert.equal(new Set(cma.map(a => a.sourceId)).size, cma.length, 'CMA source IDs');
   assert.equal(new Set(cma.map(a => a.sourceUrl.replace('www.', '').replace(/\/$/, ''))).size, cma.length, 'CMA source URLs');
-  const previousFamilies = new Set(base.filter(a => /clevelandart\.org/.test(a.sourceUrl)).map(a => family(a.sourceUrl.split('/').pop())));
+  const previousFamilies = new Set(originalStudy.filter(a => /clevelandart\.org/.test(a.sourceUrl)).map(a => family(a.sourceUrl.split('/').pop())));
   const addedFamilies = added.map(a => family(a.accessionNumber));
   assert.equal(new Set(addedFamilies).size, added.length, 'No alternate panels or parts from one accession family');
   for (const value of addedFamilies) assert.ok(!previousFamilies.has(value), value);
 });
 
-test('every remaining decorative work has individual CC0 image provenance and no taste scores', () => {
+test('the preserved255 opening manifest retains its individual CC0 provenance and historical decorative metadata', () => {
   for (const a of added) {
     assert.equal(a.rights, 'CC0'); assert.equal(a.provenance.share_license_status, 'CC0');
     assert.equal(a.provenance.type, 'Painting'); assert.equal(a.decorativeOnly, true); assert.equal(a.coreQuiz, false);
@@ -60,13 +61,13 @@ test('every remaining decorative work has individual CC0 image provenance and no
   }
 });
 
-test('all 419 local JPEGs have unique SHA256 values and declared dimensions; opening images retain their size limits', async () => {
+test('all483 unique local source JPEGs retain their bytes and dimensions,including the three research-only records', async () => {
   const shipped = (await fs.readdir(path.join(root, 'assets'))).filter(name => /^opening-cma-\d+\.jpg$/.test(name));
-  const referencedOpeningFiles = all.map(a => path.basename(a.image)).filter(name => /^opening-cma-\d+\.jpg$/.test(name));
+  const referencedOpeningFiles = sourceRecords.map(a => path.basename(a.image)).filter(name => /^opening-cma-\d+\.jpg$/.test(name));
   assert.equal(shipped.length, 261, 'Original opening images include six retained study promotions');
   assert.deepEqual(shipped.sort(), referencedOpeningFiles.sort(), 'No obsolete or unreferenced opening image files');
   const hashes = new Set();
-  for (const a of all) {
+  for (const a of sourceRecords) {
     const bytes = await fs.readFile(path.join(root, a.image));
     const value = hash(bytes);
     assert.ok(!hashes.has(value), `Repeated image bytes: ${a.id}`); hashes.add(value);
@@ -80,14 +81,14 @@ test('all 419 local JPEGs have unique SHA256 values and declared dimensions; ope
     if (a.sha256 !== undefined) assert.equal(value, a.sha256, a.id);
     assert.ok(bytes.length > 4000, a.id);
   }
-  assert.equal(hashes.size, 419);
+  assert.equal(hashes.size, 483);
 });
 
 test('six opening promotions retain their exact identity, image path and bytes in the study collection', () => {
   const promoted = studyAdditions.filter(a => a.promotedFromOpening);
   assert.equal(studyAdditions.length, 40);
   assert.equal(promoted.length, 6);
-  assert.deepEqual(base.filter(a => a.promotedFromOpening).map(a => a.id).sort(), promoted.map(a => a.id).sort());
+  assert.deepEqual(originalStudy.filter(a => a.promotedFromOpening).map(a => a.id).sort(), promoted.map(a => a.id).sort());
   for (const snapshot of promoted) {
     const current = base.find(a => a.id === snapshot.id);
     assert.ok(current, snapshot.id);
@@ -101,4 +102,21 @@ test('six opening promotions retain their exact identity, image path and bytes i
     assert.equal(current.featureQuality, 'provisional_manual');
     assert.match(current.featureSource, /Manual provisional editorial/);
   }
+});
+
+test('the235 newly promoted opening works appear once and use the study object without altering the historical manifest',()=>{
+  const promoted=base.filter(work=>work.provenance?.promotedFromOpening===true);assert.equal(promoted.length,235);
+  for(const study of promoted){const historical=added.find(work=>work.id===study.id);assert.ok(historical);assert.equal(historical.decorativeOnly,true);assert.equal(study.decorativeOnly,false);assert.equal(study.image,historical.image);assert.equal(study.sha256,historical.sha256);assert.equal(all.filter(work=>work.id===study.id).length,1);assert.equal(all.find(work=>work.id===study.id),study);}
+  const researchOnly=base.filter(work=>work.studyEligible===false&&work.eligibleForStudy===false&&work.decorativeOnly!==true);assert.equal(researchOnly.length,3);for(const work of researchOnly)assert.ok(!all.includes(work));
+});
+
+test('canonical identity guards reject conflicting IDs and unsafe images while preferring a valid study promotion',()=>{
+  const historical=added[0],promoted=base.find(work=>work.id===historical.id);assert.ok(promoted);assert.equal(canonicalOpeningPool([historical,promoted])[0],promoted);assert.equal(canonicalOpeningPool([promoted,historical])[0],promoted);
+  assert.deepEqual(canonicalOpeningPool([historical,{...promoted,sourceUrl:'https://museum.example/different'}]),[]);assert.deepEqual(canonicalOpeningPool([historical,{...promoted,sha256:'f'.repeat(64)}]),[]);
+  assert.deepEqual(canonicalOpeningPool([{...promoted,image:'assets/../outside.jpg'}]),[]);assert.deepEqual(canonicalOpeningPool([{...promoted,image:'https://remote.example/art.jpg'}]),[]);
+  const alias={...promoted,id:'another-id'};assert.equal(canonicalOpeningPool([promoted,alias]).length,1);
+});
+
+test('separate paintings can share a primary museum guide without being collapsed into one artwork',()=>{
+  const works=base.filter(work=>/req-rivera-controller-universe|req-siqueiros-new-democracy|req-orozco-katharsis|req-camarena-liberacion/.test(work.id));assert.equal(works.length,4);assert.equal(canonicalOpeningPool(works).length,4);
 });

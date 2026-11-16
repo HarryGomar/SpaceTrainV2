@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { STUDY_LENGTHS, STUDY_BANK_REVISION, buildStudyRounds, studyBankSummary } from '../../public/art-atlas/question-bank.mjs';
-const works=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/artworks.json',import.meta.url),'utf8'));
+const works=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/artworks.json',import.meta.url),'utf8')).slice(0,164);
 const catalogue=new Map(works.map(w=>[w.id,w])),all=buildStudyRounds(works,200);
 const ids=art=>art.map(w=>w.id);
 const sortedIds=art=>ids(art).sort().join('|');
@@ -11,9 +11,9 @@ function preferenceAnswer(round,reverse=false,key='abstraction') {
   return {workIds:ids(round.works),criterion:'preference',positions:Object.fromEntries(sorted.map((w,i)=>[w.id,Math.round(i/(sorted.length-1)*100)])),confirmed:true};
 }
 
-test('Every preset is an exact deterministic prefix of the same 200-item path',()=>{
-  assert.deepEqual(STUDY_LENGTHS,[50,100,150,200]);
-  for(const length of STUDY_LENGTHS){const rounds=buildStudyRounds(works,length);assert.equal(rounds.length,length);assert.deepEqual(rounds,all.slice(0,length));assert.equal(new Set(rounds.map(r=>r.id)).size,length);}
+test('Every preset is an exact deterministic prefix of the same300-item path, preserving the first200',()=>{
+  const complete=buildStudyRounds(works,300);assert.deepEqual(STUDY_LENGTHS,[50,100,150,200,250,300]);assert.deepEqual(complete.slice(0,200),all);
+  for(const length of STUDY_LENGTHS){const rounds=buildStudyRounds(works,length);assert.equal(rounds.length,length);assert.deepEqual(rounds,complete.slice(0,length));assert.equal(new Set(rounds.map(r=>r.id)).size,length);}
 });
 
 test('All 200 tasks bind sourced artwork objects, valid formats and explicit interpretation limits',()=>{
@@ -86,6 +86,6 @@ test('Only the three established self-description links are marked for compariso
 });
 
 test('The summary reports actual task instances and catalogue coverage without a validity score',()=>{
-  const summary=studyBankSummary(works);assert.equal(summary.interactions,200);assert.equal(summary.artworks,139);assert.equal(summary.artworks,new Set(all.flatMap(round=>ids([...round.works,...(round.anchorWorks||[])])).values()).size);assert.equal(summary.repeats,10);assert.equal(summary.reservedChecks,16);assert.deepEqual(summary.byKind,{spectrum:114,grid:64,statements:12,match:5,context:5});assert.equal(summary.confidence,undefined);
-  assert.throws(()=>buildStudyRounds(works,75),/50, 100, 150 or 200/);assert.throws(()=>buildStudyRounds(works.slice(0,8),50),/twelve distinct/);assert.throws(()=>buildStudyRounds([...works,works[0]],50),/twelve distinct/);
+  const summary=studyBankSummary(works);assert.equal(summary.interactions,200);assert.equal(summary.artworks,137);assert.equal(summary.artworks,new Set(all.flatMap(round=>ids([...round.works,...(round.anchorWorks||[])])).values()).size);assert.equal(summary.repeats,10);assert.equal(summary.reservedChecks,16);assert.deepEqual(summary.byKind,{spectrum:114,grid:64,statements:12,match:5,context:5});assert.equal(summary.confidence,undefined);
+  assert.throws(()=>buildStudyRounds(works,75),/50, 100, 150, 200, 250 or 300/);assert.throws(()=>buildStudyRounds(works.slice(0,8),50),/twelve distinct/);assert.throws(()=>buildStudyRounds([...works,works[0]],50),/twelve distinct/);
 });

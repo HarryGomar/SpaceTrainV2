@@ -254,15 +254,9 @@ export function createInteractions({ app, getRound, getDraft, ready, image, esc,
       if (!['select-art','next-art','previous-art','place-spectrum','place-match','nudge'].includes(action)) return false;
       if (!ready() || locked() || suppressClick) return true;
       if (action === 'select-art') {
-        const r = getRound(), d = getDraft();
-        // An unplaced work can join an existing position. The reference strip always selects.
-        if (control.classList.contains('placed-art') && selected && selected !== control.dataset.work && !placed(selected)) {
-          const placingId=selected;
-          if (r.kind === 'grid') setPoint(selected, d.points[control.dataset.work]);
-          else if (r.kind === 'spectrum') setPosition(selected, d.positions[control.dataset.work]);
-          else select(control.dataset.work);
-          if(r.kind==='grid'||r.kind==='spectrum')cycle(1,true,placingId);
-        } else select(control.dataset.work);
+        // Every artwork thumbnail selects that work. Revisiting a placed work
+        // must not give the currently unplaced painting an unintended rating.
+        select(control.dataset.work);
       }
       else if (action === 'next-art') cycle(1);
       else if (action === 'previous-art') cycle(-1);

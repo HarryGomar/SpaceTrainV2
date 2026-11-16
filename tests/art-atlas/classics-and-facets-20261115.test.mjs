@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import crypto from 'node:crypto';
 import {imageDimensions} from '../../scripts/art-atlas/import-study-media.mjs';
 import {resolveArtworkMedia} from '../../public/art-atlas/artwork-media.mjs';
+import {FEATURE_SEMANTIC_VERSION,isReviewedVisualDescriptor} from '../../public/art-atlas/visual-descriptor-semantics.mjs';
 
 const site = new URL('../../public/art-atlas/', import.meta.url);
 const works = JSON.parse(fs.readFileSync(new URL('artworks.json', site), 'utf8'));
@@ -85,7 +86,8 @@ test('New numeric descriptors are explicitly provisional, keep literal action/se
     const work = byId.get(id);
     assert.deepEqual(Object.keys(work.features).sort(), featureKeys);
     assert.ok(Object.values(work.features).every(value => Number.isFinite(value) && value >= 0 && value <= 1));
-    assert.equal(work.featureSemanticVersion, 'literal-action-setting-v1');
+    assert.equal(work.featureSemanticVersion, FEATURE_SEMANTIC_VERSION);
+    for(const key of ['narrative','atmosphere'])assert.ok(isReviewedVisualDescriptor(work,key));
     assert.match(work.featureSource, /Manual provisional editorial/);
     assert.match(work.featureSource, /Narrative means depicted action; atmosphere means emphasis on setting/);
     assert.match(work.featureSource, /not psychometric measurements/);

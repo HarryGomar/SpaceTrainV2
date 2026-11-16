@@ -2,7 +2,7 @@ const DATABASE='art-atlas-study-archives',STORE='quizzes';
 export const ARCHIVE_STORAGE='art-atlas-indexeddb-v1';
 const isReference=value=>value?.archiveStorage===ARCHIVE_STORAGE&&typeof value.id==='string';
 
-/** Large, unchanged old runs live in IndexedDB; the active quiz stays in localStorage. */
+/** Frozen runs and large active snapshots share this store under separate keys. */
 export function createStudyArchiveStore(indexedDB=globalThis.indexedDB){
   let connection;
   function open(){
@@ -16,7 +16,8 @@ export function createStudyArchiveStore(indexedDB=globalThis.indexedDB){
   }
   return {
     async put(id,value){const db=await open();return new Promise((resolve,reject)=>{const transaction=db.transaction(STORE,'readwrite');transaction.objectStore(STORE).put({id,value});transaction.oncomplete=()=>resolve();transaction.onerror=transaction.onabort=()=>reject(transaction.error||Error('Archive was not saved'));});},
-    async get(id){const db=await open();return new Promise((resolve,reject)=>{const request=db.transaction(STORE,'readonly').objectStore(STORE).get(id);request.onsuccess=()=>resolve(request.result?.value);request.onerror=()=>reject(request.error||Error('Archive could not open'));});}
+    async get(id){const db=await open();return new Promise((resolve,reject)=>{const request=db.transaction(STORE,'readonly').objectStore(STORE).get(id);request.onsuccess=()=>resolve(request.result?.value);request.onerror=()=>reject(request.error||Error('Archive could not open'));});},
+    async remove(id){const db=await open();return new Promise((resolve,reject)=>{const transaction=db.transaction(STORE,'readwrite');transaction.objectStore(STORE).delete(id);transaction.oncomplete=()=>resolve();transaction.onerror=transaction.onabort=()=>reject(transaction.error||Error('Old quiz snapshot could not be removed'));});}
   };
 }
 

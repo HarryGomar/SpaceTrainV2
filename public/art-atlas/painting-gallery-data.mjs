@@ -1,4 +1,5 @@
 import {validAnswer} from './engine.mjs';
+import {artworkContextSearchText} from './artwork-context.mjs';
 
 export const GALLERY_CONTEXT_KEY='art-atlas-gallery-context-v1';
 export const GALLERY_CONTEXT_SCOPE='Gallery opened; which artwork labels were actually read is unknown.';
@@ -11,10 +12,10 @@ function catalogue(works){
   const list=Array.isArray(works)?works:[],counts=new Map();for(const work of list)if(text(work?.id))counts.set(work.id,(counts.get(work.id)||0)+1);
   return list.filter(work=>plain(work)&&counts.get(work.id)===1&&text(work.title)&&text(work.image)&&work.image.startsWith('assets/')&&!work.image.includes('..')&&safeUrl(work.sourceUrl)).map(work=>structuredClone(work));
 }
-export function paintingSearchText(work){
-  return normalise([work.title,work.shortTitle,work.artist,work.date,work.movement,work.country,work.origin,work.museum,work.institution,work.medium].filter(value=>typeof value==='string').join(' '));
+export function paintingSearchText(work,{includeCurrentContext=true}={}){
+  return normalise([work.title,work.shortTitle,work.artist,work.date,work.movement,work.country,work.origin,work.museum,work.institution,work.medium,includeCurrentContext?artworkContextSearchText(work):''].filter(value=>typeof value==='string').join(' '));
 }
-const item=(work,namespace)=>({key:namespace+':'+work.id,workId:work.id,source:namespace,work:structuredClone(work),searchText:paintingSearchText(work)});
+const item=(work,namespace)=>({key:namespace+':'+work.id,workId:work.id,source:namespace,work:structuredClone(work),searchText:paintingSearchText(work,{includeCurrentContext:namespace==='current'})});
 const group=(definition,works,namespace)=>({...definition,workIds:works.map(work=>work.id),items:works.map(work=>item(work,namespace))});
 const counts=groups=>({setCount:groups.length,workCount:unique(groups.flatMap(group=>group.workIds)).length,itemCount:groups.reduce((sum,group)=>sum+group.items.length,0)});
 
@@ -47,11 +48,13 @@ export function buildPaintingGallery({works=[],notes={},saved=null}={}){
   planned.sort((a,b)=>a.number-b.number);
   const reserve=field=>unique(Array.isArray(notes?.reservePools?.[field])?notes.reservePools[field]:[]).filter(id=>byId.has(id)).map(id=>byId.get(id)),next=reserve('batch2'),later=reserve('batch3'),history=answeredGroups(saved);
   const view=(id,label,title,intro,groups,kind)=>({id,label,title,intro,kind,groups,...counts(groups)});
+  const laterBlocks=[4,5,6].map(block=>{const reserved=reserve('batch'+block),start=(block-1)*50+1,end=block*50;return view('block'+block,'Rounds '+start+'–'+end,'Rounds '+start+'–'+end,'Paintings reserved for first overall ratings in this block.',reserved.length?[group({id:'reserve:block'+block,kind:'reserve-pool',title:'Paintings for rounds '+start+'–'+end,label:'Rounds '+start+'–'+end},reserved,'current')]:[],'reserve');}).filter(item=>item.workCount);
   const views=[
     view('first','First comparison sets','The first comparison sets.','The current plan for the first 50 rounds. Other activities show additional paintings.',planned,'planned'),
     view('next','Next '+next.length,'The next paintings.','Reserved for first preference ratings in the second block. Their comparison groups depend on earlier answers.',next.length?[group({id:'reserve:next',kind:'reserve-pool',title:'Paintings for the second block',label:'Rounds 51–100'},next,'current')]:[],'reserve'),
     view('later','Following '+later.length,'Further into the collection.','Reserved for first preference ratings in the third block. Later comparison groups depend on earlier answers.',later.length?[group({id:'reserve:later',kind:'reserve-pool',title:'Paintings for the third block',label:'Rounds 101–150'},later,'current')]:[],'reserve'),
-    view('all','All '+pool.length,'The collection.','Every painting available in the current study collection.',pool.length?[group({id:'catalogue',kind:'catalogue',title:'',label:''},pool,'current')]:[],'catalogue')
+    ...laterBlocks,
+    view('all','All '+pool.length,'The collection','Every painting available in the current collection.',pool.length?[group({id:'catalogue',kind:'catalogue',title:'',label:''},pool,'current')]:[],'catalogue')
   ];
   if(history.available)views.push(view('answered','Your answered sets','Your answered comparisons.','Completed ordinary preference comparisons, with the artwork details saved in your study.',history.groups,'history'));
   return {version:1,views,history:{available:history.available,answeredSetCount:history.groups.length,rejectedRoundIds:history.rejectedRoundIds},coverage:{catalogue:pool.length,first:counts(planned).workCount,next:next.length,later:later.length,plannedSetCount:planned.length},audit:{rejectedPanels},scope:['The first comparison sets describe the current proposal, not what any particular viewer saw.','Later pools reserve first preference ratings. Paintings may appear earlier in other activities.','Later comparison groups adapt to earlier responses.','Saved answers use their own captured catalogue. Current metadata never fills a missing historical artwork.']};
