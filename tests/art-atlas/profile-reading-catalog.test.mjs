@@ -33,6 +33,18 @@ test('Current and retained instruments stay distinct, without presenting removed
   assert.deepEqual(Object.fromEntries(['current','legacy','planned'].map(value=>[value,catalogue.filter(item=>item.availability===value).length])),{current:29,legacy:7,planned:5});for(const item of catalogue.filter(item=>item.status==='planned'))assert.deepEqual(item.sources,[]);
 });
 
+test('Every current family supplies short art-facing requirements and limits without exposing implementation rules',()=>{
+  const current=catalogue.filter(item=>item.availability==='current'),technical=/checksum|sha256|features\.|measurementScope|protocol|criterion|qualified|descriptor|unassigned tag|editorial non-assignment/i;
+  assert.equal(current.length,29);
+  for(const item of current){
+    assert.ok(Array.isArray(item.userSignals)&&item.userSignals.length>=2&&item.userSignals.length<=4,item.id+' has concise product requirements');
+    assert.ok(Array.isArray(item.userLimits)&&item.userLimits.length===2,item.id+' has two plain limits');
+    for(const text of [...item.userSignals,...item.userLimits]){assert.equal(typeof text,'string');assert.ok(text.trim());assert.ok(text.split(/\s+/).length<=34,item.id+' stays short');assert.doesNotMatch(text,technical);assert.doesNotMatch(text,/[\r\n]/);}
+  }
+  const connections=catalogue.find(item=>item.id==='chosen-work-connections');assert.match(connections.requiredSignals.join(' '),/checksum/,'Detailed developer requirements remain intact');assert.notDeepEqual(connections.userSignals,connections.requiredSignals);
+  for(const id of ['admiration-and-appeal','tension-and-return','prospective-feature-check','favourites-and-ratings'])assert.ok(catalogue.find(item=>item.id===id).userSignals.length);
+});
+
 test('Real reviewed artwork examples can reach the new favourite, connection and range family source records',()=>{
   const chosen=['add-varo-harmony','bosch-garden-delights','add-carrington-dagobert','add-watts-hope','egypt-man-portrait'].map(get),lower=['mondrian-composition','add-pollock-convergence'].map(get);
   const pref=(id,offered)=>withOverallAppeal({id,kind:'spectrum',criterion:'preference',works:offered,evidence:{construct:'preference',family:'individual-choice',role:'discovery'}}),a=pref('a',[chosen[0],chosen[1],lower[0]]),b=pref('b',[chosen[2],chosen[3],chosen[4],lower[1]]),fav={id:'favourite-example',kind:'choice-grid',selectionMode:'shortlist',maxChoices:5,works:[...chosen,...lower],evidence:{construct:'overall-favourites'}},answers={a:answer(a,[90,95,10]),b:answer(b,[90,95,90,10]),[fav.id]:{confirmed:true,workIds:ids(fav),selectionMode:'shortlist',selectedIds:chosen.map(work=>work.id),explicitNone:false,unsure:false}},portrait=buildTastePortrait({works,rounds:[a,b,fav],answers});

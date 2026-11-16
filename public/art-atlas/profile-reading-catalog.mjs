@@ -116,6 +116,126 @@ const refined=match=>({module:'reading-patterns-v2',file:'public/art-atlas/readi
 const contrast=match=>({module:'contrast-readings',file:'public/art-atlas/contrast-readings.mjs',export:'buildContrastReadings',resultPath:'$',resultType:'array',match});
 const example=(text,workIds)=>({text,workIds,illustrative:true});
 
+// Product copy is separate from the detailed analytical requirements below.
+const userCopy={
+  'human-figures':{
+    userSignals:['Choices across several groups of paintings.','Comparisons between work centred on people and work with less human presence.','Examples that go against the pattern, as well as those that support it.'],
+    userLimits:['People may come with other qualities you enjoy, such as expressive faces or a story.','These choices do not represent every painting of people.']
+  },
+  representation:{
+    userSignals:['Choices across several different groups.','Paintings that differ clearly in how closely they depict recognisable things.','Both supporting choices and exceptions.'],
+    userLimits:['Subject, colour and artist can change alongside representation.','A few comparisons do not speak for all figurative or abstract art.']
+  },
+  'colour-intensity':{
+    userSignals:['Choices between paintings with stronger and more restrained colour.','The same direction appearing in different groups.','Other colour choices that challenge that direction.'],
+    userLimits:['Reproductions and screens can alter colour.','Colour intensity does not tell us your favourite hue or combination of colours.']
+  },
+  'density-and-activity':{
+    userSignals:['Choices across several groups, with different amounts of detail or movement.','A recurring connection between those differences and your choices.','Preferred paintings that do not fit that connection.'],
+    userLimits:['Detail and movement are considered separately.','Enjoying a spare painting does not rule out enjoying a dense one.']
+  },
+  'depicted-action':{
+    userSignals:['Choices between scenes with more bodily action and scenes with less.','The connection appearing across different paintings.','Exceptions that show where that connection stops helping.'],
+    userLimits:['A crowded composition does not necessarily show more action.','Other differences between the paintings may matter to your choice.']
+  },
+  'setting-and-atmosphere':{
+    userSignals:['Choices between paintings that give their setting different amounts of emphasis.','Examples from several groups.','Paintings you preferred despite a different emphasis on setting.'],
+    userLimits:['The setting in a picture and the feeling it gives you are separate things.','A connection in this collection does not establish a preference for every landscape.']
+  },
+  'shared-subjects':{
+    userSignals:['Choices between paintings of a broadly shared subject.','An earlier preference for the same paintings, if a change of choice is described.','Several different examples before describing a recurring way of treating a subject.'],
+    userLimits:['Similar subjects can still differ in colour, style, artist and composition.','The other paintings and the question being asked can affect a choice.']
+  },
+  'admiration-and-appeal':{
+    userSignals:['Separate answers about personal appeal and admiration for the making.','The same paintings in both answers.','Examples where admiration and appeal agree, alongside examples where they separate.'],
+    userLimits:['Admiration is your judgment, not a grade of artistic quality.','Admiration and liking can agree for some paintings and differ for others.']
+  },
+  'tension-and-return':{
+    userSignals:['Your placements between comforting and unsettling.','A separate answer about which paintings you would return to.','Several examples at both ends before describing a wish to return to both comfort and tension.'],
+    userLimits:['Wanting to return is not the same as actually returning later.','An unsettling painting need not be unpleasant or disliked.']
+  },
+  'scene-and-interpretation':{
+    userSignals:['Your answers about how clear each scene is and how many readings it allows.','Separate choices about which of those paintings you prefer.','Different examples, including those that do not follow the same connection.'],
+    userLimits:['A clear scene can still allow several interpretations.','These answers do not judge whether an interpretation is correct.']
+  },
+  'story-rating-change':{
+    userSignals:['An appeal rating before reading and another afterwards.','The same painting in both ratings.','A sourced note about the painting that you actually opened.'],
+    userLimits:['Reading and looking again happen together.','A change after the note does not prove that the note alone caused it.']
+  },
+  'claim-and-story-comparison':{
+    userSignals:['An earlier answer about whether stories usually change your preferences.','A later before-and-after response to a particular painting.','The earlier statement and the later response kept together.'],
+    userLimits:['A broad description of your taste can have exceptions.','One changed rating does not show how often a story matters.']
+  },
+  'exact-preference-repeat':{
+    userSignals:['The same paintings returning under the same question.','Your answers on both occasions.','Clear choices and close calls kept distinct.'],
+    userLimits:['Memory, order, mood and time can affect the second answer.','A return within this study does not establish long-term stability.']
+  },
+  'selection-changes':{
+    userSignals:['A painting you chose to keep and another you chose to leave.','An earlier preference between those same two paintings.','The other choices and the purpose of each question kept visible.'],
+    userLimits:['Leaving a painting out does not mean you dislike it.','A different group or purpose can lead to a different choice.']
+  },
+  'prospective-feature-check':{
+    userSignals:['A possible explanation drawn from several earlier choices.','A prediction recorded before you answered the later comparison.','The actual result, including exceptions and any competing explanation.'],
+    userLimits:['An explanation can fit one comparison and miss another.','A new pairing can contain paintings you already know.']
+  },
+  'chosen-groups':{
+    userSignals:['A completed museum arrangement or sorting table.','The paintings you actually placed together.','Their positions and room choices kept as you made them.'],
+    userLimits:['A group need not have just one connection.','Placing works together does not say that they are equally liked.']
+  },
+  'pairing-choices':{
+    userSignals:['The neighbour you chose for a particular painting.','Any connections you selected, such as colour, subject or composition.','An earlier preference between the candidates, if the reading describes a different choice.'],
+    userLimits:['Choosing a neighbour asks a different question from choosing a favourite.','The unchosen candidates are not necessarily disliked.']
+  },
+  'grouping-descriptors':{
+    userSignals:['The groups you made in a completed arrangement.','Known connections in colour, date, style or composition.','Other groups and separated paintings that challenge a suggested connection.'],
+    userLimits:['Several connections can fit the same group.','Convenience and personal associations can matter too.']
+  },
+  'grouping-recurrence':{
+    userSignals:['At least two arrangements made with the same collection.','The groups and separations you actually chose on each occasion.','Paintings whose relationship changed as well as those kept together.'],
+    userLimits:['You may remember or deliberately change an earlier arrangement.','A repeated grouping is not an overall score for consistency of taste.']
+  },
+  'table-and-room-difference':{
+    userSignals:['The same paintings placed in a sorting table and a museum.','A pair kept close on the table but put in different rooms.','Both arrangements available to inspect.'],
+    userLimits:['Rooms can serve a different purpose from a sorting table.','A different placement need not contradict your preference.']
+  },
+  'works-left-out':{
+    userSignals:['A completed arrangement and the paintings you actually saw.','The works you kept and those you left outside it.','A real earlier preference if the reading compares liking with what you chose to hang.'],
+    userLimits:['Space, repetition or fit can explain an omission.','Unseen paintings do not count as rejected, and an omission is not a dislike.']
+  },
+  'familiarity-and-shortlist':{
+    userSignals:['An earlier answer about which paintings were familiar.','A later selection from those same paintings.','Your original answers, including None or Not sure.'],
+    userLimits:['Not marked familiar does not prove a painting has never been seen.','Familiarity is different from expertise, and selection is different from ranking.']
+  },
+  'artist-and-tradition-routes':{
+    userSignals:['Paintings you rated highly or chose as favourites.','Reliable artist, style or date information for those works.','Other choices that go against a suggested artist or period connection.'],
+    userLimits:["One painting does not represent an artist's whole output.",'A broad period or tradition can contain very different work.']
+  },
+  'unrated-painting-route':{
+    userSignals:['A painting you preferred, with that choice still available to inspect.','Another sourced work you have not yet rated here.','A clear connection through the artist, tradition or visual treatment.'],
+    userLimits:['A shared artist or subject does not guarantee that you will like the other work.','This is a comparison to try rather than a promise about your taste.']
+  },
+  'museum-collection-route':{
+    userSignals:['Paintings you chose, rated highly or named as favourites.','A sourced link to a museum collection or to an artist represented there.','The actual works behind each museum connection.'],
+    userLimits:['A work belonging to a collection does not guarantee that it is on display.','Check the museum directly before planning a visit.']
+  },
+  'chosen-work-connections':{
+    userSignals:['Several paintings you rated highly or chose as favourites.','A sourced visual connection across different artists or styles.','Paintings that challenge that connection, alongside examples that support it.'],
+    userLimits:['Shared visual features suggest a connection; they do not prove why you prefer a painting.','A common subject in this collection may explain part of a pattern.']
+  },
+  'range-in-positive-choices':{
+    userSignals:['Several spare paintings and several denser ones that you liked.','Your actual ratings or explicit favourites for each.','Examples from both ends shown together.'],
+    userLimits:['Detail can matter without ruling out other kinds of painting.','This keeps both ends in the picture rather than naming a single type for your taste.']
+  },
+  'attention-to-making':{
+    userSignals:['Your answer about attention to paint, marks, lines and composition.','A separate preference for the same paintings if the two responses are compared.','Examples where those answers agree or differ.'],
+    userLimits:['Paying attention to the making is different from admiring it.','Reported attention is not a measurement of viewing time.']
+  },
+  'favourites-and-ratings':{
+    userSignals:['A favourites selection you confirmed.','Earlier liking ratings for the same paintings, if a difference is described.','Only paintings you actually saw among the favourites options.'],
+    userLimits:['Selected favourites are not ranked among themselves.','A painting not selected as a favourite is not necessarily disliked.']
+  }
+};
+
 export const PROFILE_READING_CATALOG=Object.freeze([
   {
     id:"human-figures",lensId:"visual-patterns",title:"Human presence",status:"implemented",availability:"current",
@@ -486,7 +606,7 @@ export const PROFILE_READING_CATALOG=Object.freeze([
     implementationNote:"Artist/style matching is separate from prior-familiarity grids. Its coverage is recorded, but no matched artist-recognition/preference reading is implemented; the familiarity shortlist does not change this status.",
     limits:["Correct matches can be guesses, and earlier games teach labels. Cued recognition is not general expertise, prior familiarity or a motive inferred from preference."]
   }
-]);
+].map(item=>({...item,...(userCopy[item.id]||{})})));
 
 export const READING_LENSES=PROFILE_READING_LENSES;
 export const READING_FAMILIES=PROFILE_READING_CATALOG;
