@@ -7,6 +7,7 @@ import { createDeepStudy } from './deep-study.mjs';
 import { analyzeScenarios } from './scenarios.mjs';
 import { createOpeningScene } from './opening-scene.mjs';
 import {createProfileDetails} from './profile-details.mjs';
+import {createProfileReadingTabs} from './profile-intelligence-view.mjs';
 import {createProfileResponseTabs} from './profile-response-view.mjs';
 import { SCHEMA, ROUND_IDS, FORMATS, AGREEMENT, freshState, pruneAfter, buildRounds, buildProfile, describePoint, validAnswer, sanitizeDraft } from './engine.mjs';
 
@@ -34,6 +35,7 @@ const deep=createDeepStudy({app,getWorks:()=>works,image,esc,keepButtons,mode:'j
 const titleScene=createOpeningScene({app,getWorks:()=>[...works,...openingWorks]});
 createProfileDetails({app,showArtwork});
 createProfileResponseTabs({app});
+createProfileReadingTabs({app});
 function persist(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch { storageAvailable = false; } }
 function save() { persist(STORAGE_KEY, state); }
 function restore() {

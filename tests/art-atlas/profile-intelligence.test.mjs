@@ -37,7 +37,7 @@ test('Personal connection and reported attention use their original separate map
 test('Every category stays visible, distinguishing unmeasured from tested but unresolved',()=>{
   const empty=buildProfileIntelligence();assert.equal(empty.categories.length,9);assert.ok(empty.categories.every(c=>c.status==='not-explored'));
   const f=line([75,75,75,75]),result=buildProfileIntelligence({works,rounds:[f.round],answers:{[f.round.id]:f.answer}});assert.equal(result.categories.find(c=>c.id==='appeal').status,'open');assert.equal(result.categories.find(c=>c.id==='connection').status,'not-explored');
-  const html=renderProfileIntelligence({intelligence:result,esc});assert.match(html,/What captivates you/);assert.match(html,/Not yet explored/);assert.match(html,/Next:/);assert.doesNotMatch(html,/\d+%/);
+  const html=renderProfileIntelligence({intelligence:result,esc});assert.match(html,/What captivates you/);assert.match(html,/Not yet explored/);assert.match(html,/A comparison to try/);assert.doesNotMatch(html,/\d+%/);
 });
 
 test('An explicit disliked counterexample remains prominent and comparative evidence outranks slight favourite enrichment',()=>{

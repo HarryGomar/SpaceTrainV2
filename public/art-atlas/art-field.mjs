@@ -1,6 +1,6 @@
 export function fieldRandom(seed=9317){let value=seed>>>0;return()=>{value=(Math.imul(value,1664525)+1013904223)>>>0;return value/4294967296;};}
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
-export const FIELD_MOTION=Object.freeze({pointerFollow:4.8,presenceRise:3.6,presenceFall:4.1,presence:.9,radiusSquared:.34,repulsion:.26,directionSoftness:.14,parallaxX:.034,parallaxY:.025});
+export const FIELD_MOTION=Object.freeze({pointerFollow:4.8,presenceRise:3,presenceFall:3.4,presence:.9,radiusSquared:.42,repulsion:.35,directionSoftness:.22,parallaxX:.038,parallaxY:.028});
 export const PHONE_FIELD=Object.freeze({paintingLimit:96,foregroundCount:10,edgeScale:.36,clearingInner:.9,clearingOuter:1.4,clearingX:1.35,clearingY:2.6});
 
 export function fieldClearing([x,y],mobile=false){
