@@ -278,9 +278,10 @@ export function journeyInvestigationPool(data,index,earlier=[]){
   const works=data.manifest.catalogue,planning=data.manifest.stimulusPlanning,batchIndex=Math.min(JOURNEY_MAX_LENGTH/JOURNEY_LENGTH-1,Math.floor(index/JOURNEY_LENGTH));
   const reservations=data.batches?.find(batch=>batch.index===batchIndex)?.selection?.reservations||planning?.reservations;
   const routed=reservations?.collectionRouting?.activeStudyWorkIds,active=routed?new Set(routed):null;
+  const deferred=new Set(batchIndex<3?reservations?.deferredUntilAfter150||[]:[]);
   const future=new Set(reservationPoolKeys(reservations).filter(name=>Number(name.slice(5))-1>batchIndex).flatMap(name=>reservations[name]));
   const rated=new Set(earlier.flatMap(round=>round.works.filter(work=>continuousAppealValue(round,data.answers[round.id],work.id)!==null).map(work=>work.id)));
-  const permitted=works.filter(work=>(!active||active.has(work.id))&&allowedInCurationStage(work,batchIndex));
+  const permitted=works.filter(work=>(!active||active.has(work.id))&&!deferred.has(work.id)&&allowedInCurationStage(work,batchIndex));
   const next=data.plan.slice(index+1,index+3).flatMap(snapshot=>[...(snapshot.workIds||[]),...(snapshot.anchorIds||[])]);
   const past=earlier.at(-1),recent=past&&past.kind!=='exercise'&&past.works.length<=12?ids(past):[];
   return {batchIndex,candidateIds:permitted.filter(work=>!future.has(work.id)||rated.has(work.id)).map(work=>work.id),earlyIds:permitted.filter(work=>future.has(work.id)&&!rated.has(work.id)).map(work=>work.id),avoidIds:unique([...next,...recent])};
@@ -321,7 +322,7 @@ export function prepareJourneySession(saved,works,now=Date.now()){
           // A shown legacy map can pin a different set than the saved selector.
           // Keep its real works without carrying a prediction or repeat onto them.
           const bindings=new Map();
-          for(const round of history){const match=/^journey-(\d+)$/.exec(round.id),legacy=/^panel-(\d+)$/.exec(round.evidence?.setId||''),number=round.evidence?.panelNumber||(legacy?Number(legacy[1]):null),sourceBatch=round.evidence?.batchIndex??Math.floor((Number(match?.[1]||1)-1)/JOURNEY_LENGTH);if((['art-profile-50-v2','art-profile-50-v3','art-profile-50-v4','art-profile-50-v5','art-profile-50-v6','art-profile-50-v7','art-profile-50-v8','art-profile-50-v9','art-profile-50-v10','art-profile-50-v11','art-profile-50-v12','art-profile-50-v13','art-profile-50-v14','art-profile-50-v15','art-profile-50-v16','art-profile-50-v17',JOURNEY_REVISION].includes(round.evidence?.journeyRevision)||legacy)&&sourceBatch===batchIndex&&Number.isInteger(number)&&number>=1&&number<=18&&!bindings.has(number))bindings.set(number,ids(round));}
+          for(const round of history){const match=/^journey-(\d+)$/.exec(round.id),legacy=/^panel-(\d+)$/.exec(round.evidence?.setId||''),number=round.evidence?.panelNumber||(legacy?Number(legacy[1]):null),sourceBatch=round.evidence?.batchIndex??Math.floor((Number(match?.[1]||1)-1)/JOURNEY_LENGTH);if((['art-profile-50-v2','art-profile-50-v3','art-profile-50-v4','art-profile-50-v5','art-profile-50-v6','art-profile-50-v7','art-profile-50-v8','art-profile-50-v9','art-profile-50-v10','art-profile-50-v11','art-profile-50-v12','art-profile-50-v13','art-profile-50-v14','art-profile-50-v15','art-profile-50-v16','art-profile-50-v17','art-profile-50-v18',JOURNEY_REVISION].includes(round.evidence?.journeyRevision)||legacy)&&sourceBatch===batchIndex&&Number.isInteger(number)&&number>=1&&number<=18&&!bindings.has(number))bindings.set(number,ids(round));}
           for(const [number,binding] of bindings){const panel=options.panels[number-1];if(!Array.isArray(panel?.workIds)||!sameWorks(panel.workIds,binding)){options.panels[number-1]={workIds:[...binding],construct:'preference',role:'exploration',selectionReason:'Preserve the artwork set in the recorded question. Conflicting repeat or prediction metadata has been removed.',evidenceRoundIds:[]};demotedPanels.push(number);}}
         }
         try{

@@ -21,7 +21,7 @@
     "material-detail",
     "open-expanse"
   ],
-  "reviewedCount": 489,
+  "reviewedCount": 506,
   "limits": [
     "These are nonexclusive editorial descriptions of particular reproductions, reviewed by an assistant. They are not independent human validation, scientific scores or measurements of a viewer's feelings.",
     "Only an explicit reviewed absent status supplies a negative observation. A missing review, mismatched source, unknown status or insufficient reproduction remains unknown.",
@@ -45674,47 +45674,45 @@
       "version": "artwork-attributes-v1",
       "reviewed": true,
       "reviewerType": "assistant-visual-review",
-      "sourceIdentity": {
-        "sourceUrl": "https://museomuraldiegorivera.inba.gob.mx/images/PDF/-HOJA-DE-SALA-MMDR.pdf",
-        "image": "assets/required-20261115/req-rivera-alameda.jpg",
-        "previewSha256": "3c8dcee0cac682ef47d6240134182c20c1e2840445ee3161dbbb8f2179990c41"
-      },
-      "reviewedAsset": {
-        "image": "assets/required-20261115/req-rivera-alameda-large.jpg",
-        "sha256": "69d17d278ea0a66e3cf503a099df89f4cb9d1f4c7919a3afb5b8c57fd3f10499",
-        "width": 3200,
-        "height": 1517,
-        "mediaBinding": "source-verified-required-reproduction",
-        "compositionMatch": "same-composition",
-        "sourceLimited": false
-      },
+      "reviewedAt": "2026-11-17T20:09:02.254Z",
       "sourceUrls": [
         "https://museomuraldiegorivera.inba.gob.mx/images/PDF/-HOJA-DE-SALA-MMDR.pdf",
-        "https://inba.gob.mx/prensa/15490/museo-mural-diego-rivera-exhibira-obra-grafica-del-siglo-xx-que-explora-la-nocion-de-diversidad",
-        "https://commons.wikimedia.org/wiki/File:%27Dream_of_a_Sunday_Afternoon_in_the_Alameda%27_-_Museo_Mural_Diego_Rivera_-_Mexico_2024.jpg#Licensing"
+        "https://commons.wikimedia.org/wiki/File:Mural_Sue%C3%B1o_de_una_tarde_dominical_en_la_Alameda_Central.jpg"
       ],
-      "reviewMethod": "Assistant visually checked all sixteen operational criteria against the actual reproduction. Unlisted checklist criteria were assessed as absent; unresolved evidence was recorded as unknown. No artist/movement defaults were used.",
-      "reviewScope": "displayed-work-or-explicit-complete-panel",
-      "compositionScope": "whole-work",
+      "sourceIdentity": {
+        "sourceUrl": "https://museomuraldiegorivera.inba.gob.mx/images/PDF/-HOJA-DE-SALA-MMDR.pdf",
+        "image": "assets/first-150-20261117/req-rivera-alameda-frontal.jpg",
+        "previewSha256": "a28745584e596c749133e4fccd235d3e79ba6f875d286e6383454a83b4a053c2"
+      },
+      "reviewedAsset": {
+        "image": "assets/first-150-20261117/req-rivera-alameda-frontal-large.jpg",
+        "sha256": "e26b768fcbf8cc9597069eac62e73c6fde7cf592ac0006b62dd761fe52179cd3",
+        "width": 3200,
+        "height": 777,
+        "mediaBinding": "first-150-local-source-rendering",
+        "compositionMatch": "same-composition",
+        "sourceLimited": true,
+        "displayScale": "The full published view was inspected. Unresolved fine detail remains unknown."
+      },
       "attributes": {
         "narrative-detail": {
           "status": "present",
-          "reason": "Painted costumes, signs, objects, the skeleton and small encounters offer many clues beyond an individual pose.",
+          "reason": "Separate incidents and objects recur around the central encounter and at both ends.",
           "evidenceKind": "visual-review"
         },
         "imagined-world": {
           "status": "present",
-          "reason": "A dressed skeleton stands among the painted people as an animate participant.",
+          "reason": "A clothed skeleton stands among living figures and visibly holds a hand.",
           "evidenceKind": "visual-review"
         },
         "dramatic-light": {
-          "status": "absent",
-          "reason": "Selective illumination against deep shadow does not organise this reproduction.",
+          "status": "unknown",
+          "reason": "The stitching and different exposures limit comparison of the mural’s lighting.",
           "evidenceKind": "visual-review"
         },
         "layered-space": {
-          "status": "absent",
-          "reason": "Distinct physical stages, frames or recessed compartments do not organise the view.",
+          "status": "present",
+          "reason": "Trees, paths and receding groups show distinct depths.",
           "evidenceKind": "visual-review"
         },
         "geometric-structure": {
@@ -45724,7 +45722,7 @@
         },
         "visible-gesture": {
           "status": "present",
-          "reason": "Several painted figures hold objects, reach and make emphatic hand gestures.",
+          "reason": "Bodies visibly reach, hold hands and raise arms.",
           "evidenceKind": "visual-review"
         },
         "intimate-figures": {
@@ -45734,42 +45732,42 @@
         },
         "landscape": {
           "status": "present",
-          "reason": "Substantial painted trees and park vegetation organise the upper setting.",
+          "reason": "Trees and terrain organise the setting around the crowd.",
           "evidenceKind": "visual-review"
         },
         "expressive-distortion": {
-          "status": "present",
-          "reason": "Several painted faces and bodies are conspicuously caricatured or altered in proportion.",
+          "status": "unknown",
+          "reason": "Tight edges and stitched geometry limit small proportional comparisons.",
           "evidenceKind": "visual-review"
         },
         "precise-rendering": {
           "status": "present",
-          "reason": "Painted faces, garments and small objects have controlled delineation.",
+          "reason": "Faces, clothing and smaller objects are separately delineated.",
           "evidenceKind": "visual-review"
         },
         "visible-paint-marks": {
           "status": "unknown",
-          "reason": "At the whole-mural photographic scale, distinct paint marks cannot be reliably separated from image texture or surface condition.",
+          "reason": "The stitched image does not consistently distinguish original mural marks.",
           "evidenceKind": "visual-review"
         },
         "pattern-rhythm": {
           "status": "present",
-          "reason": "Repeated upright figures, faces and hats form a long horizontal rhythm.",
+          "reason": "Repeated trees articulate the length of the crowd.",
           "evidenceKind": "visual-review"
         },
         "human-relationships": {
           "status": "present",
-          "reason": "Painted figures hold hands, embrace and direct gazes toward one another.",
+          "reason": "Specific figures hold hands and respond to others around them.",
           "evidenceKind": "visual-review"
         },
         "theatrical-staging": {
-          "status": "absent",
-          "reason": "Curtains, stage-like framing or an emphatic arranged display do not organise the scene.",
+          "status": "present",
+          "reason": "The centred figures and smaller groups form a visibly arranged encounter.",
           "evidenceKind": "visual-review"
         },
         "material-detail": {
           "status": "present",
-          "reason": "Painted hats, garments, feathers and objects have differentiated local descriptions.",
+          "reason": "Clothes and ornaments show distinguishable surface qualities.",
           "evidenceKind": "visual-review"
         },
         "open-expanse": {
@@ -45778,8 +45776,7 @@
           "evidenceKind": "visual-review"
         }
       },
-      "sourcedContext": [],
-      "contextStatus": "not-documented-in-this-review"
+      "sourcedContext": []
     },
     "req-rivera-history-mexico": {
       "version": "artwork-attributes-v1",
@@ -57238,6 +57235,1831 @@
       },
       "sourcedContext": [],
       "contextStatus": "documented-separately"
+    },
+    "add-basquiat-untitled-1981": {
+      "version": "artwork-attributes-v1",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "reviewedAt": "2026-11-17T20:09:02.254Z",
+      "sourceUrls": [
+        "https://www.thebroad.org/art/jean-michel-basquiat/untitled"
+      ],
+      "sourceIdentity": {
+        "sourceUrl": "https://www.thebroad.org/art/jean-michel-basquiat/untitled",
+        "image": "assets/first-150-20261117/add-basquiat-untitled-1981.jpg",
+        "previewSha256": "33fd88ec9c596c013299ebe75d5dac6eb8ba834b5ab37cd3f90d4567a96b703f"
+      },
+      "reviewedAsset": {
+        "image": "assets/first-150-20261117/add-basquiat-untitled-1981-large.jpg",
+        "sha256": "563f7a52068ab1fedf92df928b1e1e8a3756a91d1b05b1edef0cb7c09c58c5f5",
+        "width": 921,
+        "height": 1080,
+        "mediaBinding": "first-150-local-source-rendering",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The full published view was inspected. Unresolved fine detail remains unknown."
+      },
+      "attributes": {
+        "narrative-detail": {
+          "status": "absent",
+          "reason": "No secondary incident, object or relationship is emphasised as a clue beyond the main motif.",
+          "evidenceKind": "visual-review"
+        },
+        "imagined-world": {
+          "status": "unknown",
+          "reason": "Skull-like and living features overlap. The image leaves the depiction between an altered portrait and imagined anatomy.",
+          "evidenceKind": "visual-review"
+        },
+        "dramatic-light": {
+          "status": "absent",
+          "reason": "Selective illumination against deep shadow does not organise this reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "layered-space": {
+          "status": "absent",
+          "reason": "Distinct physical stages, frames or recessed compartments do not organise the view.",
+          "evidenceKind": "visual-review"
+        },
+        "geometric-structure": {
+          "status": "absent",
+          "reason": "Regular geometric shapes, a grid or clearly divided colour fields are not a dominant organising feature.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-gesture": {
+          "status": "absent",
+          "reason": "No emphasised bodily action or active hand gesture shapes the main motif.",
+          "evidenceKind": "visual-review"
+        },
+        "intimate-figures": {
+          "status": "present",
+          "reason": "An oversized head takes up most of the canvas.",
+          "evidenceKind": "visual-review"
+        },
+        "landscape": {
+          "status": "absent",
+          "reason": "Recognisable terrain, water or vegetation does not substantially organise the composition.",
+          "evidenceKind": "visual-review"
+        },
+        "expressive-distortion": {
+          "status": "present",
+          "reason": "The jaw, eyes and scalp are divided and exaggerated through irregular anatomy.",
+          "evidenceKind": "visual-review"
+        },
+        "precise-rendering": {
+          "status": "absent",
+          "reason": "Sharply controlled contours or finely differentiated detail do not dominate the visible treatment.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-paint-marks": {
+          "status": "present",
+          "reason": "Scratched lines, broad strokes and uneven patches remain separately visible.",
+          "evidenceKind": "visual-review"
+        },
+        "pattern-rhythm": {
+          "status": "present",
+          "reason": "Short scalp strokes and separately outlined teeth recur in conspicuous clusters.",
+          "evidenceKind": "visual-review"
+        },
+        "human-relationships": {
+          "status": "absent",
+          "reason": "No emphasised visible exchange or coordinated action connects two depicted people.",
+          "evidenceKind": "visual-review"
+        },
+        "theatrical-staging": {
+          "status": "absent",
+          "reason": "Curtains, stage-like framing or an emphatic arranged display do not organise the scene.",
+          "evidenceKind": "visual-review"
+        },
+        "material-detail": {
+          "status": "absent",
+          "reason": "Finely differentiated depicted material surfaces are not a conspicuous treatment in this reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "open-expanse": {
+          "status": "absent",
+          "reason": "Large relatively uninterrupted open fields do not occupy a substantial part of the composition.",
+          "evidenceKind": "visual-review"
+        }
+      },
+      "sourcedContext": []
+    },
+    "add-magritte-lovers": {
+      "version": "artwork-attributes-v1",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "reviewedAt": "2026-11-17T20:09:02.254Z",
+      "sourceUrls": [
+        "https://www.moma.org/collection/works/79933"
+      ],
+      "sourceIdentity": {
+        "sourceUrl": "https://www.moma.org/collection/works/79933",
+        "image": "assets/first-150-20261117/add-magritte-lovers.jpg",
+        "previewSha256": "dba6f3b2ad6978d6991e78e595c357e346c899876c5eb5a2d988e00e61242061"
+      },
+      "reviewedAsset": {
+        "image": "assets/first-150-20261117/add-magritte-lovers-large.jpg",
+        "sha256": "0814a8b48d4bc51318e9a20a94b7ee257c37f3975ffe4317b3f725a414b34383",
+        "width": 1600,
+        "height": 1191,
+        "mediaBinding": "first-150-local-source-rendering",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The full published view was inspected. Unresolved fine detail remains unknown."
+      },
+      "attributes": {
+        "narrative-detail": {
+          "status": "absent",
+          "reason": "No secondary incident, object or relationship is emphasised as a clue beyond the main motif.",
+          "evidenceKind": "visual-review"
+        },
+        "imagined-world": {
+          "status": "absent",
+          "reason": "No visibly impossible body, object or setting is depicted under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "dramatic-light": {
+          "status": "absent",
+          "reason": "Selective illumination against deep shadow does not organise this reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "layered-space": {
+          "status": "absent",
+          "reason": "Distinct physical stages, frames or recessed compartments do not organise the view.",
+          "evidenceKind": "visual-review"
+        },
+        "geometric-structure": {
+          "status": "absent",
+          "reason": "Regular geometric shapes, a grid or clearly divided colour fields are not a dominant organising feature.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-gesture": {
+          "status": "present",
+          "reason": "The two heads tilt and press together.",
+          "evidenceKind": "visual-review"
+        },
+        "intimate-figures": {
+          "status": "present",
+          "reason": "Two bodies and shrouded heads fill the foreground.",
+          "evidenceKind": "visual-review"
+        },
+        "landscape": {
+          "status": "absent",
+          "reason": "Recognisable terrain, water or vegetation does not substantially organise the composition.",
+          "evidenceKind": "visual-review"
+        },
+        "expressive-distortion": {
+          "status": "absent",
+          "reason": "Recognisable forms are not conspicuously elongated, fragmented or altered in proportion under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "precise-rendering": {
+          "status": "present",
+          "reason": "Controlled contours distinguish fabric folds and the outlines of both heads.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-paint-marks": {
+          "status": "unknown",
+          "reason": "Fine brush texture is hard to distinguish within the softly modelled passages.",
+          "evidenceKind": "visual-review"
+        },
+        "pattern-rhythm": {
+          "status": "absent",
+          "reason": "A conspicuous repeated motif or directional rhythm does not organise this view.",
+          "evidenceKind": "visual-review"
+        },
+        "human-relationships": {
+          "status": "present",
+          "reason": "Contact and corresponding tilts visibly link the two people.",
+          "evidenceKind": "visual-review"
+        },
+        "theatrical-staging": {
+          "status": "absent",
+          "reason": "Curtains, stage-like framing or an emphatic arranged display do not organise the scene.",
+          "evidenceKind": "visual-review"
+        },
+        "material-detail": {
+          "status": "present",
+          "reason": "Tonal folds distinguish the cloth from the jacket.",
+          "evidenceKind": "visual-review"
+        },
+        "open-expanse": {
+          "status": "absent",
+          "reason": "Large relatively uninterrupted open fields do not occupy a substantial part of the composition.",
+          "evidenceKind": "visual-review"
+        }
+      },
+      "sourcedContext": []
+    },
+    "add-warhol-gold-marilyn": {
+      "version": "artwork-attributes-v1",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "reviewedAt": "2026-11-17T20:09:02.254Z",
+      "sourceUrls": [
+        "https://www.moma.org/collection/works/79737"
+      ],
+      "sourceIdentity": {
+        "sourceUrl": "https://www.moma.org/collection/works/79737",
+        "image": "assets/first-150-20261117/add-warhol-gold-marilyn.jpg",
+        "previewSha256": "bfb08c8bb303c2ac848f9c2ac053b3dd57916040ba37a048ad9a4f6bf158f0c4"
+      },
+      "reviewedAsset": {
+        "image": "assets/first-150-20261117/add-warhol-gold-marilyn-large.jpg",
+        "sha256": "422b9d20cdcb4c2fb0901a35c3e74a50d97201f6b55b26a35d2ca6e93ea2acfa",
+        "width": 1100,
+        "height": 1600,
+        "mediaBinding": "first-150-local-source-rendering",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The full published view was inspected. Unresolved fine detail remains unknown."
+      },
+      "attributes": {
+        "narrative-detail": {
+          "status": "absent",
+          "reason": "No secondary incident, object or relationship is emphasised as a clue beyond the main motif.",
+          "evidenceKind": "visual-review"
+        },
+        "imagined-world": {
+          "status": "absent",
+          "reason": "No visibly impossible body, object or setting is depicted under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "dramatic-light": {
+          "status": "absent",
+          "reason": "Selective illumination against deep shadow does not organise this reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "layered-space": {
+          "status": "absent",
+          "reason": "Distinct physical stages, frames or recessed compartments do not organise the view.",
+          "evidenceKind": "visual-review"
+        },
+        "geometric-structure": {
+          "status": "absent",
+          "reason": "Regular geometric shapes, a grid or clearly divided colour fields are not a dominant organising feature.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-gesture": {
+          "status": "absent",
+          "reason": "No emphasised bodily action or active hand gesture shapes the main motif.",
+          "evidenceKind": "visual-review"
+        },
+        "intimate-figures": {
+          "status": "absent",
+          "reason": "A close human figure or compact foreground bodily group does not occupy a substantial part of this view.",
+          "evidenceKind": "visual-review"
+        },
+        "landscape": {
+          "status": "absent",
+          "reason": "Recognisable terrain, water or vegetation does not substantially organise the composition.",
+          "evidenceKind": "visual-review"
+        },
+        "expressive-distortion": {
+          "status": "absent",
+          "reason": "Recognisable forms are not conspicuously elongated, fragmented or altered in proportion under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "precise-rendering": {
+          "status": "present",
+          "reason": "The hair silhouette, lips and blocks of colour are clearly bounded in the sole focal image.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-paint-marks": {
+          "status": "unknown",
+          "reason": "Subtle variation across the gold does not identify discrete strokes in this reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "pattern-rhythm": {
+          "status": "absent",
+          "reason": "A conspicuous repeated motif or directional rhythm does not organise this view.",
+          "evidenceKind": "visual-review"
+        },
+        "human-relationships": {
+          "status": "absent",
+          "reason": "No emphasised visible exchange or coordinated action connects two depicted people.",
+          "evidenceKind": "visual-review"
+        },
+        "theatrical-staging": {
+          "status": "absent",
+          "reason": "Curtains, stage-like framing or an emphatic arranged display do not organise the scene.",
+          "evidenceKind": "visual-review"
+        },
+        "material-detail": {
+          "status": "absent",
+          "reason": "Finely differentiated depicted material surfaces are not a conspicuous treatment in this reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "open-expanse": {
+          "status": "present",
+          "reason": "Uninterrupted gold occupies most of the surface around one small face.",
+          "evidenceKind": "visual-review"
+        }
+      },
+      "sourcedContext": []
+    },
+    "add-magritte-human-condition": {
+      "version": "artwork-attributes-v1",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "reviewedAt": "2026-11-17T20:09:02.254Z",
+      "sourceUrls": [
+        "https://www.nga.gov/artworks/70170-la-condition-humaine",
+        "https://post.moma.org/a-dialogue-across-time-between-zhang-xiaogang-and-rene-magritte/"
+      ],
+      "sourceIdentity": {
+        "sourceUrl": "https://www.nga.gov/artworks/70170-la-condition-humaine",
+        "image": "assets/first-150-20261117/add-magritte-human-condition.jpg",
+        "previewSha256": "514baa595ebf1542b8b1013b38f2db039bf1998548d3daf7cbcfcbf44e0d2966"
+      },
+      "reviewedAsset": {
+        "image": "assets/first-150-20261117/add-magritte-human-condition.jpg",
+        "sha256": "514baa595ebf1542b8b1013b38f2db039bf1998548d3daf7cbcfcbf44e0d2966",
+        "width": 526,
+        "height": 658,
+        "mediaBinding": "first-150-local-source-rendering",
+        "compositionMatch": "same-composition",
+        "sourceLimited": true,
+        "displayScale": "The full published view was inspected. Unresolved fine detail remains unknown."
+      },
+      "attributes": {
+        "narrative-detail": {
+          "status": "present",
+          "reason": "Easel and visible picture edge reveal a painting within the view.",
+          "evidenceKind": "visual-review"
+        },
+        "imagined-world": {
+          "status": "absent",
+          "reason": "No visibly impossible body, object or setting is depicted under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "dramatic-light": {
+          "status": "absent",
+          "reason": "Selective illumination against deep shadow does not organise this reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "layered-space": {
+          "status": "present",
+          "reason": "Curtains, frame, easel and receding terrain have distinct depths.",
+          "evidenceKind": "visual-review"
+        },
+        "geometric-structure": {
+          "status": "present",
+          "reason": "Window and rectilinear canvas organise the composition.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-gesture": {
+          "status": "absent",
+          "reason": "No emphasised bodily action or active hand gesture shapes the main motif.",
+          "evidenceKind": "visual-review"
+        },
+        "intimate-figures": {
+          "status": "absent",
+          "reason": "A close human figure or compact foreground bodily group does not occupy a substantial part of this view.",
+          "evidenceKind": "visual-review"
+        },
+        "landscape": {
+          "status": "present",
+          "reason": "Clouds, trees and terrain occupy a large continuous part of the image.",
+          "evidenceKind": "visual-review"
+        },
+        "expressive-distortion": {
+          "status": "absent",
+          "reason": "Recognisable forms are not conspicuously elongated, fragmented or altered in proportion under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "precise-rendering": {
+          "status": "present",
+          "reason": "The edge of the canvas is sharply distinct against outdoor forms.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-paint-marks": {
+          "status": "unknown",
+          "reason": "The 526 by 658 source does not resolve individual small strokes.",
+          "evidenceKind": "visual-review"
+        },
+        "pattern-rhythm": {
+          "status": "absent",
+          "reason": "A conspicuous repeated motif or directional rhythm does not organise this view.",
+          "evidenceKind": "visual-review"
+        },
+        "human-relationships": {
+          "status": "absent",
+          "reason": "No emphasised visible exchange or coordinated action connects two depicted people.",
+          "evidenceKind": "visual-review"
+        },
+        "theatrical-staging": {
+          "status": "present",
+          "reason": "Drawn curtains provide a stage-like frame for the easel and view.",
+          "evidenceKind": "visual-review"
+        },
+        "material-detail": {
+          "status": "unknown",
+          "reason": "The curtain folds are legible, but fine texture is unresolved at this size.",
+          "evidenceKind": "visual-review"
+        },
+        "open-expanse": {
+          "status": "absent",
+          "reason": "Large relatively uninterrupted open fields do not occupy a substantial part of the composition.",
+          "evidenceKind": "visual-review"
+        }
+      },
+      "sourcedContext": []
+    },
+    "add-dali-persistence": {
+      "version": "artwork-attributes-v1",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "reviewedAt": "2026-11-17T20:09:02.254Z",
+      "sourceUrls": [
+        "https://www.moma.org/collection/works/79018"
+      ],
+      "sourceIdentity": {
+        "sourceUrl": "https://www.moma.org/collection/works/79018",
+        "image": "assets/first-150-20261117/add-dali-persistence.jpg",
+        "previewSha256": "e5099cc06cefeea8605a91c5bb0593bf33f1b034097ae036bd9c3d67199ca2e7"
+      },
+      "reviewedAsset": {
+        "image": "assets/first-150-20261117/add-dali-persistence-large.jpg",
+        "sha256": "5dab32f3bfcf1cd35f472309e3966e91b4d49977e23bbb534b555c48adcadffd",
+        "width": 1600,
+        "height": 1157,
+        "mediaBinding": "first-150-local-source-rendering",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The full published view was inspected. Unresolved fine detail remains unknown."
+      },
+      "attributes": {
+        "narrative-detail": {
+          "status": "present",
+          "reason": "An insect-covered watch, branch and pale form supply secondary details.",
+          "evidenceKind": "visual-review"
+        },
+        "imagined-world": {
+          "status": "present",
+          "reason": "Solid watch cases sag over surfaces as if soft.",
+          "evidenceKind": "visual-review"
+        },
+        "dramatic-light": {
+          "status": "present",
+          "reason": "Hard cast shadows on the dark foreground contrast with illuminated coastal rock.",
+          "evidenceKind": "visual-review"
+        },
+        "layered-space": {
+          "status": "present",
+          "reason": "Near ledge, middle ground and distant cliffs sit in separate depths.",
+          "evidenceKind": "visual-review"
+        },
+        "geometric-structure": {
+          "status": "absent",
+          "reason": "Regular geometric shapes, a grid or clearly divided colour fields are not a dominant organising feature.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-gesture": {
+          "status": "absent",
+          "reason": "No emphasised bodily action or active hand gesture shapes the main motif.",
+          "evidenceKind": "visual-review"
+        },
+        "intimate-figures": {
+          "status": "absent",
+          "reason": "A close human figure or compact foreground bodily group does not occupy a substantial part of this view.",
+          "evidenceKind": "visual-review"
+        },
+        "landscape": {
+          "status": "present",
+          "reason": "Terrain, sky and sea form the setting.",
+          "evidenceKind": "visual-review"
+        },
+        "expressive-distortion": {
+          "status": "present",
+          "reason": "Recognisable circular watches bend and stretch.",
+          "evidenceKind": "visual-review"
+        },
+        "precise-rendering": {
+          "status": "present",
+          "reason": "Fine hands, watch faces, insects and clipped shadows are differentiated.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-paint-marks": {
+          "status": "absent",
+          "reason": "Separate painterly strokes, dabs or drips are not conspicuous in this reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "pattern-rhythm": {
+          "status": "present",
+          "reason": "Repeated watches vary their height and orientation around separate objects.",
+          "evidenceKind": "visual-review"
+        },
+        "human-relationships": {
+          "status": "absent",
+          "reason": "No emphasised visible exchange or coordinated action connects two depicted people.",
+          "evidenceKind": "visual-review"
+        },
+        "theatrical-staging": {
+          "status": "absent",
+          "reason": "Curtains, stage-like framing or an emphatic arranged display do not organise the scene.",
+          "evidenceKind": "visual-review"
+        },
+        "material-detail": {
+          "status": "present",
+          "reason": "Shiny cases and harder rock and ledge surfaces read distinctly.",
+          "evidenceKind": "visual-review"
+        },
+        "open-expanse": {
+          "status": "present",
+          "reason": "Sky and bare middle ground leave large gaps between objects.",
+          "evidenceKind": "visual-review"
+        }
+      },
+      "sourcedContext": []
+    },
+    "add-bacon-pope": {
+      "version": "artwork-attributes-v1",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "reviewedAt": "2026-11-17T20:09:02.254Z",
+      "sourceUrls": [
+        "https://www.francis-bacon.com/artworks/paintings/study-after-velazquezs-portrait-pope-innocent-x",
+        "https://www.francis-bacon.com/news/francis-bacon-teaching-and-learning-resource"
+      ],
+      "sourceIdentity": {
+        "sourceUrl": "https://www.francis-bacon.com/artworks/paintings/study-after-velazquezs-portrait-pope-innocent-x",
+        "image": "assets/first-150-20261117/add-bacon-pope.jpg",
+        "previewSha256": "a5a72cb1050f47d5a10bdf6f67f2fa0c635ec9c27c91d1b5f3748c92085fe5a1"
+      },
+      "reviewedAsset": {
+        "image": "assets/first-150-20261117/add-bacon-pope-large.jpg",
+        "sha256": "73bc39d2408475ddee1be7aba88cb51771dcb4ab41b527ecc01a19001efad31b",
+        "width": 1200,
+        "height": 1551,
+        "mediaBinding": "first-150-local-source-rendering",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The full published view was inspected. Unresolved fine detail remains unknown."
+      },
+      "attributes": {
+        "narrative-detail": {
+          "status": "unknown",
+          "reason": "The scene frames the pope, but no distinct secondary action is established.",
+          "evidenceKind": "visual-review"
+        },
+        "imagined-world": {
+          "status": "absent",
+          "reason": "No visibly impossible body, object or setting is depicted under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "dramatic-light": {
+          "status": "present",
+          "reason": "A pale robe and face stand out against the nearly black enclosure.",
+          "evidenceKind": "visual-review"
+        },
+        "layered-space": {
+          "status": "present",
+          "reason": "A foreground rail separates the seated figure from vertical background marks.",
+          "evidenceKind": "visual-review"
+        },
+        "geometric-structure": {
+          "status": "present",
+          "reason": "Straight yellow rails and several diagonals frame the centre.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-gesture": {
+          "status": "present",
+          "reason": "Hands grip the ends of the chair under the open mouth.",
+          "evidenceKind": "visual-review"
+        },
+        "intimate-figures": {
+          "status": "present",
+          "reason": "A single dominating seated body occupies the foreground.",
+          "evidenceKind": "visual-review"
+        },
+        "landscape": {
+          "status": "absent",
+          "reason": "Recognisable terrain, water or vegetation does not substantially organise the composition.",
+          "evidenceKind": "visual-review"
+        },
+        "expressive-distortion": {
+          "status": "present",
+          "reason": "Head and lower robe break into streaks and altered contours.",
+          "evidenceKind": "visual-review"
+        },
+        "precise-rendering": {
+          "status": "absent",
+          "reason": "Sharply controlled contours or finely differentiated detail do not dominate the visible treatment.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-paint-marks": {
+          "status": "present",
+          "reason": "Strong streaks, smears and rough light passages remain separate.",
+          "evidenceKind": "visual-review"
+        },
+        "pattern-rhythm": {
+          "status": "present",
+          "reason": "Dark vertical streaks recur across the enclosure.",
+          "evidenceKind": "visual-review"
+        },
+        "human-relationships": {
+          "status": "absent",
+          "reason": "No emphasised visible exchange or coordinated action connects two depicted people.",
+          "evidenceKind": "visual-review"
+        },
+        "theatrical-staging": {
+          "status": "present",
+          "reason": "Rail and curtain-like streaks visibly frame the enthroned figure.",
+          "evidenceKind": "visual-review"
+        },
+        "material-detail": {
+          "status": "absent",
+          "reason": "Finely differentiated depicted material surfaces are not a conspicuous treatment in this reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "open-expanse": {
+          "status": "absent",
+          "reason": "Large relatively uninterrupted open fields do not occupy a substantial part of the composition.",
+          "evidenceKind": "visual-review"
+        }
+      },
+      "sourcedContext": []
+    },
+    "add-okeeffe-black-iris": {
+      "version": "artwork-attributes-v1",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "reviewedAt": "2026-11-17T20:09:02.254Z",
+      "sourceUrls": [
+        "https://www.metmuseum.org/art/collection/search/489813",
+        "https://access-ok.okeeffemuseum.org/object/8629/"
+      ],
+      "sourceIdentity": {
+        "sourceUrl": "https://www.metmuseum.org/art/collection/search/489813",
+        "image": "assets/first-150-20261117/add-okeeffe-black-iris.jpg",
+        "previewSha256": "c0e91c5dd96f00293aebb08a61e7bf86c9a4afdee3afc30331169a91a2ee548b"
+      },
+      "reviewedAsset": {
+        "image": "assets/first-150-20261117/add-okeeffe-black-iris-large.jpg",
+        "sha256": "83f44a5d0c7efdc9fffdc641f1389712fd478fd3d680b045664b5d3bb0d0f203",
+        "width": 1278,
+        "height": 1536,
+        "mediaBinding": "first-150-local-source-rendering",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The full published view was inspected. Unresolved fine detail remains unknown."
+      },
+      "attributes": {
+        "narrative-detail": {
+          "status": "absent",
+          "reason": "No secondary incident, object or relationship is emphasised as a clue beyond the main motif.",
+          "evidenceKind": "visual-review"
+        },
+        "imagined-world": {
+          "status": "absent",
+          "reason": "No visibly impossible body, object or setting is depicted under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "dramatic-light": {
+          "status": "absent",
+          "reason": "Selective illumination against deep shadow does not organise this reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "layered-space": {
+          "status": "absent",
+          "reason": "Distinct physical stages, frames or recessed compartments do not organise the view.",
+          "evidenceKind": "visual-review"
+        },
+        "geometric-structure": {
+          "status": "absent",
+          "reason": "Regular geometric shapes, a grid or clearly divided colour fields are not a dominant organising feature.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-gesture": {
+          "status": "absent",
+          "reason": "No emphasised bodily action or active hand gesture shapes the main motif.",
+          "evidenceKind": "visual-review"
+        },
+        "intimate-figures": {
+          "status": "absent",
+          "reason": "A close human figure or compact foreground bodily group does not occupy a substantial part of this view.",
+          "evidenceKind": "visual-review"
+        },
+        "landscape": {
+          "status": "absent",
+          "reason": "Recognisable terrain, water or vegetation does not substantially organise the composition.",
+          "evidenceKind": "visual-review"
+        },
+        "expressive-distortion": {
+          "status": "unknown",
+          "reason": "The enlargement is clear, but the source does not show that the flower’s anatomy is altered.",
+          "evidenceKind": "visual-review"
+        },
+        "precise-rendering": {
+          "status": "unknown",
+          "reason": "Some outlines are strongly defined, with much of the image organised by soft gradations.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-paint-marks": {
+          "status": "absent",
+          "reason": "Separate painterly strokes, dabs or drips are not conspicuous in this reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "pattern-rhythm": {
+          "status": "present",
+          "reason": "Nested petal boundaries recur around the centre.",
+          "evidenceKind": "visual-review"
+        },
+        "human-relationships": {
+          "status": "absent",
+          "reason": "No emphasised visible exchange or coordinated action connects two depicted people.",
+          "evidenceKind": "visual-review"
+        },
+        "theatrical-staging": {
+          "status": "absent",
+          "reason": "Curtains, stage-like framing or an emphatic arranged display do not organise the scene.",
+          "evidenceKind": "visual-review"
+        },
+        "material-detail": {
+          "status": "absent",
+          "reason": "Finely differentiated depicted material surfaces are not a conspicuous treatment in this reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "open-expanse": {
+          "status": "absent",
+          "reason": "Large relatively uninterrupted open fields do not occupy a substantial part of the composition.",
+          "evidenceKind": "visual-review"
+        }
+      },
+      "sourcedContext": []
+    },
+    "add-hockney-bigger-splash": {
+      "version": "artwork-attributes-v1",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "reviewedAt": "2026-11-17T20:09:02.254Z",
+      "sourceUrls": [
+        "https://www.thedavidhockneyfoundation.org/artwork/3667",
+        "https://www.tate.org.uk/art/artworks/hockney-a-bigger-splash-t03254",
+        "https://www.tate.org.uk/api/v2/pages/95745/"
+      ],
+      "sourceIdentity": {
+        "sourceUrl": "https://www.thedavidhockneyfoundation.org/artwork/3667",
+        "image": "assets/first-150-20261117/add-hockney-bigger-splash.jpg",
+        "previewSha256": "05aec5f58f3678d1cefc025bda33da7a380ee244ddc2a420e9638386a6ed9dee"
+      },
+      "reviewedAsset": {
+        "image": "assets/first-150-20261117/add-hockney-bigger-splash-large.jpg",
+        "sha256": "415ee9af2f4c81198382be29e19779ea66119576a8f924327aeeb44ad9b629be",
+        "width": 1536,
+        "height": 1522,
+        "mediaBinding": "first-150-local-source-rendering",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The full published view was inspected. Unresolved fine detail remains unknown."
+      },
+      "attributes": {
+        "narrative-detail": {
+          "status": "present",
+          "reason": "The splash and empty board supply a visible clue to an event.",
+          "evidenceKind": "visual-review"
+        },
+        "imagined-world": {
+          "status": "absent",
+          "reason": "No visibly impossible body, object or setting is depicted under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "dramatic-light": {
+          "status": "absent",
+          "reason": "Selective illumination against deep shadow does not organise this reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "layered-space": {
+          "status": "present",
+          "reason": "Near pool and board, deck, house and palms are separated in depth.",
+          "evidenceKind": "visual-review"
+        },
+        "geometric-structure": {
+          "status": "present",
+          "reason": "Straight colour bands, window divisions and the board direct the view.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-gesture": {
+          "status": "absent",
+          "reason": "No emphasised bodily action or active hand gesture shapes the main motif.",
+          "evidenceKind": "visual-review"
+        },
+        "intimate-figures": {
+          "status": "absent",
+          "reason": "A close human figure or compact foreground bodily group does not occupy a substantial part of this view.",
+          "evidenceKind": "visual-review"
+        },
+        "landscape": {
+          "status": "absent",
+          "reason": "Recognisable terrain, water or vegetation does not substantially organise the composition.",
+          "evidenceKind": "visual-review"
+        },
+        "expressive-distortion": {
+          "status": "absent",
+          "reason": "Recognisable forms are not conspicuously elongated, fragmented or altered in proportion under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "precise-rendering": {
+          "status": "present",
+          "reason": "Hard architectural edges divide the colour fields.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-paint-marks": {
+          "status": "present",
+          "reason": "Small white marks remain distinct around the main splash.",
+          "evidenceKind": "visual-review"
+        },
+        "pattern-rhythm": {
+          "status": "present",
+          "reason": "Repeated window divisions meet the horizontal bands of the pool.",
+          "evidenceKind": "visual-review"
+        },
+        "human-relationships": {
+          "status": "absent",
+          "reason": "No emphasised visible exchange or coordinated action connects two depicted people.",
+          "evidenceKind": "visual-review"
+        },
+        "theatrical-staging": {
+          "status": "absent",
+          "reason": "Curtains, stage-like framing or an emphatic arranged display do not organise the scene.",
+          "evidenceKind": "visual-review"
+        },
+        "material-detail": {
+          "status": "absent",
+          "reason": "Finely differentiated depicted material surfaces are not a conspicuous treatment in this reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "open-expanse": {
+          "status": "present",
+          "reason": "The sky and pool are broad, uninterrupted fields.",
+          "evidenceKind": "visual-review"
+        }
+      },
+      "sourcedContext": []
+    },
+    "add-picasso-girl-mirror": {
+      "version": "artwork-attributes-v1",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "reviewedAt": "2026-11-17T20:09:02.254Z",
+      "sourceUrls": [
+        "https://www.moma.org/collection/works/78311"
+      ],
+      "sourceIdentity": {
+        "sourceUrl": "https://www.moma.org/collection/works/78311",
+        "image": "assets/first-150-20261117/add-picasso-girl-mirror.jpg",
+        "previewSha256": "b96de12b4100666b8421794453697f5812635705c881b457426ce6d286b58d1d"
+      },
+      "reviewedAsset": {
+        "image": "assets/first-150-20261117/add-picasso-girl-mirror-large.jpg",
+        "sha256": "7451df284bbaf7ed517c7d929c49595c00a3d7a3b7fe87f7a4d86d560633dda6",
+        "width": 1288,
+        "height": 1600,
+        "mediaBinding": "first-150-local-source-rendering",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The full published view was inspected. Unresolved fine detail remains unknown."
+      },
+      "attributes": {
+        "narrative-detail": {
+          "status": "present",
+          "reason": "Hand, mirror and altered reflection give a relation beyond the pose.",
+          "evidenceKind": "visual-review"
+        },
+        "imagined-world": {
+          "status": "unknown",
+          "reason": "The altered reflection may come from pictorial distortion. A distinct impossible scene is uncertain.",
+          "evidenceKind": "visual-review"
+        },
+        "dramatic-light": {
+          "status": "absent",
+          "reason": "Selective illumination against deep shadow does not organise this reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "layered-space": {
+          "status": "present",
+          "reason": "The mirror contains a separately framed plane.",
+          "evidenceKind": "visual-review"
+        },
+        "geometric-structure": {
+          "status": "present",
+          "reason": "Diamonds and long arcs divide the surface.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-gesture": {
+          "status": "present",
+          "reason": "The outstretched hand touches the mirror.",
+          "evidenceKind": "visual-review"
+        },
+        "intimate-figures": {
+          "status": "present",
+          "reason": "The large foreground figure fills its half of the view.",
+          "evidenceKind": "visual-review"
+        },
+        "landscape": {
+          "status": "absent",
+          "reason": "Recognisable terrain, water or vegetation does not substantially organise the composition.",
+          "evidenceKind": "visual-review"
+        },
+        "expressive-distortion": {
+          "status": "present",
+          "reason": "Face, arms and body divide into displaced shapes and colours.",
+          "evidenceKind": "visual-review"
+        },
+        "precise-rendering": {
+          "status": "present",
+          "reason": "Strong dark contours separate large colour areas.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-paint-marks": {
+          "status": "unknown",
+          "reason": "Some texture is visible, but separate brush marks are less clear than the outlines.",
+          "evidenceKind": "visual-review"
+        },
+        "pattern-rhythm": {
+          "status": "present",
+          "reason": "Diamonds, arcs and stripes repeat in both halves.",
+          "evidenceKind": "visual-review"
+        },
+        "human-relationships": {
+          "status": "absent",
+          "reason": "No emphasised visible exchange or coordinated action connects two depicted people.",
+          "evidenceKind": "visual-review"
+        },
+        "theatrical-staging": {
+          "status": "absent",
+          "reason": "Curtains, stage-like framing or an emphatic arranged display do not organise the scene.",
+          "evidenceKind": "visual-review"
+        },
+        "material-detail": {
+          "status": "absent",
+          "reason": "Finely differentiated depicted material surfaces are not a conspicuous treatment in this reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "open-expanse": {
+          "status": "absent",
+          "reason": "Large relatively uninterrupted open fields do not occupy a substantial part of the composition.",
+          "evidenceKind": "visual-review"
+        }
+      },
+      "sourcedContext": []
+    },
+    "add-tarsila-abaporu": {
+      "version": "artwork-attributes-v1",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "reviewedAt": "2026-11-17T20:09:02.254Z",
+      "sourceUrls": [
+        "https://coleccion.malba.org.ar/Detail/objects/201"
+      ],
+      "sourceIdentity": {
+        "sourceUrl": "https://coleccion.malba.org.ar/Detail/objects/201",
+        "image": "assets/first-150-20261117/add-tarsila-abaporu.jpg",
+        "previewSha256": "85bf32f1114811a36ce1027397917d9dd49191d07b3da188ff57f3ba5c8327c7"
+      },
+      "reviewedAsset": {
+        "image": "assets/first-150-20261117/add-tarsila-abaporu-large.jpg",
+        "sha256": "2f55b362be0cce36e95224873e5a5e4b063cb1f8547e9f2414cbce581534cc6b",
+        "width": 1367,
+        "height": 1600,
+        "mediaBinding": "first-150-local-source-rendering",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The full published view was inspected. Unresolved fine detail remains unknown."
+      },
+      "attributes": {
+        "narrative-detail": {
+          "status": "absent",
+          "reason": "No secondary incident, object or relationship is emphasised as a clue beyond the main motif.",
+          "evidenceKind": "visual-review"
+        },
+        "imagined-world": {
+          "status": "absent",
+          "reason": "No visibly impossible body, object or setting is depicted under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "dramatic-light": {
+          "status": "absent",
+          "reason": "Selective illumination against deep shadow does not organise this reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "layered-space": {
+          "status": "absent",
+          "reason": "Distinct physical stages, frames or recessed compartments do not organise the view.",
+          "evidenceKind": "visual-review"
+        },
+        "geometric-structure": {
+          "status": "absent",
+          "reason": "Regular geometric shapes, a grid or clearly divided colour fields are not a dominant organising feature.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-gesture": {
+          "status": "absent",
+          "reason": "No emphasised bodily action or active hand gesture shapes the main motif.",
+          "evidenceKind": "visual-review"
+        },
+        "intimate-figures": {
+          "status": "present",
+          "reason": "The near body and greatly enlarged foot occupy most of the composition.",
+          "evidenceKind": "visual-review"
+        },
+        "landscape": {
+          "status": "present",
+          "reason": "Cactus, sun and ground are substantial elements around the figure.",
+          "evidenceKind": "visual-review"
+        },
+        "expressive-distortion": {
+          "status": "present",
+          "reason": "Recognisable limbs and head have emphatically altered proportions.",
+          "evidenceKind": "visual-review"
+        },
+        "precise-rendering": {
+          "status": "present",
+          "reason": "Smooth, strongly bounded edges distinguish the body from the cactus.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-paint-marks": {
+          "status": "absent",
+          "reason": "Separate painterly strokes, dabs or drips are not conspicuous in this reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "pattern-rhythm": {
+          "status": "absent",
+          "reason": "A conspicuous repeated motif or directional rhythm does not organise this view.",
+          "evidenceKind": "visual-review"
+        },
+        "human-relationships": {
+          "status": "absent",
+          "reason": "No emphasised visible exchange or coordinated action connects two depicted people.",
+          "evidenceKind": "visual-review"
+        },
+        "theatrical-staging": {
+          "status": "absent",
+          "reason": "Curtains, stage-like framing or an emphatic arranged display do not organise the scene.",
+          "evidenceKind": "visual-review"
+        },
+        "material-detail": {
+          "status": "absent",
+          "reason": "Finely differentiated depicted material surfaces are not a conspicuous treatment in this reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "open-expanse": {
+          "status": "present",
+          "reason": "The blue field leaves substantial continuous space around the motifs.",
+          "evidenceKind": "visual-review"
+        }
+      },
+      "sourcedContext": []
+    },
+    "add-chagall-village": {
+      "version": "artwork-attributes-v1",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "reviewedAt": "2026-11-17T20:09:02.254Z",
+      "sourceUrls": [
+        "https://www.moma.org/collection/works/78984"
+      ],
+      "sourceIdentity": {
+        "sourceUrl": "https://www.moma.org/collection/works/78984",
+        "image": "assets/first-150-20261117/add-chagall-village.jpg",
+        "previewSha256": "965c1e7e9971d973adde7935e3cf073aeaa7a188684a36b4c714290ce3b49bf0"
+      },
+      "reviewedAsset": {
+        "image": "assets/first-150-20261117/add-chagall-village-large.jpg",
+        "sha256": "316e21513fbe08607d5297098ee75a0ce49ae9626771212850736d52c220510d",
+        "width": 1270,
+        "height": 1600,
+        "mediaBinding": "first-150-local-source-rendering",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The full published view was inspected. Unresolved fine detail remains unknown."
+      },
+      "attributes": {
+        "narrative-detail": {
+          "status": "present",
+          "reason": "Small human and animal scenes, buildings and a branch appear in the larger scene.",
+          "evidenceKind": "visual-review"
+        },
+        "imagined-world": {
+          "status": "present",
+          "reason": "Inverted villagers and fragments of scenes appear within the large profiles.",
+          "evidenceKind": "visual-review"
+        },
+        "dramatic-light": {
+          "status": "absent",
+          "reason": "Selective illumination against deep shadow does not organise this reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "layered-space": {
+          "status": "present",
+          "reason": "Pictured village space and small figures sit inside and behind the foreground forms.",
+          "evidenceKind": "visual-review"
+        },
+        "geometric-structure": {
+          "status": "present",
+          "reason": "Large arcs and diagonals divide and connect the village and faces.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-gesture": {
+          "status": "present",
+          "reason": "A hand holds a plant and a smaller figure carries a visible implement.",
+          "evidenceKind": "visual-review"
+        },
+        "intimate-figures": {
+          "status": "present",
+          "reason": "The large profiles straddle much of the image.",
+          "evidenceKind": "visual-review"
+        },
+        "landscape": {
+          "status": "absent",
+          "reason": "Recognisable terrain, water or vegetation does not substantially organise the composition.",
+          "evidenceKind": "visual-review"
+        },
+        "expressive-distortion": {
+          "status": "present",
+          "reason": "Large, altered profiles and greatly reduced scenes intersect.",
+          "evidenceKind": "visual-review"
+        },
+        "precise-rendering": {
+          "status": "absent",
+          "reason": "Sharply controlled contours or finely differentiated detail do not dominate the visible treatment.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-paint-marks": {
+          "status": "present",
+          "reason": "Distinct strokes show around the coloured faces and sky.",
+          "evidenceKind": "visual-review"
+        },
+        "pattern-rhythm": {
+          "status": "unknown",
+          "reason": "Repeated arcs and roofs are visible, but a single organising rhythm is less clear.",
+          "evidenceKind": "visual-review"
+        },
+        "human-relationships": {
+          "status": "absent",
+          "reason": "No emphasised visible exchange or coordinated action connects two depicted people.",
+          "evidenceKind": "visual-review"
+        },
+        "theatrical-staging": {
+          "status": "absent",
+          "reason": "Curtains, stage-like framing or an emphatic arranged display do not organise the scene.",
+          "evidenceKind": "visual-review"
+        },
+        "material-detail": {
+          "status": "absent",
+          "reason": "Finely differentiated depicted material surfaces are not a conspicuous treatment in this reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "open-expanse": {
+          "status": "absent",
+          "reason": "Large relatively uninterrupted open fields do not occupy a substantial part of the composition.",
+          "evidenceKind": "visual-review"
+        }
+      },
+      "sourcedContext": []
+    },
+    "add-lam-jungle": {
+      "version": "artwork-attributes-v1",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "reviewedAt": "2026-11-17T20:09:02.254Z",
+      "sourceUrls": [
+        "https://www.moma.org/collection/works/34666"
+      ],
+      "sourceIdentity": {
+        "sourceUrl": "https://www.moma.org/collection/works/34666",
+        "image": "assets/first-150-20261117/add-lam-jungle.jpg",
+        "previewSha256": "1bf384c74a8dbfcade168586dcacb06c77bef51e8e67b998fe38323ca6dfeccd"
+      },
+      "reviewedAsset": {
+        "image": "assets/first-150-20261117/add-lam-jungle-large.jpg",
+        "sha256": "e285fe28fda2185206901ef7738c875ef13d14bdba35e3f1e48f9e67ee239a13",
+        "width": 1532,
+        "height": 1600,
+        "mediaBinding": "first-150-local-source-rendering",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The full published view was inspected. Unresolved fine detail remains unknown."
+      },
+      "attributes": {
+        "narrative-detail": {
+          "status": "present",
+          "reason": "Smaller hybrid forms and held shears add distinct details.",
+          "evidenceKind": "visual-review"
+        },
+        "imagined-world": {
+          "status": "present",
+          "reason": "Figures combine animal-like heads and elongated human-like limbs.",
+          "evidenceKind": "visual-review"
+        },
+        "dramatic-light": {
+          "status": "absent",
+          "reason": "Selective illumination against deep shadow does not organise this reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "layered-space": {
+          "status": "absent",
+          "reason": "Distinct physical stages, frames or recessed compartments do not organise the view.",
+          "evidenceKind": "visual-review"
+        },
+        "geometric-structure": {
+          "status": "absent",
+          "reason": "Regular geometric shapes, a grid or clearly divided colour fields are not a dominant organising feature.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-gesture": {
+          "status": "present",
+          "reason": "Raised limbs and the shears held in a hand register as actions.",
+          "evidenceKind": "visual-review"
+        },
+        "intimate-figures": {
+          "status": "present",
+          "reason": "Elongated bodies and large feet fill the foreground.",
+          "evidenceKind": "visual-review"
+        },
+        "landscape": {
+          "status": "present",
+          "reason": "Vegetal forms organise spaces throughout the image.",
+          "evidenceKind": "visual-review"
+        },
+        "expressive-distortion": {
+          "status": "present",
+          "reason": "Bodies stretch, bend and join animal and human proportions.",
+          "evidenceKind": "visual-review"
+        },
+        "precise-rendering": {
+          "status": "present",
+          "reason": "Differentiated contours separate narrow plant and body forms.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-paint-marks": {
+          "status": "present",
+          "reason": "Irregular pigment passages are visible along many forms.",
+          "evidenceKind": "visual-review"
+        },
+        "pattern-rhythm": {
+          "status": "present",
+          "reason": "Upright stalks and elongated bodies recur in a sustained rhythm.",
+          "evidenceKind": "visual-review"
+        },
+        "human-relationships": {
+          "status": "unknown",
+          "reason": "The interwoven bodies give no clear evidence of particular human exchanges.",
+          "evidenceKind": "visual-review"
+        },
+        "theatrical-staging": {
+          "status": "absent",
+          "reason": "Curtains, stage-like framing or an emphatic arranged display do not organise the scene.",
+          "evidenceKind": "visual-review"
+        },
+        "material-detail": {
+          "status": "absent",
+          "reason": "Finely differentiated depicted material surfaces are not a conspicuous treatment in this reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "open-expanse": {
+          "status": "absent",
+          "reason": "Large relatively uninterrupted open fields do not occupy a substantial part of the composition.",
+          "evidenceKind": "visual-review"
+        }
+      },
+      "sourcedContext": []
+    },
+    "add-botero-mona-lisa": {
+      "version": "artwork-attributes-v1",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "reviewedAt": "2026-11-17T20:09:02.254Z",
+      "sourceUrls": [
+        "https://www.moma.org/collection/works/79379"
+      ],
+      "sourceIdentity": {
+        "sourceUrl": "https://www.moma.org/collection/works/79379",
+        "image": "assets/first-150-20261117/add-botero-mona-lisa.jpg",
+        "previewSha256": "a9eed8e2e18ff1051843f941e988660684ebffc31963963b1d62e9475a992f43"
+      },
+      "reviewedAsset": {
+        "image": "assets/first-150-20261117/add-botero-mona-lisa-large.jpg",
+        "sha256": "5f77c2abedd031c9887df878b3c3b331d377ac5c8f262e19fa1286738fff92ec",
+        "width": 1478,
+        "height": 1600,
+        "mediaBinding": "first-150-local-source-rendering",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The full published view was inspected. Unresolved fine detail remains unknown."
+      },
+      "attributes": {
+        "narrative-detail": {
+          "status": "absent",
+          "reason": "No secondary incident, object or relationship is emphasised as a clue beyond the main motif.",
+          "evidenceKind": "visual-review"
+        },
+        "imagined-world": {
+          "status": "absent",
+          "reason": "No visibly impossible body, object or setting is depicted under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "dramatic-light": {
+          "status": "absent",
+          "reason": "Selective illumination against deep shadow does not organise this reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "layered-space": {
+          "status": "absent",
+          "reason": "Distinct physical stages, frames or recessed compartments do not organise the view.",
+          "evidenceKind": "visual-review"
+        },
+        "geometric-structure": {
+          "status": "absent",
+          "reason": "Regular geometric shapes, a grid or clearly divided colour fields are not a dominant organising feature.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-gesture": {
+          "status": "absent",
+          "reason": "No emphasised bodily action or active hand gesture shapes the main motif.",
+          "evidenceKind": "visual-review"
+        },
+        "intimate-figures": {
+          "status": "present",
+          "reason": "One cropped face occupies most of the frame.",
+          "evidenceKind": "visual-review"
+        },
+        "landscape": {
+          "status": "absent",
+          "reason": "Recognisable terrain, water or vegetation does not substantially organise the composition.",
+          "evidenceKind": "visual-review"
+        },
+        "expressive-distortion": {
+          "status": "present",
+          "reason": "The head and features are rounded and enlarged relative to usual facial proportions.",
+          "evidenceKind": "visual-review"
+        },
+        "precise-rendering": {
+          "status": "absent",
+          "reason": "Sharply controlled contours or finely differentiated detail do not dominate the visible treatment.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-paint-marks": {
+          "status": "present",
+          "reason": "Blue, green and violet strokes are conspicuous below the face and along the hair.",
+          "evidenceKind": "visual-review"
+        },
+        "pattern-rhythm": {
+          "status": "absent",
+          "reason": "A conspicuous repeated motif or directional rhythm does not organise this view.",
+          "evidenceKind": "visual-review"
+        },
+        "human-relationships": {
+          "status": "absent",
+          "reason": "No emphasised visible exchange or coordinated action connects two depicted people.",
+          "evidenceKind": "visual-review"
+        },
+        "theatrical-staging": {
+          "status": "absent",
+          "reason": "Curtains, stage-like framing or an emphatic arranged display do not organise the scene.",
+          "evidenceKind": "visual-review"
+        },
+        "material-detail": {
+          "status": "absent",
+          "reason": "Finely differentiated depicted material surfaces are not a conspicuous treatment in this reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "open-expanse": {
+          "status": "absent",
+          "reason": "Large relatively uninterrupted open fields do not occupy a substantial part of the composition.",
+          "evidenceKind": "visual-review"
+        }
+      },
+      "sourcedContext": []
+    },
+    "add-lichtenstein-drowning": {
+      "version": "artwork-attributes-v1",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "reviewedAt": "2026-11-17T20:09:02.254Z",
+      "sourceUrls": [
+        "https://www.moma.org/collection/works/80249"
+      ],
+      "sourceIdentity": {
+        "sourceUrl": "https://www.moma.org/collection/works/80249",
+        "image": "assets/first-150-20261117/add-lichtenstein-drowning.jpg",
+        "previewSha256": "79e0daadb4bc2cacc980c2356e0ff051bee8e7b5bfdb3f4b3b1998fed1c5a24d"
+      },
+      "reviewedAsset": {
+        "image": "assets/first-150-20261117/add-lichtenstein-drowning-large.jpg",
+        "sha256": "c7f908079b2b78acd34d1840fff49ad2c3718f98add7e0c81c796c6566bc4e89",
+        "width": 1586,
+        "height": 1600,
+        "mediaBinding": "first-150-local-source-rendering",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The full published view was inspected. Unresolved fine detail remains unknown."
+      },
+      "attributes": {
+        "narrative-detail": {
+          "status": "present",
+          "reason": "The speech balloon supplies a story clue beyond the face.",
+          "evidenceKind": "visual-review"
+        },
+        "imagined-world": {
+          "status": "absent",
+          "reason": "No visibly impossible body, object or setting is depicted under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "dramatic-light": {
+          "status": "absent",
+          "reason": "Selective illumination against deep shadow does not organise this reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "layered-space": {
+          "status": "absent",
+          "reason": "Distinct physical stages, frames or recessed compartments do not organise the view.",
+          "evidenceKind": "visual-review"
+        },
+        "geometric-structure": {
+          "status": "absent",
+          "reason": "Regular geometric shapes, a grid or clearly divided colour fields are not a dominant organising feature.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-gesture": {
+          "status": "present",
+          "reason": "A prominently angled hand rises from the waves.",
+          "evidenceKind": "visual-review"
+        },
+        "intimate-figures": {
+          "status": "present",
+          "reason": "One large face dominates the centre.",
+          "evidenceKind": "visual-review"
+        },
+        "landscape": {
+          "status": "present",
+          "reason": "Water surrounds and shapes the view of the face and arm.",
+          "evidenceKind": "visual-review"
+        },
+        "expressive-distortion": {
+          "status": "absent",
+          "reason": "Recognisable forms are not conspicuously elongated, fragmented or altered in proportion under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "precise-rendering": {
+          "status": "present",
+          "reason": "Hard-edged comic contours divide hair, waves and skin.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-paint-marks": {
+          "status": "absent",
+          "reason": "Separate painterly strokes, dabs or drips are not conspicuous in this reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "pattern-rhythm": {
+          "status": "present",
+          "reason": "Repeated curls connect the shapes of waves and hair.",
+          "evidenceKind": "visual-review"
+        },
+        "human-relationships": {
+          "status": "absent",
+          "reason": "No emphasised visible exchange or coordinated action connects two depicted people.",
+          "evidenceKind": "visual-review"
+        },
+        "theatrical-staging": {
+          "status": "absent",
+          "reason": "Curtains, stage-like framing or an emphatic arranged display do not organise the scene.",
+          "evidenceKind": "visual-review"
+        },
+        "material-detail": {
+          "status": "absent",
+          "reason": "Finely differentiated depicted material surfaces are not a conspicuous treatment in this reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "open-expanse": {
+          "status": "absent",
+          "reason": "Large relatively uninterrupted open fields do not occupy a substantial part of the composition.",
+          "evidenceKind": "visual-review"
+        }
+      },
+      "sourcedContext": []
+    },
+    "add-matisse-red-studio": {
+      "version": "artwork-attributes-v1",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "reviewedAt": "2026-11-17T20:09:02.254Z",
+      "sourceUrls": [
+        "https://www.moma.org/collection/works/78389"
+      ],
+      "sourceIdentity": {
+        "sourceUrl": "https://www.moma.org/collection/works/78389",
+        "image": "assets/first-150-20261117/add-matisse-red-studio.jpg",
+        "previewSha256": "f21be633188f01cba5266580235c163e02435374f7c3aa53ee44d2a4009c8716"
+      },
+      "reviewedAsset": {
+        "image": "assets/first-150-20261117/add-matisse-red-studio-large.jpg",
+        "sha256": "92873e99fdd6702c79922d92739addfe16a249f7c3ad754082075ae788a476ba",
+        "width": 1600,
+        "height": 1322,
+        "mediaBinding": "first-150-local-source-rendering",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The full published view was inspected. Unresolved fine detail remains unknown."
+      },
+      "attributes": {
+        "narrative-detail": {
+          "status": "present",
+          "reason": "Pictures, cups and furniture suggest the use of the room.",
+          "evidenceKind": "visual-review"
+        },
+        "imagined-world": {
+          "status": "absent",
+          "reason": "No visibly impossible body, object or setting is depicted under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "dramatic-light": {
+          "status": "absent",
+          "reason": "Selective illumination against deep shadow does not organise this reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "layered-space": {
+          "status": "present",
+          "reason": "Near tabletop and room edges give shallow but legible depth.",
+          "evidenceKind": "visual-review"
+        },
+        "geometric-structure": {
+          "status": "present",
+          "reason": "Framed rectangles and furniture lines organise the red surface.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-gesture": {
+          "status": "absent",
+          "reason": "No emphasised bodily action or active hand gesture shapes the main motif.",
+          "evidenceKind": "visual-review"
+        },
+        "intimate-figures": {
+          "status": "absent",
+          "reason": "A close human figure or compact foreground bodily group does not occupy a substantial part of this view.",
+          "evidenceKind": "visual-review"
+        },
+        "landscape": {
+          "status": "absent",
+          "reason": "Recognisable terrain, water or vegetation does not substantially organise the composition.",
+          "evidenceKind": "visual-review"
+        },
+        "expressive-distortion": {
+          "status": "absent",
+          "reason": "Recognisable forms are not conspicuously elongated, fragmented or altered in proportion under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "precise-rendering": {
+          "status": "absent",
+          "reason": "Sharply controlled contours or finely differentiated detail do not dominate the visible treatment.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-paint-marks": {
+          "status": "unknown",
+          "reason": "Separate marks within the main red field are harder to resolve than the drawn outlines.",
+          "evidenceKind": "visual-review"
+        },
+        "pattern-rhythm": {
+          "status": "present",
+          "reason": "Repeated rectangles and intervals between objects connect different parts of the image.",
+          "evidenceKind": "visual-review"
+        },
+        "human-relationships": {
+          "status": "absent",
+          "reason": "No emphasised visible exchange or coordinated action connects two depicted people.",
+          "evidenceKind": "visual-review"
+        },
+        "theatrical-staging": {
+          "status": "absent",
+          "reason": "Curtains, stage-like framing or an emphatic arranged display do not organise the scene.",
+          "evidenceKind": "visual-review"
+        },
+        "material-detail": {
+          "status": "absent",
+          "reason": "Finely differentiated depicted material surfaces are not a conspicuous treatment in this reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "open-expanse": {
+          "status": "present",
+          "reason": "Continuous red leaves large uninterrupted areas between objects.",
+          "evidenceKind": "visual-review"
+        }
+      },
+      "sourcedContext": []
+    },
+    "add-haring-untitled-1982": {
+      "version": "artwork-attributes-v1",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "reviewedAt": "2026-11-17T20:09:02.254Z",
+      "sourceUrls": [
+        "https://www.boijmans.nl/en/collection/artworks/4434/untitled"
+      ],
+      "sourceIdentity": {
+        "sourceUrl": "https://www.boijmans.nl/en/collection/artworks/4434/untitled",
+        "image": "assets/first-150-20261117/add-haring-untitled-1982.jpg",
+        "previewSha256": "38a962361f4fa96345a2c97d9305af42d9a6d0f0fd1dbf2b9552b4b2414fa21e"
+      },
+      "reviewedAsset": {
+        "image": "assets/first-150-20261117/add-haring-untitled-1982-large.jpg",
+        "sha256": "9d80ebfa71839eb5ea2efc58a864c14aa5c9d5cb1648d79860121567fa561f15",
+        "width": 1385,
+        "height": 1200,
+        "mediaBinding": "first-150-local-source-rendering",
+        "compositionMatch": "same-composition",
+        "sourceLimited": false,
+        "displayScale": "The full published view was inspected. Unresolved fine detail remains unknown."
+      },
+      "attributes": {
+        "narrative-detail": {
+          "status": "absent",
+          "reason": "No secondary incident, object or relationship is emphasised as a clue beyond the main motif.",
+          "evidenceKind": "visual-review"
+        },
+        "imagined-world": {
+          "status": "unknown",
+          "reason": "Some signs and bodies look fantastical, but the overall scene is indeterminate.",
+          "evidenceKind": "visual-review"
+        },
+        "dramatic-light": {
+          "status": "absent",
+          "reason": "Selective illumination against deep shadow does not organise this reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "layered-space": {
+          "status": "absent",
+          "reason": "Distinct physical stages, frames or recessed compartments do not organise the view.",
+          "evidenceKind": "visual-review"
+        },
+        "geometric-structure": {
+          "status": "present",
+          "reason": "Strong divisions and angular enclosed shapes separate areas of yellow.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-gesture": {
+          "status": "present",
+          "reason": "Multiple graphic bodies have emphatically reaching and bending limbs.",
+          "evidenceKind": "visual-review"
+        },
+        "intimate-figures": {
+          "status": "absent",
+          "reason": "A close human figure or compact foreground bodily group does not occupy a substantial part of this view.",
+          "evidenceKind": "visual-review"
+        },
+        "landscape": {
+          "status": "absent",
+          "reason": "Recognisable terrain, water or vegetation does not substantially organise the composition.",
+          "evidenceKind": "visual-review"
+        },
+        "expressive-distortion": {
+          "status": "present",
+          "reason": "Recognisable bodies stretch and merge beyond ordinary proportions.",
+          "evidenceKind": "visual-review"
+        },
+        "precise-rendering": {
+          "status": "present",
+          "reason": "Thick delineated outlines maintain a legible division between figures and ground.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-paint-marks": {
+          "status": "unknown",
+          "reason": "The contours are clear. Independent brush marks within their broad lines are harder to isolate.",
+          "evidenceKind": "visual-review"
+        },
+        "pattern-rhythm": {
+          "status": "present",
+          "reason": "Connected bodies, dashes and angular marks organise the entire design.",
+          "evidenceKind": "visual-review"
+        },
+        "human-relationships": {
+          "status": "unknown",
+          "reason": "The outlines give no unambiguous exchanges between particular people.",
+          "evidenceKind": "visual-review"
+        },
+        "theatrical-staging": {
+          "status": "absent",
+          "reason": "Curtains, stage-like framing or an emphatic arranged display do not organise the scene.",
+          "evidenceKind": "visual-review"
+        },
+        "material-detail": {
+          "status": "absent",
+          "reason": "Finely differentiated depicted material surfaces are not a conspicuous treatment in this reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "open-expanse": {
+          "status": "absent",
+          "reason": "Large relatively uninterrupted open fields do not occupy a substantial part of the composition.",
+          "evidenceKind": "visual-review"
+        }
+      },
+      "sourcedContext": []
+    },
+    "add-marshall-many-mansions": {
+      "version": "artwork-attributes-v1",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "reviewedAt": "2026-11-17T20:09:02.254Z",
+      "sourceUrls": [
+        "https://art21.org/gallery/kerry-james-marshall-many-mansions-1994/",
+        "https://www.artic.edu/files/aa3ebf14-5f78-489a-a75f-2613336d614d/TX-CR1103.pdf"
+      ],
+      "sourceIdentity": {
+        "sourceUrl": "https://art21.org/gallery/kerry-james-marshall-many-mansions-1994/",
+        "image": "assets/first-150-20261117/add-marshall-many-mansions.jpg",
+        "previewSha256": "4562cbea9a1c23e6cd7b6a90679a613e051c71b07af3af0a3e8fadbcbdb8ccb6"
+      },
+      "reviewedAsset": {
+        "image": "assets/first-150-20261117/add-marshall-many-mansions-large.jpg",
+        "sha256": "b1124d7d3c9999af8845d7a1fd1045f5b652f57b61f54e3db5635f5914b09467",
+        "width": 864,
+        "height": 742,
+        "mediaBinding": "first-150-local-source-rendering",
+        "compositionMatch": "same-composition",
+        "sourceLimited": true,
+        "displayScale": "The full published view was inspected. Unresolved fine detail remains unknown."
+      },
+      "attributes": {
+        "narrative-detail": {
+          "status": "present",
+          "reason": "Signs, banners and gardening actions provide several secondary clues.",
+          "evidenceKind": "visual-review"
+        },
+        "imagined-world": {
+          "status": "absent",
+          "reason": "No visibly impossible body, object or setting is depicted under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "dramatic-light": {
+          "status": "absent",
+          "reason": "Selective illumination against deep shadow does not organise this reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "layered-space": {
+          "status": "present",
+          "reason": "Flower beds, gardeners, hedges and farther housing can be distinguished.",
+          "evidenceKind": "visual-review"
+        },
+        "geometric-structure": {
+          "status": "present",
+          "reason": "Straight sign edges, buildings and planting beds separate regions.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-gesture": {
+          "status": "present",
+          "reason": "Several people visibly bend, plant or handle tools.",
+          "evidenceKind": "visual-review"
+        },
+        "intimate-figures": {
+          "status": "present",
+          "reason": "Large foreground bodies occupy much of the lower frame.",
+          "evidenceKind": "visual-review"
+        },
+        "landscape": {
+          "status": "present",
+          "reason": "Planted beds and trees organise the space around the figures.",
+          "evidenceKind": "visual-review"
+        },
+        "expressive-distortion": {
+          "status": "absent",
+          "reason": "Recognisable forms are not conspicuously elongated, fragmented or altered in proportion under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "precise-rendering": {
+          "status": "present",
+          "reason": "Distinct edges and small floral details punctuate the dense surface.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-paint-marks": {
+          "status": "present",
+          "reason": "Irregular dabs and scumbled colour passages remain distinct in the garden.",
+          "evidenceKind": "visual-review"
+        },
+        "pattern-rhythm": {
+          "status": "present",
+          "reason": "Repeated flowers, white shirts and upright shrubs connect several areas.",
+          "evidenceKind": "visual-review"
+        },
+        "human-relationships": {
+          "status": "absent",
+          "reason": "No emphasised visible exchange or coordinated action connects two depicted people.",
+          "evidenceKind": "visual-review"
+        },
+        "theatrical-staging": {
+          "status": "unknown",
+          "reason": "A banner frames the scene, with stronger evidence for an arranged garden than for theatrical staging.",
+          "evidenceKind": "visual-review"
+        },
+        "material-detail": {
+          "status": "present",
+          "reason": "Clothing, flowers and textured planting are visibly differentiated.",
+          "evidenceKind": "visual-review"
+        },
+        "open-expanse": {
+          "status": "absent",
+          "reason": "Large relatively uninterrupted open fields do not occupy a substantial part of the composition.",
+          "evidenceKind": "visual-review"
+        }
+      },
+      "sourcedContext": []
     }
   }
 }

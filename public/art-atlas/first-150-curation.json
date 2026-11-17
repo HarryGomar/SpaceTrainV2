@@ -1,0 +1,647 @@
+{
+  "revision": "declared-first-150-20261117-v1",
+  "sourceCommit": "6b24f27d92962872d039b6616e0de5166d9e205d",
+  "openingPanels": [
+    {
+      "panel": 1,
+      "workIds": [
+        "van-gogh-starry-night",
+        "study-leonardo-mona-lisa",
+        "study-hokusai-great-wave",
+        "klimt-kiss"
+      ],
+      "title": "Four different ways of holding a scene",
+      "qualities": [
+        "layered-space",
+        "pattern-rhythm"
+      ],
+      "purposes": [
+        "Compare a focal figure, a pair, a sea scene and a night setting.",
+        "Keep recognisability separate from colour and repeated shapes."
+      ]
+    },
+    {
+      "panel": 2,
+      "workIds": [
+        "study-vermeer-pearl",
+        "add-rivera-portrait-frida",
+        "add-warhol-gold-marilyn",
+        "add-rothko-orange-yellow"
+      ],
+      "title": "The face and the field",
+      "qualities": [
+        "intimate-figures",
+        "open-expanse"
+      ],
+      "purposes": [
+        "Compare three treatments of a close figure with an uninterrupted colour field. Gold Marilyn shows one photograph-derived face. Recognition, subject and medium can distinguish the responses."
+      ]
+    },
+    {
+      "panel": 3,
+      "workIds": [
+        "study-cassatt-child-bath",
+        "study-morisot-cradle",
+        "add-siqueiros-madre-nina",
+        "cassatt-omnibus"
+      ],
+      "title": "Close relationships and public company",
+      "qualities": [
+        "visible-gesture",
+        "theatrical-staging"
+      ],
+      "purposes": [
+        "Compare intimate care with figures sharing a public setting.",
+        "Two Cassatt works offer a limited within-artist contrast; subject and handling still differ."
+      ]
+    },
+    {
+      "panel": 4,
+      "workIds": [
+        "study-van-gogh-sunflowers",
+        "friedrich-wanderer",
+        "blanchard-still-life",
+        "add-tamayo-still-life-foot"
+      ],
+      "title": "Colour in objects and landscapes",
+      "qualities": [
+        "landscape",
+        "open-expanse"
+      ],
+      "purposes": [
+        "Compare colour and space in three still-life treatments and an outdoor scene. A landscape response may depend on the figure, distance or handling."
+      ]
+    },
+    {
+      "panel": 5,
+      "workIds": [
+        "mondrian-composition",
+        "study-kandinsky-composition-eight",
+        "add-gerzso-water-mansion",
+        "add-pollock-convergence"
+      ],
+      "title": "Abstraction can be sparse or dense",
+      "qualities": [
+        "geometric-structure",
+        "visible-paint-marks"
+      ],
+      "purposes": [
+        "Keep abstraction separate from visible density.",
+        "Compare geometric order with accumulating marks and rhythm."
+      ]
+    },
+    {
+      "panel": 6,
+      "workIds": [
+        "add-basquiat-untitled-1981",
+        "study-munch-scream",
+        "opening-cma-92937",
+        "almeida-junior-saudade"
+      ],
+      "title": "An expressive head and bodily action",
+      "qualities": [
+        "expressive-distortion",
+        "visible-paint-marks"
+      ],
+      "purposes": [
+        "Compare Basquiat’s single worked-over head and Munch’s altered face with an explicit physical contest and a quieter figure. The ratings concern appeal."
+      ]
+    },
+    {
+      "panel": 7,
+      "workIds": [
+        "study-raphael-school-athens",
+        "canon-leonardo-last-supper",
+        "canon-caravaggio-calling-matthew",
+        "study-rembrandt-night-watch"
+      ],
+      "title": "How groups direct attention",
+      "qualities": [
+        "dramatic-light",
+        "layered-space"
+      ],
+      "purposes": [
+        "Compare spatial and light cues in four group scenes. A visible exchange requires its own evidence."
+      ]
+    },
+    {
+      "panel": 8,
+      "workIds": [
+        "add-magritte-lovers",
+        "study-rousseau-sleeping-gypsy",
+        "add-watts-hope",
+        "add-varo-harmony"
+      ],
+      "title": "What a scene leaves unexplained",
+      "qualities": [
+        "imagined-world",
+        "narrative-detail"
+      ],
+      "purposes": [
+        "Compare withheld faces, a sleeping figure with a lion, a blindfolded musician and an imagined act of making. Apparent meaning and any later note remain separate reports."
+      ]
+    },
+    {
+      "panel": 9,
+      "workIds": [
+        "velazquez-las-meninas",
+        "holbein-ambassadors",
+        "add-van-eyck-arnolfini",
+        "add-hammershoi-room-wife"
+      ],
+      "title": "A room can organise a story or stay quiet",
+      "qualities": [
+        "theatrical-staging",
+        "narrative-detail"
+      ],
+      "purposes": [
+        "Compare elaborate interior encounters with a restrained inhabited room.",
+        "Keep surrounding space separate from the number of objects or secondary clues."
+      ]
+    },
+    {
+      "panel": 10,
+      "workIds": [
+        "study-malevich-black-square",
+        "add-herrera-cobalt-white",
+        "study-vermeer-milkmaid",
+        "add-caravaggio-judith-barberini"
+      ],
+      "title": "Focus and visual construction",
+      "qualities": [
+        "geometric-structure",
+        "dramatic-light"
+      ],
+      "purposes": [
+        "See whether geometric edges or selective light and bodily action draw appeal in different treatments. These works also differ in subject, palette and handling."
+      ]
+    },
+    {
+      "panel": 11,
+      "workIds": [
+        "cezanne-mountain",
+        "opening-cma-141639",
+        "velasco-valley-mexico",
+        "study-bruegel-hunters-snow"
+      ],
+      "title": "Weather, scale and landscape",
+      "qualities": [
+        "landscape",
+        "open-expanse"
+      ],
+      "purposes": [
+        "Compare natural settings through broken colour planes, expansive weather, a receding valley and layered winter activity. The variation makes landscape a more useful subject to test."
+      ]
+    },
+    {
+      "panel": 12,
+      "workIds": [
+        "req-brueghel-hearing",
+        "req-caravaggio-david-borghese",
+        "req-dore-quixote-library",
+        "req-rivera-controller-universe"
+      ],
+      "title": "Story clues can accumulate or concentrate",
+      "qualities": [
+        "imagined-world",
+        "layered-space"
+      ],
+      "purposes": [
+        "Compare clues concentrated around a figure with distributed objects and incidents.",
+        "A dense scene and a symbolic subject need not be the same preference."
+      ]
+    },
+    {
+      "panel": 13,
+      "workIds": [
+        "bosch-garden-delights",
+        "req-rivera-alameda",
+        "goya-saturn",
+        "canon-goya-third-may"
+      ],
+      "title": "Dense stories and different kinds of tragedy",
+      "qualities": [
+        "narrative-detail",
+        "imagined-world"
+      ],
+      "purposes": [
+        "Compare dense storytelling in Bosch and Rivera, then two very different Goya scenes.",
+        "Crowded composition, physically fantastical imagery and depicted violence are distinct candidate explanations.",
+        "Report felt unease and willingness to return separately; neither is inferred from the subject."
+      ]
+    },
+    {
+      "panel": 14,
+      "workIds": [
+        "study-posada-catrina",
+        "add-bruegel-triumph-death",
+        "brueghel-sight",
+        "req-patinir-massys-temptations"
+      ],
+      "title": "Different amounts of space for an image to imply meaning",
+      "qualities": [
+        "precise-rendering",
+        "layered-space"
+      ],
+      "purposes": [
+        "Compare a compact graphic figure with extensive scenes and gathered objects.",
+        "Documented symbolism remains context, not a visual score inferred from the title."
+      ]
+    },
+    {
+      "panel": 15,
+      "workIds": [
+        "turner-burning-parliament",
+        "canon-picasso-guernica",
+        "bonheur-horses",
+        "canon-siqueiros-collective-suicide"
+      ],
+      "title": "Action, tragedy and visual spectacle",
+      "qualities": [
+        "visible-gesture",
+        "expressive-distortion"
+      ],
+      "purposes": [
+        "Compare the tragic scenes of Guernica and Collective Suicide with nonviolent bodily action and illuminated spectacle.",
+        "Differences in palette, fragmentation, subject and historical knowledge remain competing explanations."
+      ]
+    },
+    {
+      "panel": 16,
+      "workIds": [
+        "van-gogh-night-cafe",
+        "canon-hopper-nighthawks",
+        "canon-kahlo-two-fridas",
+        "study-wood-american-gothic"
+      ],
+      "title": "Night interiors and paired portraits",
+      "qualities": [
+        "dramatic-light",
+        "human-relationships"
+      ],
+      "purposes": [
+        "Compare The Night Café with Nighthawks for illuminated interiors, colour, handling and interpersonal clues.",
+        "Compare The Two Fridas with American Gothic for paired figures and visibly expressed symbolic connection.",
+        "Neither familiar artists nor multiple figures establish liking or an interest in interpersonal exchange."
+      ]
+    },
+    {
+      "panel": 17,
+      "workIds": [
+        "study-matisse-dance",
+        "study-seurat-grande-jatte",
+        "study-tanner-banjo-lesson",
+        "add-izquierdo-sorrowful-friday"
+      ],
+      "title": "Social scenes through different handling",
+      "qualities": [
+        "precise-rendering",
+        "expressive-distortion"
+      ],
+      "purposes": [
+        "Compare everyday group relationships across precise and altered treatment.",
+        "The paired admiration question asks about making separately from preference."
+      ]
+    },
+    {
+      "panel": 18,
+      "workIds": [
+        "canon-varo-creation-birds",
+        "add-carrington-dagobert",
+        "add-miro-harlequin-carnival",
+        "add-rivera-zapatista-landscape"
+      ],
+      "title": "Precise edges across imagined and abstract forms",
+      "qualities": [
+        "imagined-world",
+        "geometric-structure"
+      ],
+      "purposes": [
+        "Compare meticulous imagined scenes with organic and geometric abstraction.",
+        "Clear edges remain common here, so precision is not treated as the opposite of abstraction."
+      ]
+    }
+  ],
+  "laterBlocks": [
+    {
+      "block": 2,
+      "workIds": [
+        "req-birkhauser-worlds-wound",
+        "req-siqueiros-new-democracy",
+        "req-orozco-prometheus",
+        "req-orozco-katharsis",
+        "req-camarena-liberacion",
+        "matejko-stanczyk",
+        "canon-caravaggio-bacchus",
+        "canon-michelangelo-creation-adam",
+        "canon-bosch-temptations-lisbon",
+        "canon-bruegel-tower-babel",
+        "canon-bruegel-netherlandish-proverbs",
+        "canon-velazquez-breda",
+        "canon-rembrandt-prodigal-son",
+        "canon-holbein-dead-christ",
+        "canon-durer-melencolia",
+        "canon-delacroix-sardanapalus",
+        "canon-ingres-odalisque",
+        "canon-bocklin-isle-dead",
+        "canon-siqueiros-echo-scream",
+        "canon-tamayo-dualidad",
+        "canon-varo-call",
+        "add-af-klint-dove-two",
+        "add-albers-light-grey-wall",
+        "friedrich-moonrise",
+        "gauguin-call",
+        "add-krasner-icarus",
+        "teotihuacan-mural",
+        "still-life-sweets",
+        "add-thomas-etude-blue",
+        "add-morandi-still-life-1948",
+        "add-delaunay-air-iron-water",
+        "add-malevich-football-player",
+        "add-atl-climatic-eruption",
+        "piazza-san-marco",
+        "add-kandinsky-impression-concert",
+        "add-rivera-flower-vendor",
+        "herran-la-ofrenda",
+        "add-de-chirico-engineer",
+        "study-belmiro-arrufos",
+        "klee-carnival",
+        "morisot-reading",
+        "study-waterhouse-shalott",
+        "redon-violette",
+        "add-renoir-boating-party",
+        "add-magritte-human-condition",
+        "add-dali-persistence",
+        "add-bacon-pope",
+        "add-okeeffe-black-iris",
+        "add-hockney-bigger-splash",
+        "add-picasso-girl-mirror",
+        "add-tarsila-abaporu",
+        "study-botticelli-birth-venus",
+        "study-gentileschi-judith",
+        "study-david-marat",
+        "study-monet-japanese-footbridge"
+      ],
+      "comparisons": [
+        {
+          "workIds": [
+            "add-magritte-human-condition",
+            "add-hockney-bigger-splash"
+          ],
+          "title": "Constructed views",
+          "qualities": [
+            "layered-space",
+            "geometric-structure"
+          ],
+          "purpose": "Compare the continuity of a painted landscape and its window with Hockney’s divided poolside view."
+        },
+        {
+          "workIds": [
+            "add-dali-persistence",
+            "canon-bocklin-isle-dead"
+          ],
+          "title": "Space and the uncanny",
+          "qualities": [
+            "imagined-world",
+            "open-expanse"
+          ],
+          "purpose": "Cross far-off coast and island views with differences in impossible forms and visual focus."
+        },
+        {
+          "workIds": [
+            "add-bacon-pope",
+            "canon-ingres-odalisque"
+          ],
+          "title": "Treatment of a figure",
+          "qualities": [
+            "expressive-distortion",
+            "precise-rendering"
+          ],
+          "purpose": "Compare what handling does to an emphatically posed figure. Subject, palette and genre also differ."
+        },
+        {
+          "workIds": [
+            "add-okeeffe-black-iris",
+            "study-monet-japanese-footbridge"
+          ],
+          "title": "Natural forms up close and in space",
+          "qualities": [
+            "landscape",
+            "material-detail"
+          ],
+          "purpose": "Compare an enlarged flower with a garden whose vegetation forms a setting."
+        },
+        {
+          "workIds": [
+            "add-picasso-girl-mirror",
+            "add-tarsila-abaporu"
+          ],
+          "title": "Changed bodily proportions",
+          "qualities": [
+            "expressive-distortion",
+            "pattern-rhythm"
+          ],
+          "purpose": "Compare a doubled figure with dense repeated pattern and one elongated figure in a spare setting."
+        },
+        {
+          "workIds": [
+            "study-david-marat",
+            "study-gentileschi-judith"
+          ],
+          "title": "Different handling of depicted violence",
+          "qualities": [
+            "visible-gesture",
+            "dramatic-light"
+          ],
+          "purpose": "Compare a still aftermath with active struggle. Felt unease requires a separate report."
+        },
+        {
+          "workIds": [
+            "study-botticelli-birth-venus",
+            "add-renoir-boating-party"
+          ],
+          "title": "Poses and social attention",
+          "qualities": [
+            "visible-gesture",
+            "human-relationships"
+          ],
+          "purpose": "Compare deliberately posed figures with visible interactions in a gathering."
+        }
+      ]
+    },
+    {
+      "block": 3,
+      "workIds": [
+        "tanner-waters",
+        "van-gogh-plane-trees",
+        "add-mondrian-tableau-one",
+        "add-af-klint-untitled-1933",
+        "add-atl-popocatepetl",
+        "add-ernst-divinite",
+        "add-gerzso-landscape-red-ii",
+        "add-gerzso-yellow-green-blue",
+        "add-izquierdo-idyll",
+        "add-izquierdo-living-still-life",
+        "add-kahlo-borderline",
+        "add-kahlo-girl-death-mask",
+        "add-kandinsky-composition-seven",
+        "add-klee-rose-garden",
+        "add-kupka-cathedral",
+        "add-marc-animal-destinies",
+        "add-merida-time-space",
+        "add-merida-untitled-1950",
+        "add-miro-composition-1933",
+        "add-paalen-golden-fleece",
+        "add-tamayo-woman-watermelon",
+        "add-velazquez-spinners",
+        "extended-cma-111470",
+        "extended-cma-128393",
+        "extended-cma-128394",
+        "extended-cma-135371",
+        "extended-cma-150693",
+        "extended-cma-154286",
+        "extended-cma-171157",
+        "extended-cma-83462",
+        "extended-cma-84370",
+        "figari-candombe-moon",
+        "klee-tightrope",
+        "millais-ophelia",
+        "monet-spring-flowers",
+        "monet-water-lilies",
+        "opening-cma-101461",
+        "opening-cma-102578",
+        "opening-cma-103997",
+        "opening-cma-106088",
+        "opening-cma-106094",
+        "opening-cma-109245",
+        "opening-cma-110180",
+        "add-chagall-village",
+        "add-lam-jungle",
+        "add-botero-mona-lisa",
+        "add-lichtenstein-drowning",
+        "add-matisse-red-studio",
+        "add-haring-untitled-1982",
+        "add-marshall-many-mansions",
+        "study-manet-luncheon-grass",
+        "study-gericault-raft",
+        "study-delacroix-liberty",
+        "study-monet-rouen-sunlight",
+        "opening-cma-125104"
+      ],
+      "comparisons": [
+        {
+          "workIds": [
+            "add-chagall-village",
+            "add-lam-jungle"
+          ],
+          "title": "Figures with animal forms",
+          "qualities": [
+            "imagined-world",
+            "layered-space"
+          ],
+          "purpose": "Compare Chagall’s intersecting village imagery with Lam’s tightly interwoven forms."
+        },
+        {
+          "workIds": [
+            "add-botero-mona-lisa",
+            "add-kahlo-borderline"
+          ],
+          "title": "Framing a figure and its setting",
+          "qualities": [
+            "expressive-distortion",
+            "narrative-detail"
+          ],
+          "purpose": "Compare a recognizable portrait quotation with a self-portrait placed between contrasting environments."
+        },
+        {
+          "workIds": [
+            "add-lichtenstein-drowning",
+            "add-haring-untitled-1982"
+          ],
+          "title": "Graphic line and repeated forms",
+          "qualities": [
+            "pattern-rhythm",
+            "intimate-figures"
+          ],
+          "purpose": "Compare a single close comic face and speech with a dense mural-like web of repeated graphic bodies."
+        },
+        {
+          "workIds": [
+            "add-matisse-red-studio",
+            "add-marshall-many-mansions"
+          ],
+          "title": "Colour and the organisation of a place",
+          "qualities": [
+            "layered-space",
+            "geometric-structure"
+          ],
+          "purpose": "Compare an interior reduced to a red field and a populated outdoor setting with independently legible parts."
+        },
+        {
+          "workIds": [
+            "study-gericault-raft",
+            "study-delacroix-liberty"
+          ],
+          "title": "Groups under pressure",
+          "qualities": [
+            "visible-gesture",
+            "theatrical-staging"
+          ],
+          "purpose": "Compare directed bodily action in two layered group scenes under different circumstances."
+        },
+        {
+          "workIds": [
+            "study-manet-luncheon-grass",
+            "opening-cma-125104"
+          ],
+          "title": "Figure groups and bodily gesture",
+          "qualities": [
+            "human-relationships",
+            "visible-gesture"
+          ],
+          "purpose": "Compare a staged foreground group with several dancers and distinct uses of gesture."
+        },
+        {
+          "workIds": [
+            "study-monet-rouen-sunlight",
+            "extended-cma-83462"
+          ],
+          "title": "Light and surface across views",
+          "qualities": [
+            "visible-paint-marks",
+            "open-expanse"
+          ],
+          "purpose": "Compare Monet’s close architectural surface with the clearly divided expanses in Vallotton’s fields."
+        }
+      ]
+    }
+  ],
+  "deferrals": [
+    "add-caravaggio-taking-christ",
+    "canon-caravaggio-entombment",
+    "canon-caravaggio-medusa",
+    "add-caravaggio-supper-emmaus-1601",
+    "canon-varo-escape",
+    "add-varo-sympathy",
+    "add-varo-icon",
+    "add-varo-weaving-space-time",
+    "add-mondrian-composition-1930",
+    "add-mondrian-composition-colour-a",
+    "add-mondrian-composition-ten",
+    "add-orozco-buffoons",
+    "req-orozco-cortes-malinche",
+    "req-orozco-man-fire",
+    "add-kandinsky-rowing",
+    "add-kandinsky-circle-square",
+    "add-klee-flowering-tree",
+    "add-klee-wald-bau",
+    "req-brueghel-smell",
+    "req-brueghel-taste",
+    "req-brueghel-touch",
+    "add-newman-prometheus-bound",
+    "add-magritte-fanatiques",
+    "add-dali-transparent-simulacrum",
+    "opening-cma-100489",
+    "opening-cma-103366"
+  ]
+}

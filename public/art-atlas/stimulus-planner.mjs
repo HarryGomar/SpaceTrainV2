@@ -7,7 +7,7 @@ import {choiceGridExposure} from './discovery-grid.mjs';
 import {isStudyEligibleArtwork} from './study-eligibility.mjs';
 import {isLaterCurationWork,isWesternAmericasWork} from './curation-sequence.mjs';
 
-export const STIMULUS_PLANNER_REVISION='curated-stimuli-v5';
+export const STIMULUS_PLANNER_REVISION='curated-stimuli-v6';
 export const JOURNEY_BLOCK_LIMIT=6;
 export const LATER_FIRST_RATING_CAPACITY=64;
 export const FIRST_PANEL_SIZES=Object.freeze([4,3,4,3,4,4,3,4,4,3,4,4,3,4,4,3,3,3]);
@@ -167,7 +167,9 @@ function reservationsFor(rows,notes,reservationPlan,history,batchIndex,seed){
 /** New unshown preference-panel proposals only. The caller owns saved session preservation. */
 export function planStimulusPanels({works=[],rounds=[],answers={},batchIndex=0,seed='curated-study',adaptivePlan,curationNotes={},reservationPlan,panelCount=18,panelSizes=null,quotas={}}={}){
   const inputWorks=Array.isArray(works)?works:[],notes=plain(curationNotes)?curationNotes:{},rows=rowsFor(inputWorks,notes),byId=new Map(rows.map(r=>[r.id,r])),history=historyFor(rows,Array.isArray(rounds)?rounds:[],plain(answers)?answers:{});
-  const count=Number.isInteger(panelCount)?Math.max(0,Math.min(18,panelCount)):18,batch=Number.isInteger(batchIndex)&&batchIndex>=0?batchIndex:0,configuredSizes=panelSizes||notes.panelSizes||(rows.length>=144?Array(18).fill(4):FIRST_PANEL_SIZES),sizes=Array.from({length:count},(_,i)=>Number.isInteger(configuredSizes?.[i])&&configuredSizes[i]>=2&&configuredSizes[i]<=4?configuredSizes[i]:FIRST_PANEL_SIZES[i]),reservations=reservationsFor(rows,notes,reservationPlan,history,batch,String(seed)),blocked=new Set(rows.filter(row=>(reservations.releases.get(row.id)||0)>batch&&!history.preferenceSeen.has(row.id)).map(row=>row.id));
+  const count=Number.isInteger(panelCount)?Math.max(0,Math.min(18,panelCount)):18,batch=Number.isInteger(batchIndex)&&batchIndex>=0?batchIndex:0,configuredSizes=panelSizes||notes.panelSizes||(rows.length>=144?Array(18).fill(4):FIRST_PANEL_SIZES),sizes=Array.from({length:count},(_,i)=>Number.isInteger(configuredSizes?.[i])&&configuredSizes[i]>=2&&configuredSizes[i]<=4?configuredSizes[i]:FIRST_PANEL_SIZES[i]),reservations=reservationsFor(rows,notes,reservationPlan,history,batch,String(seed));
+  const declaredEarly=!!reservations.pools.earlyCurationRevision&&batch<3;
+  const blocked=new Set(rows.filter(row=>(reservations.releases.get(row.id)||0)>batch&&(declaredEarly||!history.preferenceSeen.has(row.id))).map(row=>row.id));
   const warnings=[],rejectedBriefs=[],panels=Array(count).fill(null),uses=new Map(),selectedCounts={era:new Map(),region:new Map(),country:new Map(),tradition:new Map()},priorCounts=groupCounts(rows.filter(row=>history.preferenceSeen.has(row.id))),protectedWorks=new Set(),preserved=new Set();
   const recordRows=chosen=>{for(const row of chosen){increment(uses,row.id);for(const f of Object.keys(selectedCounts))increment(selectedCounts[f],row[f]);}};
   let originalAdaptive=null;
@@ -180,20 +182,45 @@ export function planStimulusPanels({works=[],rounds=[],answers={},batchIndex=0,s
       panels[i]=structuredClone(p);preserved.add(i);p.workIds.forEach(id=>protectedWorks.add(id));recordRows(p.workIds.map(id=>byId.get(id)));
     }
   }
-  const futureTargets=Object.fromEntries(reservationPoolKeys(reservations.pools).map(name=>[name,reservations.pools[name].length])),totalSlots=sizes.reduce((a,b)=>a+b,0),currentPool='batch'+(batch+1),scopedTarget=batch>0&&Object.hasOwn(futureTargets,currentPool)&&(reservations.explicit||futureTargets[currentPool]>0),targetIds=new Set(scopedTarget?reservations.pools[currentPool]:[]),targetUnrated=id=>!history.preferenceSeen.has(id)&&(!scopedTarget||targetIds.has(id)),releasedUnrated=rows.filter(row=>targetUnrated(row.id)&&!blocked.has(row.id)).length,firstRatingTarget=batch===0?totalSlots:scopedTarget?[...targetIds].filter(id=>!history.preferenceSeen.has(id)).length:batch===1?STIMULUS_TARGETS.secondBatchFirstRatings:batch===2?STIMULUS_TARGETS.thirdBatchFirstRatings:Math.min(LATER_FIRST_RATING_CAPACITY,releasedUnrated),firstRatingChosen=new Set([...uses.keys()].filter(targetUnrated)),jitter=(id,salt)=>hash(String(seed)+'|'+batch+'|'+salt+'|'+id)/4294967296;
+  const futureTargets=Object.fromEntries(reservationPoolKeys(reservations.pools).map(name=>[name,reservations.pools[name].length])),totalSlots=sizes.reduce((a,b)=>a+b,0),currentPool='batch'+(batch+1),scopedTarget=batch>0&&Object.hasOwn(futureTargets,currentPool)&&(reservations.explicit||futureTargets[currentPool]>0),targetIds=new Set(scopedTarget?reservations.pools[currentPool]:[]);
+  const targetUnrated=id=>!history.preferenceSeen.has(id)&&(!scopedTarget||targetIds.has(id));
+  const releasedUnrated=rows.filter(row=>targetUnrated(row.id)&&!blocked.has(row.id)).length;
+  const firstRatingTarget=batch===0?totalSlots:scopedTarget?[...targetIds].filter(id=>!history.preferenceSeen.has(id)).length:batch===1?STIMULUS_TARGETS.secondBatchFirstRatings:batch===2?STIMULUS_TARGETS.thirdBatchFirstRatings:Math.min(LATER_FIRST_RATING_CAPACITY,releasedUnrated);
+  const fixedCohort=declaredEarly&&scopedTarget;
+  const needsPlace=fixedCohort?id=>targetIds.has(id):targetUnrated,placementTarget=fixedCohort?targetIds.size:firstRatingTarget;
+  const placed=new Set([...uses.keys()].filter(needsPlace)),jitter=(id,salt)=>hash(String(seed)+'|'+batch+'|'+salt+'|'+id)/4294967296;
+  const pairBriefs=fixedCohort?[...(notes.earlyComparisonPairs?.[batch+1]||[])]:[];
   const benefit=row=>{
     let score=0;for(const f of Object.keys(selectedCounts))if(row[f])score+=(f==='region'?4:f==='era'?3:1.5)/(1+(selectedCounts[f].get(row[f])||0)+(priorCounts[f][row[f]]||0)*.25);
     score+=(row.landmark?.7:0)+(IMPORTANCE_WEIGHTS[row.importance]||0);
-    const unrated=targetUnrated(row.id);if(unrated&&!firstRatingChosen.has(row.id))score+=firstRatingChosen.size<firstRatingTarget?8:1;else if(!unrated&&firstRatingChosen.size>=firstRatingTarget)score+=2;
+    if(needsPlace(row.id)&&!placed.has(row.id))score+=placed.size<placementTarget?8:1;
+    else if(!needsPlace(row.id)&&placed.size>=placementTarget)score+=2;
     return score-(uses.get(row.id)||0)*5-(history.presentations.get(row.id)||0)*2;
   };
-  function choosePanel(index,size){
-    let candidates=rows.filter(row=>!blocked.has(row.id)&&!protectedWorks.has(row.id)&&(uses.get(row.id)||0)<(batch?2:1));
-    const futureSlots=sizes.slice(index+1).reduce((total,value,j)=>total+(preserved.has(index+1+j)?0:value),0),requiredFresh=Math.max(0,Math.min(size,firstRatingTarget-firstRatingChosen.size-futureSlots));
-    const fresh=row=>targetUnrated(row.id)&&!firstRatingChosen.has(row.id),freshCount=items=>items.filter(fresh).length;
+  function choosePanel(index,size,pairBrief){
+    const pending=new Set(pairBriefs.flatMap(brief=>brief.workIds));
+    let candidates=rows.filter(row=>!blocked.has(row.id)&&!protectedWorks.has(row.id)&&!pending.has(row.id)&&(uses.get(row.id)||0)<(batch?2:1));
+    const futureSlots=sizes.slice(index+1).reduce((total,value,j)=>total+(preserved.has(index+1+j)?0:value),0),requiredFresh=Math.max(0,Math.min(size,placementTarget-placed.size-futureSlots));
+    const fresh=row=>needsPlace(row.id)&&!placed.has(row.id),freshCount=items=>items.filter(fresh).length;
     const canReachFresh=items=>!requiredFresh||freshCount(items)+Math.min(size-items.length,candidates.filter(row=>fresh(row)&&!items.some(other=>other.id===row.id)).length)>=requiredFresh;
     if(requiredFresh===size&&candidates.filter(fresh).length>=size)candidates=candidates.filter(fresh);
     const maximumLandmarks=index===0&&batch===0?4:(Number.isInteger(notes.maximumLandmarksPerPanel)?Math.max(1,Math.min(4,notes.maximumLandmarksPerPanel)):2),chosen=[],contrastPairs=[];
+    if(pairBrief&&pairBrief.workIds.every(id=>candidates.some(row=>row.id===id))){
+      const pair=pairBrief.workIds.map(id=>byId.get(id));
+      if(canReachFresh(pair)){
+        chosen.push(...pair);
+        const proposedPartners=new Set(originalAdaptive?.panels[index]?.workIds||[]);
+        const partnerScore=row=>benefit(row)+Number(proposedPartners.has(row.id))*1.5+pair.reduce((sum,anchor)=>sum+Number(row.work.artist!==anchor.work.artist),0)+jitter(row.id,'declared-partner-'+index)*.01;
+        while(chosen.length<size){
+          const requireRemaining=requiredFresh-freshCount(chosen)>=size-chosen.length;
+          const partner=candidates.filter(row=>(!requireRemaining||fresh(row))&&chosen.every(other=>row.id!==other.id&&!avoidPair(row,other))&&(!row.landmark||chosen.filter(other=>other.landmark).length<maximumLandmarks)).sort((a,b)=>partnerScore(b)-partnerScore(a)||a.id.localeCompare(b.id))[0];
+          if(!partner)break;
+          chosen.push(partner);
+        }
+        if(chosen.length===size)return {chosen,target:null,contrastPairs:[pairBrief.workIds],pairBasis:'editorial-declared',reason:pairBrief.purpose,brief:{...pairBrief,comparisonObjectives:{title:pairBrief.title,qualities:pairBrief.qualities,purposes:[pairBrief.purpose]}}};
+        chosen.length=0;
+      }
+    }
     if(index===0&&batch===0&&OPENING.every(id=>candidates.some(row=>row.id===id))&&size===4)return {chosen:OPENING.map(id=>byId.get(id)),target:null,contrastPairs,pairBasis:'benchmark',reason:'A fixed four-work benchmark with recognisable works from different periods and traditions.'};
     if(batch&&notes.qualityDesign&&size===4){const keys=QUALITY_COMPARISONS[index%QUALITY_COMPARISONS.length],crossed=chooseQualityCrossing({candidates,keys,benefit,requiredFresh,fresh,maximumLandmarks,avoidPair});if(crossed)return {chosen:crossed.chosen,target:null,contrastPairs:[],pairBasis:'source-bound-quality-crossing',qualityDiagnostic:crossed.qualityDiagnostic,reason:'Compare predeclared visible qualities across reviewed annotation cells while retaining artist and source differences as alternatives.'};}
     const target=TARGETS[index]||FEATURES[index%FEATURES.length],proposals=[];
@@ -209,14 +236,14 @@ export function planStimulusPanels({works=[],rounds=[],answers={},batchIndex=0,s
     const brief=batch===0?(Array.isArray(notes.proposedFirst18Panels)?notes.proposedFirst18Panels:[]).find(p=>p&&(p.panel??p.panelNumber)===i+1):null;
     let selected;
     if(brief){const workIds=brief.workIds,valid=Array.isArray(workIds)&&workIds.length===sizes[i]&&new Set(workIds).size===workIds.length&&workIds.every(id=>byId.has(id)&&!blocked.has(id)&&!uses.has(id))&&(i!==0||sizes[i]!==4||!OPENING.every(id=>byId.has(id))||signature(workIds)===signature(OPENING))&&(i===0||workIds.filter(id=>byId.get(id).landmark).length<=(notes.maximumLandmarksPerPanel||2))&&pairs(workIds).every(([a,b])=>!avoidPair(byId.get(a),byId.get(b)));if(valid){const chosen=workIds.map(id=>byId.get(id)),target=FEATURES.includes(brief.targetFeature)?brief.targetFeature:FEATURES.includes(brief.targetContrast)?brief.targetContrast:FEATURES.includes(brief.targetContrast?.feature)?brief.targetContrast.feature:null,declared=Array.isArray(brief.contrastPairs)?brief.contrastPairs.filter(pair=>Array.isArray(pair)&&pair.length===2&&new Set(pair).size===2&&pair.every(id=>workIds.includes(id))):[],contrastPairs=declared.length?[...new Map(declared.map(pair=>[signature(pair),[...pair]])).values()].slice(0,2):chosen.length>=2?[chosen.slice(0,2).map(r=>r.id),...(chosen.length===4?[chosen.slice(2,4).map(r=>r.id)]:[])]:[];selected={chosen,target,contrastPairs,pairBasis:declared.length?'editorial-declared':'descriptive-adjacent',reason:label(brief.primaryQuestion)||'Reviewed editorial comparison brief.',brief};}else rejectedBriefs.push({panel:i+1,reason:'The editorial brief conflicts with panel size, reservations, available identities, reuse, or the landmark cap.'});}
-    selected||=choosePanel(i,sizes[i]);
+    selected||=choosePanel(i,sizes[i],pairBriefs.shift());
     if(selected.chosen.length!==sizes[i]){
-      const fallback=originalAdaptive?.panels?.[i];if(batch&&Array.isArray(fallback?.workIds)&&fallback.workIds.every(id=>byId.has(id))){panels[i]=structuredClone(fallback);preserved.add(i);recordRows(fallback.workIds.map(id=>byId.get(id)));warnings.push({panel:i+1,reason:'The original exploration comparison was retained because a safe curated replacement could not fill this slot.'});continue;}
+      const fallback=originalAdaptive?.panels?.[i];if(batch&&Array.isArray(fallback?.workIds)&&fallback.workIds.every(id=>byId.has(id))){panels[i]=structuredClone(fallback);preserved.add(i);recordRows(fallback.workIds.map(id=>byId.get(id)));fallback.workIds.filter(needsPlace).forEach(id=>placed.add(id));warnings.push({panel:i+1,reason:'The original exploration comparison was retained because a safe curated replacement could not fill this slot.'});continue;}
       warnings.push({panel:i+1,reason:'The catalogue cannot fill this panel without violating reserved first ratings, landmark limits, or reuse limits.'});continue;
     }
     const diagnostic=panelDiagnostic(selected.chosen,selected.target,selected.contrastPairs,selected.pairBasis),ordered=i===0&&batch===0?selected.chosen:[...selected.chosen].sort((a,b)=>jitter(a.id,'order-'+i)-jitter(b.id,'order-'+i)||a.id.localeCompare(b.id)),crossing=selected.qualityDiagnostic||(selected.brief?.comparisonObjectives?.qualities?qualityDiagnostic(selected.chosen,selected.brief.comparisonObjectives.qualities):null);
     panels[i]={panelIndex:i,workIds:ordered.map(r=>r.id),construct:'preference',role:batch?'exploration':'discovery',selectionReason:selected.reason,evidenceRoundIds:[],plannerRevision:STIMULUS_PLANNER_REVISION,plannerDiagnostic:diagnostic,...(crossing?{qualityDiagnostic:crossing}:{}),...(selected.brief?{editorialBrief:{...structuredClone(selected.brief),primaryQuestion:selected.brief.primaryQuestion||null,targetContrast:structuredClone(selected.brief.targetContrast??null),sharedGround:structuredClone(selected.brief.sharedGround??null),confounds:structuredClone(selected.brief.confounds??null)}}:{})};
-    recordRows(selected.chosen);selected.chosen.filter(row=>targetUnrated(row.id)).forEach(row=>firstRatingChosen.add(row.id));
+    recordRows(selected.chosen);selected.chosen.filter(row=>needsPlace(row.id)).forEach(row=>placed.add(row.id));
   }
   // Repair only the opening exploration panel after all other assignments are
   // fixed. This stops a skipped-but-shown final picture returning immediately
@@ -231,6 +258,7 @@ export function planStimulusPanels({works=[],rounds=[],answers={},batchIndex=0,s
       const repaired=[...opening.workIds];
       for(const oldId of overlap){
         const old=byId.get(oldId),remainingCounts=new Map(uses);remainingCounts.set(oldId,(remainingCounts.get(oldId)||0)-1);
+        if(opening.editorialBrief?.workIds?.includes(oldId)||fixedCohort&&targetIds.has(oldId)&&!remainingCounts.get(oldId))continue;
         const losesFirstRating=targetUnrated(oldId)&&!remainingCounts.get(oldId),retained=repaired.filter(id=>id!==oldId).map(id=>byId.get(id));
         const alternatives=rows.filter(row=>!blocked.has(row.id)&&!protectedWorks.has(row.id)&&!boundaryAvoid.has(row.id)&&!repaired.includes(row.id)&&(uses.get(row.id)||0)<2&&retained.every(other=>!avoidPair(row,other))&&(!row.landmark||retained.filter(other=>other.landmark).length<(notes.maximumLandmarksPerPanel||2))&&(targetUnrated(row.id)&&!remainingCounts.get(row.id))===losesFirstRating);
         const score=row=>benefit(row)+(row.landmark===old.landmark?4:0)+(row.region&&row.region===old.region?1:0)-(pairDiagnostic(old,row,null).meanOtherFeatureGap??.5)+jitter(row.id,'boundary-replacement')*.01;
@@ -253,9 +281,11 @@ export function planStimulusPanels({works=[],rounds=[],answers={},batchIndex=0,s
   const availableGroups=groupCounts(rows),achievedGroups=groupCounts(selectedRows),minimumTargets=Object.fromEntries([['era',STIMULUS_TARGETS.eraCount],['region',STIMULUS_TARGETS.regionCount],['country',STIMULUS_TARGETS.countryCount],['tradition',STIMULUS_TARGETS.traditionCount]].map(([field,target])=>[field,{requested:target,available:Object.keys(availableGroups[field]).length,achieved:Object.keys(achievedGroups[field]).length,met:Object.keys(achievedGroups[field]).length>=target}]));
   const reservedOverrideIds=selectedIds.filter(id=>blocked.has(id)),remainingUnrated=rows.filter(row=>!history.preferenceSeen.has(row.id)&&!selectedIds.includes(row.id)).map(row=>row.id),firstRatingAvailable=rows.filter(row=>targetUnrated(row.id)&&(!blocked.has(row.id)||reservedOverrideIds.includes(row.id))).length,selectedSlots=actualPanels.reduce((n,p)=>n+p.workIds.length,0),firstRatingTargetWorkIds=selectedIds.filter(targetUnrated);
   const protectedFirstRatingWorkIds=unique([...preserved].flatMap(index=>panels[index]?.workIds||[])).filter(targetUnrated),firstRatingSlotCapacity=protectedFirstRatingWorkIds.length+panels.reduce((total,panel,index)=>total+(!panel||preserved.has(index)?0:panel.workIds.length),0);
+  const missingDeclaredWorkIds=fixedCohort?[...targetIds].filter(id=>!selectedIds.includes(id)):[];
+  if(missingDeclaredWorkIds.length)warnings.push({reason:'Declared ordinary cohort members were missing from the planned block.',workIds:missingDeclaredWorkIds});
   if(batch&&firstRatingTargetWorkIds.length<firstRatingTarget)warnings.push({reason:'The completed panel plan did not meet its distinct first-rating target under the retained comparison constraints.',target:firstRatingTarget,actual:firstRatingTargetWorkIds.length});
   return {revision:STIMULUS_PLANNER_REVISION,status:actualPanels.length===count?'complete':'partial',complete:actualPanels.length===count,panels:actualPanels,reservations:{...reservations.pools,scope:reservations.scope,source:reservations.source,alreadyRatedIds:unique(reservationPoolKeys(reservations.pools).flatMap(name=>reservations.pools[name]).filter(id=>history.preferenceSeen.has(id))),unavailableReservationIds:unique(reservationPoolKeys(reservations.pools).flatMap(name=>reservations.pools[name]).filter(id=>!byId.has(id))),protectedAdaptiveOverrides:reservedOverrideIds},
     coverage:{...(originalAdaptive?.coverage||{}),catalogueSize:rows.length,excludedCatalogueEntries:inputWorks.length-rows.length,requestedPanelCount:count,selectedPanelCount:actualPanels.length,requestedSlots:totalSlots,selectedSlots,selectedWorkIds:selectedIds,uniqueWorkCount:selectedIds.length,firstRatingWorkIds:selectedIds.filter(id=>!history.preferenceSeen.has(id)),firstRatingTarget,firstRatingTargetWorkIds,firstRatingTargetPool:scopedTarget?currentPool:null,firstRatingAvailable,firstRatingSlotCapacity,protectedFirstRatingWorkIds,firstRatingTargetFeasible:firstRatingAvailable>=firstRatingTarget&&firstRatingSlotCapacity>=firstRatingTarget,remainingUnratedIds:remainingUnrated,firstRatingTargetMet:firstRatingTargetWorkIds.length>=firstRatingTarget,actualSessionUnpresentedIds:selectedIds.filter(id=>!history.presentations.has(id)&&!history.unknownExposure.has(id)),exposureUnknownIds:selectedIds.filter(id=>history.unknownExposure.has(id)),exposureBefore:Object.fromEntries(rows.map(row=>[row.id,history.presentations.get(row.id)||0])),exposureUnknownWorkIds:[...history.unknownExposure],exposureUnknownRoundIds:history.unknownRoundIds,eligiblePreferenceRoundIds:history.eligibleRoundIds,distinctPreferenceSetCount:history.eligibleSets.size,preservedAdaptivePanels:preserved.size,plannedUses:Object.fromEntries(uses),availableGroups,achievedGroups,minimumTargets,unknownMetadataCounts:Object.fromEntries(['era','region','country','tradition'].map(f=>[f,selectedRows.filter(row=>!row[f]).length])),roleCounts:Object.fromEntries(unique(actualPanels.map(p=>p.role)).map(role=>[role,actualPanels.filter(p=>p.role===role).length])),actualRoles:Object.fromEntries(['exploration','repeat','recontextualization','challenge'].map(role=>[role,actualPanels.filter(p=>p.role===role).length])),explorationShare:actualPanels.length?actualPanels.filter(p=>p.role==='exploration').length/actualPanels.length:0,futureFirstRatingTargets:futureTargets},
-    audit:{panels:panelAudit,rejectedBriefs,warnings,boundarySpacing,annotationMatchedContrasts:panelAudit.flatMap(p=>p.diagnostic.pairs).filter(p=>p.annotationMatched).length,annotationDiagnosticGaps:panelAudit.filter(p=>p.diagnostic.targetFeature&&(p.diagnostic.targetSpread===null||p.diagnostic.targetSpread<.3)).map(p=>({panel:p.panel,targetFeature:p.diagnostic.targetFeature,largestRecordedGap:p.diagnostic.targetSpread,reason:'The declared concept may be useful, but these recorded annotations do not supply a clear numeric feature contrast across this set.'})),regionalTransferPanels:panelAudit.filter(p=>p.diagnostic.regionTransfer).map(p=>p.panel),missingCoverage:Object.entries(minimumTargets).filter(([,v])=>!v.met).map(([dimension,v])=>({dimension,requested:v.requested,achieved:v.achieved,available:v.available})),shortageReason:actualPanels.length<count?'The available catalogue and protected comparisons could not meet every requested panel constraint.':null},
+     audit:{panels:panelAudit,rejectedBriefs,warnings,boundarySpacing,missingDeclaredWorkIds,annotationMatchedContrasts:panelAudit.flatMap(p=>p.diagnostic.pairs).filter(p=>p.annotationMatched).length,annotationDiagnosticGaps:panelAudit.filter(p=>p.diagnostic.targetFeature&&(p.diagnostic.targetSpread===null||p.diagnostic.targetSpread<.3)).map(p=>({panel:p.panel,targetFeature:p.diagnostic.targetFeature,largestRecordedGap:p.diagnostic.targetSpread,reason:'The declared concept may be useful, but these recorded annotations do not supply a clear numeric feature contrast across this set.'})),regionalTransferPanels:panelAudit.filter(p=>p.diagnostic.regionTransfer).map(p=>p.panel),missingCoverage:Object.entries(minimumTargets).filter(([,v])=>!v.met).map(([dimension,v])=>({dimension,requested:v.requested,achieved:v.achieved,available:v.available})),shortageReason:actualPanels.length<count?'The available catalogue and protected comparisons could not meet every requested panel constraint.':null},
     method:'Seeded editorial briefs, recorded annotation contrasts, explicit coverage balancing, and protected adaptive comparisons. No global preference scores or optimal-information claim.',limits:[...LIMITS]};
 }

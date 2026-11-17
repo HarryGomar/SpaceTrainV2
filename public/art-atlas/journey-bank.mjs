@@ -21,9 +21,10 @@ import {isReviewedVisualDescriptor} from './visual-descriptor-semantics.mjs';
 import {routeCollection} from './collection-routing.mjs';
 import {PANEL_OBJECTIVES,CANONICAL_COMPARISON_OBJECTIVES} from './curation-panel-objectives.mjs';
 import {buildDiagnosticRound} from './explanation-followups.mjs';
+import {declaredFirst150} from './first-150-curation.mjs';
 
 export const JOURNEY_PROTOCOL='art-profile-50-v1';
-export const JOURNEY_REVISION='art-profile-50-v18';
+export const JOURNEY_REVISION='art-profile-50-v19';
 export const JOURNEY_VARIETY_POLICY='specific-question-variety-v2';
 export const JOURNEY_LENGTH=50;
 export const JOURNEY_MAX_LENGTH=JOURNEY_BLOCK_LIMIT*JOURNEY_LENGTH;
@@ -101,6 +102,10 @@ export function journeyCurationNotes(works,reservationPlan,{firstWorkIds,startBa
   if(canonicalReady){notes.qualityDesign='predeclared-source-quality-crossings-v1';for(const panel of notes.proposedFirst18Panels){const objective=(comparisonsReady?CANONICAL_COMPARISON_OBJECTIVES[panel.panel]:null)||PANEL_OBJECTIVES[panel.panel];panel.galleryTitle=objective.title;panel.comparisonObjectives=structuredClone(objective);panel.primaryQuestion=objective.purposes.join(' ');panel.questionUse='Continuous personal appeal, followed by separately reported judgments where planned.';panel.confounds=uniqueIds([...(panel.confounds||[]),'These are deliberately crossed examples, not randomized isolation of a single visual cause.']);}}
   const first=new Set(notes.proposedFirst18Panels.flatMap(panel=>panel.workIds));
   if(first.size!==72||[...first].some(id=>!available.has(id)))return CURATION_NOTES;
+  if(comparisonsReady){
+    const declared=declaredFirst150(works,{...notes,maximumLandmarksPerPanel:4,curationSequence:CURATION_SEQUENCE},{reservationPlan,firstWorkIds,startBatch});
+    if(declared)return declared;
+  }
   const routed=regional&&(!reservationPlan||reservationPlan.collectionRouting)?routeCollection(works,reservationPlan?.collectionRouting,notes):null,activeWorks=routed?routed.studyWorks:works;
   if(routed)notes.collectionRouting=routed.metadata;
   const remaining=activeWorks.map(work=>work.id).filter(id=>!first.has(id)),priority=['matejko-stanczyk','brueghel-sight',...activeWorks.filter(work=>work.curationRole==='canonical-priority').map(work=>work.id)],ordered=uniqueIds([...priority.filter(id=>remaining.includes(id)),...(CURATION_NOTES.reservePools?.batch2||[]).filter(id=>remaining.includes(id)),...remaining.sort()]);
@@ -250,7 +255,7 @@ export function buildJourneyRounds(works,answers={},options={}){
     if(!sourceIndex||Number(sourceIndex[1])<=offset)registerSpecificQuestion(round,sourceIndex?Number(sourceIndex[1])-1:null);
     if(sourceIndex&&Number(sourceIndex[1])<=offset&&round.kind!=='statements')round.works.forEach(work=>lastSeen.set(work.id,Math.max(lastSeen.get(work.id)??-Infinity,Number(sourceIndex[1])-1)));
     const legacyPanel=/^panel-(\d+)$/.exec(round.evidence?.setId||''),number=round.evidence?.panelNumber||(legacyPanel?Number(legacyPanel[1]):null),sourceBatch=round.evidence?.batchIndex??Math.floor((Number(sourceIndex?.[1]||1)-1)/JOURNEY_LENGTH);
-    if((['art-profile-50-v2','art-profile-50-v3','art-profile-50-v4','art-profile-50-v5','art-profile-50-v6','art-profile-50-v7','art-profile-50-v8','art-profile-50-v9','art-profile-50-v10','art-profile-50-v11','art-profile-50-v12','art-profile-50-v13','art-profile-50-v14','art-profile-50-v15','art-profile-50-v16','art-profile-50-v17',JOURNEY_REVISION].includes(round.evidence?.journeyRevision)||legacyPanel)&&sourceBatch===batchIndex&&Number.isInteger(number)&&number>=1&&number<=18&&round.works.every(work=>pool.some(item=>item.id===work.id))&&!panels.has(number)){
+    if((['art-profile-50-v2','art-profile-50-v3','art-profile-50-v4','art-profile-50-v5','art-profile-50-v6','art-profile-50-v7','art-profile-50-v8','art-profile-50-v9','art-profile-50-v10','art-profile-50-v11','art-profile-50-v12','art-profile-50-v13','art-profile-50-v14','art-profile-50-v15','art-profile-50-v16','art-profile-50-v17','art-profile-50-v18',JOURNEY_REVISION].includes(round.evidence?.journeyRevision)||legacyPanel)&&sourceBatch===batchIndex&&Number.isInteger(number)&&number>=1&&number<=18&&round.works.every(work=>pool.some(item=>item.id===work.id))&&!panels.has(number)){
       panels.set(number,round.works.map(work=>pool.find(item=>item.id===work.id)));
       if(round.evidence?.setId)panelSetIds.set(number,round.evidence.setId);
       round.works.forEach(work=>panelUses.set(work.id,(panelUses.get(work.id)||0)+1));
