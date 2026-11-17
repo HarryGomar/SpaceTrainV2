@@ -30,4 +30,6 @@ The reading retains a whole-profile introduction, with centred paintings, consis
 
 The reading catalogue contains families that may combine, remain unresolved or be unavailable under older instruments. They are not fixed personality types. Implemented and planned families are explicitly distinguished on the Profiles page.
 
-The opening painting field also has direct All, Your likes and Reshuffle controls. Your likes uses the same validated explicit favourites and positive anchored appeal as the collection controls, including works from later global exploration. This changes only the animation's displayed pool and arrangement; it does not create preferences or alter saved paintings or quiz answers.
+The Paintings page now divides every later 50-round pool into small browsing sets with titles and comparison notes. Source-bound quality reviews supply contrasts where available; reviewed visual descriptors provide a fallback, and missing evidence receives a neutral description. These gallery arrangements do not replace the quiz's adaptive comparisons or become preference evidence. The first block retains its declared curation, and answered comparisons retain their captured works and instructions.
+
+Collection additions and reset are available through the compact Manage saved menu rather than a separate explanatory section. The opening animation has no painting-pool toolbar.

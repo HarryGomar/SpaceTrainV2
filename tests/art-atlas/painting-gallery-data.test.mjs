@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {buildPaintingGallery,filterPaintingGallery,nextGalleryContext,captureGalleryPreview,GALLERY_CONTEXT_SCOPE} from '../../public/art-atlas/painting-gallery-data.mjs';
 import {journeyCurationNotes,createJourneyStimulusPlan,buildJourneyRounds} from '../../public/art-atlas/journey-bank.mjs';
+import {groupReservedPaintings} from '../../public/art-atlas/painting-gallery-sets.mjs';
 const expandedWorks=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/artworks.json',import.meta.url),'utf8')),works=expandedWorks.slice(0,164),notes=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/curation-notes.json',import.meta.url),'utf8'));
 const legacyWorks=works.filter(work=>!work.image.startsWith('assets/classics-20261115/'));
 const view=(gallery,id)=>gallery.views.find(view=>view.id===id),items=view=>view.groups.flatMap(group=>group.items);
@@ -14,7 +15,7 @@ function oldSession(){
 test('An explicit historical156-work proposal retains its exact72 reviewed works and42/42 future pools',()=>{
   const gallery=buildPaintingGallery({works:legacyWorks,notes}),first=view(gallery,'first'),next=view(gallery,'next'),later=view(gallery,'later');assert.deepEqual(gallery.coverage,{catalogue:156,main:156,world:0,first:72,next:42,later:42,plannedSetCount:18});assert.equal(first.groups.length,18);assert.equal(first.itemCount,72);
   for(const [index,group] of first.groups.entries()){assert.deepEqual(group.workIds,notes.proposedFirst18Panels[index].workIds);assert.equal(group.title,notes.proposedFirst18Panels[index].galleryTitle||notes.proposedFirst18Panels[index].title||notes.proposedFirst18Panels[index].targetContrast);assert.equal(group.kind,'planned-comparison');}
-  assert.equal(next.groups.length,1);assert.equal(later.groups.length,1);assert.equal(next.groups[0].kind,'reserve-pool');assert.equal(later.groups[0].kind,'reserve-pool');assert.deepEqual(next.groups[0].workIds,notes.reservePools.batch2);assert.deepEqual(later.groups[0].workIds,notes.reservePools.batch3);assert.equal(new Set([...items(first),...items(next),...items(later)].map(item=>item.workId)).size,156);assert.equal(gallery.views.some(view=>view.id==='answered'),false);
+  for(const [block,current]of [[2,next],[3,later]]){assert(current.groups.length>1);assert(current.groups.every(group=>group.kind==='gallery-comparison'&&group.items.length<=4&&group.description));assert.deepEqual(items(current).map(item=>item.workId).sort(),[...notes.reservePools['batch'+block]].sort());}assert.equal(new Set([...items(first),...items(next),...items(later)].map(item=>item.workId)).size,156);assert.equal(gallery.views.some(view=>view.id==='answered'),false);
 });
 test('All164 gallery entries retain actual local reproductions and institution source metadata',()=>{
   const all=view(buildPaintingGallery({works,notes}),'all');assert.equal(all.workCount,164);assert.equal(new Set(items(all).map(item=>item.workId)).size,164);for(const item of items(all)){const original=works.find(work=>work.id===item.workId);assert.deepEqual(item.work,original);assert.ok(fs.existsSync(new URL('../../public/art-atlas/'+item.work.image,import.meta.url)),item.workId);assert.ok(/^https?:/.test(item.work.sourceUrl));}
@@ -29,8 +30,8 @@ test('The current gallery proposal matches actual fresh v10 main panels and incl
   for(const [index,group] of first.groups.entries())assert.deepEqual([...group.workIds].sort(),actual[index].works.map(work=>work.id).sort(),'Panel '+group.number);
   const firstIds=new Set(first.groups.flatMap(group=>group.workIds));
   for(const work of works.filter(work=>work.image.startsWith('assets/classics-20261115/')))assert(firstIds.has(work.id),work.id);
-  assert.deepEqual(view(gallery,'next').groups[0].workIds,currentNotes.reservePools.batch2);
-  assert.deepEqual(view(gallery,'later').groups[0].workIds,currentNotes.reservePools.batch3);
+  assert.deepEqual(items(view(gallery,'next')).map(item=>item.workId).sort(),[...currentNotes.reservePools.batch2].sort());
+  assert.deepEqual(items(view(gallery,'later')).map(item=>item.workId).sort(),[...currentNotes.reservePools.batch3].sort());
   assert.equal(new Set([...items(first),...items(view(gallery,'next')),...items(view(gallery,'later'))].map(item=>item.workId)).size,164);
 });
 test('Search combines accent-insensitive terms across actual artwork metadata and preserves set identities',()=>{
@@ -79,7 +80,17 @@ test('An expanded collection exposes the reserved fourth, fifth and sixth blocks
   assert.equal(main.workCount+world.workCount,expandedWorks.length);assert.deepEqual([...mainIds].sort(),[...currentNotes.collectionRouting.mainWorkIds].sort());assert.deepEqual([...worldIds].sort(),[...currentNotes.collectionRouting.worldWorkIds].sort());assert.equal(new Set([...mainIds,...worldIds]).size,expandedWorks.length);assert.equal(mainIds.some(id=>worldIds.includes(id)),false);
   for(const block of [4,5,6]){
     const reserved=currentNotes.reservePools['batch'+block]||[],actual=view(gallery,'block'+block);
-    if(reserved.length)assert.deepEqual(actual.groups[0].workIds,reserved);
+    if(reserved.length){assert.deepEqual(items(actual).map(item=>item.workId).sort(),[...reserved].sort());assert(actual.groups.every(group=>group.items.length<=4&&group.description&&group.scope.startsWith('Gallery arrangement')));}
     else assert.equal(actual,undefined);
+  }
+});
+
+test('Browsing sets cover small and uneven pools once, stay deterministic, and do not invent source reviews',()=>{
+  for(const size of [0,1,2,3,4,5,6,7,8,9,55]){
+    const pool=expandedWorks.slice(0,size).map(work=>({...structuredClone(work),sourceUrl:work.sourceUrl+'?different-reproduction',features:{}})),before=structuredClone(pool),groups=groupReservedPaintings(pool,{block:3});
+    assert.deepEqual(groups,groupReservedPaintings(pool,{block:3}));assert.deepEqual(pool,before);
+    assert.deepEqual(groups.flatMap(group=>group.works.map(work=>work.id)).sort(),pool.map(work=>work.id).sort());
+    assert(groups.every(group=>group.works.length<=4&&group.title==='A closer look at different treatments'));
+    if(size>1)assert(groups.every(group=>group.works.length>=2));
   }
 });

@@ -107,12 +107,3 @@ body{background:var(--paper)}
 @media(max-width:600px){.journey-question>.question-head{margin:12px 0 18px}}
 
 #collection-status{position:fixed;top:0;left:0}
-
-/* Opening painting choices stay above the canvas, separate from quiz data. */
-.opening-screen .opening-field-controls{position:absolute;left:24px;top:20px;z-index:4;display:flex;align-items:center;flex-wrap:wrap;gap:4px 10px;max-width:calc(100% - 48px);padding:4px 10px;background:#f5f4f1e8;border-radius:3px;color:#8c7c68;font-size:11px}
-.opening-screen .opening-field-controls>span{font-size:10px;margin-right:3px}
-.opening-screen .opening-field-controls button{font:inherit;color:inherit;min-height:32px;padding:4px 6px;border:0;border-bottom:1px solid transparent;background:none;cursor:pointer}
-.opening-screen .opening-field-controls button[aria-pressed=true]{color:#9c5d43;border-bottom-color:#b3836c}
-.opening-screen .opening-field-controls button:disabled{opacity:.4;cursor:default}
-.opening-screen .opening-field-controls button:focus-visible{outline:1px solid #9c5d43;outline-offset:3px}
-@media(max-width:700px){.opening-screen .opening-field-controls{left:16px;top:12px;max-width:calc(100% - 32px);gap:2px 7px;padding:3px 7px;font-size:10px}.opening-screen .opening-field-controls>span{font-size:9px}}

@@ -4,7 +4,7 @@ import {JSDOM} from 'jsdom';
 import {createOpeningScene} from '../../public/art-atlas/opening-scene.mjs';
 
 const markup='<section class="opening-screen"><canvas data-art-scene></canvas><button data-scene-motion></button></section>';
-function fixture({paused=true,storedMotion=null,autoLoad=true,count=3,likedCount=0,width=900,height=650}={}){
+function fixture({paused=true,storedMotion=null,autoLoad=true,count=3,width=900,height=650}={}){
   const dom=new JSDOM('<main>'+markup+'</main>',{url:'https://example.org/art-atlas/',pretendToBeVisual:true}),window=dom.window,app=window.document.querySelector('main'),images=[],canvases=[],contexts=new Map(),frames=new Map(),resizes=new Set(),viewport={width,height};let frameId=0;
   const media={matches:paused,addEventListener(){},removeEventListener(){}};window.matchMedia=()=>media;window.ResizeObserver=class{constructor(callback){this.callback=callback;}observe(){resizes.add(this.callback);}disconnect(){resizes.delete(this.callback);}};
   window.requestAnimationFrame=fn=>{frames.set(++frameId,fn);return frameId;};window.cancelAnimationFrame=id=>frames.delete(id);
@@ -17,24 +17,13 @@ function fixture({paused=true,storedMotion=null,autoLoad=true,count=3,likedCount
     removeAttribute(name){if(name==='src'){this.url='';this.removed=true;}}
   };
   if(storedMotion)window.localStorage.setItem('art-profile-opening-motion',storedMotion);
-  const works=Array.from({length:count},(_,i)=>({id:'w'+i,title:'Artwork '+i,artist:'Artist '+i,image:'assets/w'+i+'.jpg',sourceUrl:'https://museum.example/'+i,studyEligible:true,country:i%2?'Mexico':'France',recognitionTier:'landmark'})),scene=createOpeningScene({app,getWorks:()=>works,getLikedWorkIds:()=>works.slice(0,likedCount).map(work=>work.id),seed:12345});
+  const works=Array.from({length:count},(_,i)=>({id:'w'+i,title:'Artwork '+i,artist:'Artist '+i,image:'assets/w'+i+'.jpg',sourceUrl:'https://museum.example/'+i,studyEligible:true,country:i%2?'Mexico':'France',recognitionTier:'landmark'})),scene=createOpeningScene({app,getWorks:()=>works,seed:12345});
   const flush=async()=>{await new Promise(resolve=>setImmediate(resolve));const pending=[...frames.values()];frames.clear();for(const callback of pending)callback(window.performance.now()+100);};
   return {dom,window,app,scene,images,canvases,contexts,frames,flush,tick(now){const pending=[...frames.values()];frames.clear();for(const callback of pending)callback(now);},step(){const pending=[...frames.values()];frames.clear();for(const callback of pending)callback(window.performance.now()+1000);},resize(width,height){Object.assign(viewport,{width,height});for(const callback of resizes)callback();},close(){scene.destroy();dom.window.close();}};
 }
 
 test('The opening autoplays on a new visit even when an older visit stored Pause',async()=>{
   const f=fixture({paused:false,storedMotion:'pause'});try{await f.flush();assert.equal(f.app.querySelector('[data-art-scene]').dataset.sceneStatus,'running');assert.equal(f.app.querySelector('[data-scene-motion]').getAttribute('aria-label'),'Pause animation');assert.equal(f.frames.size,1);}finally{f.close();}
-});
-
-test('Opening painting choices rebuild only the visual pool and keep one animation loop',async()=>{
-  const f=fixture({paused:false,count:20,likedCount:6});try{
-    await f.flush();assert.equal(f.app.querySelector('[data-art-scene]').dataset.scenePaintings,'20');
-    f.app.querySelector('[data-scene-pool=liked]').click();await f.flush();
-    assert.equal(f.app.querySelector('[data-art-scene]').dataset.scenePaintings,'6');assert.equal(f.app.querySelector('[data-art-scene]').dataset.scenePool,'liked');
-    assert.equal(f.app.querySelectorAll('.opening-field-controls').length,1);assert.equal(f.frames.size,1);
-    f.app.querySelector('[data-scene-pool=all]').click();await f.flush();assert.equal(f.app.querySelector('[data-art-scene]').dataset.scenePaintings,'20');assert.equal(f.frames.size,1);
-    assert.equal(f.scene.setPaintingPool('unknown'),false);
-  }finally{f.close();}
 });
 
 test('The opening force stays latched to the cursor in full and reduced motion and after resizing',async()=>{

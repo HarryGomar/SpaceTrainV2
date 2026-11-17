@@ -1,6 +1,7 @@
 import {validAnswer} from './engine.mjs';
 import {artworkContextSearchText} from './artwork-context.mjs';
 import {routeCollection} from './collection-routing.mjs';
+import {groupReservedPaintings} from './painting-gallery-sets.mjs';
 
 export const GALLERY_CONTEXT_KEY='art-atlas-gallery-context-v1';
 export const GALLERY_CONTEXT_SCOPE='Gallery opened; which artwork labels were actually read is unknown.';
@@ -50,11 +51,16 @@ export function buildPaintingGallery({works=[],notes={},saved=null}={}){
   planned.sort((a,b)=>a.number-b.number);
   const reserve=field=>unique(Array.isArray(notes?.reservePools?.[field])?notes.reservePools[field]:[]).filter(id=>byId.has(id)).map(id=>byId.get(id)),next=reserve('batch2'),later=reserve('batch3'),history=answeredGroups(saved);
   const view=(id,label,title,intro,groups,kind)=>({id,label,title,intro,kind,groups,...counts(groups)});
-  const laterBlocks=[4,5,6].map(block=>{const reserved=reserve('batch'+block),start=(block-1)*50+1,end=block*50;return view('block'+block,'Rounds '+start+'–'+end,'Rounds '+start+'–'+end,'Paintings reserved for first overall ratings in this block.',reserved.length?[group({id:'reserve:block'+block,kind:'reserve-pool',title:'Paintings for rounds '+start+'–'+end,label:'Rounds '+start+'–'+end},reserved,'current')]:[],'reserve');}).filter(item=>item.workCount);
+  const blockView=(block,id)=>{
+    const reserved=reserve('batch'+block),start=(block-1)*50+1,end=block*50,label='Rounds '+start+'–'+end;
+    const groups=groupReservedPaintings(reserved,{block}).map(({works,...definition})=>group(definition,works,'current'));
+    return view(id,label,label,'Explore this block’s paintings in small comparison sets. These are browsing groups; your quiz adapts its comparisons to your earlier answers.',groups,'reserve');
+  };
+  const laterBlocks=[4,5,6].map(block=>blockView(block,'block'+block)).filter(item=>item.workCount);
   const views=[
     view('first','First comparison sets','The first comparison sets.','The current plan for the first 50 rounds. Other activities show additional paintings.',planned,'planned'),
-    view('next','Next '+next.length,'The next paintings.','Reserved for first preference ratings in the second block. Their comparison groups depend on earlier answers.',next.length?[group({id:'reserve:next',kind:'reserve-pool',title:'Paintings for the second block',label:'Rounds 51–100'},next,'current')]:[],'reserve'),
-    view('later','Following '+later.length,'Further into the collection.','Reserved for first preference ratings in the third block. Later comparison groups depend on earlier answers.',later.length?[group({id:'reserve:later',kind:'reserve-pool',title:'Paintings for the third block',label:'Rounds 101–150'},later,'current')]:[],'reserve'),
+    blockView(2,'next'),
+    blockView(3,'later'),
     ...laterBlocks,
     view('all','Main collection · '+main.length,'The main collection','Classics and Americas works, with a few global anchors.',main.length?[group({id:'catalogue',kind:'catalogue',title:'',label:''},main,'current')]:[],'catalogue'),
     ...(world.length?[view('world','World collection · '+world.length,'The world collection','Additional East Asian, South Asian and Himalayan works. These remain available without filling the main quiz.',[group({id:'world-catalogue',kind:'catalogue',title:'',label:''},world,'current')],'catalogue')]:[])
