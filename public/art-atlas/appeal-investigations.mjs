@@ -87,7 +87,7 @@ function earlierSources(works,rounds,answers){
   return {shown,sources,scope:sources.preferenceScopes.find(scope=>scope.channel==='personal-appeal'),history:recordedHistory(shown,answers)};
 }
 
-function localAnchors(scope,basis,shown,rows){
+function localAnchors(scope,basis,shown,rows,focusIds){
   const anchors=new Map(),declared=new Map([...basis.favourites.map(item=>[item.workId,{item,direction:1}]),...basis.dislikes.map(item=>[item.workId,{item,direction:-1}])]);
   for(const set of scope?.sets||[]){
     for(const item of set.items){
@@ -112,7 +112,7 @@ function localAnchors(scope,basis,shown,rows){
     const declaration={roundId:item.entry.round.id,workId:id,type:direction===1?'favourite':'dislike'};
     anchors.set(id,{id,direction,source:rating?{roundId:rating.entry.round.id,workId:id,value:rating.score,positions:{...rating.entry.answer.positions},declaration}:{declaration},priority:Math.max(27,previous?.priority||0)+18});
   }
-  const ordered=[...anchors.values()].filter(item=>rows.get(item.id)?.artist).sort((a,b)=>b.priority-a.priority||a.id.localeCompare(b.id));
+  const ordered=[...anchors.values()].filter(item=>rows.get(item.id)?.artist&&(!focusIds||focusIds.includes(item.id))).sort((a,b)=>b.priority-a.priority||a.id.localeCompare(b.id));
   return ordered.slice(0,8).map(anchor=>{
     const opposite=ordered.find(other=>other.direction===-anchor.direction&&declared.has(other.id)&&
       compareAppealControls(rows.get(anchor.id),rows.get(other.id)).usable);
@@ -178,12 +178,12 @@ function bindProposal({id,scope,rivals,target,anchor,history,rows,sourceRoundIds
 /** Select one comparison at presentation time from earlier shown definitions.
  * Thresholds, ranking and the shortlist size are editorial design choices.
  */
-export function selectAppealInvestigation({id,works=[],rounds=[],answers={},candidateIds,earlyIds=[],avoidIds=[],batchIndex=0,mode=goal.local,seed='',annotationReviews=REVIEWS}={}){
+export function selectAppealInvestigation({id,works=[],rounds=[],answers={},candidateIds,earlyIds=[],avoidIds=[],batchIndex=0,mode=goal.local,seed='',annotationReviews=REVIEWS,focus}={}){
   const {shown,sources,scope,history}=earlierSources(works,rounds,answers);
   if(!scope?.sets.length)return null;
   const rows=reviewRows(works,annotationReviews),allowed=new Set(candidateIds||works.map(work=>work.id)),early=new Set(earlyIds),avoid=new Set(avoidIds);
   const candidates=[...rows.values()].filter(row=>row.review&&eligible(row.work)&&!avoid.has(row.work.id)&&(allowed.has(row.work.id)||early.has(row.work.id)));
-  const usedEarly=shown.some(round=>(round.evidence?.batchIndex??0)===batchIndex&&round.evidence?.appealInvestigation?.pulledForwardIds?.length);
+  const usedEarly=shown.some(round=>(round.evidence?.batchIndex??0)===batchIndex&&(round.evidence?.appealInvestigation?.pulledForwardIds?.length||round.evidence?.openingInquiry?.pulledForwardIds?.length));
   const select=(rivals,anchor,sourceRoundIds)=>{
     const target=targetContrast({rivals,rows,candidates,history,anchor,opposite:anchor?.opposite,scope:mode,allowed,usedEarly:usedEarly||!anchor});
     return target?{id,scope:mode,rivals,target,anchor,history,rows,sourceRoundIds,answers,seed}:null;
@@ -199,7 +199,7 @@ export function selectAppealInvestigation({id,works=[],rounds=[],answers={},cand
     proposals.sort((a,b)=>b.target.score-a.target.score);
     return proposals[0]?bindProposal(proposals[0]):null;
   }
-  const anchors=localAnchors(scope,buildPreferenceBasis(sources.entries),shown,rows);
+  const anchors=localAnchors(scope,buildPreferenceBasis(sources.entries),shown,rows,focus?.anchorIds);
   const previous=shown.some(round=>round.evidence?.appealInvestigation)?readAppealInvestigations({works,rounds:shown,answers}).filter(item=>item.scope==='local'&&!item.sourceChanged):[];
   let best=null;
   for(const anchor of anchors){
