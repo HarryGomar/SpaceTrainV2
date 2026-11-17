@@ -1,6 +1,6 @@
 import {withContinuousPreference,isContinuousPreferenceRound} from './continuous-preference.mjs';
 import {collectTastePatternSources} from './taste-axes.mjs';
-import {resolveArtworkAttributes} from './taste-patterns.mjs';
+import {resolveArtworkAttributes,buildTastePatterns} from './taste-patterns.mjs';
 import {ARTWORK_ATTRIBUTE_DEFINITIONS} from './artwork-attribute-definitions.mjs';
 import REVIEWS from './artwork-attribute-reviews.json' with {type:'json'};
 import {validSorting,sortingDistance} from './sorting-table.mjs';
@@ -90,4 +90,32 @@ export function bindDiagnosticRound({round,works=[],rounds=[],answers={},annotat
   if(round.evidence.diagnostic.binding==='bound')return structuredClone(round);
   const captured=historyBefore(round,rounds,answers),byId=new Map(works.map(work=>[work.id,work])),history=captured.history.filter(source=>source.works?.every(work=>sameOrdinalArtworkIdentity(work,byId.get(work.id),{requireSource:true}))),earlierAnswers=captured.answers,read=reviewsFor(works,annotationReviews);
   return round.evidence.diagnostic.kind==='grouping'?bindGrouping(round,works,history,earlierAnswers,read):bindQuality(round,works,history,earlierAnswers,read);
+}
+
+/** Test broad candidate explanations from declared favourites against a new
+ * appeal comparison. The hypotheses need not already be established rules. */
+export function bindFavouriteDiagnostic({works=[],rounds=[],answers={},id,seed='favourite-check',annotationReviews=REVIEWS}={}){
+  if(rounds.filter(round=>round.evidence?.diagnostic?.discoveryBasis==='explicit-favourites-and-earlier-appeal').length>=2)return null;
+  const profile=buildTastePatterns({works,rounds,answers,annotationReviews}),candidates=profile.patterns.filter(item=>item.channel==='explicit-favourites'&&item.summaryEligible&&item.direction===1&&!item.bundle).slice(0,5);
+  const scope=collectTastePatternSources({works,rounds,answers}).preferenceScopes.find(item=>item.channel==='personal-appeal');if(!scope||scope.sets.length<3||candidates.length<2)return null;
+  const read=reviewsFor(works,annotationReviews),rated=[...new Map(scope.sets.flatMap(set=>set.items).map(item=>[item.work.id,item])).values()],previous=new Set(rounds.filter(round=>round.kind==='spectrum'&&round.criterion==='preference').flatMap(round=>pairs(ids(round)).map(key)));
+  const proposals=[];
+  for(const [left,right]of pairs(candidates)){
+    const focus=[left.qualityKey,right.qualityKey].sort().join('|');
+    if(rounds.some(round=>round.evidence?.diagnostic?.favouriteFocus===focus))continue;
+    for(const [a,b]of pairs(rated)){
+      if(previous.has(key([a.work.id,b.work.id]))||a.work.artist===b.work.artist)continue;
+      const av=[value(read,a.work,left.qualityKey),value(read,a.work,right.qualityKey)],bv=[value(read,b.work,left.qualityKey),value(read,b.work,right.qualityKey)];
+      if(av.includes(null)||bv.includes(null)||av[0]===bv[0]||av[1]===bv[1]||av[0]-bv[0]===av[1]-bv[1])continue;
+      const favourites=new Set([...left.favouriteWorkIds,...right.favouriteWorkIds]);
+      const score=(left.explanationEvidence?.score||0)+(right.explanationEvidence?.score||0)+Number(favourites.has(a.work.id))*6+Number(favourites.has(b.work.id))*6-Math.abs(a.value-b.value)*.12;
+      proposals.push({a,b,left,right,focus,score,predictions:[av[0]>bv[0]?a.work.id:b.work.id,av[1]>bv[1]?a.work.id:b.work.id]});
+    }
+  }
+  proposals.sort((a,b)=>b.score-a.score||key([a.a.work.id,a.b.work.id]).localeCompare(key([b.a.work.id,b.b.work.id])));const selected=proposals[0];if(!selected)return null;
+  const targets=new Set([selected.a.work.id,selected.b.work.id]),relevant=new Set([...selected.left.favouriteWorkIds,...selected.right.favouriteWorkIds,...targets]),sources=scope.sets.filter(set=>set.items.some(item=>relevant.has(item.work.id))).sort((a,b)=>Number(b.items.some(item=>targets.has(item.work.id)))-Number(a.items.some(item=>targets.has(item.work.id)))).slice(0,6);
+  if(sources.length<3)return null;
+  const favouriteRounds=rounds.filter(round=>round.evidence?.construct==='overall-favourites'&&answers[round.id]?.confirmed);
+  const base=buildDiagnosticRound({works,id,kind:'quality',seed}),sourceRoundIds=sources.map(set=>set.entry.round.id),workIds=[selected.a.work.id,selected.b.work.id];
+  return finish(base,works,workIds,{kind:'quality',favouriteFocus:selected.focus,discoveryBasis:'explicit-favourites-and-earlier-appeal',hypotheses:[selected.left,selected.right].map(item=>({quality:item.qualityKey,title:item.title,direction:1,trainingRoundIds:sourceRoundIds,supportingGroups:sources.length})),predictions:selected.predictions,sourceRoundIds,sourceSnapshots:sources.map(set=>({round:structuredClone(set.entry.round),answer:structuredClone(set.entry.answer)})),favouriteSnapshots:favouriteRounds.map(round=>({round:structuredClone(round),answer:structuredClone(answers[round.id])})),qualitySnapshots:Object.fromEntries(workIds.map(id=>[id,read(works.find(work=>work.id===id))])),comparisonNovel:true,holdoutUnit:'new-comparison-of-earlier-rated-works',hypothesisStatus:'frozen-before-answer'});
 }

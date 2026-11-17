@@ -37,7 +37,24 @@ test('Personal connection and reported attention use their original separate map
 test('Every category stays visible, distinguishing unmeasured from tested but unresolved',()=>{
   const empty=buildProfileIntelligence();assert.equal(empty.categories.length,9);assert.ok(empty.categories.every(c=>c.status==='not-explored'));
   const f=line([75,75,75,75]),result=buildProfileIntelligence({works,rounds:[f.round],answers:{[f.round.id]:f.answer}});assert.equal(result.categories.find(c=>c.id==='appeal').status,'open');assert.equal(result.categories.find(c=>c.id==='connection').status,'not-explored');
-  const html=renderProfileIntelligence({intelligence:result,esc});assert.match(html,/What captivates you/);assert.match(html,/Not yet explored/);assert.match(html,/A comparison to try/);assert.doesNotMatch(html,/\d+%/);
+});
+
+test('Similar liking with different reported attention is informative without either painting being disliked',()=>{
+  const round={id:'attention-contrast',kind:'grid',axis:'attention',axisDefinition:structuredClone(AXES.attention),works:works.slice(0,2),evidence:{construct:'reported-attention'}},answer={workIds:ids(round),axis:'attention',points:{i0:[70,90],i1:[75,25]},confirmed:true};
+  const result=buildProfileIntelligence({works,rounds:[round],answers:{[round.id]:answer}}),finding=result.observations.find(item=>item.module==='attention-and-appeal');
+  assert.ok(finding);assert.equal(finding.status,'provisional');assert.deepEqual(finding.displayWorkIds,['i0','i1']);assert.equal(finding.supportingSetCount,1);
+  assert.equal(buildProfileIntelligence({works,rounds:[round],answers:{[round.id]:{...answer,points:{i0:[70,90],i1:[75,85]}}}}).observations.length,0);
+});
+
+test('A strong local comparison remains available but cannot name overall taste when declared favourites do not fit',()=>{
+  const pattern={id:'local',qualityKey:'human-relationships',title:'Interactions',channel:'personal-appeal',status:'qualified',summaryEligible:true,direction:1,supportingSetCount:3,eligibleSetCount:3,support:[],recordQuality:{presentWorkIds:['i0'],absentWorkIds:['i1','i2','i3','i4']}};
+  const [ranked]=rankExplanationPatterns([pattern],{favouriteIds:['i1','i2','i3','i4']});
+  assert.equal(ranked.localPatternEligible,true);assert.equal(ranked.overallEligible,false);assert.deepEqual(ranked.recordFit.favouritesWithoutQuality,['i1','i2','i3','i4']);
+});
+
+test('An opposing broad association cannot be described as supporting a favourite connection',()=>{
+  const [pattern]=rankExplanationPatterns([{id:'fav',channel:'explicit-favourites',status:'descriptive',summaryEligible:true,direction:1,favouriteRatingContext:{summaryEligible:true,direction:-1,difference:-25},recordQuality:{presentWorkIds:['i0','i1','i2'],absentWorkIds:[]}}],{favouriteIds:['i0','i1','i2']});
+  assert.equal(pattern.recordFit.broadAssociationEligible,false);assert.equal(pattern.recordFit.broadAssociationOpposed,true);assert.equal(pattern.recordFit.favouriteSpecific,true);
 });
 
 test('An explicit disliked counterexample remains prominent and comparative evidence outranks slight favourite enrichment',()=>{

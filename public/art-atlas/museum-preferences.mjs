@@ -2,6 +2,10 @@ import {isContinuousPreferenceRound} from './continuous-preference.mjs';
 import {validAnswer} from './engine.mjs';
 import {isOverallAppealRound} from './appeal-scale.mjs';
 import {isComparisonPreferenceRound,comparisonDirection} from './comparison-protocol.mjs';
+import {roomOf} from './gallery-model.mjs';
+import {resolveArtworkAttributes} from './artwork-quality-review.mjs';
+import {ARTWORK_ATTRIBUTE_DEFINITIONS} from './artwork-attribute-definitions.mjs';
+import REVIEWS from './artwork-attribute-reviews.json' with {type:'json'};
 const orderOnly=round=>isComparisonPreferenceRound(round)&&!isContinuousPreferenceRound(round);
 
 export const MUSEUM_PREFERENCE_PROTOCOL='museum-preference-snapshot-v2';
@@ -63,7 +67,10 @@ export function museumPreferenceFindings(works,record){
     const {left,right}=candidates[0],support=[...earlierEvidence(left,right),museumEvidence(record,[left.work.id,right.work.id],`${short(left.work)} was presented but left unhung. ${short(right.work)} received a place.`)];
     const opposite=hung.flatMap(first=>omitted.map(second=>({first:known.get(first),second:known.get(second)}))).find(pair=>pair.first.scope===pair.second.scope&&pair.first.score-pair.second.score>=20);
     const counter=opposite?[...earlierEvidence(opposite.first,opposite.second),museumEvidence(record,[opposite.first.work.id,opposite.second.work.id],'This hung/omitted pair follows the earlier appeal order.')]:[];
-    output.push(finding(record,'omission','A higher-rated painting stayed off the walls.',`You rated ${short(left.work)} ${left.score} and ${short(right.work)} ${right.score} on the overall-appeal scale. In your museum, the first was shown but left unhung, while the second received a place.`,support,{counter}));
+    const roomId=roomOf(record,right.work.id),roomIds=Object.keys(record.placements).filter(id=>works.some(work=>work.id===id)&&roomOf(record,id)===roomId),anchorIds=roomIds.filter(id=>id!==right.work.id),byId=new Map(works.map(work=>[work.id,work])),review=id=>resolveArtworkAttributes(byId.get(id),{annotationReviews:REVIEWS,currentWorks:works});
+    const roomReviews=roomIds.map(id=>review(id)),leftReview=review(left.work.id),shared=Object.keys(ARTWORK_ATTRIBUTE_DEFINITIONS).map(quality=>({quality,count:roomReviews.filter(item=>item?.attributes[quality]?.status==='present').length})).filter(item=>item.count>=3&&item.count/roomIds.length>=.75&&leftReview?.attributes[item.quality]?.status==='absent').sort((a,b)=>b.count-a.count)[0];
+    const hypothesis=shared?` ${short(right.work)} joined a room where ${shared.count} of ${roomIds.length} paintings share ${ARTWORK_ATTRIBUTE_DEFINITIONS[shared.quality].label.toLowerCase()}, a quality not emphasised in ${short(left.work)}. Preserving that connection is one possible reason for the choice. A direct room-fit comparison would test this; the omission alone does not establish your motive.`:' The earlier appeal ratings did not determine every place in this museum. A direct comparison beside the works in this room could distinguish room fit from a choice about space, variety or another purpose.';
+    output.push(finding(record,'omission','The room may matter more than the rating.',`You rated ${short(left.work)} ${left.score} and ${short(right.work)} ${right.score}. You hung ${short(right.work)} while leaving ${short(left.work)} out.`+hypothesis,support,{counter,status:'provisional',museumComparison:{higherRatedId:left.work.id,selectedId:right.work.id,higherRating:left.score,selectedRating:right.score,roomId,anchorIds,sharedQuality:shared?.quality||null},nextComparison:{title:'Compare the two paintings beside the actual group in this room.'}}));
   }
   const entry=known.get(record.roomResponses?.entryId),higher=entry?hung.map(id=>known.get(id)).filter(item=>item.work.id!==entry.work.id&&item.scope===entry.scope&&item.score-entry.score>=20).sort((a,b)=>b.score-a.score)[0]:null;
   if(higher)output.push(finding(record,'entry','Your opening work differed from a higher-rated choice.',`Both paintings hang in your museum. You chose ${short(entry.work)} to begin the visit, although you had given ${short(higher.work)} a higher overall-appeal rating.`,[...earlierEvidence(entry,higher),museumEvidence(record,[entry.work.id,higher.work.id],'The first work was explicitly chosen as the entrance painting; the other was also hung.')],{priority:11}));

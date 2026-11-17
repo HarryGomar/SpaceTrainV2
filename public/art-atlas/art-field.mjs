@@ -45,6 +45,17 @@ export function updateFieldPointer(pointer,{x,y,time,active=true,strength=1},dt=
   const step=clamp(Number.isFinite(dt)?dt:1/60,0,.05);
   pointer.x=Number.isFinite(pointer.x)?pointer.x:0;pointer.y=Number.isFinite(pointer.y)?pointer.y:0;pointer.energy=Number.isFinite(pointer.energy)?clamp(pointer.energy,0,1):0;
   const targetX=Number.isFinite(x)?clamp(x,-1.2,1.2):pointer.x,targetY=Number.isFinite(y)?clamp(y,-1.2,1.2):pointer.y;
+  const previousX=Number.isFinite(pointer.targetX)?pointer.targetX:targetX,previousY=Number.isFinite(pointer.targetY)?pointer.targetY:targetY;
+  for(const field of ['wakeX','wakeY','wakeVX','wakeVY'])if(!Number.isFinite(pointer[field]))pointer[field]=0;
+  if(active){pointer.wakeVX=clamp(pointer.wakeVX+(targetX-previousX)*7,-1.6,1.6);pointer.wakeVY=clamp(pointer.wakeVY+(targetY-previousY)*7,-1.6,1.6);}
+  // A small damped wake keeps the field settling after the pointer stops.
+  // Substeps bound the spring at both slow and high display refresh rates.
+  const count=Math.max(1,Math.ceil(step*120)),h=step/count;
+  for(let i=0;i<count;i++)for(const [position,velocity]of [['wakeX','wakeVX'],['wakeY','wakeVY']]){
+    pointer[velocity]+=(-196*pointer[position]-23*pointer[velocity])*h;
+    pointer[position]=clamp(pointer[position]+pointer[velocity]*h,-.065,.065);
+  }
+  pointer.targetX=targetX;pointer.targetY=targetY;
   // Latch on entry, then filter sub-frame input noise with a short 15 ms response.
   // Presence fades at the last position after leaving, rather than drifting home.
   if(pointer.energy<.0001){pointer.x=targetX;pointer.y=targetY;}
@@ -59,5 +70,6 @@ export function updateFieldPointer(pointer,{x,y,time,active=true,strength=1},dt=
 export function interactFieldPoint(point,pointer,{aspect=1,z=0}={}){
   const ratio=Number.isFinite(aspect)&&aspect>0?aspect:1,energy=clamp(Number.isFinite(pointer.energy)?pointer.energy:0,0,1),depth=clamp((z+2)/3,0,1),weight=.45+(.9-.45)*depth;
   const x=point[0]+pointer.x*energy*FIELD_MOTION.parallaxX*(.55+depth*.45),y=point[1]+pointer.y*energy*FIELD_MOTION.parallaxY*(.55+depth*.45),dx=(x-pointer.x)*ratio,dy=y-pointer.y,distance=Math.hypot(dx,dy),force=Math.exp(-distance*distance/FIELD_MOTION.radiusSquared)*energy*weight*FIELD_MOTION.repulsion;
-  return [x+dx/(distance+FIELD_MOTION.directionSoftness)*force/ratio,y+dy/(distance+FIELD_MOTION.directionSoftness)*force];
+  const wake=Math.exp(-distance*distance/FIELD_MOTION.radiusSquared)*energy*weight;
+  return [x+dx/(distance+FIELD_MOTION.directionSoftness)*force/ratio+(pointer.wakeX||0)*wake,y+dy/(distance+FIELD_MOTION.directionSoftness)*force+(pointer.wakeY||0)*wake];
 }

@@ -29,6 +29,12 @@ test('Mixed and missing axes cannot be promoted into a directional identity',()=
   for(const status of ['mixed','insufficient','not-tested'])assert.equal(composeTasteSummary({axesProfile:{axes:[{key:'colour',status,direction:1,eligibleSetCount:10,supportingSetCount:10,opposingSetCount:0}]}}).title,'Art profile');
 });
 
+test('Admiration cannot name overall taste, even when its local evidence has highest priority',()=>{
+  const pattern={id:'admiration',title:'Relationships between people',channel:'admiration-of-making',status:'qualified',summaryEligible:true,direction:1,priority:999};
+  const result=composeTasteSummary({tastePatterns:{patterns:[pattern],readingSummary:{title:pattern.title,patternIds:[pattern.id],text:'An admiration finding.'}}});
+  assert.equal(result.title,'Art profile');assert.deepEqual(result.findingIds,[]);
+});
+
 test('Existing qualified connections remain available without replacing them with one-off checks',()=>{
   const theme={id:'worlds',title:'Stories & imagined worlds',findingIds:['worlds'],workIds:['a','b']};
   const result=composeTasteSummary({themes:[theme],observations:[{id:'worlds',module:'curatorial-themes',text:'A shared quality across these choices. Here is the evidence.'},{id:'neighbour',module:'taste-and-neighbours',priority:999}],legacyBasis:'qualified-positive-patterns'});

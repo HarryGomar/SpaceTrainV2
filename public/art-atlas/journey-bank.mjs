@@ -23,7 +23,7 @@ import {PANEL_OBJECTIVES} from './curation-panel-objectives.mjs';
 import {buildDiagnosticRound} from './explanation-followups.mjs';
 
 export const JOURNEY_PROTOCOL='art-profile-50-v1';
-export const JOURNEY_REVISION='art-profile-50-v15';
+export const JOURNEY_REVISION='art-profile-50-v16';
 export const JOURNEY_VARIETY_POLICY='specific-question-variety-v2';
 export const JOURNEY_LENGTH=50;
 export const JOURNEY_MAX_LENGTH=JOURNEY_BLOCK_LIMIT*JOURNEY_LENGTH;
@@ -248,7 +248,7 @@ export function buildJourneyRounds(works,answers={},options={}){
     if(!sourceIndex||Number(sourceIndex[1])<=offset)registerSpecificQuestion(round,sourceIndex?Number(sourceIndex[1])-1:null);
     if(sourceIndex&&Number(sourceIndex[1])<=offset&&round.kind!=='statements')round.works.forEach(work=>lastSeen.set(work.id,Math.max(lastSeen.get(work.id)??-Infinity,Number(sourceIndex[1])-1)));
     const legacyPanel=/^panel-(\d+)$/.exec(round.evidence?.setId||''),number=round.evidence?.panelNumber||(legacyPanel?Number(legacyPanel[1]):null),sourceBatch=round.evidence?.batchIndex??Math.floor((Number(sourceIndex?.[1]||1)-1)/JOURNEY_LENGTH);
-    if((['art-profile-50-v2','art-profile-50-v3','art-profile-50-v4','art-profile-50-v5','art-profile-50-v6','art-profile-50-v7','art-profile-50-v8','art-profile-50-v9','art-profile-50-v10','art-profile-50-v11','art-profile-50-v12','art-profile-50-v13','art-profile-50-v14',JOURNEY_REVISION].includes(round.evidence?.journeyRevision)||legacyPanel)&&sourceBatch===batchIndex&&Number.isInteger(number)&&number>=1&&number<=18&&round.works.every(work=>pool.some(item=>item.id===work.id))&&!panels.has(number)){
+    if((['art-profile-50-v2','art-profile-50-v3','art-profile-50-v4','art-profile-50-v5','art-profile-50-v6','art-profile-50-v7','art-profile-50-v8','art-profile-50-v9','art-profile-50-v10','art-profile-50-v11','art-profile-50-v12','art-profile-50-v13','art-profile-50-v14','art-profile-50-v15',JOURNEY_REVISION].includes(round.evidence?.journeyRevision)||legacyPanel)&&sourceBatch===batchIndex&&Number.isInteger(number)&&number>=1&&number<=18&&round.works.every(work=>pool.some(item=>item.id===work.id))&&!panels.has(number)){
       panels.set(number,round.works.map(work=>pool.find(item=>item.id===work.id)));
       if(round.evidence?.setId)panelSetIds.set(number,round.evidence.setId);
       round.works.forEach(work=>panelUses.set(work.id,(panelUses.get(work.id)||0)+1));
@@ -260,7 +260,7 @@ export function buildJourneyRounds(works,answers={},options={}){
     if(!panels.has(index+1))panels.set(index+1,panel.workIds.map(id=>pool.find(work=>work.id===id)));
   }
   for(const previous of history.values())if(previous.kind==='choice-grid'&&previous.evidence?.batchIndex===batchIndex&&previous.evidence?.gridGroup&&previous.works.every(work=>pool.some(other=>other.id===work.id))){gridPanels.set(previous.evidence.gridGroup,previous.works.map(work=>pool.find(other=>other.id===work.id)));gridSelectionAudits.set(previous.evidence.gridGroup,previous.evidence.varietySelection?structuredClone(previous.evidence.varietySelection):{policy:JOURNEY_VARIETY_POLICY,preservedCachedBinding:true,scope:'A previously bound grid identity is preserved before applying new spacing choices.'});}
-  const sequence=[],closing=comparisonFirst?buildOrdinalClosingRounds({works:activeSourcePool,offset,seed:selectionSeed,preferenceProtocol}):buildFinalRefinementRounds({works:pool,offset,seed:selectionSeed}),earlyRefinements=new Map(comparisonFirst?[[18,'bridge-high-high'],[22,'dislikes'],[26,'bridge-low-low']]:[]);
+  const sequence=[],closing=comparisonFirst?buildOrdinalClosingRounds({works:activeSourcePool,offset,seed:selectionSeed,preferenceProtocol}):buildFinalRefinementRounds({works:pool,offset,seed:selectionSeed}),earlyRefinements=new Map(comparisonFirst?[[18,'bridge-high-high'],...(preferenceProtocol===CONTINUOUS_PROTOCOL?[]:[[22,'dislikes']]),[26,'bridge-low-low']]:[]);
   const firstSortingPlan=()=>{
     const earlier=sequence.filter(source=>source.kind==='spectrum'&&source.evidence?.construct==='preference'&&source.evidence.unconditional!==false),offered=new Map(earlier.flatMap(source=>source.works.map(work=>[work.id,work]))),preferred=regional?['van-gogh-starry-night','klimt-kiss','study-hokusai-great-wave','study-vermeer-milkmaid','mondrian-composition','study-kandinsky-composition-eight','add-rivera-portrait-frida','add-tamayo-still-life-foot']:['van-gogh-starry-night','klimt-kiss','study-hokusai-great-wave','study-vermeer-milkmaid','blanchard-still-life','add-tamayo-still-life-foot','add-rivera-portrait-frida','hiroshige-sudden-shower','add-siqueiros-madre-nina','study-cassatt-child-bath'],chosen=uniqueIds([...preferred.filter(id=>offered.has(id)),...offered.keys()]).slice(0,8);
     if(chosen.length<8){const fallback=selectArrangementStimuli({works:activityPool,batchIndex,kind:'sorting'});return {...fallback,fallback:true,fallbackReason:'Fewer than eight distinct earlier appeal paintings were available; the reviewed arrangement rotation was retained.'};}
@@ -297,7 +297,7 @@ export function buildJourneyRounds(works,answers={},options={}){
       continue;
     }
     if(preferenceProtocol===CONTINUOUS_PROTOCOL){
-      const diagnosticKind=index===31?'grouping':([14,17,26].includes(index)&&batchIndex<2?'quality':null);
+      const diagnosticKind=index===31?'grouping':([14,17,22,26].includes(index)&&batchIndex<2?'quality':null);
       if(diagnosticKind){const pending=buildDiagnosticRound({works:activeSourcePool,id,kind:diagnosticKind,seed:selectionSeed});sequence.push({...pending,evidence:{...pending.evidence,journeyRevision:JOURNEY_REVISION,batchIndex,selectionSeed}});continue;}
     }
     if(index>=45||earlyRefinements.has(index)){const pending=index>=45?closing[index-45]:buildOrdinalRefinementRound({works:activeSourcePool,id,role:earlyRefinements.get(index),slot:0,offset,seed:selectionSeed,preferenceProtocol});sequence.push({...pending,evidence:{...pending.evidence,journeyRevision:JOURNEY_REVISION,batchIndex,selectionSeed}});continue;}
