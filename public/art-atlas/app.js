@@ -34,7 +34,7 @@ const lab = createCurationLab({app:legacyLabSurface,getWorks:()=>works,getBaseli
   storageChanged:()=>{storageAvailable=false;}
 });
 const deep=createDeepStudy({app,getWorks:()=>works,image,esc,keepButtons,mode:'journey',getSavedCollection:()=>collection.saved,getSavedExercises:()=>lab.exportData().drafts,getExhibitionFindings:()=>analyzeScenarios(works,lab.records()).findings,navigate:stage=>{state.stage=stage||'study';save();render();focusQuestion();},showArtwork:(id,reveal)=>showArtwork(id,reveal)});
-const titleScene=createOpeningScene({app,getWorks:()=>[...works,...openingWorks]});
+const titleScene=createOpeningScene({app,getWorks:()=>[...works,...openingWorks],getLikedWorkIds:()=>deep.collectionChoices().likedIds});
 createProfileDetails({app,showArtwork});
 createProfileResponseTabs({app});
 createProfileReadingTabs({app});

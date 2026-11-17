@@ -29,3 +29,5 @@ Conditional favourite/dislike comparisons now require agreement on other reviewe
 The reading retains a whole-profile introduction, with centred paintings, consistent restrained colour and emphasis tied to generated patterns. The optional refinement invitation is a compact action bar. Dense comparison maps have question filtering and a selected-painting focus rather than requiring the visitor to untangle every edge at once.
 
 The reading catalogue contains families that may combine, remain unresolved or be unavailable under older instruments. They are not fixed personality types. Implemented and planned families are explicitly distinguished on the Profiles page.
+
+The opening painting field also has direct All, Your likes and Reshuffle controls. Your likes uses the same validated explicit favourites and positive anchored appeal as the collection controls, including works from later global exploration. This changes only the animation's displayed pool and arrangement; it does not create preferences or alter saved paintings or quiz answers.
