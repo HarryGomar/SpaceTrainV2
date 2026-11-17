@@ -54,5 +54,18 @@ test('Repeat reports retain their history while counting each painting once and 
 
 test('Two distinct direct reports provide a descriptive context summary and source IDs without implying a symbolic trait',()=>{
   const f=fixture(),other=withContextChange({id:'journey-035',kind:'context',works:[f.works[1]],evidence:{}});f.rounds.push(other);f.answers[other.id]={...structuredClone(f.answer),workIds:[f.works[1].id],workId:f.works[1].id,contentId:other.contextNote.id};
-  const result=buildContextChangeReadings(f),portrait=buildTastePortrait(f);assert.equal(result.summary.distinctWorkCount,2);assert.equal(result.summary.documentaryInterpretation,false,'A generic collection note does not become documented symbolism');assert.match(result.summary.text,/2 different paintings/);assert.equal(result.observations.length,1);assert.deepEqual(result.summary.sourceRoundIds,['journey-025','journey-035']);assert(portrait.profileSummary.findingIds.includes('reported-context-summary'));assert.equal(portrait.profileSummary.basis,'direct-context-reports');assert.doesNotMatch(portrait.profileSummary.title,/sensitivity|personality/i);
+  const result=buildContextChangeReadings(f),portrait=buildTastePortrait(f);assert.equal(result.summary.distinctWorkCount,2);assert.equal(result.summary.documentaryInterpretation,false,'A generic collection note does not become documented symbolism');assert.match(result.summary.text,/appreciated all 2 paintings more/);assert.doesNotMatch(result.summary.text,/less after 0|no change after 0/);assert.equal(result.observations.length,1);assert.deepEqual(result.summary.sourceRoundIds,['journey-025','journey-035']);assert(portrait.profileSummary.findingIds.includes('reported-context-summary'));assert.equal(portrait.profileSummary.basis,'direct-context-reports');assert.doesNotMatch(portrait.profileSummary.title,/sensitivity|personality/i);
+});
+
+test('Context summaries explain the reported response and retain mixed, unchanged and uncertain answers without zero-count prose',()=>{
+  const f=fixture();
+  for(let i=1;i<4;i++){
+    const round=withContextChange({id:'context-extra-'+i,kind:'context',works:[f.works[i]],evidence:{}});f.rounds.push(round);
+    f.answers[round.id]={...structuredClone(f.answer),workIds:[f.works[i].id],workId:f.works[i].id,contentId:round.contextNote.id,reportedChange:[100,50,0][i-1]};
+  }
+  let reading=buildContextChangeReadings(f);assert.match(reading.summary.text,/greater appreciation for 2 paintings/);assert.match(reading.summary.text,/less appreciation for 1 painting/);assert.match(reading.summary.text,/no change for 1 painting/);assert.match(reading.summary.text,/without liking it more/);
+  const unsure=f.answers['context-extra-3'];delete unsure.reportedChange;unsure.uncertain=true;reading=buildContextChangeReadings(f);
+  assert.equal(reading.summary.uncertainWorkCount,1);assert.match(reading.summary.text,/unsure/);assert.doesNotMatch(reading.summary.text,/less after 0|no change after 0/);assert.ok(reading.summary.sourceRoundIds.includes('context-extra-3'));assert.ok(reading.summary.support.some(row=>row.roundId==='context-extra-3'&&/Not sure/.test(row.detail)));
+  for(const answer of Object.values(f.answers))if(answer.contextProtocol===CONTEXT_CHANGE_PROTOCOL){answer.uncertain=false;answer.reportedChange=50;}
+  reading=buildContextChangeReadings(f);assert.match(reading.summary.text,/all 4 paintings.*unchanged/);assert.doesNotMatch(reading.summary.text,/more.*0|less.*0/);
 });

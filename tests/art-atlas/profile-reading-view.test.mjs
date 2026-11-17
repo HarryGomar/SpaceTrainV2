@@ -6,18 +6,19 @@ import {renderProfileIntelligence,createProfileReadingTabs} from '../../public/a
 const esc=value=>String(value).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('"','&quot;');
 const category=(id,status='open')=>({id,title:id,readingTitle:'Reading '+id,status,statusLabel:status==='open'?'Still open':'Recurring evidence',conclusion:'A supported observation, with its limits.',support:[{roundId:'r1',workIds:['a','b']}],counter:[],nextComparison:{title:'A new comparison would separate the alternatives.'}});
 
-test('Every theme stays available while one reading and its actual source paintings are presented',()=>{
+test('The coloured visual index keeps all themes and displays only source-bound paintings',()=>{
   const categories=[category('attention'),category('appeal','supported'),category('company','not-explored')],works=[{id:'a',title:'A',artist:'Painter A'},{id:'b',title:'B',artist:'Painter B'},{id:'unrelated',title:'Unrelated'}];
   categories[1].displayWorkIds=['unrelated','b','a'];
-  const dom=new JSDOM(renderProfileIntelligence({intelligence:{categories},works,esc,image:work=>`<img alt="${work.title}">`,evidence:()=>'<details class="tp-evidence"><summary>View the choices</summary>Recorded evidence</details>'})),document=dom.window.document;
-  assert.equal(document.querySelectorAll('[role=tab]').length,3);assert.equal(document.querySelectorAll('[role=tabpanel]:not([hidden])').length,1);assert.equal(document.querySelector('[aria-selected=true]').id,'reading-tab-appeal');
-  assert.deepEqual([...document.querySelector('#profile-category-appeal').querySelectorAll('[data-work]')].map(el=>el.dataset.work),['b','a']);assert.doesNotMatch(document.body.innerHTML,/data-work="unrelated"/);assert.equal(document.querySelectorAll('.tp-category-grid').length,0);dom.window.close();
+  const dom=new JSDOM(renderProfileIntelligence({intelligence:{categories},works,esc,image:work=>'<img alt="'+work.title+'">',evidence:()=>'<details class="tp-evidence"><summary>View the choices</summary>Recorded evidence</details>'})),document=dom.window.document;
+  assert.equal(document.querySelectorAll('.tp-index-item').length,3);assert.equal(document.querySelectorAll('.tp-index-item[open]').length,1);assert.equal(document.querySelector('.tp-index-item[open]').id,'profile-category-appeal');
+  assert.deepEqual([...document.querySelector('#profile-category-appeal').querySelectorAll('[data-work]')].map(el=>el.dataset.work),['b','a']);assert.doesNotMatch(document.body.innerHTML,/data-work="unrelated"/);
+  assert.equal(document.querySelector('#profile-category-company .tp-index-status').textContent,'Unexplored');assert.match(document.querySelector('#profile-category-company').textContent,/A comparison to try/);dom.window.close();
 });
 
-test('Mouse and keyboard navigation preserve evidence, focus and the open categories',()=>{
-  const dom=new JSDOM('<main>'+renderProfileIntelligence({intelligence:{categories:[category('appeal','supported'),category('attention'),category('company','not-explored')]},esc})+'</main>'),app=dom.window.document.querySelector('main');
-  createProfileReadingTabs({app});const tabs=[...app.querySelectorAll('[role=tab]')];tabs[1].click();
-  assert.equal(app.querySelector('[role=tabpanel]:not([hidden])').id,'profile-category-attention');assert.equal(tabs[0].tabIndex,-1);assert.equal(tabs[1].tabIndex,0);
-  tabs[1].dispatchEvent(new dom.window.KeyboardEvent('keydown',{key:'End',bubbles:true}));assert.equal(dom.window.document.activeElement,tabs[2]);assert.equal(app.querySelector('[role=tabpanel]:not([hidden])').id,'profile-category-company');assert.match(app.textContent,/A comparison to try/);
-  tabs[2].dispatchEvent(new dom.window.KeyboardEvent('keydown',{key:'ArrowDown',bubbles:true}));assert.equal(dom.window.document.activeElement,tabs[0]);assert.equal(tabs.filter(tab=>tab.getAttribute('aria-selected')==='true').length,1);dom.window.close();
+test('Opening a theme preserves its evidence and leaves the remaining themes available',()=>{
+  const dom=new JSDOM('<main>'+renderProfileIntelligence({intelligence:{categories:[category('appeal','supported'),category('attention'),category('company','not-explored')]},esc,evidence:()=>'<details class="tp-evidence"><summary>View the choices</summary>Recorded evidence</details>'})+'</main>'),app=dom.window.document.querySelector('main');
+  createProfileReadingTabs({app});const items=[...app.querySelectorAll('.tp-index-item')];items[1].open=true;items[1].dispatchEvent(new dom.window.Event('toggle'));
+  assert.deepEqual(items.map(item=>item.open),[false,true,false]);assert.equal(items[1].querySelector('summary').getAttribute('aria-controls'),items[1].querySelector('.tp-index-body').id);
+  const evidence=items[1].querySelector('.tp-evidence');evidence.open=true;evidence.dispatchEvent(new dom.window.Event('toggle'));assert.equal(items[1].open,true);assert.equal(evidence.open,true);
+  items[2].open=true;items[2].dispatchEvent(new dom.window.Event('toggle'));assert.deepEqual(items.map(item=>item.open),[false,false,true]);assert.equal(evidence.open,true,'Source details survive switching themes');assert.equal(app.querySelectorAll('.tp-index-item>summary').length,3);dom.window.close();
 });

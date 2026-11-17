@@ -11,7 +11,7 @@ export function createInteractions({ app, getRound, getDraft, ready, image, esc,
   const locked = () => getRound().kind === 'match' && getDraft().confirmed;
   const placed = id => { const r = getRound(), d = getDraft(); return r.kind === 'spectrum' ? d.positions[id] !== undefined : r.kind === 'grid' ? !!d.points[id] : !!d.guesses[id]; };
   const initial = () => getRound().works.find(w => !placed(w.id))?.id || getRound().works[0].id;
-  const mobileSpectrum=()=>getRound()?.kind==='spectrum'&&getRound().works.length>=3&&!!app.querySelector('.journey-question')&&window.matchMedia('(max-width:700px)').matches;
+  const mobileSpectrum=()=>getRound()?.kind==='spectrum'&&getRound().works.length>=2&&!!app.querySelector('.journey-question')&&window.matchMedia('(max-width:700px)').matches;
   const mobileMap=()=>getRound()?.kind==='grid'&&!!app.querySelector('.journey-question')&&window.matchMedia('(max-width:700px)').matches;
   const ordinal=()=>isComparisonPreferenceRound(getRound())&&!isContinuousPreferenceRound(getRound());
   function spectrumDescription(id){
@@ -41,7 +41,7 @@ export function createInteractions({ app, getRound, getDraft, ready, image, esc,
     const r = getRound(), overall=isOverallAppealRound(r), target = `<div class="placement-column"><div class="spectrum-target${overall?' overall-appeal-target':''}" id="spectrum-target"><button type="button" class="spectrum-hit" data-action="place-spectrum" aria-label="Place the selected artwork on the scale${overall?'. Every point from 0 to 100 is available. Neutral is 50.':''}"><span class="spectrum-empty">Drop a painting on the line</span></button><div class="spectrum-rail"><span class="spectrum-line"></span><span class="spectrum-mid"></span>${overall?'<span class="appeal-quarter" style="left:25%"></span><span class="appeal-quarter" style="left:75%"></span>':''}<div class="spectrum-placements" id="spectrum-placements"></div></div></div><div class="spectrum-labels${overall?' overall-appeal-labels':''}"><span>${esc(r.scale?.left || (r.criterion === 'interest' ? 'Less curious' : 'Less preferred'))}</span>${overall?`<span class="appeal-neutral">${esc(r.scale.middle)}</span>`:''}<span>${esc(r.scale?.right || (r.criterion === 'interest' ? 'More curious' : 'More preferred'))}</span></div><div class="fine-controls" id="fine-controls"></div><p class="input-status" id="input-status" aria-live="polite"></p></div>`;
     const mobile=`<div class="mobile-spectrum-controls"><input id="mobile-spectrum-range" type="range" min="0" max="100" step="1" value="50" aria-label="Rate the selected painting" aria-describedby="spectrum-scale-labels"></div>`;
     const shared=target.replace('id="spectrum-target">','id="spectrum-target">'+mobile).replace('class="spectrum-labels','id="spectrum-scale-labels" class="spectrum-labels');
-    return r.works.length >= 3 ? `<div class="placement-layout spectrum-layout"><div class="focus-column" id="focus-column">${focusMarkup()}</div>${shared}${overview()}</div>` : `<div class="spectrum-input">${tray()}${target}</div>`;
+    return r.works.length >= 3 ? `<div class="placement-layout spectrum-layout"><div class="focus-column" id="focus-column">${focusMarkup()}</div>${shared}${overview()}</div>` : `<div class="spectrum-input">${tray()}${shared}</div>`;
   }
   function gridMarkup() {
     const a = AXES[getRound().axis];
@@ -81,7 +81,7 @@ export function createInteractions({ app, getRound, getDraft, ready, image, esc,
     if (fine && r.kind === 'spectrum') fine.innerHTML = `<span>${ordinal()?`Painting ${label(selected)}`:mobileSpectrum()?`Painting ${r.works.findIndex(work=>work.id===selected)+1} · ${d.positions[selected]===undefined?'Not rated':d.positions[selected]+' / 100'}`:`Artwork ${label(selected)} · ${d.positions[selected] ?? 'Not placed'}`}</span><button type="button" data-action="nudge" data-dx="-1" aria-label="Move artwork ${label(selected)} one step left" ${placed(selected) ? '' : 'disabled'}>−</button><button type="button" data-action="nudge" data-dx="1" aria-label="Move artwork ${label(selected)} one step right" ${placed(selected) ? '' : 'disabled'}>+</button>`;
     if (fine && r.kind === 'grid') fine.innerHTML = `<span>Artwork ${label(selected)} · ${placed(selected) ? esc(describePoint(r.axis, d.points[selected])) : 'Not placed'}</span>${[['←',-1,0,'left'],['↓',0,-1,'down'],['↑',0,1,'up'],['→',1,0,'right']].map(([text, dx, dy, word]) => `<button type="button" data-action="nudge" data-dx="${dx}" data-dy="${dy}" aria-label="Move artwork ${label(selected)} one step ${word}" ${placed(selected) ? '' : 'disabled'}>${text}</button>`).join('')}`;
     if(fine&&mobileSpectrum()){
-      const value=d.positions[selected];fine.classList.add('mobile-precision');fine.querySelector('span').innerHTML=ordinal()?'<span aria-hidden="true">↔</span>':value===undefined?'—':`${value}<small> / 100</small>`;
+      const value=d.positions[selected];fine.classList.add('mobile-precision');fine.innerHTML=ordinal()?'':`<span>${value===undefined?'Not rated':`${value}<small> / 100</small>`}</span>`;
     }else fine?.classList.remove('mobile-precision');
     syncMobileMap();
     const range=app.querySelector('#mobile-spectrum-range');
@@ -110,8 +110,8 @@ export function createInteractions({ app, getRound, getDraft, ready, image, esc,
   function paintSpectrum() {
     const r = getRound(), d = getDraft(), holder = app.querySelector('#spectrum-placements');
     if (!holder) return;
-    const mobile=mobileSpectrum();app.querySelector('.spectrum-layout')?.classList.toggle('mobile-spectrum-mode',mobile);app.querySelector('.work-overview')?.setAttribute('aria-label',mobile?'Paintings still to place':'Your artwork reference group');
-    const compactPhone=mobile&&window.innerHeight<740,rail=app.querySelector('.spectrum-rail'),lanes=[],laneStep=mobile?(compactPhone?40:48):65,tokenBase=mobile?(compactPhone?12:14):22;
+    const mobile=mobileSpectrum(),layout=app.querySelector('.spectrum-layout,.spectrum-input');layout?.classList.toggle('mobile-spectrum-mode',mobile);layout?.classList.toggle('all-placed',r.works.every(w=>placed(w.id)));app.querySelector('.work-overview')?.setAttribute('aria-label',mobile?'Paintings still to place':'Your artwork reference group');
+    const compactPhone=mobile&&window.innerHeight<740,rail=app.querySelector('.spectrum-rail'),lanes=[],laneStep=mobile?(compactPhone?34:40):65,tokenBase=mobile?12:22;
     const positions = r.works.filter(w => placed(w.id)).sort((a, b) => d.positions[a.id] - d.positions[b.id]);
     holder.innerHTML = positions.map(w => {
       const x = d.positions[w.id] / 100 * rail.clientWidth;
@@ -120,8 +120,8 @@ export function createInteractions({ app, getRound, getDraft, ready, image, esc,
       return `<div class="spectrum-token" style="left:${d.positions[w.id]}%;bottom:${tokenBase + lane * laneStep}px"><span class="spectrum-stem" style="height:${tokenBase - 2 + lane * laneStep}px"></span>${source(w, 'placed-art')}${ordinal()?'':`<span class="position-value">${d.positions[w.id]}</span>`}</div>`;
     }).join('');
     const compact=app.querySelector('.journey-question')&&window.matchMedia('(max-width:600px)').matches;
-    const height=mobile?Math.max(compactPhone?116:170,lanes.length*laneStep+26):Math.max(compact?110:r.works.length>=3?215:145,lanes.length*65+35);
-    app.querySelector('#spectrum-target').style.height=height+'px';app.querySelector('.spectrum-layout')?.style.setProperty('--spectrum-height',height+'px');
+    const height=mobile?Math.max(compactPhone?100:120,lanes.length*laneStep+26):Math.max(compact?110:r.works.length>=3?215:145,lanes.length*65+35);
+    app.querySelector('#spectrum-target').style.height=height+'px';layout?.style.setProperty('--spectrum-height',height+'px');
     app.querySelector('.spectrum-empty').hidden = positions.length > 0;
     paintSelection(); status(); bindSources();
   }

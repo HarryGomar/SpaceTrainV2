@@ -1,3 +1,4 @@
+import {nextProfileRefinement,PROFILE_REFINEMENT_PROTOCOL,PROFILE_REFINEMENT_LIMIT} from './profile-refinement.mjs';
 import {isReviewedVisualDescriptor,FEATURE_SEMANTIC_VERSION} from './visual-descriptor-semantics.mjs';
 import {isDiagnosticRound,bindDiagnosticRound} from './explanation-followups.mjs';
 import {simplifyActiveInteraction} from './quiet-interactions.mjs';
@@ -242,6 +243,13 @@ export function analyzeStudy(works,rounds,answers) {
   return {findings,checks,answered:reportedEntries.length,skipped:rounds.filter(r=>answers[r.id]?.skipped).length,sets:unique(reportedEntries.map(e=>workSetKey(e.round))).length,artworks:unique(reportedEntries.flatMap(e=>ids(e.round))).length,repeatsCompared:repeatComparisons,repeatsWithClearReversal:repeats.length,predictionChecks:predictionChecks.length,name:findings[0]?.title||'Your study so far.',enough:reportedEntries.length>=2,evidence:unique(findings.flatMap(f=>f.evidence)),basis:'Only complete answers enter this reading. Ordinary preference, curiosity, response and connection tasks are compared under their recorded instructions. Contextual choices are kept separate from unconditional preference. Intentional repeats keep their earlier comparison. Thresholds are design heuristics, not validated confidence estimates. A longer path reuses this small catalogue and does not supply 200 independent observations.'};
 }
 
+const profileRefinementState=data=>data.profileRefinement?.protocol===PROFILE_REFINEMENT_PROTOCOL&&data.profileRefinement.baseTarget===50&&Array.isArray(data.profileRefinement.plan)&&data.profileRefinement.plan.length<=PROFILE_REFINEMENT_LIMIT?data.profileRefinement:null;
+export function sessionRefinementRounds(data){
+  const state=profileRefinementState(data);if(!state)return [];
+  return state.plan.map((planned,index)=>restoreStudyRound(data.shown[planned.id]||planned,data.manifest.catalogue)||unavailableRound(planned,index,'This saved focused comparison is unavailable.'));
+}
+function journeyRoundIndices(data){const state=profileRefinementState(data),order=state?[...data.plan.slice(0,50),...state.plan,...data.plan.slice(50)]:data.plan;return new Map(order.map((round,index)=>[round.id,index]));}
+export function journeyEvidenceRounds(data){const rounds=sessionJourneyRounds(data),extra=sessionRefinementRounds(data);return [...rounds.slice(0,50),...extra,...rounds.slice(50)];}
 const fresh=()=>({version:1,target:50,index:0,screen:'home',answers:{},shown:{},startedAt:null,finishedAt:null,archives:[]});
 export function prepareJourneySession(saved,works,now=Date.now()){
   const source=plainObject(saved)?structuredClone(saved):{};
@@ -301,7 +309,7 @@ export function prepareJourneySession(saved,works,now=Date.now()){
 }
 export function extendJourneySession(source,currentWorks,now=Date.now()){
   if(Array.isArray(source?.plan)&&source.plan.length>=JOURNEY_MAX_LENGTH)throw Error('This quiz has reached 300 decisions. Your answers stay saved; explore your gallery or start a new quiz.');
-  const data=prepareJourneySession(source,currentWorks,now),resolved=sessionJourneyRounds(data),history=resolved.filter(r=>data.shown[r.id]).map(r=>{
+  const data=prepareJourneySession(source,currentWorks,now),resolved=sessionJourneyRounds(data),history=journeyEvidenceRounds(data).filter(r=>data.shown[r.id]).map(r=>{
     if(r.evidence?.stimulusVisibility==='not-shown')return {...r,presentedIds:[],coPresentedGroups:[]};
     if(r.kind!=='exercise')return r;
     const record=data.answers[r.id]?.record;
@@ -310,6 +318,7 @@ export function extendJourneySession(source,currentWorks,now=Date.now()){
     return {...r,presentedIds,coPresentedGroups:r.exerciseKind==='curate'?[placed]:[presentedIds],exposureUnknownWorkIds:r.exerciseKind==='curate'?presentedIds.filter(id=>!placed.includes(id)):[]};
   });
   if(resolved.some(r=>!r.unavailable&&!data.answers[r.id]?.skipped&&!validStudyAnswer(r,data.answers[r.id])))throw Error('Finish this set before adding another.');
+  if(profileRefinementState(data))data.profileRefinement.active=false;
   const known=new Set(data.manifest.catalogue.map(w=>w.id)),added=currentWorks.filter(w=>!known.has(w.id));data.manifest.catalogue.push(...structuredClone(added));data.manifest.catalogueIds=data.manifest.catalogue.map(w=>w.id);
   const offset=data.plan.length,batchIndex=offset/JOURNEY_LENGTH,seed=data.manifest.id+'-'+batchIndex,curated=createJourneyStimulusPlan({works:data.manifest.catalogue,rounds:history,answers:data.answers,batchIndex,seed,reservationPlan:data.manifest.stimulusPlanning?.reservations,firstWorkIds:data.manifest.stimulusPlanning?.boundMainWorkIds}),reservationPlan=curated.reservations||data.manifest.stimulusPlanning?.reservations;
   const futureReserved=new Set(reservationPoolKeys(reservationPlan).filter(name=>Number(name.slice(5))-1>batchIndex).flatMap(name=>reservationPlan[name])),alreadyRated=new Set(history.filter(round=>round.kind==='spectrum'&&round.evidence?.construct==='preference'&&validStudyAnswer(round,data.answers[round.id])).flatMap(ids)),fallbackWorks=data.manifest.catalogue.filter(work=>!futureReserved.has(work.id)||alreadyRated.has(work.id));
@@ -328,9 +337,9 @@ export function sessionJourneyRounds(data,{regenerateBlock=buildJourneyRounds}={
     const panels=Array.isArray(saved)?saved:saved?.panels;
     const result={rounds:[],history:[],answers:{},reason:'The saved bound panel selection is unavailable for this block.'};blocks.set(offset,result);
     if(!Array.isArray(panels)||panels.length!==18)return result;
-    indices??=new Map(data.plan.map((snapshot,index)=>[snapshot.id,index]));
+    indices??=journeyRoundIndices(data);
     shownHistory??=Object.values(data.shown).map(snapshot=>restoreStudyRound(snapshot,works)).filter(Boolean);
-    result.history=shownHistory.filter(round=>indices.has(round.id)&&indices.get(round.id)<index);
+    result.history=shownHistory.filter(round=>indices.has(round.id)&&indices.get(round.id)<indices.get(data.plan[index].id));
     result.answers=Object.fromEntries(result.history.filter(round=>validStudyAnswer(round,data.answers[round.id])).map(round=>[round.id,data.answers[round.id]]));
     const seed=data.plan.slice(offset,offset+JOURNEY_LENGTH).find(round=>typeof round.evidence?.selectionSeed==='string')?.evidence.selectionSeed;
     try{result.rounds=regenerateBlock(works,result.answers,{offset,batchIndex,panels,history:result.history,preferenceProtocol:data.manifest.preferenceProtocol||'overall-appeal-v1',...(seed!==undefined?{seed}:{})});result.reason='The current binder did not reproduce this pinned question and source.';}
@@ -343,15 +352,15 @@ export function sessionJourneyRounds(data,{regenerateBlock=buildJourneyRounds}={
     if(!shown&&data.answers[planned.id])return unavailableRound(planned,index,'The original presentation record is unavailable.');
     if(!shown&&isDiagnosticRound(round)){
       if(index>data.index)return round;
-      indices??=new Map(data.plan.map((snapshot,position)=>[snapshot.id,position]));
+      indices??=journeyRoundIndices(data);
       shownHistory??=Object.values(data.shown).map(snapshot=>restoreStudyRound(snapshot,works)).filter(Boolean);
-      const earlier=shownHistory.filter(item=>indices.has(item.id)&&indices.get(item.id)<index);
+      const earlier=shownHistory.filter(item=>indices.has(item.id)&&indices.get(item.id)<indices.get(planned.id));
       return bindDiagnosticRound({round,works,rounds:earlier,answers:data.answers});
     }
     if(!shown&&isFinalRefinementRound(round)){
-      indices??=new Map(data.plan.map((snapshot,position)=>[snapshot.id,position]));
+      indices??=journeyRoundIndices(data);
       shownHistory??=Object.values(data.shown).map(snapshot=>restoreStudyRound(snapshot,works)).filter(Boolean);
-      const earlier=shownHistory.filter(item=>indices.has(item.id)&&indices.get(item.id)<index);
+      const earlier=shownHistory.filter(item=>indices.has(item.id)&&indices.get(item.id)<indices.get(planned.id));
       return bindFinalRefinementRound({round,works,rounds:earlier,answers:data.answers,seed:data.manifest.id});
     }
     if(!shown&&round.evidence.family==='feature-check'){
@@ -395,14 +404,43 @@ export function createDeepStudy({app,getWorks,image,esc,keepButtons,navigate,sho
   const save=()=>storageBlocked?Promise.resolve(false):persistence.save(()=>encodeStudyWithArchives(data,archiveReferences),{sessionId:data.manifest?.id});
   const ensureSession=()=>{if(!data.manifest)data=prepare(null,getWorks());};
   const actualRounds=(target=data.target)=>{ensureSession();return journey?sessionJourneyRounds(data):sessionStudyRounds(data,target);};
+  const profileRounds=(target=data.target)=>journey?journeyEvidenceRounds(data):actualRounds(target);
+  const refining=()=>journey&&profileRefinementState(data)?.active===true;
+  const refinementAttempts=()=>sessionRefinementRounds(data);
+  let refinementOfferCache=null;
+  function refinementOffer({rounds,completed}={}){
+    if(!journey||data.plan.length!==50||data.reviewingArchived||data.profileRefinement&&!profileRefinementState(data))return null;
+    rounds??=profileRounds();completed??=data.plan.every(snapshot=>{const item=rounds.find(round=>round.id===snapshot.id);return item&&resolved(item);});
+    if(!completed)return null;
+    const attempts=refinementAttempts(),pending=attempts.find(item=>!resolved(item));
+    if(pending)return {round:pending,reason:pending.evidence.profileRefinement?.reason||'Return to your saved focused comparison.',resume:true};
+    if(attempts.length>=PROFILE_REFINEMENT_LIMIT)return null;
+    const cacheKey=JSON.stringify([data.manifest.id,data.answers,data.profileRefinement?.plan?.map(round=>round.id)]);
+    if(refinementOfferCache?.key===cacheKey)return refinementOfferCache.offer;
+    const offer=nextProfileRefinement({works:sessionWorks(),rounds:rounds.filter(item=>data.shown[item.id]),answers:data.answers,attempts,seed:data.manifest.id});
+    refinementOfferCache={key:cacheKey,offer};return offer;
+  }
+  function startRefinement(){
+    const offer=refinementOffer();if(!offer)return false;
+    data.profileRefinement??={protocol:PROFILE_REFINEMENT_PROTOCOL,baseTarget:50,limit:PROFILE_REFINEMENT_LIMIT,plan:[],startedAt:Date.now()};
+    if(!offer.resume)data.profileRefinement.plan.push(snapshotStudyRound(offer.round));
+    data.profileRefinement.active=true;data.profileRefinement.finishedAt=null;data.screen='question';save();navigate('study');return true;
+  }
+  function stopRefinement(){if(profileRefinementState(data))data.profileRefinement.active=false;data.screen='reading';save();render();focus();}
+  function continueRefinement(){
+    const offer=refinementOffer();
+    if(offer){if(!offer.resume)data.profileRefinement.plan.push(snapshotStudyRound(offer.round));data.profileRefinement.active=true;}
+    else{data.profileRefinement.active=false;data.profileRefinement.finishedAt=Date.now();data.screen='reading';}
+    save();render();focus();
+  }
   const resolved=(r)=>r.unavailable||data.answers[r.id]?.skipped||validStudyAnswer(r,data.answers[r.id]);
   const answerCount=(rounds=actualRounds())=>rounds.filter(r=>validStudyAnswer(r,data.answers[r.id])).length;
-  const inputs=createInteractions({app,getRound:()=>round,getDraft:()=>draft,ready:()=>ready,image,esc,workById:lookup,saveDraft:()=>{data.answers[round.id]=structuredClone(draft);data.finishedAt=null;save();},sync:()=>syncImages()});
+  const inputs=createInteractions({app,getRound:()=>round,getDraft:()=>draft,ready:()=>ready,image,esc,workById:lookup,saveDraft:()=>{data.answers[round.id]=structuredClone(draft);if(!refining())data.finishedAt=null;save();},sync:()=>syncImages()});
   const exerciseRecords=(rounds=actualRounds())=>rounds.filter(r=>r.kind==='exercise'&&validStudyAnswer(r,data.answers[r.id])).map(r=>data.answers[r.id].record);
   const saveExercise=()=>{if(round?.kind!=='exercise'||!draft?.record)return;data.answers[round.id]=structuredClone(draft);data.finishedAt=null;save();};
   const embeddedOptions={app,getRecord:()=>draft?.record,setRecord:record=>{draft.record=record;},getWorks:sessionWorks,image,esc,save:saveExercise,rerender:()=>{render();},inspect:id=>showArtwork(id,true)};
   const embedded={sorting:createSortingTable(embeddedOptions),'difficult-edit':createDifficultEdit(embeddedOptions),curate:createGalleryStudio(embeddedOptions)};
-  const chrome=()=>`<header class="journey-chrome"><button class="text-button" type="button" data-action="deep-back" ${data.index?'':'disabled'} aria-label="Previous round">←</button><span>${data.index+1} / ${data.target}</span><button class="text-button" type="button" data-action="deep-save" aria-label="Close">×</button></header>`;
+  const chrome=()=>`<header class="journey-chrome"><button class="text-button" type="button" data-action="deep-back" ${!refining()&&data.index?'':'disabled'} aria-label="Previous round">←</button><span>${refining()?'Refining · '+refinementAttempts().length+' / '+PROFILE_REFINEMENT_LIMIT:data.index+1+' / '+data.target}</span><button class="text-button" type="button" data-action="deep-save" aria-label="Close">×</button></header>`;
   function earlierPreferenceOptions(){
     const rounds=actualRounds(),index=rounds.findIndex(item=>item.id===round.id);
     return {preferenceCatalogue:sessionWorks(),preferenceContext:{roundId:round.id,index},preferenceSources:rounds.slice(0,index).flatMap((item,sourceIndex)=>data.shown[item.id]&&!item.unavailable&&validStudyAnswer(item,data.answers[item.id])?[{round:item,answer:data.answers[item.id],index:sourceIndex}]:[])};
@@ -478,7 +516,9 @@ export function createDeepStudy({app,getWorks,image,esc,keepButtons,navigate,sho
     return `<div class="deep-context story-rating"><figure>${image(work)}<button class="text-button" type="button" data-action="deep-art" data-work="${esc(work.id)}">Look closer ↗</button></figure><div class="story-response">${after?`<p class="story-note">${esc(note.text)}</p><p class="story-sources">${note.sources.map(source=>`<a class="story-source" href="${esc(source.url)}" target="_blank" rel="noopener noreferrer">${esc(source.publisher)} ↗</a>`).join(' · ')}</p><div class="liking-circles" role="group" aria-label="${esc(CONTEXT_CHANGE_PROMPT)}">${CONTEXT_CHANGE_OPTIONS.map(option=>`<button type="button" class="context-circle" data-action="deep-context-change" data-value="${option.value}" aria-pressed="${!draft.uncertain&&draft.reportedChange===option.value}"><span class="context-ring" aria-hidden="true"></span><span>${esc(option.label)}</span></button>`).join('')}</div><button class="text-button" type="button" data-action="deep-context-change" data-value="unsure" aria-pressed="${draft.uncertain===true}">Unsure</button>`:'<p>Take a look, then reveal the note.</p>'}</div></div>`;
   }
   function question() {
-    const r=actualRounds()[data.index];round=r;
+    const all=profileRounds(),r=refining()?refinementAttempts().find(item=>!resolved(item)):actualRounds()[data.index];round=r;
+    if(!r){stopRefinement();return;}
+    const earlierShown=all.slice(0,all.findIndex(item=>item.id===r.id)).filter(item=>data.shown[item.id]);
     if(round.kind==='exercise'){exerciseQuestion();return;}
     if(round.unavailable){ready=false;draft=null;app.innerHTML=`<section class="deep-question"><div class="deep-top"><button class="text-button" type="button" data-action="deep-save">← Study overview</button><span>${data.index+1} / ${data.target}</span></div><h1 id="question-title">This saved decision is unavailable.</h1><p class="deep-intro">${esc(round.unavailableReason)} Its question and response remain in the downloaded record. No replacement artwork or answer has been inserted.</p><div class="deep-home-actions"><button class="primary-button" type="button" data-action="deep-unavailable-next">Continue without changing it →</button><button class="text-button" type="button" data-action="deep-export">Download study record ↓</button></div></section>`;return;}
     if(!data.shown[r.id]&&round.evidence?.provisionalPrediction){round={...round,evidence:{...round.evidence,trainingAnswers:Object.fromEntries((round.evidence.trainingRoundIds||[]).filter(id=>data.answers[id]).map(id=>[id,structuredClone(data.answers[id])]))}};}
@@ -489,15 +529,15 @@ export function createDeepStudy({app,getWorks,image,esc,keepButtons,navigate,sho
       if(upgrade.changed){data.instrumentRevisions=[...(data.instrumentRevisions||[]),{roundId:round.id,...upgrade.archive,question:snapshotStudyRound(upgrade.archive.question)}];round=upgrade.round;const snapshot=snapshotStudyRound(round);data.shown[round.id]=snapshot;const planned=data.plan.findIndex(item=>item.id===round.id);if(planned>=0)data.plan[planned]=structuredClone(snapshot);if(original!==undefined)data.answers[round.id]=upgrade.draft;}
     }
     if(round.kind==='match'&&!data.shown[r.id]){try{const galleryPreview=captureGalleryPreview(JSON.parse(localStorage.getItem(GALLERY_CONTEXT_KEY)||'null'),ids(round));if(galleryPreview)round={...round,evidence:{...round.evidence,galleryPreview}};}catch{}}
-    if(isContextChangeRound(round)&&!data.shown[r.id])round=bindContextChangeRound({round,rounds:actualRounds().slice(0,data.index).filter(item=>data.shown[item.id]),answers:data.answers});
-    if(!data.shown[r.id])round={...round,evidence:{...round.evidence,exposureHistory:captureArtworkExposure(round,actualRounds().slice(0,data.index).filter(item=>data.shown[item.id]),data.answers)}};
+    if(isContextChangeRound(round)&&!data.shown[r.id])round=bindContextChangeRound({round,rounds:earlierShown,answers:data.answers});
+    if(!data.shown[r.id])round={...round,evidence:{...round.evidence,exposureHistory:captureArtworkExposure(round,earlierShown,data.answers)}};
     if(!data.shown[r.id])data.shown[r.id]=snapshotStudyRound(round);
     const a=data.answers[round.id];draft=a&&!a.skipped?(validStudyAnswer(round,a)?structuredClone(a):sanitizeStudyDraft(round,a)):sanitizeStudyDraft(round,{});
     if(round.kind==='choice-grid'&&round.evidence?.instrumentRevision===PAGED_FAVOURITES)data.answers[round.id]=structuredClone(draft);
     if(round.kind==='contrast')contrastController=createContrastController({app,round,draft,image,esc,saveDraft:answer=>{draft=answer;data.answers[round.id]=structuredClone(answer);data.finishedAt=null;save();},sync:()=>syncImages()});
     statementIndex=round.kind==='statements'?Math.max(0,round.statements.findIndex(s=>draft.claims[s.id]===undefined)):0;
     const body=round.kind==='contrast'?contrastController.markup():round.kind==='choice-grid'?discoveryGridMarkup(round,draft,{image,esc}):['spectrum','grid','match'].includes(round.kind)?inputs.markup():round.kind==='statements'?statementMarkup():isContextChangeRound(round)?directContextMarkup():round.contextMode==='preference-before-after-v1'?contextShiftMarkup():`<div class="deep-context"><figure>${image(round.works[0])}<button class="text-button" type="button" data-action="deep-art" data-work="${esc(round.works[0].id)}">Look closer ↗</button></figure><div><p class="eyebrow">${esc(round.works[0].artist)}</p><h2>${esc(short(round.works[0]))}</h2><p class="deep-note">${esc(round.works[0].note)}</p><div class="deep-context-options">${[['more','More curious'],['same','About the same'],['less','Less curious'],['unsure','Not sure']].map(([value,label])=>`<button class="context-circle" type="button" data-action="deep-context" data-value="${value}" aria-pressed="${draft.change===value}"><span class="context-ring" aria-hidden="true"></span><span>${label}</span></button>`).join('')}</div><a href="${esc(round.works[0].sourceUrl)}" target="_blank" rel="noopener noreferrer">Museum source ↗</a></div></div>`;
-    app.innerHTML=`<section class="deep-question ${journey?'journey-question':''}" data-deep-round="${esc(round.id)}" data-kind="${round.kind}">${journey?chrome():`<div class="deep-top"><button class="text-button" type="button" data-action="deep-save">← Back</button><span>${data.index+1} / ${data.target}</span></div>`}<div class="question-head"><h1 id="${journey&&round.kind==='statements'?'round-format-title':'question-title'}">${esc(isContextChangeRound(round)?(draft.storySeen?CONTEXT_CHANGE_PROMPT:round.contextPrompts.before):round.contextMode==='preference-before-after-v1'?(draft.storySeen?(round.contextPrompts?.after||'How much do you like it now?'):(round.contextPrompts?.before||'How much do you like this painting?')):round.title)}</h1>${round.hint?'<p'+(round.contextMode==='preference-before-after-v1'&&draft.storySeen?' aria-hidden="true"':'')+'>'+(round.contextMode==='preference-before-after-v1'&&draft.storySeen?'&nbsp;':esc(round.hint))+'</p>':''}</div><div id="deep-image-status" class="image-status" role="status" hidden></div><div class="deep-round-body">${round.kind!=='contrast'&&round.anchorWorks?.length?`<div class="deep-anchors">${round.anchorWorks.map(w=>`<figure>${image(w)}</figure>`).join('')}</div>`:''}${body}</div><div class="round-actions"><div class="action-side">${!journey?'<button class="text-button" type="button" data-action="deep-back">Back</button>':''}<button class="text-button" type="button" data-action="deep-skip">Skip</button></div><button class="primary-button" type="button" data-action="deep-next" disabled>${isContextChangeRound(round)&&!draft.storySeen?'Reveal note':round.contextMode==='preference-before-after-v1'&&!draft.storySeen?(round.symbolismProtocol?'Read the note':'Read the story'):round.kind==='contrast'&&round.contrastKind==='chronology'&&!draft.confirmed?'Check dates':round.kind==='match'&&!draft.confirmed?'Check':data.index===data.target-1?'View profile':'Continue'}</button></div></section>`;
+    app.innerHTML=`<section class="deep-question ${journey?'journey-question':''}" data-deep-round="${esc(round.id)}" data-kind="${round.kind}">${journey?chrome():`<div class="deep-top"><button class="text-button" type="button" data-action="deep-save">← Back</button><span>${data.index+1} / ${data.target}</span></div>`}<div class="question-head"><h1 id="${journey&&round.kind==='statements'?'round-format-title':'question-title'}">${esc(isContextChangeRound(round)?(draft.storySeen?CONTEXT_CHANGE_PROMPT:round.contextPrompts.before):round.contextMode==='preference-before-after-v1'?(draft.storySeen?(round.contextPrompts?.after||'How much do you like it now?'):(round.contextPrompts?.before||'How much do you like this painting?')):round.title)}</h1>${round.hint?'<p'+(round.contextMode==='preference-before-after-v1'&&draft.storySeen?' aria-hidden="true"':'')+'>'+(round.contextMode==='preference-before-after-v1'&&draft.storySeen?'&nbsp;':esc(round.hint))+'</p>':''}</div><div id="deep-image-status" class="image-status" role="status" hidden></div><div class="deep-round-body">${round.kind!=='contrast'&&round.anchorWorks?.length?`<div class="deep-anchors">${round.anchorWorks.map(w=>`<figure>${image(w)}</figure>`).join('')}</div>`:''}${body}</div><div class="round-actions"><div class="action-side">${!journey?'<button class="text-button" type="button" data-action="deep-back">Back</button>':''}<button class="text-button" type="button" data-action="${refining()?'deep-refine-stop':'deep-skip'}">${refining()?'Finish for now':'Skip'}</button></div><button class="primary-button" type="button" data-action="deep-next" disabled>${isContextChangeRound(round)&&!draft.storySeen?'Reveal note':round.contextMode==='preference-before-after-v1'&&!draft.storySeen?(round.symbolismProtocol?'Read the note':'Read the story'):round.kind==='contrast'&&round.contrastKind==='chronology'&&!draft.confirmed?'Check dates':round.kind==='match'&&!draft.confirmed?'Check':refining()?(refinementAttempts().length===PROFILE_REFINEMENT_LIMIT?'View profile':'Continue'):data.index===data.target-1?'View profile':'Continue'}</button></div></section>`;
     if(['spectrum','grid','match'].includes(round.kind))inputs.attach();
     applyTaskSignals(app,round);
     syncImages();save();
@@ -514,10 +554,10 @@ export function createDeepStudy({app,getWorks,image,esc,keepButtons,navigate,sho
     return findings.length?`<section class="deep-exhibitions"><h2>Your arrangements</h2>${findings.slice(0,5).map(markup).join('')}</section>`:'';
   }
   function reading() {
-    const rounds=actualRounds(Math.max(200,data.plan.length)),activeRounds=journey?rounds:rounds.slice(0,data.target),records=journey?exerciseRecords(rounds):[],result=analyzeStudy(sessionWorks(),rounds,data.answers),leading=result.findings.slice(0,3),rest=result.findings.slice(3);
+    const rounds=profileRounds(Math.max(200,data.plan.length)),activeRounds=journey?rounds:rounds.slice(0,data.target),records=journey?exerciseRecords(rounds):[],result=analyzeStudy(sessionWorks(),rounds,data.answers),leading=result.findings.slice(0,3),rest=result.findings.slice(3);
     const continueButton=activeRounds.some(r=>!resolved(r))?'<button class="primary-button" type="button" data-action="deep-start">Continue the study →</button>':'<button class="primary-button" type="button" data-action="deep-home">Study overview →</button>';
     const markup=f=>`<article class="deep-finding"><h2>${esc(f.title)}</h2><p>${esc(f.text)}</p><details><summary>Works, evidence and limits${f.counter.length?' · including exceptions':''}</summary>${evidenceMarkup(f.support,'Supporting comparisons')}${evidenceMarkup(f.counter,'Comparisons going the other way')}${f.alternatives.map(text=>`<p>${esc(text)}</p>`).join('')}</details></article>`;
-    if(journey){const universe=[...new Map([...getWorks(),...sessionWorks()].map(w=>[w.id,w])).values()],arrangements=analyzeScenarios(sessionWorks(),records),portrait=buildTastePortrait({works:universe,rounds,answers:data.answers,records,saved:getSavedCollection(),recommendationHistory:data.archives||[]});portrait.connections=buildTasteConnections({works:universe,rounds,answers:data.answers,records});const completed=rounds.every(resolved),legacyOnly=completed&&![COMPARISON_PROTOCOL,CONTINUOUS_PROTOCOL].includes(data.manifest.preferenceProtocol)&&!rounds.some(item=>(isComparisonPreferenceRound(item)||isOverallAppealRound(item))&&validStudyAnswer(item,data.answers[item.id]));const atLimit=data.plan.length>=JOURNEY_MAX_LENGTH,continuation={action:legacyOnly?'deep-retake':completed?atLimit?'collection':'deep-extend':'deep-start',label:legacyOnly?'Start updated quiz':completed?atLimit?'Explore your gallery':'Continue with 50 more':'Continue your rounds'};const view=renderTastePortrait({portrait,study:result,arrangements,rounds,answers:data.answers,works:universe,image,esc,keepButtons,continuation});const footer=`<div class="deep-reading-actions tp-footer"><button class="primary-button" type="button" data-action="${esc(continuation.action)}">${esc(continuation.label)}</button><button class="text-button" type="button" data-action="collection">Your collection</button><a class="text-button" href="./maps.html">Your maps ↗</a><a class="text-button" href="./paintings.html">Paintings ↗</a><a class="text-button" href="./profiles.html">Explore profiles ↗</a><button class="text-button" type="button" data-action="deep-retake">Start a new quiz</button>${data.archives.length?'<button class="text-button" type="button" data-action="deep-archives">Previous quizzes</button>':''}<button class="text-button" type="button" data-action="deep-review">Review answers</button><button class="text-button" type="button" data-action="deep-export">Download</button></div>`;const end=view.lastIndexOf('</section>');return view.slice(0,end)+footer+view.slice(end);}
+    if(journey){const universe=[...new Map([...getWorks(),...sessionWorks()].map(w=>[w.id,w])).values()],arrangements=analyzeScenarios(sessionWorks(),records),portrait=buildTastePortrait({works:universe,rounds,answers:data.answers,records,saved:getSavedCollection(),recommendationHistory:data.archives||[]});portrait.connections=buildTasteConnections({works:universe,rounds,answers:data.answers,records});const completed=data.plan.every(snapshot=>{const item=rounds.find(round=>round.id===snapshot.id);return item&&resolved(item);}),legacyOnly=completed&&![COMPARISON_PROTOCOL,CONTINUOUS_PROTOCOL].includes(data.manifest.preferenceProtocol)&&!rounds.some(item=>(isComparisonPreferenceRound(item)||isOverallAppealRound(item))&&validStudyAnswer(item,data.answers[item.id]));const atLimit=data.plan.length>=JOURNEY_MAX_LENGTH,continuation={action:legacyOnly?'deep-retake':completed?atLimit?'collection':'deep-extend':'deep-start',label:legacyOnly?'Start updated quiz':completed?atLimit?'Explore your gallery':'Continue with 50 more':'Continue your rounds'};const view=renderTastePortrait({portrait,study:result,arrangements,rounds,answers:data.answers,works:universe,image,esc,keepButtons,continuation,refinementOffer:refinementOffer({rounds,completed})});const footer=`<div class="deep-reading-actions tp-footer"><button class="primary-button" type="button" data-action="${esc(continuation.action)}">${esc(continuation.label)}</button><button class="text-button" type="button" data-action="collection">Your collection</button><a class="text-button" href="./maps.html">Your maps ↗</a><a class="text-button" href="./paintings.html">Paintings ↗</a><a class="text-button" href="./profiles.html">Explore profiles ↗</a><button class="text-button" type="button" data-action="deep-retake">Start a new quiz</button>${data.archives.length?'<button class="text-button" type="button" data-action="deep-archives">Previous quizzes</button>':''}<button class="text-button" type="button" data-action="deep-review">Review answers</button><button class="text-button" type="button" data-action="deep-export">Download</button></div>`;const end=view.lastIndexOf('</section>');return view.slice(0,end)+footer+view.slice(end);}
     return `<section class="deep-reading"><div class="deep-top"><button class="text-button" type="button" data-action="deep-home">← Study overview</button><span>Saved in this browser</span></div><p class="eyebrow">${result.answered} answered rounds · ${result.artworks} distinct works</p><h1>${esc(result.name)}</h1><p class="deep-intro">This reading connects the decisions you actually completed. Specific comparisons, exceptions and task wording stay attached to each observation.</p>${!result.findings.length?'<p class="deep-empty-reading">Complete preference choices and the related response tasks to connect them. An isolated placement stays a response, without an invented explanation.</p>':''}${leading.map(markup).join('')}${rest.length?`<details class="deep-more"><summary>${rest.length} more observations</summary>${rest.map(markup).join('')}</details>`:''}${checksMarkup(result)}${exhibitionsMarkup(markup)}<div class="deep-reading-actions">${continueButton}<button class="text-button" type="button" data-action="deep-export">Download study record ↓</button></div><details class="deep-method"><summary>What this reading can establish</summary><p>${esc(result.basis)}</p><p>${result.skipped} decisions were skipped. Missing answers and ties do not become preferences. Contextual selection tasks and agreement statements do not train the individual preference explanation.</p><p>This prototype has not been psychometrically validated. A long path through ${sessionWorks().length} artworks does not establish an unrestricted profile of taste.</p></details>${result.evidence.length?`<section class="deep-keeps"><h2>Keep works for another look.</h2>${result.evidence.slice(0,12).map(id=>`<div><span>${esc(short(lookup(id)))}</span>${keepButtons(lookup(id))}</div>`).join('')}</section>`:''}</section>`;
   }
   function syncImages() {
@@ -538,7 +578,7 @@ export function createDeepStudy({app,getWorks,image,esc,keepButtons,navigate,sho
     for(const button of app.querySelectorAll('.drag-art,.match-label,[data-action=place-match],.spectrum-hit,.discovery-work,.discovery-none,.deep-agreement-choice,[data-action=deep-context],[data-action=deep-liking],[data-action=deep-context-change]'))button.disabled=!ready||round.kind==='match'&&draft.confirmed;
     for(const button of app.querySelectorAll('[data-action=nudge]'))if(!ready)button.disabled=true;
     const next=app.querySelector('[data-action=deep-next]');if(next)next.disabled=!ready||(isContextChangeRound(round)&&!draft.storySeen?false:round.contextMode==='preference-before-after-v1'&&!draft.storySeen?![0,25,50,75,100].includes(draft.before):!validStudyAnswer(round,['grid','spectrum','match','choice-grid','contrast','context'].includes(round.kind)?{...draft,confirmed:true}:draft));
-    const flow=inputs.mobileMapAction?.();if(next&&flow){next.textContent=flow.label;next.disabled=!ready||flow.disabled;}
+    const flow=inputs.mobileMapAction?.();if(next&&flow){next.textContent=flow.label;next.disabled=!ready||flow.disabled;}else if(next&&round.kind==='grid')next.textContent=refining()?(refinementAttempts().length===PROFILE_REFINEMENT_LIMIT?'View profile':'Continue'):data.index===data.target-1?'View profile':'Continue';
     app.querySelector('#response-pad')?.setAttribute('aria-disabled',String(!ready));
   }
   function simplifyInteraction(force=false){
@@ -562,7 +602,7 @@ export function createDeepStudy({app,getWorks,image,esc,keepButtons,navigate,sho
   app.addEventListener('load',()=>syncImages(),true);app.addEventListener('error',()=>syncImages(),true);
   globalThis.addEventListener?.('resize',()=>{if(['choice-grid','contrast'].includes(round?.kind)&&app.querySelector('.deep-question'))syncImages();});
   function render(){clearTimeout(statementTimer);contrastController?.dispose();contrastController=null;if(data.screen==='question')question();else app.innerHTML=data.screen==='reading'?reading():home();}
-  function changeScreen(screen){data.screen=screen;save();navigate(journey&&screen==='home'?'intro':'study');}
+  function changeScreen(screen){if(screen!=='question'&&profileRefinementState(data))data.profileRefinement.active=false;data.screen=screen;save();navigate(journey&&screen==='home'?'intro':'study');}
   function next(skip=false) {
     if(!skip&&isContextChangeRound(round)&&!draft.storySeen){if(!ready)return;draft=reduceContextChangeDraft(round,draft,{type:'reveal'});data.answers[round.id]=structuredClone(draft);save();render();focus();return;}
     if(!skip&&round?.contextMode==='preference-before-after-v1'&&!draft.storySeen){if(!ready||![0,25,50,75,100].includes(draft.before))return;if(round.symbolismProtocol)draft=reduceSymbolismDraft(round,draft,{type:'reveal'});else{draft.storySeen=true;draft.stage='after';}data.answers[round.id]=structuredClone(draft);save();render();focus();return;}
@@ -580,14 +620,15 @@ export function createDeepStudy({app,getWorks,image,esc,keepButtons,navigate,sho
     if(!skip&&round.kind==='contrast'&&!draft.confirmed){const answer=contrastController?.confirm();if(!answer)return;draft=answer;if(round.contrastKind==='chronology'){syncImages();return;}}
     if(!skip&&round.kind==='match'&&!draft.confirmed){draft.confirmed=true;draft.feedbackSeen=true;data.answers[round.id]=structuredClone(draft);save();render();focus();return;}
     if(skip)data.answers[round.id]={skipped:true,workIds:ids(round)};else{if(['spectrum','grid','choice-grid','contrast','context'].includes(round.kind))draft.confirmed=true;data.answers[round.id]={...structuredClone(draft),answeredAt:Date.now()};}
+    if(refining()){continueRefinement();return;}
     if(data.index===data.target-1){data.finishedAt=Date.now();data.screen='reading';}else data.index++;
     save();render();focus();
   }
   function exportData(){
     ensureSession();
-    const rounds=actualRounds(Math.max(200,data.plan.length)),records=journey?exerciseRecords(rounds):[],unavailable=rounds.filter(r=>r.unavailable),universe=[...new Map([...getWorks(),...sessionWorks()].map(w=>[w.id,w])).values()],portrait=journey?buildTastePortrait({works:universe,rounds,answers:data.answers,records,saved:getSavedCollection(),recommendationHistory:data.archives||[]}):null;
+    const rounds=profileRounds(Math.max(200,data.plan.length)),records=journey?exerciseRecords(rounds):[],unavailable=rounds.filter(r=>r.unavailable),universe=[...new Map([...getWorks(),...sessionWorks()].map(w=>[w.id,w])).values()],portrait=journey?buildTastePortrait({works:universe,rounds,answers:data.answers,records,saved:getSavedCollection(),recommendationHistory:data.archives||[]}):null;
     if(portrait)portrait.connections=buildTasteConnections({works:universe,rounds,answers:data.answers,records});
-    return {version:1,target:data.target,index:data.index,startedAt:data.startedAt,finishedAt:data.finishedAt,manifest:structuredClone(data.manifest),answers:structuredClone(data.answers),rounds:structuredClone(Object.values(data.shown)),plannedRounds:structuredClone(data.plan),archives:structuredClone(data.archives),unavailableDecisions:unavailable.map(r=>({id:r.id,workIds:r.unavailableWorkIds,reason:r.unavailableReason})),reading:analyzeStudy(sessionWorks(),rounds,data.answers),...(journey?{batches:structuredClone(data.batches||[]),planRevisions:structuredClone(data.planRevisions||[]),instrumentRevisions:structuredClone(data.instrumentRevisions||[]),portrait}:{}),exhibitionFindings:structuredClone(journey?analyzeScenarios(sessionWorks(),records).findings:getExhibitionFindings()),...(data.unreadableSource?{unreadableSource:data.unreadableSource}:{}),...(data.unmappedAnswers!==undefined?{unmappedAnswers:structuredClone(data.unmappedAnswers)}:{}),...(data.unmappedShown!==undefined?{unmappedShown:structuredClone(data.unmappedShown)}:{}),...(data.retainedSource?{retainedSource:structuredClone(data.retainedSource)}:{})};
+    return {version:1,target:data.target,index:data.index,startedAt:data.startedAt,finishedAt:data.finishedAt,manifest:structuredClone(data.manifest),answers:structuredClone(data.answers),rounds:structuredClone(Object.values(data.shown)),plannedRounds:structuredClone(data.plan),archives:structuredClone(data.archives),unavailableDecisions:unavailable.map(r=>({id:r.id,workIds:r.unavailableWorkIds,reason:r.unavailableReason})),reading:analyzeStudy(sessionWorks(),rounds,data.answers),...(journey?{...(data.profileRefinement?{profileRefinement:structuredClone(data.profileRefinement)}:{}),batches:structuredClone(data.batches||[]),planRevisions:structuredClone(data.planRevisions||[]),instrumentRevisions:structuredClone(data.instrumentRevisions||[]),portrait}:{}),exhibitionFindings:structuredClone(journey?analyzeScenarios(sessionWorks(),records).findings:getExhibitionFindings()),...(data.unreadableSource?{unreadableSource:data.unreadableSource}:{}),...(data.unmappedAnswers!==undefined?{unmappedAnswers:structuredClone(data.unmappedAnswers)}:{}),...(data.unmappedShown!==undefined?{unmappedShown:structuredClone(data.unmappedShown)}:{}),...(data.retainedSource?{retainedSource:structuredClone(data.retainedSource)}:{})};
   }
   async function commitSessionChange(candidate,{navigateTo='study'}={}) {
     if(sessionChangePending)return;sessionChangePending=true;
@@ -622,6 +663,8 @@ export function createDeepStudy({app,getWorks,image,esc,keepButtons,navigate,sho
     if(app.querySelector('.deep-question')&&inputs.click(action,control,event))return true;
     if(app.querySelector('.deep-question')&&action==='zoom'){showArtwork(control.dataset.work,round.kind==='context'&&(!round.contextMode||draft.storySeen)||round.kind==='match'&&draft.confirmed?(round.kind==='match'&&round.field==='artist'?'artist':true):false);return true;}
     if(!action?.startsWith('deep-'))return false;
+    if(action==='deep-refine'){startRefinement();return true;}
+    if(action==='deep-refine-stop'){stopRefinement();return true;}
     if(action==='deep-extend'&&journey){data=extendJourneySession(data,getWorks());save();navigate('study');focus();return true;}
     if(action==='deep-retake'){startNewSession();return true;}
     if(action==='deep-grid-page'&&round?.kind==='choice-grid'&&round.evidence?.instrumentRevision===PAGED_FAVOURITES){
@@ -637,10 +680,10 @@ export function createDeepStudy({app,getWorks,image,esc,keepButtons,navigate,sho
     if(action==='deep-exit'){data.screen='home';save();navigate('intro');}
     if(action==='deep-length'&&!journey){const target=Number(control.dataset.target);if(STUDY_LENGTHS.includes(target)){data.target=target;data.index=Math.min(data.index,target-1);save();render();}}
     if(action==='deep-start'){const rounds=actualRounds(),first=rounds.findIndex(r=>!resolved(r));if(first<0){changeScreen('reading');return true;}if(resolved(rounds[data.index]))data.index=first;data.startedAt||=Date.now();data.finishedAt=null;changeScreen('question');}
-    if(action==='deep-review'){data.index=0;changeScreen('question');}
-    if(action==='deep-save')changeScreen('home');
-    if(action==='deep-reading')changeScreen('reading');
-    if(action==='deep-back'&&data.index>0){data.index--;save();render();focus();}
+    if(action==='deep-review'){if(profileRefinementState(data))data.profileRefinement.active=false;data.index=0;changeScreen('question');}
+    if(action==='deep-save'){if(refining())stopRefinement();else changeScreen('home');}
+    if(action==='deep-reading'){if(refining())stopRefinement();else changeScreen('reading');}
+    if(action==='deep-back'&&!refining()&&data.index>0){data.index--;save();render();focus();}
     if(action==='deep-next'&&!inputs.advanceMobileMap?.())next();if(action==='deep-skip')next(true);
     if(action==='deep-liking'&&ready&&round.contextMode==='preference-before-after-v1'){const phase=draft.storySeen?'after':'before',value=Number(control.dataset.value);if(control.dataset.phase===phase&&[0,25,50,75,100].includes(value)){if(round.symbolismProtocol)draft=reduceSymbolismDraft(round,draft,{type:phase==='before'?'rate-before':'rate-after',value});else draft[phase]=value;data.answers[round.id]=structuredClone(draft);data.finishedAt=null;save();for(const b of app.querySelectorAll('[data-action=deep-liking]'))b.setAttribute('aria-pressed',String(Number(b.dataset.value)===value));syncImages();}}
     if(action==='deep-context-change'&&ready&&isContextChangeRound(round)){draft=reduceContextChangeDraft(round,draft,control.dataset.value==='unsure'?{type:'unsure'}:{type:'change',value:Number(control.dataset.value)});data.answers[round.id]=structuredClone(draft);data.finishedAt=null;save();for(const button of app.querySelectorAll('[data-action=deep-context-change]'))button.setAttribute('aria-pressed',String(button.dataset.value==='unsure'?draft.uncertain===true:!draft.uncertain&&Number(button.dataset.value)===draft.reportedChange));syncImages();}

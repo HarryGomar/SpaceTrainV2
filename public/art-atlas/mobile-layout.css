@@ -1,0 +1,69 @@
+/* Phone tasks share one spacing system, after the individual task styles. */
+@media(max-width:700px){
+  .site-shell:has(.journey-question){padding-inline:20px}
+  .deep-question.journey-question{grid-template-rows:44px auto minmax(0,1fr) 56px}
+  .journey-question>.journey-chrome{height:44px}
+  .journey-question>.question-head,.journey-question[data-mobile-map-stage]>.question-head{margin:6px 0 12px}
+  .journey-question>.question-head h1,.journey-question[data-mobile-map-stage]>.question-head h1{font-size:clamp(24px,6.7vw,29px);line-height:1.13}
+  .journey-question>.question-head p{margin-top:7px;font-size:10px;line-height:1.45}
+  .journey-question .task-signal{margin-bottom:7px;line-height:16px}
+  .journey-question>.round-actions{min-height:48px;padding-top:6px;gap:12px}
+  .journey-question>.round-actions .primary-button{min-height:44px;padding:10px 22px}
+  .journey-question>.journey-chrome button{min-height:44px;min-width:44px}
+
+  .journey-question.deep-question .placement-layout.mobile-spectrum-mode{grid-template-rows:minmax(0,1fr) 44px auto;gap:6px}
+  .journey-question.deep-question .placement-layout.mobile-spectrum-mode.all-placed{grid-template-rows:minmax(0,1fr) auto}
+  .journey-question .mobile-spectrum-mode.all-placed>.work-overview{display:none}
+  .journey-question .mobile-spectrum-mode.all-placed>.placement-column{grid-row:2}
+  .journey-question .mobile-spectrum-mode #fine-controls.mobile-precision{display:block;min-height:20px;height:20px;margin:4px 0 0;border:0;width:100%;text-align:center;line-height:20px}
+  .journey-question .mobile-spectrum-mode #fine-controls.mobile-precision>span{font-size:12px;margin:0}
+  .journey-question .mobile-spectrum-mode #fine-controls.mobile-precision:empty{display:none}
+  .journey-question .mobile-spectrum-mode .spectrum-token .placed-art .art-visual>img{width:30px;height:30px}
+  .journey-question .mobile-spectrum-mode .spectrum-token{width:30px}
+  .journey-question .mobile-spectrum-mode .spectrum-labels{font-size:9px;gap:6px}
+  .journey-question .spectrum-input.mobile-spectrum-mode{grid-template-rows:minmax(0,1fr) auto;gap:12px;align-items:stretch}
+  .journey-question .spectrum-input.mobile-spectrum-mode>.placement-column{grid-row:2}
+  .journey-question .spectrum-input.mobile-spectrum-mode .art-tray.two-works{gap:20px;align-items:stretch}
+  .journey-question .spectrum-input.mobile-spectrum-mode .tray-work>.drag-art{display:grid;grid-template-rows:minmax(0,1fr) 20px;height:100%}
+  .journey-question .spectrum-input.mobile-spectrum-mode .tray-work .art-visual{height:100%;min-height:0}
+  .journey-question .spectrum-input.mobile-spectrum-mode .two-works .drag-art .art-visual>img{height:100%;max-height:100%;object-fit:contain}
+  .journey-question .spectrum-input.mobile-spectrum-mode .look-button{min-height:30px;padding:6px 0;margin:0}
+
+  .journey-question>.deep-round-body:has(>.deep-anchors){grid-template-rows:auto minmax(0,1fr);gap:12px;align-items:stretch}
+  .journey-question .deep-anchors{margin:0;gap:18px}
+  .journey-question .deep-anchors figure{margin:0;width:130px}
+  .journey-question .deep-anchors img{height:clamp(65px,12dvh,105px)}
+  .journey-question .discovery-pictures{gap:12px 15px}
+  .journey-question .discovery-grid-tools{gap:12px;min-height:38px}
+  .journey-question .discovery-none-options{gap:18px}
+  .journey-question .discovery-none{min-height:38px;font-size:10px}
+
+  .journey-question[data-kind=statements]{grid-template-rows:44px 0 minmax(0,1fr) 56px}
+  .journey-question .deep-statement{padding:0;margin:0 auto}
+  .journey-question .deep-statement h2{font-size:clamp(24px,6.6vw,29px);margin-bottom:30px;line-height:1.28}
+  .journey-question .deep-agreement{gap:8px}
+  .journey-question .deep-agreement-choice{min-width:0;line-height:1.5}
+  .journey-question .deep-statement-status{margin-top:18px}
+
+  /* Notes can grow; their response choices must never overdraw the next button. */
+  .journey-question>.deep-round-body:has(>.story-rating){overflow-y:auto;overflow-x:hidden;align-items:start;overscroll-behavior:contain}
+  .journey-question .story-rating{height:auto;min-height:100%;grid-template-rows:minmax(130px,1fr) auto;gap:12px}
+  .journey-question .story-rating>figure{height:clamp(130px,28dvh,250px);margin:0}
+  .journey-question .story-response{min-height:0;padding-bottom:8px}
+  .journey-question .story-note{max-width:none;font-size:12px;line-height:1.65;margin:0 0 10px}
+  .journey-question .story-sources{margin:0 0 8px}
+  .journey-question .liking-circles{gap:3px}
+  .journey-question .context-circle{padding:8px 2px;min-height:72px;font-size:9px;line-height:1.35;gap:9px}
+  .journey-question .matching-input .match-label{font-size:12px;overflow-wrap:anywhere}
+}
+@media(max-width:700px) and (max-height:739px){
+  .deep-question.journey-question,.deep-question.journey-question:has(.mobile-spectrum-mode){grid-template-rows:40px auto minmax(0,1fr) 52px}
+  .journey-question>.journey-chrome,.journey-question:has(.mobile-spectrum-mode)>.journey-chrome{height:40px}
+  .journey-question>.question-head,.journey-question[data-mobile-map-stage]>.question-head,.journey-question:has(.mobile-spectrum-mode)>.question-head{margin:4px 0 8px}
+  .journey-question>.question-head h1,.journey-question[data-mobile-map-stage]>.question-head h1{font-size:24px}
+  .journey-question .task-signal{line-height:14px;font-size:9px;margin-bottom:6px}
+  .journey-question .mobile-spectrum-mode .spectrum-token .placed-art .art-visual>img{width:26px;height:26px}
+  .journey-question .mobile-spectrum-mode .spectrum-token{width:26px}
+  .journey-question[data-kind=statements]{grid-template-rows:40px 0 minmax(0,1fr) 52px}
+  .journey-question .story-rating>figure{height:150px}
+}

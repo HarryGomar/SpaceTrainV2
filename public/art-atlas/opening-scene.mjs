@@ -41,13 +41,13 @@ export function createOpeningScene({app,getWorks,seed}){
  function updateControl(){if(!mounted)return;const control=mounted.control;control?.setAttribute('aria-label',paused()?'Play animation':'Pause animation');if(control)control.innerHTML=`<svg viewBox="0 0 20 20" aria-hidden="true"><path d="${paused()?'M7 4l9 6-9 6z':'M7 5v10M13 5v10'}"/></svg>`;}
  function frame(now){
   const s=mounted;if(!s)return;s.frame=0;if(paused()||document.hidden||!s.visible)return;
-  const elapsed=(now-s.last)/1000;if(elapsed>=1/75){const dt=Math.min(elapsed,.05);s.last=now;s.time+=dt*(media.matches ? .2 : 1);updateFieldPointer(s.pointer,{x:s.target.x,y:s.target.y,time:s.time,active:s.target.active,strength:media.matches ? .25 : 1},dt);paint();}
+  const dt=Math.max(0,Math.min((now-s.last)/1000,.05));s.last=now;s.time+=dt*(media.matches ? .2 : 1);updateFieldPointer(s.pointer,{x:s.target.x,y:s.target.y,time:s.time,active:s.target.active,strength:media.matches ? .25 : 1},dt);paint();
   s.frame=window.requestAnimationFrame(frame);
  }
  function animate(){if(!mounted)return;window.cancelAnimationFrame(mounted.frame);mounted.frame=0;updateControl();paint();if(!paused()&&!document.hidden&&mounted.visible){mounted.last=window.performance.now();mounted.frame=window.requestAnimationFrame(frame);}}
  function resize(){if(!mounted)return;const s=mounted,box=s.canvas.getBoundingClientRect();if(!box.width||!box.height)return;s.width=box.width;s.height=box.height;if(s.lastPointer){const target=fieldPointerFromClient(s.lastPointer,box);if(target){s.target=target;if(target.active){s.pointer.x=target.x;s.pointer.y=target.y;}}}const dpr=Math.min(window.devicePixelRatio||1,box.width<700?1.4:1.6);s.canvas.width=Math.round(box.width*dpr);s.canvas.height=Math.round(box.height*dpr);if(s.mobile!==(box.width<700)){s.mobile=box.width<700;s.field=createArtField({mobile:s.mobile,workCount:atlas.total,seed:fieldSeed});s.renderer.setField(s.field,atlas.sources);}s.renderer.resize();paint();}
  function toggle(){userPaused=!paused();animate();}
- function pointerMove(event){if(!mounted)return;const s=mounted,target=fieldPointerFromClient(event,s.canvas.getBoundingClientRect());if(!target)return;s.lastPointer={clientX:event.clientX,clientY:event.clientY};s.target=target;if(target.active){s.pointer.x=target.x;s.pointer.y=target.y;}s.moves++;}
+ function pointerMove(event){if(!mounted)return;const s=mounted,target=fieldPointerFromClient(event,s.canvas.getBoundingClientRect());if(!target)return;const entering=!s.target.active;s.lastPointer={clientX:event.clientX,clientY:event.clientY};s.target=target;if(target.active&&entering){s.pointer.x=target.x;s.pointer.y=target.y;}s.moves++;}
  function pointerLeave(){if(mounted){mounted.lastPointer=null;mounted.target={x:mounted.pointer.x,y:mounted.pointer.y,active:false};}}
  function contextLost(event){event.preventDefault();if(mounted){window.cancelAnimationFrame(mounted.frame);mounted.frame=0;mounted.canvas.dataset.sceneStatus='suspended';}}
  function contextRestored(){const old=mounted?.canvas;if(old){unmount();sync();}}

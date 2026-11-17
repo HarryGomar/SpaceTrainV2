@@ -19,7 +19,7 @@ function fixture({paused=true,storedMotion=null,autoLoad=true,count=3,width=900,
   if(storedMotion)window.localStorage.setItem('art-profile-opening-motion',storedMotion);
   const works=Array.from({length:count},(_,i)=>({id:'w'+i,title:'Artwork '+i,artist:'Artist '+i,image:'assets/w'+i+'.jpg',sourceUrl:'https://museum.example/'+i,studyEligible:true,country:i%2?'Mexico':'France',recognitionTier:'landmark'})),scene=createOpeningScene({app,getWorks:()=>works,seed:12345});
   const flush=async()=>{await new Promise(resolve=>setImmediate(resolve));const pending=[...frames.values()];frames.clear();for(const callback of pending)callback(window.performance.now()+100);};
-  return {dom,window,app,scene,images,canvases,contexts,frames,flush,step(){const pending=[...frames.values()];frames.clear();for(const callback of pending)callback(window.performance.now()+1000);},resize(width,height){Object.assign(viewport,{width,height});for(const callback of resizes)callback();},close(){scene.destroy();dom.window.close();}};
+  return {dom,window,app,scene,images,canvases,contexts,frames,flush,tick(now){const pending=[...frames.values()];frames.clear();for(const callback of pending)callback(now);},step(){const pending=[...frames.values()];frames.clear();for(const callback of pending)callback(window.performance.now()+1000);},resize(width,height){Object.assign(viewport,{width,height});for(const callback of resizes)callback();},close(){scene.destroy();dom.window.close();}};
 }
 
 test('The opening autoplays on a new visit even when an older visit stored Pause',async()=>{
@@ -72,5 +72,13 @@ test('Phone controller renders 96 smaller layers and resize restores desktop wit
     assert.ok(Math.max(...draws.map(args=>Math.max(args[7],args[8])))<105,'Actual fallback painting dimensions fit the phone treatment');
     f.resize(1440,900);assert.equal(canvas.dataset.scenePaintings,'480');assert.equal(canvas.dataset.scenePoints,'26000');assert.equal(canvas.dataset.sceneSeed,seed);
     f.resize(390,844);assert.equal(canvas.dataset.scenePaintings,'96');assert.equal(canvas.dataset.sceneSeed,seed);assert.equal(f.images.length,480,'Resizing reuses the same packed collection');assert.equal(f.frames.size,1,'The gentle animation continues through both resizes');
+  }finally{f.close();}
+});
+
+
+test('A high refresh display receives a draw on every animation frame',async()=>{
+  const f=fixture({paused:false});try{
+    await f.flush();const canvas=f.app.querySelector('[data-art-scene]'),context=f.contexts.get(canvas);let time=f.window.performance.now()+120;
+    for(let i=0;i<24;i++){const before=context.draws.length;const previous=canvas.dataset.sceneTime;time+=1000/120;f.tick(time);assert.notEqual(canvas.dataset.sceneTime,previous,'Every 120 Hz frame advances rather than alternating skipped frames');assert.ok(context.draws.length>before,'Every frame draws the loaded paintings');assert.equal(f.frames.size,1);}
   }finally{f.close();}
 });

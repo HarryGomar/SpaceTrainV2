@@ -1,6 +1,6 @@
 export function fieldRandom(seed=9317){let value=seed>>>0;return()=>{value=(Math.imul(value,1664525)+1013904223)>>>0;return value/4294967296;};}
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
-export const FIELD_MOTION=Object.freeze({pointerFollow:4.8,presenceRise:3,presenceFall:3.4,presence:.9,radiusSquared:.42,repulsion:.35,directionSoftness:.22,parallaxX:.038,parallaxY:.028});
+export const FIELD_MOTION=Object.freeze({pointerFollow:65,presenceRise:3,presenceFall:3.4,presence:.9,radiusSquared:.42,repulsion:.35,directionSoftness:.22,parallaxX:.038,parallaxY:.028});
 export const PHONE_FIELD=Object.freeze({paintingLimit:96,foregroundCount:10,edgeScale:.36,clearingInner:.9,clearingOuter:1.4,clearingX:1.35,clearingY:2.6});
 
 export function fieldClearing([x,y],mobile=false){
@@ -45,9 +45,10 @@ export function updateFieldPointer(pointer,{x,y,time,active=true,strength=1},dt=
   const step=clamp(Number.isFinite(dt)?dt:1/60,0,.05);
   pointer.x=Number.isFinite(pointer.x)?pointer.x:0;pointer.y=Number.isFinite(pointer.y)?pointer.y:0;pointer.energy=Number.isFinite(pointer.energy)?clamp(pointer.energy,0,1):0;
   const targetX=Number.isFinite(x)?clamp(x,-1.2,1.2):pointer.x,targetY=Number.isFinite(y)?clamp(y,-1.2,1.2):pointer.y;
-  // The force centre follows the actual cursor. Only its presence fades; easing
-  // the coordinates makes the interaction trail and detach during fast motion.
-  if(active||pointer.energy<.0001){pointer.x=targetX;pointer.y=targetY;}
+  // Latch on entry, then filter sub-frame input noise with a short 15 ms response.
+  // Presence fades at the last position after leaving, rather than drifting home.
+  if(pointer.energy<.0001){pointer.x=targetX;pointer.y=targetY;}
+  else if(active){const follow=1-Math.exp(-step*FIELD_MOTION.pointerFollow);pointer.x+=(targetX-pointer.x)*follow;pointer.y+=(targetY-pointer.y)*follow;}
   const target=active?FIELD_MOTION.presence*clamp(Number.isFinite(strength)?strength:1,0,1):0,rate=active?FIELD_MOTION.presenceRise:FIELD_MOTION.presenceFall;
   pointer.energy+=(target-pointer.energy)*(1-Math.exp(-step*rate));
   if(Number.isFinite(time))pointer.time=time;return pointer;

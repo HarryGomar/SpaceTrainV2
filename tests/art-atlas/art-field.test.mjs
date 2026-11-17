@@ -79,7 +79,7 @@ test('Pointer position latches to the cursor while energy stays bounded and fade
 
 test('Stationary presence is prominent and stable; tiny input jitter does not spike its force',()=>{
   const pointer={x:0,y:0,energy:0,time:0};for(let i=0;i<240;i++)updateFieldPointer(pointer,{x:.35,y:.2,time:i/60},1/60);assert.ok(Math.abs(pointer.energy-FIELD_MOTION.presence)<.00001);const energy=pointer.energy;
-  for(let i=0;i<120;i++)updateFieldPointer(pointer,{x:.35+(i%2?.001:-.001),y:.2,time:4+i/60},1/60);assert.ok(Math.abs(pointer.energy-energy)<.00001);assert.ok(Math.abs(pointer.x-.351)<1e-10);
+  for(let i=0;i<120;i++)updateFieldPointer(pointer,{x:.35+(i%2?.001:-.001),y:.2,time:4+i/60},1/60);assert.ok(Math.abs(pointer.energy-energy)<.00001);assert.ok(pointer.x>.35&&pointer.x<.3506,'Tiny input noise is attenuated without a slow pointer trail');
   const moved=interactFieldPoint([.62,.2],pointer,{aspect:1.6,z:.4}),pixels=Math.hypot((moved[0]-.62)*720,(moved[1]-.2)*450);assert.ok(pixels>25&&pixels<100,'Visible yet bounded displacement');
 });
 

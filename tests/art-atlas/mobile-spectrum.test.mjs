@@ -7,11 +7,6 @@ import {withComparisonPreference} from '../../public/art-atlas/comparison-protoc
 import {validAnswer} from '../../public/art-atlas/engine.mjs';
 import {renderOpening} from '../../public/art-atlas/experience-view.mjs';
 
-test('Preserved old quizzes do not add archive or reset controls to the opening',()=>{
-  const html=renderOpening({archiveCount:3});assert.match(html,/data-action="deep-start">Start/);assert.doesNotMatch(html,/deep-archives|Previous quizzes|deep-reset|Restart|Reset/);
-  assert.doesNotMatch(renderOpening(),/deep-archives/);
-});
-
 function fixture({width=390,count=4,positions={},ready=true,comparison=false}={}){
   const dom=new JSDOM('<!doctype html><main id="app"></main>',{pretendToBeVisual:true}),previous={};
   for(const name of ['window','document','requestAnimationFrame','cancelAnimationFrame','innerHeight']){previous[name]=Object.getOwnPropertyDescriptor(globalThis,name);Object.defineProperty(globalThis,name,{configurable:true,writable:true,value:name==='window'?dom.window:name==='document'?dom.window.document:name==='innerHeight'?844:dom.window[name].bind(dom.window)});}
@@ -38,7 +33,7 @@ test('A mobile rating offers every integer point and advances only after the ges
 });
 
 test('Tapping a reference returns to its painting without changing any ratings, then edits stay on that painting',()=>{
-  const f=fixture({positions:{'painting-0':25,'painting-1':50,'painting-2':75,'painting-3':100}});try{const before=structuredClone(f.draft),saves=f.saves;f.app.querySelector('.reference-art[data-work="painting-2"]').click();assert.equal(f.app.querySelector('.focus-art').dataset.work,'painting-2');assert.deepEqual(f.draft,before);assert.equal(f.saves,saves);f.rate(76);assert.equal(f.draft.positions['painting-2'],76);assert.equal(f.app.querySelector('.focus-art').dataset.work,'painting-2');const decrement=f.app.querySelector('#fine-controls [data-dx="-1"]');decrement.focus();decrement.click();assert.equal(f.draft.positions['painting-2'],75);assert.equal(f.app.querySelector('.focus-art').dataset.work,'painting-2');assert.ok(f.dom.window.document.activeElement.matches('#fine-controls [data-dx="-1"]'),'A mobile nudge retains focus on its visible adjustment control');}finally{f.close();}
+  const f=fixture({positions:{'painting-0':25,'painting-1':50,'painting-2':75,'painting-3':100}});try{const before=structuredClone(f.draft),saves=f.saves;f.app.querySelector('.reference-art[data-work="painting-2"]').click();assert.equal(f.app.querySelector('.focus-art').dataset.work,'painting-2');assert.deepEqual(f.draft,before);assert.equal(f.saves,saves);f.rate(76);assert.equal(f.draft.positions['painting-2'],76);assert.equal(f.app.querySelector('.focus-art').dataset.work,'painting-2');const range=f.app.querySelector('#mobile-spectrum-range');range.focus();range.value='75';range.dispatchEvent(new f.dom.window.Event('input',{bubbles:true}));assert.equal(f.draft.positions['painting-2'],75);assert.equal(f.app.querySelector('.focus-art').dataset.work,'painting-2');assert.equal(f.dom.window.document.activeElement,range,'Precise adjustments keep focus on the shared line');assert.equal(f.app.querySelectorAll('#fine-controls button').length,0);}finally{f.close();}
 });
 
 test('An intentional tap at neutral records50, while keyboard adjustment waits for Enter before advancing',()=>{
@@ -91,11 +86,6 @@ test('A phone painting can be dragged onto the shared line and advances only aft
 });
 
 
-test('The opening keeps a single primary action for a fresh or started quiz',()=>{
-  const fresh=new JSDOM(renderOpening()),started=new JSDOM(renderOpening({started:true,profileAvailable:false}));
-  try{for(const dom of [fresh,started])assert.equal(dom.window.document.querySelector('[data-action=deep-retake]'),null);assert.equal(fresh.window.document.querySelector('.opening-start').textContent,'Start');assert.equal(started.window.document.querySelector('.opening-start').textContent,'Continue');assert.equal(started.window.document.querySelector('[data-action=deep-reading]'),null);}finally{fresh.window.close();started.window.close();}
-});
-
 test('Comparison mode keeps the shared granular line without presenting positions as absolute ratings',()=>{
   const f=fixture({comparison:true,positions:{'painting-0':91,'painting-1':90,'painting-2':0,'painting-3':100}});
   try{
@@ -104,7 +94,7 @@ test('Comparison mode keeps the shared granular line without presenting position
     assert.doesNotMatch(f.app.querySelector('#fine-controls').textContent,/91|100|Not rated/);
     const range=f.app.querySelector('#mobile-spectrum-range');assert.equal(range.step,'1');assert.equal(range.min,'0');assert.equal(range.max,'100');
     assert.match(range.getAttribute('aria-label'),/^Place painting/);assert.match(range.getAttribute('aria-valuetext'),/Preference order 2 of 4/);
-    f.app.querySelector('#fine-controls [data-dx="-1"]').click();
+    range.value='90';range.dispatchEvent(new f.dom.window.Event('input',{bubbles:true}));
     assert.equal(f.draft.positions['painting-0'],90);assert.match(range.getAttribute('aria-valuetext'),/Joint preference order 2 of 4/);
     for(let value=0;value<=100;value++){f.rate(value);assert.equal(f.draft.positions['painting-0'],value);}
     assert.ok(validAnswer(f.round,{...f.draft,confirmed:true}));
@@ -116,9 +106,20 @@ test('Placed phone paintings remain on the line and leave the pending tray, with
     const pending=f.app.querySelector('.reference-art[data-work="painting-0"]');assert.equal(pending.getAttribute('aria-hidden'),'true');assert.equal(pending.tabIndex,-1);
     assert.equal(f.app.querySelector('.work-overview').getAttribute('aria-label'),'Paintings still to place');
     assert.equal(f.app.querySelector('.reference-art[data-work="painting-1"]').getAttribute('aria-hidden'),null);
-    const placed=f.app.querySelector('.placed-art[data-work="painting-0"]');placed.click();assert.equal(f.app.querySelector('#fine-controls').textContent.replace(/\s+/g,' ').trim(),'90 / 100−+');
+    const placed=f.app.querySelector('.placed-art[data-work="painting-0"]');placed.click();assert.equal(f.app.querySelector('#fine-controls').textContent.replace(/\s+/g,' ').trim(),'90 / 100');
     const range=f.app.querySelector('#mobile-spectrum-range');range.dispatchEvent(new f.dom.window.KeyboardEvent('keydown',{key:'ArrowLeft',shiftKey:true,bubbles:true}));assert.equal(f.draft.positions['painting-0'],80);
     range.dispatchEvent(new f.dom.window.KeyboardEvent('keydown',{key:'Enter',bubbles:true}));assert.equal(f.draft.positions['painting-0'],80);
     assert.equal(f.app.querySelector('.focus-art').dataset.work,'painting-0');
+  }finally{f.close();}
+});
+
+
+test('A two-painting phone comparison has the same exact line control without extra step buttons',()=>{
+  const f=fixture({count:2});try{
+    assert.equal(f.app.querySelectorAll('.art-tray.two-works img').length,2);
+    assert.ok(f.app.querySelector('.spectrum-input.mobile-spectrum-mode'));
+    assert.equal(f.app.querySelectorAll('#fine-controls button').length,0);
+    f.rate(85);f.rate(84);assert.deepEqual(f.draft.positions,{'painting-0':85,'painting-1':84});
+    assert.ok(validAnswer(f.round,{...f.draft,confirmed:true}));
   }finally{f.close();}
 });

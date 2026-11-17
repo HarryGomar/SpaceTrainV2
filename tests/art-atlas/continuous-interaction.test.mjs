@@ -20,10 +20,10 @@ test('Personal appeal keeps its three anchors, visible points and shared paintin
   for(const width of [390,1280]){const f=fixture(width);try{assert.deepEqual([...f.app.querySelectorAll('.spectrum-labels>span')].map(node=>node.textContent),Object.values(CONTINUOUS_SCALE));assert.equal(f.app.querySelectorAll('.spectrum-token img').length,4);assert.deepEqual([...f.app.querySelectorAll('.position-value')].map(node=>node.textContent),['90','93','96','99']);assert.deepEqual([...f.app.querySelectorAll('.reference-rating')].map(node=>node.textContent),['90','93','96','99']);assert.match(f.app.querySelector('#fine-controls').textContent,/90/);assert.match(f.app.querySelector('.spectrum-hit').getAttribute('aria-label'),/Neutral is 50/);assert.equal(taskSignal(f.round).label,'Personal appeal');}finally{f.close();}}
 });
 
-test('The personal appeal phone input retains every integer, exact neutral and one-step nudges without changing its source definition',()=>{
+test('The personal appeal phone input retains every integer, exact neutral and one-step line adjustments without changing its source definition',()=>{
   const f=fixture();try{const definition=structuredClone(f.round),range=f.app.querySelector('#mobile-spectrum-range');assert.equal(range.min,'0');assert.equal(range.max,'100');assert.equal(range.step,'1');assert.match(range.getAttribute('aria-label'),/^Rate painting/);assert.equal(range.getAttribute('aria-valuetext'),'90 of 100');
     for(let value=0;value<=100;value++){range.value=String(value);range.dispatchEvent(new f.dom.window.Event('input',{bubbles:true}));assert.equal(f.draft.positions['work-0'],value);assert.equal(range.getAttribute('aria-valuetext'),value+' of 100');}
-    range.dispatchEvent(new f.dom.window.Event('blur'));f.app.querySelector('#fine-controls [data-dx="-1"]').click();assert.equal(f.draft.positions['work-0'],99);assert.ok(validAnswer(f.round,{...f.draft,confirmed:true}));assert.deepEqual(f.round,definition);
+    range.dispatchEvent(new f.dom.window.Event('blur'));range.value='99';range.dispatchEvent(new f.dom.window.Event('input',{bubbles:true}));assert.equal(f.app.querySelectorAll('#fine-controls button').length,0);assert.equal(f.draft.positions['work-0'],99);assert.ok(validAnswer(f.round,{...f.draft,confirmed:true}));assert.deepEqual(f.round,definition);
   }finally{f.close();}
 });
 

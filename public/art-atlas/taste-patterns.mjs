@@ -95,9 +95,9 @@ function annotationEvidence(items,review){
 function scopedText(result,quality,scope){
   const toward=(result.direction||result.candidateDirection)>0,subject=toward?'paintings with '+quality.description:'paintings without '+(quality.attributes.length>1?'the full combination of ':'')+quality.description;
   if(result.status==='leaning'){
-    if(scope.channel==='admiration-of-making')return `You repeatedly gave more admiration to ${subject}. This is about their making, separately from how much they appealed to you.`;
+    if(scope.channel==='admiration-of-making')return `In your admiration ratings, ${subject} tended to come above other paintings shown alongside them. You found more to admire in how they were made; this does not necessarily mean you liked them more.`;
     if(scope.channel==='overall-appeal')return `${subject[0].toUpperCase()+subject.slice(1)} repeatedly received higher overall ratings across different sets and artists.`;
-    if(scope.channel==='personal-appeal')return `${subject[0].toUpperCase()+subject.slice(1)} repeatedly received higher personal appeal, with the size of the differences contributing to the pattern. The original levels and exceptions remain part of the reading.`;
+    if(scope.channel==='personal-appeal')return `You tended to like ${subject} more than the other paintings shown alongside them. This recurred across different artists and sets.`;
     return `${subject[0].toUpperCase()+subject.slice(1)} repeatedly won your comparisons across different sets and artists. ${scope.channel==='ordinal-choice'?'These questions establish only an order within each set. Line spacing is not a measure of liking.':'These earlier questions establish a relative order, rather than an absolute level of liking.'}`;
   }
   if(result.checkConflict)return `${quality.title} separated several earlier choices, but later comparisons went against that direction in more than one artwork set. The later responses remain dependent checks, rather than new independent evidence.`;
