@@ -20,3 +20,11 @@ export const PANEL_OBJECTIVES=Object.freeze({
   17:{title:'Social scenes through different handling',qualities:['precise-rendering','expressive-distortion'],purposes:['Compare everyday group relationships across precise and altered treatment.','The paired admiration question asks about making separately from preference.']},
   18:{title:'Precise edges across imagined and abstract forms',qualities:['imagined-world','geometric-structure'],sharedQualities:['precise-rendering'],purposes:['Compare meticulous imagined scenes with organic and geometric abstraction.','Clear edges remain common here, so precision is not treated as the opposite of abstraction.']}
 });
+
+/** Public stimulus choices for every fresh v17 run; never a fitted taste rule. */
+export const CANONICAL_COMPARISON_OBJECTIVES=Object.freeze({
+  11:{title:'Space and detail across natural settings',qualities:['landscape','layered-space'],purposes:['Compare broad natural settings with different amounts of detail and human presence.','A busy winter scene provides a contrast with quieter views without equating detail with abstraction.']},
+  13:{title:'Dense stories and different kinds of tragedy',qualities:['narrative-detail','imagined-world'],purposes:['Compare dense storytelling in Bosch and Rivera, then two very different Goya scenes.','Crowded composition, physically fantastical imagery and depicted violence are distinct candidate explanations.','Report felt unease and willingness to return separately; neither is inferred from the subject.']},
+  15:{title:'Action, tragedy and visual spectacle',qualities:['visible-gesture','expressive-distortion'],purposes:['Compare the tragic scenes of Guernica and Collective Suicide with nonviolent bodily action and illuminated spectacle.','Differences in palette, fragmentation, subject and historical knowledge remain competing explanations.']},
+  16:{title:'Night interiors and paired portraits',qualities:['dramatic-light','human-relationships'],purposes:['Compare The Night Café with Nighthawks for illuminated interiors, colour, handling and interpersonal clues.','Compare The Two Fridas with American Gothic for paired figures and visibly expressed symbolic connection.','Neither familiar artists nor multiple figures establish liking or an interest in interpersonal exchange.']}
+});

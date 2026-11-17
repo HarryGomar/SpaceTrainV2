@@ -1,6 +1,6 @@
 export function fieldRandom(seed=9317){let value=seed>>>0;return()=>{value=(Math.imul(value,1664525)+1013904223)>>>0;return value/4294967296;};}
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
-export const FIELD_MOTION=Object.freeze({pointerFollow:65,presenceRise:3,presenceFall:3.4,presence:.9,radiusSquared:.42,repulsion:.35,directionSoftness:.22,parallaxX:.038,parallaxY:.028});
+export const FIELD_MOTION=Object.freeze({pointerFollow:65,presenceRise:3,presenceFall:3.4,presence:.9,radiusSquared:.52,repulsion:.35,directionSoftness:.22,parallaxX:.038,parallaxY:.028,rippleSpread:.95,rippleFrequency:9.2,rippleSpeed:8.5,rippleDecay:3.4,rippleLimit:.055});
 export const PHONE_FIELD=Object.freeze({paintingLimit:96,foregroundCount:10,edgeScale:.36,clearingInner:.9,clearingOuter:1.4,clearingX:1.35,clearingY:2.6});
 
 export function fieldClearing([x,y],mobile=false){
@@ -46,14 +46,18 @@ export function updateFieldPointer(pointer,{x,y,time,active=true,strength=1},dt=
   pointer.x=Number.isFinite(pointer.x)?pointer.x:0;pointer.y=Number.isFinite(pointer.y)?pointer.y:0;pointer.energy=Number.isFinite(pointer.energy)?clamp(pointer.energy,0,1):0;
   const targetX=Number.isFinite(x)?clamp(x,-1.2,1.2):pointer.x,targetY=Number.isFinite(y)?clamp(y,-1.2,1.2):pointer.y;
   const previousX=Number.isFinite(pointer.targetX)?pointer.targetX:targetX,previousY=Number.isFinite(pointer.targetY)?pointer.targetY:targetY;
+  const travel=active?Math.hypot(targetX-previousX,targetY-previousY):0;
+  pointer.rippleStrength=clamp((Number.isFinite(pointer.rippleStrength)?pointer.rippleStrength:0)*Math.exp(-FIELD_MOTION.rippleDecay*step)+Math.max(0,travel-.003)*.35,0,FIELD_MOTION.rippleLimit);
+  if(pointer.rippleStrength<.00001)pointer.rippleStrength=0;
+  pointer.ripplePhase=pointer.rippleStrength?((Number.isFinite(pointer.ripplePhase)?pointer.ripplePhase:0)+FIELD_MOTION.rippleSpeed*step)%(Math.PI*2):0;
   for(const field of ['wakeX','wakeY','wakeVX','wakeVY'])if(!Number.isFinite(pointer[field]))pointer[field]=0;
   if(active){pointer.wakeVX=clamp(pointer.wakeVX+(targetX-previousX)*7,-1.6,1.6);pointer.wakeVY=clamp(pointer.wakeVY+(targetY-previousY)*7,-1.6,1.6);}
   // A small damped wake keeps the field settling after the pointer stops.
   // Substeps bound the spring at both slow and high display refresh rates.
   const count=Math.max(1,Math.ceil(step*120)),h=step/count;
   for(let i=0;i<count;i++)for(const [position,velocity]of [['wakeX','wakeVX'],['wakeY','wakeVY']]){
-    pointer[velocity]+=(-196*pointer[position]-23*pointer[velocity])*h;
-    pointer[position]=clamp(pointer[position]+pointer[velocity]*h,-.065,.065);
+    pointer[velocity]+=(-100*pointer[position]-13*pointer[velocity])*h;
+    pointer[position]=clamp(pointer[position]+pointer[velocity]*h,-.08,.08);
   }
   pointer.targetX=targetX;pointer.targetY=targetY;
   // Latch on entry, then filter sub-frame input noise with a short 15 ms response.
@@ -65,11 +69,12 @@ export function updateFieldPointer(pointer,{x,y,time,active=true,strength=1},dt=
   if(Number.isFinite(time))pointer.time=time;return pointer;
 }
 
-/** Canvas fallback and geometry checks share the shader's static mouse force.
- * No velocity derivative or time-oscillating side-force enters the interaction. */
+/** The fallback and shader share a latched force plus a bounded, decaying ripple.
+ * Tiny pointer noise cannot excite the ripple; stationary input settles. */
 export function interactFieldPoint(point,pointer,{aspect=1,z=0}={}){
   const ratio=Number.isFinite(aspect)&&aspect>0?aspect:1,energy=clamp(Number.isFinite(pointer.energy)?pointer.energy:0,0,1),depth=clamp((z+2)/3,0,1),weight=.45+(.9-.45)*depth;
   const x=point[0]+pointer.x*energy*FIELD_MOTION.parallaxX*(.55+depth*.45),y=point[1]+pointer.y*energy*FIELD_MOTION.parallaxY*(.55+depth*.45),dx=(x-pointer.x)*ratio,dy=y-pointer.y,distance=Math.hypot(dx,dy),force=Math.exp(-distance*distance/FIELD_MOTION.radiusSquared)*energy*weight*FIELD_MOTION.repulsion;
   const wake=Math.exp(-distance*distance/FIELD_MOTION.radiusSquared)*energy*weight;
-  return [x+dx/(distance+FIELD_MOTION.directionSoftness)*force/ratio+(pointer.wakeX||0)*wake,y+dy/(distance+FIELD_MOTION.directionSoftness)*force+(pointer.wakeY||0)*wake];
+  const ripple=Math.sin(distance*FIELD_MOTION.rippleFrequency-(pointer.ripplePhase||0))*(pointer.rippleStrength||0)*Math.exp(-distance*distance/FIELD_MOTION.rippleSpread)*energy*weight;
+  return [x+dx/(distance+FIELD_MOTION.directionSoftness)*(force+ripple)/ratio+(pointer.wakeX||0)*wake,y+dy/(distance+FIELD_MOTION.directionSoftness)*(force+ripple)+(pointer.wakeY||0)*wake];
 }

@@ -80,9 +80,17 @@ export function renderTasteQualityRecommendations({recommendations=[],works=[],i
 }
 
 export function renderTasteBoundaries({profile={},works=[],image,esc,evidence=()=>''}={}){
-  const byId=new Map(works.map(work=>[work.id,work])),findings=(profile.findings||[]).filter(item=>['exploratory-contrast','explicit-choice-contrast'].includes(item.status)&&item.supportPairs?.length>=2);
+  const byId=new Map(works.map(work=>[work.id,work])),findings=(profile.findings||[]).filter(item=>item.summaryEligible!==false&&['exploratory-contrast','explicit-choice-contrast'].includes(item.status)&&item.supportPairs?.length>=2);
   if(!findings.length)return '';
-  return `<section class="taste-quality-section taste-boundaries" id="profile-boundaries"><div class="tp-section-heading"><h2>What separates the choices</h2></div><div class="taste-quality-grid">${findings.slice(0,3).map(item=>{const pair=item.supportPairs[0],high=byId.get(pair.highWorkId),low=byId.get(pair.lowWorkId),explicit=item.status==='explicit-choice-contrast';if(!high||!low)return '';return `<article class="taste-quality-reading" style="--quality-colour:#827097"><header><h3>${esc(item.title)}</h3></header><p>${esc(item.text)}</p><div class="taste-quality-works">${[[high,pair.highValue,explicit?'Favourite':'Rated highly'],[low,pair.lowValue,explicit?'Explicitly disliked comparison':'Lower-rated comparison']].map(([work,value,label])=>`<figure><button type="button" data-action="deep-art" data-work="${esc(work.id)}" aria-label="View ${esc(short(work))}">${image(work)}</button><figcaption><span class="taste-quality-counter-label">${label}${!explicit&&Number.isFinite(value)?` · ${value} / 100`:''}</span>${esc(short(work))}<small>${esc(work.artist||'')}</small></figcaption></figure>`).join('')}</div>${evidence(item)}</article>`;}).join('')}</div></section>`;
+  const cards=findings.slice(0,3).map(item=>{
+    const pair=item.supportPairs[0],high=byId.get(pair.highWorkId),low=byId.get(pair.lowWorkId),explicit=item.status==='explicit-choice-contrast';if(!high||!low)return '';
+    const figures=[[high,pair.highValue,explicit?'Favourite':item.displayNotes?.[high.id]||'Rated highly'],[low,pair.lowValue,explicit?'Explicitly disliked comparison':item.displayNotes?.[low.id]||'Lower-rated comparison']].map(([work,value,label])=>{
+      const notes=item.displayReviewNotes?.[work.id];
+      return `<figure><button type="button" data-action="deep-art" data-work="${esc(work.id)}" aria-label="View ${esc(short(work))}">${image(work)}</button><figcaption><span class="taste-quality-counter-label">${esc(label)}${!explicit&&Number.isFinite(value)?` · ${value} / 100`:''}</span>${esc(short(work))}<small>${esc(work.artist||'')}</small>${notes?`<small class="taste-quality-exception-note"><b>Shared quality:</b> ${esc(notes.shared)}</small><small class="taste-quality-exception-note"><b>What differs:</b> ${esc(notes.contrast)}</small>`:''}</figcaption></figure>`;
+    }).join('');
+    return `<article class="taste-quality-reading" style="--quality-colour:#827097"><header><p class="taste-quality-rival">Possible distinction · ${item.supportPairs.length} selected comparisons</p><h3>${esc(item.title)}</h3></header><p>${esc(item.text)}</p><div class="taste-quality-works">${figures}</div>${item.comparisonNote?`<p class="taste-quality-rival">${esc(item.comparisonNote)}</p>`:''}${evidence(item)}</article>`;
+  }).join('');
+  return `<section class="taste-quality-section taste-boundaries" id="profile-boundaries"><div class="tp-section-heading"><h2>Possible distinctions to test</h2></div><div class="taste-quality-grid">${cards}</div></section>`;
 }
 
 export function renderDeclaredPreferences({profile={},works=[],image,esc,evidence=()=>''}={}){

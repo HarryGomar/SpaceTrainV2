@@ -10,6 +10,12 @@ const ua='ArtAtlas/1.0 (public-domain artwork study; museum open-access media ve
 const sha=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
 const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 export function imageDimensions(bytes){
+  if(bytes.length>=30&&bytes.toString('ascii',0,4)==='RIFF'&&bytes.toString('ascii',8,12)==='WEBP'&&bytes.readUInt32LE(4)+8<=bytes.length){
+    const chunk=bytes.toString('ascii',12,16);
+    if(chunk==='VP8X')return {width:bytes.readUIntLE(24,3)+1,height:bytes.readUIntLE(27,3)+1,mime:'image/webp',extension:'webp'};
+    if(chunk==='VP8 '&&bytes.toString('hex',23,26)==='9d012a')return {width:bytes.readUInt16LE(26)&16383,height:bytes.readUInt16LE(28)&16383,mime:'image/webp',extension:'webp'};
+    if(chunk==='VP8L'&&bytes[20]===47){const packed=bytes.readUInt32LE(21);return {width:(packed&16383)+1,height:((packed>>>14)&16383)+1,mime:'image/webp',extension:'webp'};}
+  }
   if(bytes.length>24&&bytes.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10])))return{width:bytes.readUInt32BE(16),height:bytes.readUInt32BE(20),mime:'image/png',extension:'png'};
   if(bytes[0]===255&&bytes[1]===216){
     for(let i=2;i<bytes.length-9;){

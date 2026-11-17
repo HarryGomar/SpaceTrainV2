@@ -46,7 +46,7 @@
     "frozen": "Never rewrite saved work or answer snapshots. Frozen v1 literal semantics are unsupported by v2 inference."
   },
   "summary": {
-    "reviewed": 282,
+    "reviewed": 284,
     "originalCore": 164,
     "requiredEligible": 16,
     "bulkReviewed": 78,
@@ -135,7 +135,8 @@
     },
     "canonicalAdded": 24,
     "reconsideredExistingRecords": 258,
-    "existingRecordDeltaScope": "changedRecords and unchangedRecords describe the original 258 reconsidered records. The 24 newly added records have no prior catalogue values."
+    "existingRecordDeltaScope": "changedRecords and unchangedRecords describe the original 258 reconsidered records. The 24 newly added records have no prior catalogue values.",
+    "comparisonAdded": 2
   },
   "reviewSets": {
     "original": [
@@ -427,6 +428,10 @@
       "canon-tamayo-dualidad",
       "canon-varo-call",
       "canon-varo-escape"
+    ],
+    "comparisons20261117": [
+      "canon-hopper-nighthawks",
+      "canon-picasso-guernica"
     ]
   },
   "currentAssetReferences": {
@@ -2418,6 +2423,18 @@
         "dateUnchanged": "1862",
         "scope": "Current catalogue and current review/media bindings only. Previously saved participant manifests and exports are not rewritten."
       }
+    },
+    "[\"https://www.artic.edu/artworks/111628/nighthawks\",\"assets/canonical-20261117/canon-hopper-nighthawks.jpg\"]": {
+      "sourceUrl": "https://www.artic.edu/artworks/111628/nighthawks",
+      "image": "assets/canonical-20261117/canon-hopper-nighthawks.jpg",
+      "previewSha256": "ca9d7bd954f05bf23a63d9c5991c11af956b2233ee90a992136c8f2983cdaaa4",
+      "verification": "sha256-of-current-local-preview"
+    },
+    "[\"https://www.museoreinasofia.es/en/collections/artwork/guernica-0/\",\"assets/canonical-20261117/canon-picasso-guernica.webp\"]": {
+      "sourceUrl": "https://www.museoreinasofia.es/en/collections/artwork/guernica-0/",
+      "image": "assets/canonical-20261117/canon-picasso-guernica.webp",
+      "previewSha256": "1c629190caf6d139bac8c84c99feb58c4dbea4ca1470ca41c146016ea89b47fa",
+      "verification": "sha256-of-current-local-preview"
     }
   },
   "reviews": {
@@ -22895,6 +22912,149 @@
         "color"
       ],
       "reviewMethod": "Individual literal action/setting review for this newly added exact reproduction. No existing catalogue values or captured responses are overwritten.",
+      "proposedFeatureSemanticVersion": "literal-action-setting-v2"
+    },
+    "canon-hopper-nighthawks": {
+      "version": "literal-action-setting-v2",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://www.artic.edu/artworks/111628/nighthawks",
+        "image": "assets/canonical-20261117/canon-hopper-nighthawks.jpg",
+        "previewSha256": "ca9d7bd954f05bf23a63d9c5991c11af956b2233ee90a992136c8f2983cdaaa4"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261117/canon-hopper-nighthawks.jpg",
+        "sha256": "ca9d7bd954f05bf23a63d9c5991c11af956b2233ee90a992136c8f2983cdaaa4",
+        "width": 843,
+        "height": 461,
+        "mediaBinding": "exact-institutional-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": true,
+        "displayScale": "The actual full-composition local source was inspected at its native resolution. Unresolved fine surface evidence stays unknown."
+      },
+      "sourceUrls": [
+        "https://www.artic.edu/artworks/111628/nighthawks",
+        "https://api.artic.edu/api/v1/artworks/111628",
+        "https://www.artic.edu/iiif/2/831a05de-d3f6-f4fa-a460-23008dd58dda/full/843,/0/default.jpg",
+        "https://www.artic.edu/terms"
+      ],
+      "before": {
+        "abstraction": 0.08,
+        "energy": 0.12,
+        "complexity": 0.45,
+        "humanity": 0.4,
+        "narrative": 0.15,
+        "atmosphere": 0.95,
+        "color": 0.65
+      },
+      "after": {
+        "abstraction": 0.08,
+        "energy": 0.12,
+        "complexity": 0.45,
+        "humanity": 0.4,
+        "narrative": 0.15,
+        "atmosphere": 0.95,
+        "color": 0.65
+      },
+      "fields": {
+        "narrative": {
+          "status": "reviewed",
+          "value": 0.15,
+          "reason": "The server leans forward and customers sit with restrained poses. No strenuous bodily action is visible. Diner, counter, glass and surrounding streets dominate the setting.",
+          "evidenceKind": "assistant-visual-review"
+        },
+        "atmosphere": {
+          "status": "reviewed",
+          "value": 0.95,
+          "reason": "The server leans forward and customers sit with restrained poses. No strenuous bodily action is visible. Diner, counter, glass and surrounding streets dominate the setting.",
+          "evidenceKind": "assistant-visual-review"
+        }
+      },
+      "changedFeatures": [],
+      "reviewedFeatures": [
+        "narrative",
+        "atmosphere"
+      ],
+      "retainedDraftFeatures": [
+        "abstraction",
+        "energy",
+        "complexity",
+        "humanity",
+        "color"
+      ],
+      "reviewMethod": "Individual literal action and setting review of the new exact reproduction; no existing record or response changed.",
+      "proposedFeatureSemanticVersion": "literal-action-setting-v2"
+    },
+    "canon-picasso-guernica": {
+      "version": "literal-action-setting-v2",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://www.museoreinasofia.es/en/collections/artwork/guernica-0/",
+        "image": "assets/canonical-20261117/canon-picasso-guernica.webp",
+        "previewSha256": "1c629190caf6d139bac8c84c99feb58c4dbea4ca1470ca41c146016ea89b47fa"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261117/canon-picasso-guernica.webp",
+        "sha256": "1c629190caf6d139bac8c84c99feb58c4dbea4ca1470ca41c146016ea89b47fa",
+        "width": 1440,
+        "height": 652,
+        "mediaBinding": "exact-institutional-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": true,
+        "displayScale": "The actual full-composition local source was inspected at its native resolution. Unresolved fine surface evidence stays unknown."
+      },
+      "sourceUrls": [
+        "https://www.museoreinasofia.es/en/collections/artwork/guernica-0/",
+        "https://recursos.museoreinasofia.es/styles/large_landscape/public/Obra/DE00050_2.jpg.webp",
+        "https://www.museoreinasofia.es/en/node/37878"
+      ],
+      "before": {
+        "abstraction": 0.7,
+        "energy": 0.85,
+        "complexity": 0.85,
+        "humanity": 0.85,
+        "narrative": 0.75,
+        "atmosphere": 0.55,
+        "color": 0.02
+      },
+      "after": {
+        "abstraction": 0.7,
+        "energy": 0.85,
+        "complexity": 0.85,
+        "humanity": 0.85,
+        "narrative": 0.75,
+        "atmosphere": 0.55,
+        "color": 0.02
+      },
+      "fields": {
+        "narrative": {
+          "status": "reviewed",
+          "value": 0.75,
+          "reason": "Raised arms, extended necks, a running or kneeling body and collapsed bodies show substantial visible bodily action. Fragmented walls, floor and window forms supply a setting without a continuous natural landscape.",
+          "evidenceKind": "assistant-visual-review"
+        },
+        "atmosphere": {
+          "status": "reviewed",
+          "value": 0.55,
+          "reason": "Raised arms, extended necks, a running or kneeling body and collapsed bodies show substantial visible bodily action. Fragmented walls, floor and window forms supply a setting without a continuous natural landscape.",
+          "evidenceKind": "assistant-visual-review"
+        }
+      },
+      "changedFeatures": [],
+      "reviewedFeatures": [
+        "narrative",
+        "atmosphere"
+      ],
+      "retainedDraftFeatures": [
+        "abstraction",
+        "energy",
+        "complexity",
+        "humanity",
+        "color"
+      ],
+      "reviewMethod": "Individual literal action and setting review of the new exact reproduction; no existing record or response changed.",
       "proposedFeatureSemanticVersion": "literal-action-setting-v2"
     }
   },

@@ -1,4 +1,5 @@
 import {nextProfileRefinement,PROFILE_REFINEMENT_PROTOCOL,PROFILE_REFINEMENT_LIMIT} from './profile-refinement.mjs';
+import {quizCollectionChoices} from './collection-controls.mjs';
 import {isReviewedVisualDescriptor,FEATURE_SEMANTIC_VERSION} from './visual-descriptor-semantics.mjs';
 import {isDiagnosticRound,bindDiagnosticRound} from './explanation-followups.mjs';
 import {simplifyActiveInteraction} from './quiet-interactions.mjs';
@@ -286,7 +287,7 @@ export function prepareJourneySession(saved,works,now=Date.now()){
           // A shown legacy map can pin a different set than the saved selector.
           // Keep its real works without carrying a prediction or repeat onto them.
           const bindings=new Map();
-          for(const round of history){const match=/^journey-(\d+)$/.exec(round.id),legacy=/^panel-(\d+)$/.exec(round.evidence?.setId||''),number=round.evidence?.panelNumber||(legacy?Number(legacy[1]):null),sourceBatch=round.evidence?.batchIndex??Math.floor((Number(match?.[1]||1)-1)/JOURNEY_LENGTH);if((['art-profile-50-v2','art-profile-50-v3','art-profile-50-v4','art-profile-50-v5','art-profile-50-v6','art-profile-50-v7','art-profile-50-v8','art-profile-50-v9','art-profile-50-v10','art-profile-50-v11','art-profile-50-v12','art-profile-50-v13','art-profile-50-v14','art-profile-50-v15',JOURNEY_REVISION].includes(round.evidence?.journeyRevision)||legacy)&&sourceBatch===batchIndex&&Number.isInteger(number)&&number>=1&&number<=18&&!bindings.has(number))bindings.set(number,ids(round));}
+          for(const round of history){const match=/^journey-(\d+)$/.exec(round.id),legacy=/^panel-(\d+)$/.exec(round.evidence?.setId||''),number=round.evidence?.panelNumber||(legacy?Number(legacy[1]):null),sourceBatch=round.evidence?.batchIndex??Math.floor((Number(match?.[1]||1)-1)/JOURNEY_LENGTH);if((['art-profile-50-v2','art-profile-50-v3','art-profile-50-v4','art-profile-50-v5','art-profile-50-v6','art-profile-50-v7','art-profile-50-v8','art-profile-50-v9','art-profile-50-v10','art-profile-50-v11','art-profile-50-v12','art-profile-50-v13','art-profile-50-v14','art-profile-50-v15','art-profile-50-v16',JOURNEY_REVISION].includes(round.evidence?.journeyRevision)||legacy)&&sourceBatch===batchIndex&&Number.isInteger(number)&&number>=1&&number<=18&&!bindings.has(number))bindings.set(number,ids(round));}
           for(const [number,binding] of bindings){const panel=options.panels[number-1];if(!Array.isArray(panel?.workIds)||!sameWorks(panel.workIds,binding)){options.panels[number-1]={workIds:[...binding],construct:'preference',role:'exploration',selectionReason:'Preserve the artwork set in the recorded question. Conflicting repeat or prediction metadata has been removed.',evidenceRoundIds:[]};demotedPanels.push(number);}}
         }
         try{
@@ -647,21 +648,13 @@ export function createDeepStudy({app,getWorks,image,esc,keepButtons,navigate,sho
     dialog.innerHTML=`<header><h2>Previous quizzes</h2><button type="button" class="profile-details-close" data-action="deep-archives-close" aria-label="Close previous quizzes">×</button></header><div class="profile-details-content">${data.archives.map(saved=>`<button class="previous-quiz" type="button" data-action="deep-session" data-session="${esc(saved.manifest?.id)}" ${saved.unavailable?'disabled':''}><strong>${esc(new Date(saved.manifest?.createdAt||saved.startedAt||Date.now()).toLocaleDateString())}</strong><span>${saved.unavailable?'Unavailable in this browser':Object.keys(saved.answers||{}).length+' responses'}</span><span aria-hidden="true">↗</span></button>`).join('')}</div>`;
     app.append(dialog);dialog.addEventListener('close',()=>dialog.remove());dialog.showModal();
   }
-  function favouriteWorkIds(){
-    const selected=new Set();
-    for(const item of profileRounds()){
-      if(item.kind!=='choice-grid'||!validStudyAnswer(item,data.answers[item.id]))continue;
-      const answer=data.answers[item.id];
-      if(item.evidence?.construct==='overall-favourites'){for(const id of ids(item))selected.delete(id);for(const id of answer.selectedIds)selected.add(id);}
-      if(item.evidence?.construct==='overall-dislikes')for(const id of answer.selectedIds)selected.delete(id);
-    }
-    return [...selected];
-  }
+  function collectionChoices(){return quizCollectionChoices({works:sessionWorks(),rounds:profileRounds(),answers:data.answers});}
+  function favouriteWorkIds(){return collectionChoices().favouriteIds;}
   function download(){const url=URL.createObjectURL(new Blob([JSON.stringify(exportData(),null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download=journey?'my-art-atlas.json':'my-art-study.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
   globalThis.addEventListener?.('pagehide',()=>{void persistence.flush();});
   globalThis.addEventListener?.('beforeunload',()=>{void persistence.flush();});
   app.ownerDocument?.addEventListener?.('visibilitychange',()=>{if(app.ownerDocument.visibilityState==='hidden')void persistence.flush();});
-  return {restore,render,exportData,startNewSession,favouriteWorkIds,getArtwork:lookup,flush:()=>persistence.flush(),opening:home,started:()=>!!data.startedAt,clear(){clearTimeout(statementTimer);contrastController?.dispose();contrastController=null;data=fresh();round=null;draft=null;ready=false;storageBlocked=false;return persistence.clear();},handle(action,control,event){
+  return {restore,render,exportData,startNewSession,favouriteWorkIds,collectionChoices,getArtwork:lookup,flush:()=>persistence.flush(),opening:home,started:()=>!!data.startedAt,clear(){clearTimeout(statementTimer);contrastController?.dispose();contrastController=null;data=fresh();round=null;draft=null;ready=false;storageBlocked=false;return persistence.clear();},handle(action,control,event){
     if(app.querySelector('.embedded-exercise')&&round?.kind==='exercise'){
       if(action==='lab-finish'){next();return true;}
       if(action==='lab-home'){changeScreen('home');return true;}

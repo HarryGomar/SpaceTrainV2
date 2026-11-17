@@ -89735,5 +89735,277 @@
         "atmosphere": 1
       }
     }
+  },
+  {
+    "id": "canon-hopper-nighthawks",
+    "title": "Nighthawks",
+    "artist": "Edward Hopper",
+    "date": "1942",
+    "medium": "Oil on canvas",
+    "movement": "American realism",
+    "country": "United States",
+    "museum": "Art Institute of Chicago",
+    "sourceUrl": "https://www.artic.edu/artworks/111628/nighthawks",
+    "recognitionTier": "landmark",
+    "recognitionTierSource": "Editorial canonical stimulus priority, not measured population familiarity.",
+    "comparisonPurpose": "Compare with The Night Café for illuminated interiors, setting and human interaction; recognition, palette and handling remain competing explanations.",
+    "image": "assets/canonical-20261117/canon-hopper-nighthawks.jpg",
+    "imageLarge": "assets/canonical-20261117/canon-hopper-nighthawks.jpg",
+    "width": 843,
+    "height": 461,
+    "largeWidth": 843,
+    "largeHeight": 461,
+    "sha256": "ca9d7bd954f05bf23a63d9c5991c11af956b2233ee90a992136c8f2983cdaaa4",
+    "bytes": 96238,
+    "imageSourceUrl": "https://www.artic.edu/iiif/2/831a05de-d3f6-f4fa-a460-23008dd58dda/full/843,/0/default.jpg",
+    "sourceStatus": "source-verified",
+    "artistKnown": true,
+    "coreQuiz": false,
+    "decorativeOnly": false,
+    "studyEligible": true,
+    "eligibleForStudy": true,
+    "curationRole": "canonical-priority",
+    "featureSemanticVersion": "literal-action-setting-v2",
+    "featureQuality": "provisional_manual",
+    "features": {
+      "abstraction": 0.08,
+      "energy": 0.12,
+      "complexity": 0.45,
+      "humanity": 0.4,
+      "narrative": 0.15,
+      "atmosphere": 0.95,
+      "color": 0.65
+    },
+    "featureSource": "Individual assistant editorial descriptions of this actual reproduction; narrative denotes visible bodily action and atmosphere denotes prominence of depicted setting. No viewer emotion or artist-wide default is inferred.",
+    "featureAnnotationVersion": "canonical-comparisons-20261117-v1",
+    "featureReviewReason": "The server leans forward and customers sit with restrained poses. No strenuous bodily action is visible. Diner, counter, glass and surrounding streets dominate the setting.",
+    "alt": "Three customers and a server occupy a brightly lit corner diner behind a continuous glass window, surrounded by dark storefronts and an empty street.",
+    "note": "The Art Institute identifies this as an all-night diner. Hopper organised the figures within sharply divided light, glass and street space. The setting offers a comparison with other painted night interiors.",
+    "compositionScope": "whole-work",
+    "qualityStatus": "source-limited",
+    "rights": "No open image reuse licence established",
+    "rightsUrl": "https://www.artic.edu/terms",
+    "copyrightNotice": null,
+    "creditLine": "Edward Hopper, Nighthawks, 1942. Art Institute of Chicago, Friends of American Art Collection, 1942.51.",
+    "imageCredit": "Edward Hopper, Nighthawks, 1942. Art Institute of Chicago, Friends of American Art Collection, 1942.51.",
+    "analysis": {
+      "revision": "canonical-comparisons-20261117-v1",
+      "yearRange": [
+        1942,
+        1942
+      ],
+      "yearRangeSource": "https://api.artic.edu/api/v1/artworks/111628",
+      "yearRangeBasis": "Institutional object record.",
+      "dateApproximate": false,
+      "movementKey": "american realism"
+    },
+    "provenance": {
+      "provider": "Art Institute of Chicago",
+      "recordUrl": "https://www.artic.edu/artworks/111628/nighthawks",
+      "institutionRecordUrl": "https://www.artic.edu/artworks/111628/nighthawks",
+      "metadataUrl": "https://api.artic.edu/api/v1/artworks/111628",
+      "accessionNumber": "1942.51",
+      "physicalDimensionsCm": [
+        84.1,
+        152.4
+      ],
+      "downloadUrl": "https://www.artic.edu/iiif/2/831a05de-d3f6-f4fa-a460-23008dd58dda/full/843,/0/default.jpg",
+      "originalImageUrl": "https://www.artic.edu/iiif/2/831a05de-d3f6-f4fa-a460-23008dd58dda/full/843,/0/default.jpg",
+      "sourceImageSha256": "ca9d7bd954f05bf23a63d9c5991c11af956b2233ee90a992136c8f2983cdaaa4",
+      "sourceImageBytes": 96238,
+      "downloadedWidth": 843,
+      "downloadedHeight": 461,
+      "thumbnailSha256": "ca9d7bd954f05bf23a63d9c5991c11af956b2233ee90a992136c8f2983cdaaa4",
+      "largeSha256": "ca9d7bd954f05bf23a63d9c5991c11af956b2233ee90a992136c8f2983cdaaa4",
+      "thumbnailBytes": 96238,
+      "largeBytes": 96238,
+      "retrievedAt": "2026-11-17T06:46:25.706Z",
+      "reuseStatus": "no-open-reuse-licence-established",
+      "rightsScope": "Current institutional API marks is_public_domain false and copyright_notice null. Archival US public-domain documentation does not establish universal open image reuse.",
+      "sourceLimited": true,
+      "viewScope": "whole-work",
+      "compositionScope": "whole-work",
+      "transformation": "Institutional source bytes preserved without resampling, cropping, upscaling or invented detail. Preview and large view use this same verified native-resolution asset.",
+      "reviewedImageSha256": "ca9d7bd954f05bf23a63d9c5991c11af956b2233ee90a992136c8f2983cdaaa4"
+    },
+    "featureLiteralReview": {
+      "version": "literal-action-setting-v2",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://www.artic.edu/artworks/111628/nighthawks",
+        "image": "assets/canonical-20261117/canon-hopper-nighthawks.jpg",
+        "previewSha256": "ca9d7bd954f05bf23a63d9c5991c11af956b2233ee90a992136c8f2983cdaaa4"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261117/canon-hopper-nighthawks.jpg",
+        "sha256": "ca9d7bd954f05bf23a63d9c5991c11af956b2233ee90a992136c8f2983cdaaa4",
+        "width": 843,
+        "height": 461,
+        "mediaBinding": "exact-institutional-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": true,
+        "displayScale": "The actual full-composition local source was inspected at its native resolution. Unresolved fine surface evidence stays unknown."
+      },
+      "fields": {
+        "narrative": {
+          "status": "reviewed",
+          "value": 0.15,
+          "reason": "The server leans forward and customers sit with restrained poses. No strenuous bodily action is visible. Diner, counter, glass and surrounding streets dominate the setting.",
+          "evidenceKind": "assistant-visual-review"
+        },
+        "atmosphere": {
+          "status": "reviewed",
+          "value": 0.95,
+          "reason": "The server leans forward and customers sit with restrained poses. No strenuous bodily action is visible. Diner, counter, glass and surrounding streets dominate the setting.",
+          "evidenceKind": "assistant-visual-review"
+        }
+      },
+      "previousValues": {
+        "abstraction": 0.08,
+        "energy": 0.12,
+        "complexity": 0.45,
+        "humanity": 0.4,
+        "narrative": 0.15,
+        "atmosphere": 0.95,
+        "color": 0.65
+      }
+    }
+  },
+  {
+    "id": "canon-picasso-guernica",
+    "title": "Guernica",
+    "artist": "Pablo Picasso",
+    "date": "1937",
+    "medium": "Oil on canvas",
+    "movement": "Cubism",
+    "country": "Spain",
+    "museum": "Museo Nacional Centro de Arte Reina Sofía",
+    "sourceUrl": "https://www.museoreinasofia.es/en/collections/artwork/guernica-0/",
+    "recognitionTier": "landmark",
+    "recognitionTierSource": "Editorial canonical stimulus priority, not measured population familiarity.",
+    "comparisonPurpose": "Compare with Collective Suicide and The Third of May for tragic scenes across different palette and representation; ask appeal, admiration, felt unease and willingness to return separately.",
+    "image": "assets/canonical-20261117/canon-picasso-guernica.webp",
+    "imageLarge": "assets/canonical-20261117/canon-picasso-guernica.webp",
+    "width": 1440,
+    "height": 652,
+    "largeWidth": 1440,
+    "largeHeight": 652,
+    "sha256": "1c629190caf6d139bac8c84c99feb58c4dbea4ca1470ca41c146016ea89b47fa",
+    "bytes": 190960,
+    "imageSourceUrl": "https://recursos.museoreinasofia.es/styles/large_landscape/public/Obra/DE00050_2.jpg.webp",
+    "sourceStatus": "source-verified",
+    "artistKnown": true,
+    "coreQuiz": false,
+    "decorativeOnly": false,
+    "studyEligible": true,
+    "eligibleForStudy": true,
+    "curationRole": "canonical-priority",
+    "featureSemanticVersion": "literal-action-setting-v2",
+    "featureQuality": "provisional_manual",
+    "features": {
+      "abstraction": 0.7,
+      "energy": 0.85,
+      "complexity": 0.85,
+      "humanity": 0.85,
+      "narrative": 0.75,
+      "atmosphere": 0.55,
+      "color": 0.02
+    },
+    "featureSource": "Individual assistant editorial descriptions of this actual reproduction; narrative denotes visible bodily action and atmosphere denotes prominence of depicted setting. No viewer emotion or artist-wide default is inferred.",
+    "featureAnnotationVersion": "canonical-comparisons-20261117-v1",
+    "featureReviewReason": "Raised arms, extended necks, a running or kneeling body and collapsed bodies show substantial visible bodily action. Fragmented walls, floor and window forms supply a setting without a continuous natural landscape.",
+    "alt": "Fragmented human and animal bodies fill a broad grey, black and white scene, including a woman holding a child, a fallen figure with a broken weapon, a horse and raised lamps.",
+    "note": "Picasso made Guernica in 1937 for the Spanish Pavilion at the Paris International Exposition. The Reina Sofía describes its grey palette and symbolic figures in relation to war. Depicted suffering does not establish a viewer’s felt unease.",
+    "compositionScope": "whole-work",
+    "qualityStatus": "source-limited",
+    "rights": "Copyrighted; no open reuse licence established",
+    "rightsUrl": "https://www.museoreinasofia.es/en/node/37878",
+    "copyrightNotice": "© Sucesión Pablo Picasso, VEGAP, Madrid, 2026",
+    "creditLine": "Pablo Picasso, Guernica, 1937. Collection Museo Nacional Centro de Arte Reina Sofía, DE00050. © Sucesión Pablo Picasso, VEGAP, Madrid, 2026.",
+    "imageCredit": "Pablo Picasso, Guernica, 1937. Collection Museo Nacional Centro de Arte Reina Sofía, DE00050. © Sucesión Pablo Picasso, VEGAP, Madrid, 2026.",
+    "analysis": {
+      "revision": "canonical-comparisons-20261117-v1",
+      "yearRange": [
+        1937,
+        1937
+      ],
+      "yearRangeSource": "https://www.museoreinasofia.es/en/collections/artwork/guernica-0/",
+      "yearRangeBasis": "Institutional object record.",
+      "dateApproximate": false,
+      "movementKey": "cubism"
+    },
+    "provenance": {
+      "provider": "Museo Nacional Centro de Arte Reina Sofía",
+      "recordUrl": "https://www.museoreinasofia.es/en/collections/artwork/guernica-0/",
+      "institutionRecordUrl": "https://www.museoreinasofia.es/en/collections/artwork/guernica-0/",
+      "metadataUrl": "https://www.museoreinasofia.es/en/collections/artwork/guernica-0/",
+      "accessionNumber": "DE00050",
+      "physicalDimensionsCm": [
+        349.3,
+        776.6
+      ],
+      "downloadUrl": "https://recursos.museoreinasofia.es/styles/large_landscape/public/Obra/DE00050_2.jpg.webp",
+      "originalImageUrl": "https://recursos.museoreinasofia.es/styles/large_landscape/public/Obra/DE00050_2.jpg.webp",
+      "sourceImageSha256": "1c629190caf6d139bac8c84c99feb58c4dbea4ca1470ca41c146016ea89b47fa",
+      "sourceImageBytes": 190960,
+      "downloadedWidth": 1440,
+      "downloadedHeight": 652,
+      "thumbnailSha256": "1c629190caf6d139bac8c84c99feb58c4dbea4ca1470ca41c146016ea89b47fa",
+      "largeSha256": "1c629190caf6d139bac8c84c99feb58c4dbea4ca1470ca41c146016ea89b47fa",
+      "thumbnailBytes": 190960,
+      "largeBytes": 190960,
+      "retrievedAt": "2026-11-17T06:46:25.706Z",
+      "reuseStatus": "no-open-reuse-licence-established",
+      "rightsScope": "Artwork-image copyright remains with the named rights holder; the museum text licence does not grant image reuse.",
+      "sourceLimited": true,
+      "viewScope": "whole-work",
+      "compositionScope": "whole-work",
+      "transformation": "Institutional source bytes preserved without resampling, cropping, upscaling or invented detail. Preview and large view use this same verified native-resolution asset.",
+      "reviewedImageSha256": "1c629190caf6d139bac8c84c99feb58c4dbea4ca1470ca41c146016ea89b47fa"
+    },
+    "featureLiteralReview": {
+      "version": "literal-action-setting-v2",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://www.museoreinasofia.es/en/collections/artwork/guernica-0/",
+        "image": "assets/canonical-20261117/canon-picasso-guernica.webp",
+        "previewSha256": "1c629190caf6d139bac8c84c99feb58c4dbea4ca1470ca41c146016ea89b47fa"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261117/canon-picasso-guernica.webp",
+        "sha256": "1c629190caf6d139bac8c84c99feb58c4dbea4ca1470ca41c146016ea89b47fa",
+        "width": 1440,
+        "height": 652,
+        "mediaBinding": "exact-institutional-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": true,
+        "displayScale": "The actual full-composition local source was inspected at its native resolution. Unresolved fine surface evidence stays unknown."
+      },
+      "fields": {
+        "narrative": {
+          "status": "reviewed",
+          "value": 0.75,
+          "reason": "Raised arms, extended necks, a running or kneeling body and collapsed bodies show substantial visible bodily action. Fragmented walls, floor and window forms supply a setting without a continuous natural landscape.",
+          "evidenceKind": "assistant-visual-review"
+        },
+        "atmosphere": {
+          "status": "reviewed",
+          "value": 0.55,
+          "reason": "Raised arms, extended necks, a running or kneeling body and collapsed bodies show substantial visible bodily action. Fragmented walls, floor and window forms supply a setting without a continuous natural landscape.",
+          "evidenceKind": "assistant-visual-review"
+        }
+      },
+      "previousValues": {
+        "abstraction": 0.7,
+        "energy": 0.85,
+        "complexity": 0.85,
+        "humanity": 0.85,
+        "narrative": 0.75,
+        "atmosphere": 0.55,
+        "color": 0.02
+      }
+    }
   }
 ]

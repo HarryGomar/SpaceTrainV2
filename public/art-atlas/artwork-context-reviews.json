@@ -1,7 +1,7 @@
 {
   "version": "artwork-context-v1",
   "reviewedAt": "2026-11-16T05:35:34.079Z",
-  "reviewedCount": 440,
+  "reviewedCount": 442,
   "purpose": "Source-bound object facts and explicitly editorial contextual labels, kept separate from response data and visual attribute judgements.",
   "evidenceKinds": {
     "primary-api-metadata": "Exact fields from the institution's object API.",
@@ -29085,6 +29085,177 @@
       "reviewMethod": "Assistant checked the identified primary object metadata and distinguished those facts from inherited catalogue wording and an individual contextual classification. This pass does not create new visual scores, visitor emotions or a negative symbolism score.",
       "reviewScope": "The exact displayed object and existing inspected reproduction. Reported source limitations and attributed authorship remain qualified.",
       "sourceLimit": null
+    },
+    "canon-hopper-nighthawks": {
+      "version": "artwork-context-v1",
+      "reviewerType": "assistant-source-and-context-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://www.artic.edu/artworks/111628/nighthawks",
+        "image": "assets/canonical-20261117/canon-hopper-nighthawks.jpg",
+        "previewSha256": "ca9d7bd954f05bf23a63d9c5991c11af956b2233ee90a992136c8f2983cdaaa4"
+      },
+      "facts": {
+        "reportedDate": {
+          "status": "documented",
+          "value": "1942",
+          "sourceUrl": "https://api.artic.edu/api/v1/artworks/111628",
+          "sourceField": "Date",
+          "evidenceKind": "primary-institutional-record"
+        },
+        "medium": {
+          "status": "documented",
+          "value": "Oil on canvas",
+          "sourceUrl": "https://api.artic.edu/api/v1/artworks/111628",
+          "sourceField": "Medium",
+          "evidenceKind": "primary-institutional-record"
+        },
+        "sourceWorkType": {
+          "status": "documented",
+          "value": "Painting",
+          "sourceUrl": "https://api.artic.edu/api/v1/artworks/111628",
+          "sourceField": "Object classification",
+          "evidenceKind": "primary-institutional-record"
+        },
+        "creationPlace": {
+          "status": "unknown",
+          "reason": "Not inferred from artist or museum geography."
+        },
+        "artistNationality": {
+          "status": "unknown",
+          "reason": "No object-specific nationality claim made."
+        }
+      },
+      "editorial": {
+        "catalogueMovement": {
+          "value": "American realism",
+          "movementKey": "american realism",
+          "scope": "Editorial historical grouping; not a visual score."
+        },
+        "movementLabels": [
+          {
+            "label": "American realism",
+            "kind": "historical-context",
+            "evidenceKind": "catalogue-editorial-classification",
+            "sourceUrls": [
+              "https://www.artic.edu/artworks/111628/nighthawks"
+            ],
+            "reason": "Editorial historical grouping for exploration, separate from reviewed visible qualities."
+          }
+        ],
+        "catalogueCountryContext": {
+          "status": "editorial",
+          "value": "United States",
+          "reason": "Cultural/practice curation grouping, not creation place."
+        },
+        "chronologicalInterval": {
+          "status": "derived",
+          "yearRange": [
+            1942,
+            1942
+          ],
+          "sourceUrl": "https://api.artic.edu/api/v1/artworks/111628",
+          "evidenceKind": "existing-catalogue-date-normalization",
+          "approximate": false
+        },
+        "mediumFamily": {
+          "status": "derived",
+          "value": "Oil painting",
+          "sourceText": "Oil on canvas",
+          "sourceUrl": "https://api.artic.edu/api/v1/artworks/111628",
+          "evidenceKind": "normalization-of-reported-medium"
+        }
+      },
+      "sourceUrls": [
+        "https://www.artic.edu/artworks/111628/nighthawks",
+        "https://api.artic.edu/api/v1/artworks/111628",
+        "https://www.artic.edu/iiif/2/831a05de-d3f6-f4fa-a460-23008dd58dda/full/843,/0/default.jpg",
+        "https://www.artic.edu/terms"
+      ]
+    },
+    "canon-picasso-guernica": {
+      "version": "artwork-context-v1",
+      "reviewerType": "assistant-source-and-context-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://www.museoreinasofia.es/en/collections/artwork/guernica-0/",
+        "image": "assets/canonical-20261117/canon-picasso-guernica.webp",
+        "previewSha256": "1c629190caf6d139bac8c84c99feb58c4dbea4ca1470ca41c146016ea89b47fa"
+      },
+      "facts": {
+        "reportedDate": {
+          "status": "documented",
+          "value": "1937",
+          "sourceUrl": "https://www.museoreinasofia.es/en/collections/artwork/guernica-0/",
+          "sourceField": "Date",
+          "evidenceKind": "primary-institutional-record"
+        },
+        "medium": {
+          "status": "documented",
+          "value": "Oil on canvas",
+          "sourceUrl": "https://www.museoreinasofia.es/en/collections/artwork/guernica-0/",
+          "sourceField": "Medium",
+          "evidenceKind": "primary-institutional-record"
+        },
+        "sourceWorkType": {
+          "status": "documented",
+          "value": "Painting",
+          "sourceUrl": "https://www.museoreinasofia.es/en/collections/artwork/guernica-0/",
+          "sourceField": "Object classification",
+          "evidenceKind": "primary-institutional-record"
+        },
+        "creationPlace": {
+          "status": "unknown",
+          "reason": "Not inferred from artist or museum geography."
+        },
+        "artistNationality": {
+          "status": "unknown",
+          "reason": "No object-specific nationality claim made."
+        }
+      },
+      "editorial": {
+        "catalogueMovement": {
+          "value": "Cubism",
+          "movementKey": "cubism",
+          "scope": "Editorial historical grouping; not a visual score."
+        },
+        "movementLabels": [
+          {
+            "label": "Cubism",
+            "kind": "historical-context",
+            "evidenceKind": "catalogue-editorial-classification",
+            "sourceUrls": [
+              "https://www.museoreinasofia.es/en/collections/artwork/guernica-0/"
+            ],
+            "reason": "Editorial historical grouping for exploration, separate from reviewed visible qualities."
+          }
+        ],
+        "catalogueCountryContext": {
+          "status": "editorial",
+          "value": "Spain",
+          "reason": "Cultural/practice curation grouping, not creation place."
+        },
+        "chronologicalInterval": {
+          "status": "derived",
+          "yearRange": [
+            1937,
+            1937
+          ],
+          "sourceUrl": "https://www.museoreinasofia.es/en/collections/artwork/guernica-0/",
+          "evidenceKind": "existing-catalogue-date-normalization",
+          "approximate": false
+        },
+        "mediumFamily": {
+          "status": "derived",
+          "value": "Oil painting",
+          "sourceText": "Oil on canvas",
+          "sourceUrl": "https://www.museoreinasofia.es/en/collections/artwork/guernica-0/",
+          "evidenceKind": "normalization-of-reported-medium"
+        }
+      },
+      "sourceUrls": [
+        "https://www.museoreinasofia.es/en/collections/artwork/guernica-0/",
+        "https://recursos.museoreinasofia.es/styles/large_landscape/public/Obra/DE00050_2.jpg.webp",
+        "https://www.museoreinasofia.es/en/node/37878"
+      ]
     }
   }
 }

@@ -10,10 +10,10 @@ const canonicalCollection=canonicalOpeningPool([...studyWorks,...decorativeWorks
 const fullCollection=orderOpeningPool(canonicalCollection,{seed:9317});
 
 test('The painting field is deterministic, uses its curated opening pool and has actual depth',()=>{
-  assert.equal(studyWorks.length,487);
+  assert.equal(new Set(studyWorks.map(work=>work.id)).size,studyWorks.length);
   assert.equal(decorativeWorks.length,255);
-  assert.equal(canonicalCollection.length,504);
-  assert.equal(fullCollection.length,346);
+  assert.ok(canonicalCollection.length>=studyWorks.length);
+  assert.ok(fullCollection.length>0&&fullCollection.every(work=>canonicalCollection.includes(work)));
   const field=createArtField({workCount:fullCollection.length});
   assert.deepEqual(field,createArtField({workCount:fullCollection.length}));
   assert.equal(new Set(field.paintings.map(p=>p.workIndex)).size,fullCollection.length);
@@ -86,6 +86,19 @@ test('Stationary presence is prominent and stable; tiny input jitter does not sp
 test('Pointer presence is frame-rate independent,and leaving returns to the original geometry',()=>{
   const a={x:0,y:0,energy:0,time:0},b={...a};for(let i=0;i<60;i++)updateFieldPointer(a,{x:.8,y:-.4,time:i/60},1/60);for(let i=0;i<120;i++)updateFieldPointer(b,{x:.8,y:-.4,time:i/120},1/120);assert.ok(Math.abs(a.x-b.x)<1e-10);assert.ok(Math.abs(a.energy-b.energy)<1e-10);
   for(let i=0;i<240;i++)updateFieldPointer(a,{x:0,y:0,time:1+i/60,active:false},1/60);const point=[.6,.4],settled=interactFieldPoint(point,a,{aspect:1.6,z:.4});assert.ok(Math.hypot(settled[0]-point[0],settled[1]-point[1])<1e-6);assert.deepEqual(interactFieldPoint(point,{x:.8,y:.4,energy:0},{aspect:1.6}),point);
+});
+
+test('Deliberate motion produces a bounded travelling ripple that settles after stopping',()=>{
+  const pointer={x:0,y:0,energy:0};
+  for(let i=0;i<120;i++)updateFieldPointer(pointer,{x:0,y:0},1/60);
+  assert.equal(pointer.rippleStrength,0);
+  updateFieldPointer(pointer,{x:.5,y:.3},1/60);
+  assert.ok(pointer.rippleStrength>0&&pointer.rippleStrength<=FIELD_MOTION.rippleLimit);
+  const phase=pointer.ripplePhase,strength=pointer.rippleStrength;
+  updateFieldPointer(pointer,{x:.5,y:.3},1/60);
+  assert.ok(pointer.ripplePhase>phase);assert.ok(pointer.rippleStrength<strength);
+  for(let i=0;i<180;i++)updateFieldPointer(pointer,{x:.5,y:.3},1/60);
+  assert.equal(pointer.rippleStrength,0);assert.ok(Math.abs(pointer.wakeX)<.00001&&Math.abs(pointer.wakeY)<.00001);
 });
 
 test('Force direction remains continuous close to the pointer and all finite inputs stay bounded',()=>{

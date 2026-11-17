@@ -63,3 +63,26 @@ test('Latest signed declarations control the cohorts while earlier contradictory
 test('Nested conditional descriptions collapse without hiding their complete alternative audit',()=>{
   const f=declared();for(const work of f.works)attr(f,work.id,'pattern-rhythm','present');const model=result(f);assert.equal(model.explicitChoices.findings.length,1);assert.ok(model.explicitChoices.coverage.qualifiedBeforeCollapse>=2);assert.ok(main(model).relatedRuleIds.length);assert.ok(main(model).relatedContrasts[0].supportPairs.length===3);
 });
+
+test('A shared tag cannot promote a boundary when the favourite and disliked groups differ in many other reviewed qualities',()=>{
+  const f=declared();
+  for(const id of ['e0','e4','e8'])for(const key of ['dramatic-light','layered-space','visible-gesture','landscape','imagined-world'])attr(f,id,key,'present');
+  const model=result(f),audit=model.explicitChoices.rulesChecked.find(item=>item.id==='precision-relationships');
+  assert.equal(model.findings.some(item=>item.sharedQuality==='precise-rendering'&&item.contrastQuality==='human-relationships'),false);
+  assert.equal(audit.qualified,false);assert.ok(audit.reasons.includes('too-few-comparable-contrasts'));assert.equal(audit.coverage.comparablePairOpportunities,0);
+  assert.ok(audit.comparisonCandidates.length);assert.equal(audit.comparisonCandidates[0].differingQualities.length,5);
+});
+
+test('Unknown reviews of the other qualities cannot masquerade as matched controls',()=>{
+  const f=declared();for(const work of f.works)for(const key of Object.keys(ARTWORK_ATTRIBUTE_DEFINITIONS))if(!['precise-rendering','human-relationships'].includes(key))attr(f,work.id,key,'unknown');
+  const model=result(f),audit=model.explicitChoices.rulesChecked.find(item=>item.id==='precision-relationships');
+  assert.equal(main(model),undefined);assert.equal(audit.coverage.insufficientOtherReviewPairs,9);assert.equal(audit.coverage.comparablePairOpportunities,0);assert.equal(audit.comparisonCandidates[0].otherReviewedQualities,0);
+});
+
+test('Illustrations prefer closer reviewed matches over the first co-presented pair, retaining source explanations',()=>{
+  const f=declared();attr(f,'e0','dramatic-light','present');attr(f,'e5','dramatic-light','present');
+  const finding=main(result(f));assert.ok(finding);assert.ok(finding.supportPairs.some(pair=>pair.highWorkId==='e0'&&pair.lowWorkId==='e5'));
+  assert.ok(finding.supportPairs.every(pair=>pair.comparability.differingQualities.length===0));assert.equal(new Set(finding.supportPairs.map(pair=>pair.highWorkId)).size,3);assert.equal(new Set(finding.supportPairs.map(pair=>pair.lowWorkId)).size,3);
+  const first=finding.supportPairs[0];assert.equal(finding.displayReviewNotes[first.highWorkId].shared,f.annotationReviews.reviews[first.highWorkId].attributes['precise-rendering'].reason);
+  assert.match(finding.text,/3 favourites and 3 explicitly disliked/);assert.match(finding.text,/3 of the favourites/);assert.match(finding.text,/0 of the disliked/);
+});

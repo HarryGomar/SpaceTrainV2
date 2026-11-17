@@ -28,7 +28,7 @@ test('Every fresh continuous refinement binds on entry from actual earlier sourc
     assert.ok(data.answers[round.id].skipped||validStudyAnswer(round,data.answers[round.id]),round.id);
     if(isOrdinalRefinementRound(round)){closing.push(round);assert.equal(round.evidence.finalRefinement.binding,'bound');assert.ok(round.evidence.finalRefinement.sourceRoundIds.every(id=>Number(id.slice(8))<index+1));}
   }
-  assert.equal(closing.length,7);assert.equal(data.shown['journey-046'].workIds.length,72);assert.deepEqual(data.shown['journey-049'].workIds,data.shown['journey-046'].workIds);assert.equal(data.shown['journey-049'].evidence.explicitDislikes,true);
+  assert.equal(closing.length,6);assert.equal(Object.values(data.shown).filter(round=>round.evidence?.explicitDislikes).length,1);assert.equal(data.shown['journey-046'].workIds.length,72);assert.deepEqual(data.shown['journey-049'].workIds,data.shown['journey-046'].workIds);assert.equal(data.shown['journey-049'].evidence.explicitDislikes,true);
   assert.deepEqual(data.plan,beforePlan,'Entering stores the shown snapshot; it does not replace pending historical definitions.');
   const shown=structuredClone(data.shown),changed=structuredClone(data);changed.answers['journey-001'].positions=Object.fromEntries(changed.shown['journey-001'].workIds.map((id,i)=>[id,100-i]));
   for(const round of sessionJourneyRounds(changed))assert.deepEqual(snapshotStudyRound(round),shown[round.id]);

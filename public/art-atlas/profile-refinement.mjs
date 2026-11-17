@@ -76,5 +76,5 @@ export function nextProfileRefinement({works=[],rounds=[],answers={},attempts=[]
 
 export function renderProfileRefinementOffer(offer,{esc}={}){
   if(!offer)return '';
-  return '<aside class="tp-refinement-offer" aria-label="Optional focused comparisons"><div><p class="tp-kicker">A closer reading</p><h2>'+esc(offer.resume?'Continue refining your reading':'A few comparisons could clarify this')+'</h2><p>'+esc(offer.reason)+'</p><small>Optional · up to 10 extra interactions. Stop and return to your profile at any time.</small></div><button type="button" class="text-button" data-action="deep-refine">'+(offer.resume?'Continue refining':'Refine this reading')+' <span aria-hidden="true">&#8599;</span></button></aside>';
+  return '<aside class="tp-refinement-offer" aria-label="Optional focused comparisons"><div><small>Optional comparisons · up to 10</small><p>'+esc(offer.reason)+'</p></div><button type="button" class="text-button" data-action="deep-refine">'+(offer.resume?'Continue refining':'Refine reading')+' <span aria-hidden="true">&#8599;</span></button></aside>';
 }

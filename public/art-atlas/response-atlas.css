@@ -31,3 +31,25 @@
 .atlas-extended>i{display:block;width:7px;height:7px;box-sizing:border-box;border-radius:50%;border:1px solid currentColor}
 .atlas-extended[aria-pressed=true]{color:#514536}
 .atlas-extended[aria-pressed=true]>i{background:currentColor}
+
+/* The same named dimension keeps its colour in the selector and on the map. */
+.atlas-picker-options .atlas-coloured-choice{padding:11px 10px 11px 22px;border-radius:3px}
+.atlas-picker-options .atlas-coloured-choice:before{top:12px;width:7px;height:27px;border:0;border-radius:2px;opacity:.9;background:linear-gradient(180deg,var(--choice-x) 0 50%,var(--choice-y) 50% 100%)}
+.atlas-picker-options .atlas-coloured-choice[aria-pressed=true]{background:#eae6df}
+.atlas-picker-options .atlas-coloured-choice[aria-pressed=true]:before{outline:1px solid var(--choice-x);outline-offset:3px;opacity:1}
+.atlas-picker-options .atlas-coloured-choice:hover{background:#eeeae3}
+.atlas-picker-options .atlas-coloured-choice>span{line-height:1.5}
+.atlas-picker-options .atlas-coloured-choice small{color:#8a7e70}
+.atlas-controls .atlas-choice-button.atlas-coloured-choice{border-bottom:1px solid color-mix(in srgb,var(--choice-x) 45%,transparent)}
+.atlas-descriptor-list p:first-child{color:var(--x)}.atlas-descriptor-list p:nth-child(2){color:var(--y)}
+
+/* Comparison positions are an index, not estimated coordinates in taste space. */
+#atlas[data-mode=comparisons] .atlas-map-frame{display:block;position:relative}
+#atlas[data-mode=comparisons] .atlas-drawing{height:100%;width:100%}
+#atlas[data-mode=comparisons] :is(.atlas-y-high,.atlas-y-low,.atlas-x-low,.atlas-x-high){display:none}
+.atlas-graph-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px 19px}
+.atlas-graph-actions button{font-size:11px;min-height:36px;padding:4px 0;color:#8c7860}
+.atlas-graph-actions button:disabled{opacity:.4;cursor:default}
+.atlas-graph-actions [aria-pressed=true],.atlas-graph-actions [data-all-comparisons]{color:#a05c43}
+.atlas-graph-actions [hidden]{display:none}
+@media(max-width:800px){.atlas-graph-actions{width:100%;gap:8px 20px}.atlas-graph-actions button{font-size:10px;min-height:38px}#atlas[data-mode=comparisons] .atlas-main{min-height:430px}.atlas-picker-options .atlas-coloured-choice{min-height:56px}}

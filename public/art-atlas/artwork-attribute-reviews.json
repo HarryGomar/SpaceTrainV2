@@ -21,7 +21,7 @@
     "material-detail",
     "open-expanse"
   ],
-  "reviewedCount": 487,
+  "reviewedCount": 489,
   "limits": [
     "These are nonexclusive editorial descriptions of particular reproductions, reviewed by an assistant. They are not independent human validation, scientific scores or measurements of a viewer's feelings.",
     "Only an explicit reviewed absent status supplies a negative observation. A missing review, mismatched source, unknown status or insufficient reproduction remains unknown.",
@@ -3165,6 +3165,18 @@
         "dateUnchanged": "1862",
         "scope": "Current catalogue and current review/media bindings only. Previously saved participant manifests and exports are not rewritten."
       }
+    },
+    "[\"https://www.artic.edu/artworks/111628/nighthawks\",\"assets/canonical-20261117/canon-hopper-nighthawks.jpg\"]": {
+      "sourceUrl": "https://www.artic.edu/artworks/111628/nighthawks",
+      "image": "assets/canonical-20261117/canon-hopper-nighthawks.jpg",
+      "previewSha256": "ca9d7bd954f05bf23a63d9c5991c11af956b2233ee90a992136c8f2983cdaaa4",
+      "verification": "sha256-of-current-local-preview"
+    },
+    "[\"https://www.museoreinasofia.es/en/collections/artwork/guernica-0/\",\"assets/canonical-20261117/canon-picasso-guernica.webp\"]": {
+      "sourceUrl": "https://www.museoreinasofia.es/en/collections/artwork/guernica-0/",
+      "image": "assets/canonical-20261117/canon-picasso-guernica.webp",
+      "previewSha256": "1c629190caf6d139bac8c84c99feb58c4dbea4ca1470ca41c146016ea89b47fa",
+      "verification": "sha256-of-current-local-preview"
     }
   },
   "reviews": {
@@ -57005,6 +57017,227 @@
       },
       "sourcedContext": [],
       "contextStatus": "not-documented-in-this-review"
+    },
+    "canon-hopper-nighthawks": {
+      "version": "artwork-attributes-v1",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://www.artic.edu/artworks/111628/nighthawks",
+        "image": "assets/canonical-20261117/canon-hopper-nighthawks.jpg",
+        "previewSha256": "ca9d7bd954f05bf23a63d9c5991c11af956b2233ee90a992136c8f2983cdaaa4"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261117/canon-hopper-nighthawks.jpg",
+        "sha256": "ca9d7bd954f05bf23a63d9c5991c11af956b2233ee90a992136c8f2983cdaaa4",
+        "width": 843,
+        "height": 461,
+        "mediaBinding": "exact-institutional-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": true,
+        "displayScale": "The actual full-composition local source was inspected at its native resolution. Unresolved fine surface evidence stays unknown."
+      },
+      "sourceUrls": [
+        "https://www.artic.edu/artworks/111628/nighthawks",
+        "https://api.artic.edu/api/v1/artworks/111628",
+        "https://www.artic.edu/iiif/2/831a05de-d3f6-f4fa-a460-23008dd58dda/full/843,/0/default.jpg",
+        "https://www.artic.edu/terms"
+      ],
+      "reviewMethod": "Assistant inspected the actual complete institutional reproduction and separately assessed all sixteen criteria. No art-movement defaults or participant preferences were used.",
+      "attributes": {
+        "narrative-detail": {
+          "status": "unknown",
+          "reason": "Cups, coffee urns and signs supply setting details, but a separate incident or symbolic clue beyond the diner motif is not clearly established.",
+          "evidenceKind": "visual-review"
+        },
+        "imagined-world": {
+          "status": "absent",
+          "reason": "The diner, street, objects and bodies remain physically recognisable; no impossible figure or object is visible.",
+          "evidenceKind": "visual-review"
+        },
+        "dramatic-light": {
+          "status": "present",
+          "reason": "Bright diner illumination selects faces, counter and pavement against dark shop windows and the night street.",
+          "evidenceKind": "visual-review"
+        },
+        "layered-space": {
+          "status": "present",
+          "reason": "The foreground street, glass boundary, occupied counter and recessed shop fronts form distinguishable spatial stages.",
+          "evidenceKind": "visual-review"
+        },
+        "geometric-structure": {
+          "status": "present",
+          "reason": "Long straight window divisions, the angular corner and counter organise large, clearly shaped fields.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-gesture": {
+          "status": "absent",
+          "reason": "The restrained seated and leaning poses contain no emphatic reaching, striking or active hand exchange.",
+          "evidenceKind": "visual-review"
+        },
+        "intimate-figures": {
+          "status": "absent",
+          "reason": "Small figures sit within an extensive architectural view rather than forming a close foreground bodily group.",
+          "evidenceKind": "visual-review"
+        },
+        "landscape": {
+          "status": "absent",
+          "reason": "Built street and diner space dominate; recognisable terrain, water and vegetation do not organise the scene.",
+          "evidenceKind": "visual-review"
+        },
+        "expressive-distortion": {
+          "status": "absent",
+          "reason": "Bodies and architectural objects retain recognisable proportions without conspicuous fragmentation or elongation.",
+          "evidenceKind": "visual-review"
+        },
+        "precise-rendering": {
+          "status": "present",
+          "reason": "Controlled contours and sharply separated window, counter and architectural edges dominate the reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-paint-marks": {
+          "status": "unknown",
+          "reason": "The 843-pixel institutional reproduction does not reliably separate fine brushwork from reproduction texture.",
+          "evidenceKind": "visual-review"
+        },
+        "pattern-rhythm": {
+          "status": "present",
+          "reason": "Repeated upper windows, counter stools and coffee urns produce clear horizontal and vertical repetitions.",
+          "evidenceKind": "visual-review"
+        },
+        "human-relationships": {
+          "status": "absent",
+          "reason": "Customers and server share the diner, but no emphasised reciprocal exchange of gaze, touch or coordinated action is clearly depicted.",
+          "evidenceKind": "visual-review"
+        },
+        "theatrical-staging": {
+          "status": "absent",
+          "reason": "Glass and architecture frame the diner, without curtains, stage-like presentation or an emphatically presented encounter.",
+          "evidenceKind": "visual-review"
+        },
+        "material-detail": {
+          "status": "unknown",
+          "reason": "Different materials are suggested, but the source resolution does not reliably establish fine local surface description.",
+          "evidenceKind": "visual-review"
+        },
+        "open-expanse": {
+          "status": "present",
+          "reason": "Broad uninterrupted stretches of empty pavement and dark window space surround the occupied diner.",
+          "evidenceKind": "visual-review"
+        }
+      },
+      "sourcedContext": [],
+      "contextStatus": "documented-separately"
+    },
+    "canon-picasso-guernica": {
+      "version": "artwork-attributes-v1",
+      "reviewed": true,
+      "reviewerType": "assistant-visual-review",
+      "sourceIdentity": {
+        "sourceUrl": "https://www.museoreinasofia.es/en/collections/artwork/guernica-0/",
+        "image": "assets/canonical-20261117/canon-picasso-guernica.webp",
+        "previewSha256": "1c629190caf6d139bac8c84c99feb58c4dbea4ca1470ca41c146016ea89b47fa"
+      },
+      "reviewedAsset": {
+        "image": "assets/canonical-20261117/canon-picasso-guernica.webp",
+        "sha256": "1c629190caf6d139bac8c84c99feb58c4dbea4ca1470ca41c146016ea89b47fa",
+        "width": 1440,
+        "height": 652,
+        "mediaBinding": "exact-institutional-local-reproduction",
+        "compositionMatch": "same-composition",
+        "sourceLimited": true,
+        "displayScale": "The actual full-composition local source was inspected at its native resolution. Unresolved fine surface evidence stays unknown."
+      },
+      "sourceUrls": [
+        "https://www.museoreinasofia.es/en/collections/artwork/guernica-0/",
+        "https://recursos.museoreinasofia.es/styles/large_landscape/public/Obra/DE00050_2.jpg.webp",
+        "https://www.museoreinasofia.es/en/node/37878"
+      ],
+      "reviewMethod": "Assistant inspected the actual complete institutional reproduction and separately assessed all sixteen criteria. No art-movement defaults or participant preferences were used.",
+      "attributes": {
+        "narrative-detail": {
+          "status": "present",
+          "reason": "The broken sword, small flower, separate lamps, held child and differently responding figures supply several local incident clues.",
+          "evidenceKind": "visual-review"
+        },
+        "imagined-world": {
+          "status": "unknown",
+          "reason": "Fragmentation and altered bodies are conspicuous, but expressive distortion alone does not establish a fantastical world under this criterion.",
+          "evidenceKind": "visual-review"
+        },
+        "dramatic-light": {
+          "status": "present",
+          "reason": "The pale central wedge, selected faces and lamps contrast strongly with deep black surrounding fields.",
+          "evidenceKind": "visual-review"
+        },
+        "layered-space": {
+          "status": "unknown",
+          "reason": "Window, floor and overlapping bodies suggest different positions, but continuous physical spatial stages are difficult to establish in the fragmented field.",
+          "evidenceKind": "visual-review"
+        },
+        "geometric-structure": {
+          "status": "present",
+          "reason": "Strong triangular wedges, straight divisions and sharply bounded grey and white fields organise the broad composition.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-gesture": {
+          "status": "present",
+          "reason": "Raised hands, extended arms, reaching and collapsed bodily actions are emphatic throughout the image.",
+          "evidenceKind": "visual-review"
+        },
+        "intimate-figures": {
+          "status": "present",
+          "reason": "Large close human figures and compact bodily groups occupy much of the foreground, including the woman holding a child.",
+          "evidenceKind": "visual-review"
+        },
+        "landscape": {
+          "status": "absent",
+          "reason": "Recognisable terrain, water and vegetation do not substantially organise the fragmented architectural and figural scene.",
+          "evidenceKind": "visual-review"
+        },
+        "expressive-distortion": {
+          "status": "present",
+          "reason": "Faces, limbs and animal bodies are conspicuously fragmented, stretched and altered in shape and proportion.",
+          "evidenceKind": "visual-review"
+        },
+        "precise-rendering": {
+          "status": "present",
+          "reason": "Clearly controlled graphic contours, divisions and individually delineated motifs are conspicuous across the image.",
+          "evidenceKind": "visual-review"
+        },
+        "visible-paint-marks": {
+          "status": "unknown",
+          "reason": "Drawn textures and patterned passages are visible, but the reproduction does not reliably distinguish separate painterly strokes from surface or image texture.",
+          "evidenceKind": "visual-review"
+        },
+        "pattern-rhythm": {
+          "status": "present",
+          "reason": "Repeated angled limbs, open mouths and pointed shapes form directional repetitions across the broad field.",
+          "evidenceKind": "visual-review"
+        },
+        "human-relationships": {
+          "status": "present",
+          "reason": "The woman visibly holds the child, forming an emphatic bodily relationship; other figures enact distinct responses nearby.",
+          "evidenceKind": "visual-review"
+        },
+        "theatrical-staging": {
+          "status": "unknown",
+          "reason": "The compressed, presented collective action suggests staging, but unequivocal stage-like framing is not established by the reproduction.",
+          "evidenceKind": "visual-review"
+        },
+        "material-detail": {
+          "status": "absent",
+          "reason": "Differentiated tactile fabric, skin or object surfaces are not the dominant treatment; shape and graphic contrast carry the forms.",
+          "evidenceKind": "visual-review"
+        },
+        "open-expanse": {
+          "status": "absent",
+          "reason": "Figures and geometric divisions fill the image, leaving no substantial uninterrupted field around the motifs.",
+          "evidenceKind": "visual-review"
+        }
+      },
+      "sourcedContext": [],
+      "contextStatus": "documented-separately"
     }
   }
 }

@@ -75,7 +75,8 @@ test('Absent, malformed and future gallery visits cannot become earlier match ex
 
 test('An expanded collection exposes the reserved fourth, fifth and sixth blocks without losing source identities',()=>{
   const currentNotes=journeyCurationNotes(expandedWorks),gallery=buildPaintingGallery({works:expandedWorks,notes:currentNotes});
-  const main=view(gallery,'all'),world=view(gallery,'world');assert.equal(main.workCount+world.workCount,expandedWorks.length);assert.equal(main.workCount,347);assert.equal(world.workCount,140);assert.equal(new Set([...items(main),...items(world)].map(item=>item.workId)).size,expandedWorks.length);assert.equal(items(main).some(item=>items(world).some(other=>item.workId===other.workId)),false);
+  const main=view(gallery,'all'),world=view(gallery,'world'),mainIds=items(main).map(item=>item.workId),worldIds=items(world).map(item=>item.workId);
+  assert.equal(main.workCount+world.workCount,expandedWorks.length);assert.deepEqual([...mainIds].sort(),[...currentNotes.collectionRouting.mainWorkIds].sort());assert.deepEqual([...worldIds].sort(),[...currentNotes.collectionRouting.worldWorkIds].sort());assert.equal(new Set([...mainIds,...worldIds]).size,expandedWorks.length);assert.equal(mainIds.some(id=>worldIds.includes(id)),false);
   for(const block of [4,5,6]){
     const reserved=currentNotes.reservePools['batch'+block]||[],actual=view(gallery,'block'+block);
     if(reserved.length)assert.deepEqual(actual.groups[0].workIds,reserved);

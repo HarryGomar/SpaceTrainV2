@@ -4,6 +4,7 @@ const COMMON=`
 uniform float u_time;
 uniform vec2 u_pointer;
 uniform vec2 u_wake;
+uniform vec2 u_ripple;
 uniform float u_energy;
 uniform float u_aspect;
 uniform vec2 u_resolution;
@@ -27,7 +28,8 @@ vec2 interact(vec2 p,float z,float seed){
  vec2 delta=(p-u_pointer)*vec2(u_aspect,1.);float distance=length(delta);
  float envelope=exp(-distance*distance/${FIELD_MOTION.radiusSquared})*u_energy;
  vec2 direction=delta/(distance+${FIELD_MOTION.directionSoftness});
- return p+direction*${FIELD_MOTION.repulsion}*envelope*mix(.45,.9,depth)/vec2(u_aspect,1.)+u_wake*envelope*mix(.45,.9,depth);
+ float ripple=sin(distance*${FIELD_MOTION.rippleFrequency}-u_ripple.y)*u_ripple.x*exp(-distance*distance/${FIELD_MOTION.rippleSpread})*u_energy;
+ return p+direction*(${FIELD_MOTION.repulsion}*envelope+ripple)*mix(.45,.9,depth)/vec2(u_aspect,1.)+u_wake*envelope*mix(.45,.9,depth);
 }
 float clearing(vec2 p){return u_mobile>.5?smoothstep(${PHONE_FIELD.clearingInner},${PHONE_FIELD.clearingOuter},length(p*vec2(${PHONE_FIELD.clearingX},${PHONE_FIELD.clearingY}))):smoothstep(.34,.70,length(p*vec2(1.65,2.6)));}
 `;
@@ -77,7 +79,7 @@ void main(){float radius=length(gl_PointCoord-.5);if(radius>.5)discard;vec4 c=te
 `;
 
 function shader(gl,type,source){const s=gl.createShader(type);gl.shaderSource(s,source);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)){const error=gl.getShaderInfoLog(s);gl.deleteShader(s);throw Error(error);}return s;}
-function program(gl,vertex,fragment){const v=shader(gl,gl.VERTEX_SHADER,vertex),f=shader(gl,gl.FRAGMENT_SHADER,fragment),p=gl.createProgram();gl.attachShader(p,v);gl.attachShader(p,f);gl.linkProgram(p);gl.deleteShader(v);gl.deleteShader(f);if(!gl.getProgramParameter(p,gl.LINK_STATUS)){const error=gl.getProgramInfoLog(p);gl.deleteProgram(p);throw Error(error);}return {p,uniforms:Object.fromEntries(['u_time','u_pointer','u_wake','u_energy','u_aspect','u_resolution','u_atlas','u_mobile'].map(k=>[k,gl.getUniformLocation(p,k)]))};}
+function program(gl,vertex,fragment){const v=shader(gl,gl.VERTEX_SHADER,vertex),f=shader(gl,gl.FRAGMENT_SHADER,fragment),p=gl.createProgram();gl.attachShader(p,v);gl.attachShader(p,f);gl.linkProgram(p);gl.deleteShader(v);gl.deleteShader(f);if(!gl.getProgramParameter(p,gl.LINK_STATUS)){const error=gl.getProgramInfoLog(p);gl.deleteProgram(p);throw Error(error);}return {p,uniforms:Object.fromEntries(['u_time','u_pointer','u_wake','u_ripple','u_energy','u_aspect','u_resolution','u_atlas','u_mobile'].map(k=>[k,gl.getUniformLocation(p,k)]))};}
 function mesh(gl,data,stride,attributes){const vao=gl.createVertexArray(),buffer=gl.createBuffer();gl.bindVertexArray(vao);gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(data),gl.STATIC_DRAW);for(const [location,size,offset] of attributes){gl.enableVertexAttribArray(location);gl.vertexAttribPointer(location,size,gl.FLOAT,false,stride*4,offset*4);}gl.bindVertexArray(null);return {vao,buffer,count:data.length/stride};}
 
 export function createOpeningRenderer(canvas){
@@ -104,7 +106,7 @@ export function createOpeningRenderer(canvas){
     resize(){surface.width=canvas.width;surface.height=canvas.height;gl.viewport(0,0,surface.width,surface.height);},
     draw({time,pointer,width,height}){
       gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,texture);
-      for(const [object,m,mode] of [[dots,dotMesh,gl.POINTS],[art,artMesh,gl.TRIANGLES]]){if(!m?.count)continue;gl.useProgram(object.p);const u=object.uniforms;gl.uniform1f(u.u_time,time);gl.uniform2f(u.u_pointer,pointer.x,pointer.y);gl.uniform2f(u.u_wake,pointer.wakeX||0,pointer.wakeY||0);gl.uniform1f(u.u_energy,pointer.energy);gl.uniform1f(u.u_aspect,width/Math.max(height,1));gl.uniform1f(u.u_mobile,mobile?1:0);gl.uniform2f(u.u_resolution,canvas.width,canvas.height);gl.uniform1i(u.u_atlas,0);gl.bindVertexArray(m.vao);gl.drawArrays(mode,0,m.count);}gl.bindVertexArray(null);
+      for(const [object,m,mode] of [[dots,dotMesh,gl.POINTS],[art,artMesh,gl.TRIANGLES]]){if(!m?.count)continue;gl.useProgram(object.p);const u=object.uniforms;gl.uniform1f(u.u_time,time);gl.uniform2f(u.u_pointer,pointer.x,pointer.y);gl.uniform2f(u.u_wake,pointer.wakeX||0,pointer.wakeY||0);gl.uniform2f(u.u_ripple,pointer.rippleStrength||0,pointer.ripplePhase||0);gl.uniform1f(u.u_energy,pointer.energy);gl.uniform1f(u.u_aspect,width/Math.max(height,1));gl.uniform1f(u.u_mobile,mobile?1:0);gl.uniform2f(u.u_resolution,canvas.width,canvas.height);gl.uniform1i(u.u_atlas,0);gl.bindVertexArray(m.vao);gl.drawArrays(mode,0,m.count);}gl.bindVertexArray(null);
       output.fillStyle='#f5f4f1';output.fillRect(0,0,canvas.width,canvas.height);output.drawImage(surface,0,0);
     },
     destroy(){releaseMesh(artMesh);releaseMesh(dotMesh);gl.deleteTexture(texture);gl.deleteProgram(art.p);gl.deleteProgram(dots.p);artMesh=null;dotMesh=null;surface.width=1;surface.height=1;gl.getExtension('WEBGL_lose_context')?.loseContext();}

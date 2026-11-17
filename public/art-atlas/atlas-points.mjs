@@ -3,13 +3,13 @@ import {recognitionWeight} from './curation-priority.mjs';
 const short=work=>work?.shortTitle||work?.title||'';
 const cornerPath=(width,height=width)=>{const x=width/2+3,y=height/2+3,k=6;return `M${-x+k} ${-y}h${-k}v${k}M${x-k} ${-y}h${k}v${k}M${-x+k} ${y}h${-k}v${-k}M${x-k} ${y}h${k}v${-k}`;};
 export const atlasThumbnailSize=zoom=>Math.min(100,40*Math.sqrt(Math.max(1,Number.isFinite(zoom)?zoom:1)));
-export function atlasPointLayout(groups,{get,selectedId,zoom=1,photos,position,pointKey,bounds}){
-  const expanded=photos&&zoom>=1.25;
+export function atlasPointLayout(groups,{get,selectedId,zoom=1,photos,position,pointKey,bounds,mode}){
+  const expanded=photos&&(mode==='comparisons'||zoom>=1.25);
   const visibleGroups=[...groups.values()].flatMap(group=>expanded?[...Map.groupBy(group,point=>point.workId).values()]:[group]);
   const entries=visibleGroups.map(group=>{const point=group.find(item=>pointKey(item)===selectedId)||[...group].sort((a,b)=>recognitionWeight(get(b.workId))-recognitionWeight(get(a.workId)))[0],[x,y]=position(point);return {group,point,work:get(point.workId),id:pointKey(point),x,y,displayX:x,displayY:y,priority:recognitionWeight(get(point.workId))};});
   const screenSize=atlasThumbnailSize(zoom),thumbnails=photos?expanded?new Set(entries.map(entry=>entry.id)):chooseAtlasThumbnails(entries,{zoom,selectedId,spacing:Math.SQRT2*(screenSize+6)}):new Set();
-  const layout=entries.map(entry=>({...entry,active:entry.id===selectedId,photo:thumbnails.has(entry.id),screenSize}));
-  if(expanded)placeAtlasImages(layout,{zoom,size:screenSize,bounds});
+  const layout=entries.map(entry=>({...entry,active:entry.id===selectedId,photo:thumbnails.has(entry.id),screenSize:mode==='comparisons'?Math.min(110,(entry.point.thumbnailSize||screenSize)*Math.sqrt(zoom)):screenSize}));
+  if(expanded&&mode!=='comparisons')placeAtlasImages(layout,{zoom,size:screenSize,bounds});
   return layout.sort((a,b)=>Number(a.active)-Number(b.active)||Number(a.photo)-Number(b.photo));
 }
 function geometry(entry,zoom){const {photo,active,screenSize,work}=entry,ratio=work?.width>0&&work?.height>0?work.width/work.height:1,photoWidth=screenSize*Math.min(1,ratio),photoHeight=screenSize*Math.min(1,1/ratio);return {size:screenSize/zoom,hit:(photo?screenSize/2+3:9)/zoom,dot:(active?4:2.8)/zoom,corner:photo?cornerPath(photoWidth,photoHeight):cornerPath(13),led:-(screenSize/2+1)/zoom,countX:(photo?photoWidth/2+4:9)/zoom,countY:(photo?-photoHeight/2+4:-6)/zoom};}
