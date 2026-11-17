@@ -4,6 +4,7 @@ import {buildDiagnosticRound,bindDiagnosticRound} from './explanation-followups.
 import {APPEAL_INVESTIGATION_PROTOCOL,selectAppealInvestigation,selectCollectionAppeal} from './appeal-investigations.mjs';
 import {sameOrdinalArtworkIdentity} from './ordinal-preference-graph.mjs';
 import {selectTasteInquiry} from './taste-inquiry.mjs';
+import {selectResponseInquiry} from './response-inquiries.mjs';
 import {museumPreferenceFindings} from './museum-preferences.mjs';
 import {validGallery} from './gallery-model.mjs';
 
@@ -33,6 +34,8 @@ export function nextProfileRefinement({works=[],rounds=[],answers={},attempts=[]
     return {round:{...round,evidence:{...round.evidence,batchIndex:selection?.batchIndex,profileRefinement:{protocol:PROFILE_REFINEMENT_PROTOCOL,focus,reason,categoryId,afterBaseRoundCount,sourceRoundIds:[...sourceRoundIds],slot:attempts.length+1,limit:PROFILE_REFINEMENT_LIMIT,selectionMethod:'editorial-uncertainty-and-disagreement',discoveryVote:false}}},focus,reason,categoryId,limit:PROFILE_REFINEMENT_LIMIT};
   }
   const parameters={works,rounds:history,answers,id,seed,annotationReviews,...selection};
+  const response=selectResponseInquiry(parameters);
+  if(response)return finish(response.round,response.focus,response.reason,response.sourceRoundIds,response.categoryId);
   const focusedAttempts=attempts.filter(round=>round.evidence?.appealInvestigation?.scope==='local').length;
   const local=focusedAttempts<3?selectAppealInvestigation(parameters):null;
   if(local)return finish(local.round,local.focus,local.reason,local.sourceRoundIds);

@@ -12,13 +12,13 @@ import REVIEWS from './artwork-attribute-reviews.json' with {type:'json'};
 import {validGallery,roomOf} from './gallery-model.mjs';
 import {museumPreferenceFindings} from './museum-preferences.mjs';
 import {readOpeningInquiries} from './opening-inquiries.mjs';
+import {buildTasteInquiry,qualifyAppealPatterns,inquiryObservations,evaluateAppealForecasts,inquirySensitivity} from './taste-inquiry.mjs';
 
 const unique=values=>[...new Set(values.filter(Boolean))],short=work=>work.shortTitle||work.title;
 const plain=value=>!!value&&typeof value==='object'&&!Array.isArray(value);
 const ids=round=>round.works.map(work=>work.id);
 const setKey=round=>JSON.stringify([...ids(round)].sort());
 export const INTELLIGENCE_VERSION='response-intelligence-v1';
-import {buildTasteInquiry,inquiryObservations,evaluateAppealForecasts,inquirySensitivity} from './taste-inquiry.mjs';
 const limits=['These are descriptions of this selection of paintings and questions, not population confidence or psychological causes.','Repeated works and different answers about one work remain related evidence.','Unmeasured answers and unknown artwork reviews remain unknown.'];
 
 /** Wider than the preference collector: statements, matches and contexts retain
@@ -263,10 +263,11 @@ function categories({patterns,responsePortrait,maps,context,recognition,grouping
 }
 
 export function buildProfileIntelligence({works=[],rounds=[],answers={},tastePatterns={},responsePortrait={},reportedContextChanges={},preferenceEvidence={},arrangementQualities={},saved={},records=[],existingObservations=responsePortrait.observations||[],annotationReviews=REVIEWS,nextRefinement,inquiryState}={}){
+  const inquiryOptions={works,rounds,answers,annotationReviews},inquiry=inquiryState||buildTasteInquiry(inquiryOptions);
+  tastePatterns={...tastePatterns,patterns:qualifyAppealPatterns(tastePatterns.patterns||[],inquiry)};
   const entries=collectResponseEvidence({works,rounds,answers}),continuous=entries.filter(e=>isContinuousPreferenceRound(e.round)),maps=mapReadings(entries),recognition=recognitionReadings(entries,preferenceEvidence),claims=claimReadings(entries,reportedContextChanges),grouping=groupingReadings(entries,{works,rounds,annotationReviews}),diagnostics=diagnosticReadings(entries,works,annotationReviews,rounds),museum=museumFitReadings(entries,works,rounds),opening=openingInquiryReadings({works,rounds,answers}),observations=[...maps.observations,...recognition.observations,...claims.observations,...grouping.observations,...diagnostics.observations,...museum,...opening];
   const ledger=entries.map(({round,answer,index})=>({roundId:round.id,index,kind:round.kind,construct:round.evidence?.construct||null,workIds:ids(round),measurementScope:isContinuousPreferenceRound(round)?CONTINUOUS_PROTOCOL:isComparisonPreferenceRound(round)?'order-only':isOverallAppealRound(round)?'captured-overall-appeal':round.kind==='grid'?round.axis:round.evidence?.instrumentRevision||round.kind,...(round.kind==='spectrum'?{positions:structuredClone(answer.positions),gapInterpretation:isContinuousPreferenceRound(round)?'reported-personal-appeal-difference':isComparisonPreferenceRound(round)?'order-and-exact-ties-only':'original-instrument'}:{}),...(round.kind==='grid'?{points:structuredClone(answer.points),axisDefinition:structuredClone(round.axisDefinition||AXES[round.axis])}:{}),...(round.kind==='choice-grid'?{selectedIds:[...answer.selectedIds],explicitNone:answer.explicitNone===true,unsure:answer.unsure===true,selectionMode:round.selectionMode,...(isExplicitFamiliarity(round)?{familiarity:structuredClone(answer.familiarity||{})}:{})}:{}),...(round.kind==='statements'?{claims:structuredClone(answer.claims)}:{})}));
   const result={version:INTELLIGENCE_VERSION,observations,categories:categories({patterns:tastePatterns.patterns||[],responsePortrait,maps,context:reportedContextChanges,recognition,grouping,arrangementQualities,entries,recordCount:records.length,existingObservations:[...existingObservations,...museum,...opening],nextRefinement}),recognition,contextExpectations:claims,grouping,diagnostics,maps:maps.records,appealSpacing:continuous.map(spacing),responseLedger:ledger,collectionIntentions:Object.entries(saved).filter(([,value])=>value?.look||value?.study).map(([workId,value])=>({workId,look:value.look===true,study:value.study===true,preferenceVote:false})),limits:[...limits]};
-  const inquiryOptions={works,rounds,answers,annotationReviews};
   const returnReadings=returnAppealReadings(entries);
   result.observations.push(...returnReadings);
   if(returnReadings.length){
@@ -274,7 +275,7 @@ export function buildProfileIntelligence({works=[],rounds=[],answers={},tastePat
     Object.assign(category,{readingTitle:reading.title,conclusion:reading.text,status:reading.status,statusLabel:reading.status==='supported'?'Reported across works':'A directly reported distinction',displayWorkIds:reading.displayWorkIds,support:reading.support,counter:reading.counter,sourceRoundIds:reading.sourceRoundIds,findingIds:[reading.id],competingExplanations:reading.competingExplanations});
     if(!category.nextComparison.roundId)category.nextComparison={title:reading.nextQuestion,reason:reading.nextQuestion};
   }
-  result.inquiry=inquiryState||buildTasteInquiry(inquiryOptions);
+  result.inquiry=inquiry;
   result.predictionEvaluation=evaluateAppealForecasts(inquiryOptions);
   result.sensitivity=inquirySensitivity(inquiryOptions);
   const threads=inquiryObservations(result.inquiry,works);
@@ -283,7 +284,7 @@ export function buildProfileIntelligence({works=[],rounds=[],answers={},tastePat
   if(thread&&result.inquiry.discoverySets>=3){
     appealCategory.relatedReadings=threads.slice(1);
     appealCategory.displayRoles=thread.displayRoles;
-    Object.assign(appealCategory,{readingTitle:thread.title,conclusion:thread.text,status:thread.status,statusLabel:thread.summaryEligible?'Tested across artists':thread.status==='mixed'?'An explanation weakened':'A comparison to investigate',displayWorkIds:thread.displayWorkIds,support:thread.support,counter:thread.counter,sourceRoundIds:thread.sourceRoundIds,competingExplanations:thread.competingExplanations,limits:[...limits,thread.boundary],findingIds:threads.map(t=>t.id)});
+    Object.assign(appealCategory,{readingTitle:thread.headline||thread.title,conclusion:thread.text,status:thread.status,statusLabel:thread.summaryEligible?'Checked on later work':thread.recurring?'Recurring in your ratings':thread.status==='mixed'?'A boundary in the pattern':'A named comparison',displayWorkIds:thread.displayWorkIds,support:thread.support,counter:thread.counter,sourceRoundIds:thread.sourceRoundIds,competingExplanations:thread.competingExplanations,limits:[...limits,thread.boundary],findingIds:threads.map(t=>t.id)});
     if(!appealCategory.nextComparison.roundId)appealCategory.nextComparison={title:thread.nextQuestion,reason:thread.nextQuestion};
   }
   // The ledger is an inspectable account of the actual instrument, not just

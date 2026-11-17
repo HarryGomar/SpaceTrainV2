@@ -356,7 +356,15 @@ export function buildTastePortrait({works=[],rounds=[],answers={},records=[],sav
   if(inquiryThread&&portrait.intelligence.inquiry.discoverySets>=3&&!['explicit-choice-contrast','direct-context-reports'].includes(portrait.profileSummary.basis)){
     // Recurrence alone remains an early reading until an advance prediction
     // transfers to different artists. A failed check keeps its local examples.
-    portrait.profileSummary={title:inquiryThread.summaryEligible?inquiryThread.title:inquiryThread.status==='mixed'?'Where an explanation stops':'A distinction to explore',text:inquiryThread.text,findingIds:[inquiryThread.id],workIds:inquiryThread.displayWorkIds,basis:inquiryThread.summaryEligible?'prospectively-tested-appeal':'local-conditional-appeal',threads:portrait.intelligence.observations.filter(o=>o.module==='conditional-appeal').slice(0,2)};
+    portrait.profileSummary={title:inquiryThread.headline,text:inquiryThread.text,findingIds:[inquiryThread.id],workIds:inquiryThread.displayWorkIds,basis:inquiryThread.summaryEligible?'prospectively-tested-appeal':inquiryThread.recurring?'recurring-observed-appeal':'local-conditional-appeal',threads:portrait.intelligence.observations.filter(o=>o.module==='conditional-appeal').slice(0,2)};
+  }
+  const directReading=portrait.observations.filter(o=>['making-and-taste','attention-and-appeal','connection-and-understanding','tension-and-return'].includes(o.module)&&o.support?.length&&(o.status==='supported'||o.supportingWorkCount>=3&&o.supportingSetCount>=2)).sort((a,b)=>(b.supportingWorkCount||0)-(a.supportingWorkCount||0))[0];
+  if(directReading&&(!inquiryThread?.recurring)&&!['explicit-choice-contrast'].includes(portrait.profileSummary.basis)){
+    portrait.profileSummary={title:directReading.title,text:directReading.text,findingIds:[directReading.id],workIds:directReading.displayWorkIds||directReading.evidence||[],basis:'direct-response-reading',threads:[{id:directReading.id,title:directReading.title,workIds:directReading.displayWorkIds||[]}]};
+  }
+  if(portrait.profileSummary.basis==='insufficient-recurring-patterns'&&portrait.intelligence.appealSpacing.length>=3){
+    const spacing=portrait.intelligence.appealSpacing,flat=spacing.filter(s=>s.range<=10).length>=spacing.length*.75,levels=spacing.flatMap(s=>s.values.map(v=>v.value));
+    if(flat)portrait.profileSummary={title:levels.every(v=>v>=65)?'Broad appeal, few dividing lines':levels.every(v=>v<=35)?'Few of these paintings appealed':'Your ratings stayed close together',text:'Your anchored ratings kept most paintings close together. The answers describe their absolute appeal, but do not support a dividing visual preference.',findingIds:[],workIds:[],basis:'recorded-appeal-range'};
   }
   portrait.observations.sort((a,b)=>b.priority-a.priority);
   portrait.nextSteps=unique([...portrait.intelligence.nextSteps,...portrait.nextSteps].map(item=>JSON.stringify(item))).map(item=>JSON.parse(item));

@@ -1,6 +1,6 @@
 # Investigating taste through 300 rounds
 
-The quiz now keeps an account of competing explanations, rather than treating a list of correlated qualities as several independent discoveries. A strong response can start an investigation. A broad appeal reading needs recurrence across independent discovery sets and artists, plus an advance prediction that survives a comparison with new artists. A failed prediction keeps the named earlier examples and withdraws the broader account.
+The quiz now keeps an account of competing explanations, rather than treating a list of correlated qualities as several independent discoveries. A strong response can start an investigation. A broad appeal reading needs recurrence across independent discovery sets and artists, plus an advance prediction that survives a later comparison. Selected transfer checks and ordinary discovery forecasts retain separate evidence roles. A failed prediction keeps the named earlier examples and withdraws the broader account.
 
 The implementation is in `public/art-atlas/taste-inquiry.mjs`. It supplies the same explanation definitions to selection, prospective checking, sensitivity analysis and the profile. The opening release retains ownership of the first 50 paintings and early local investigations. Saved questions retain their original definitions.
 
@@ -32,12 +32,12 @@ Two ordinary discovery sets per block can carry frozen forecasts after at least 
 | --- | --- | --- |
 | 1–50 | Keep the curated opening, eighteen ordinary appeal panels and its existing local investigation policy | The opening release owns landscape breadth and early follow-ups. The profile can name a concrete possibility without promoting it to a recurring explanation. |
 | 51–100 | Keep ordinary discovery dominant and the existing exact-repeat allocation | Slots 68 and 100 seek a disagreement between live accounts. Slot 73 seeks a within-artist distinction. A failed eligibility screen becomes discovery. |
-| 101–150 | Preserve declared ordinary cohorts and broad coverage | Slots 118 and 150 test live alternatives; slot 123 seeks a within-artist check. Recurring accounts remain provisional until a new-artist prediction succeeds. |
+| 101–150 | Preserve declared ordinary cohorts and broad coverage | Slots 118 and 150 test live alternatives; slot 123 seeks a within-artist check. A recurring descriptive headline is available now. Broader wording needs a successful frozen later prediction. |
 | 151–200 | Continue discovery and delayed repeats | Slots 168, 173 and 200 pursue the surviving accounts and their boundaries. |
 | 201–250 | Expand independent subject and artist coverage | Slots 218, 223 and 250 test transfer, including conditional accounts that survived earlier exceptions. |
 | 251–300 | Spend remaining comparisons on unresolved distinctions | Slots 268, 273 and 300 test the remaining live questions. If none is resolvable, broader discovery is the useful next move. |
 
-All blocks remain fifty base interactions. The optional refinement offer retains its ten-question limit and position before the profile. It can use the same inquiry selector after local follow-ups and actual museum-fit opportunities. An optional place is not filled with an ordinary discovery question merely to reach ten.
+All blocks remain fifty base interactions. The optional refinement offer retains its ten-question limit and position before the profile. It can use the same inquiry selector. A measured response dissociation can first nominate a typed map; local appeal follow-ups and actual museum-fit opportunities remain available. An optional place is not filled with an ordinary discovery question merely to reach ten.
 
 For a later inquiry, the selector requires at least three discovery sets, two accounts with at least two supporting groups, and recurrence in at least one account. It screens only released, eligible works, respects the neighbouring-question exclusions and prevents repeated appeal pairings. Transfer targets must both be unrated. A within-artist pair needs at least one unrated target and cannot earn a new-artist confirmation. Eight jointly known controls, at most three control differences and at least 75 percent agreement are required. Unknown reviews never provide a match.
 
@@ -62,7 +62,7 @@ The ledger retains the actual prompt, scale, source artworks and complete respon
 
 ## How a reading changes
 
-A candidate needs three independent supporting sets and preferred examples by at least three artists, with support at least twice the combined opposite and close groups, before it counts as recurring discovery. To earn prominence as a broad appeal reading it also needs an eligible, successful advance prediction with different artists. One within-artist result remains local. A clear prospective reversal withdraws headline eligibility. A tie keeps the alternatives open and cannot earn promotion.
+A candidate needs three independent supporting sets and preferred examples by at least three artists, with support at least twice the combined opposite and close groups, before it counts as recurring discovery. To earn broader appeal wording it also needs an eligible, successful advance prediction. This can be a selected new-artist transfer or a frozen ordinary discovery forecast with an informative pair by distinct known artists. Each ordinary forecast group supplies one check, never another independent discovery vote. Support must dominate opposing groups at least two to one. A clear contrary ordinary forecast withdraws eligibility even after a successful selected transfer. One within-artist result remains local. A clear prospective reversal withdraws the stronger headline. Recurrence can still earn a concrete retrospective headline without claiming tested transfer. A tie keeps the alternatives open and cannot earn promotion. An exact repeat can weaken an earlier account, but cannot add independent support. Its later gap is computed on the same original supporting artwork subset; a partially fresh source must not silently gain extra previously rated works when repeated.
 
 The profile shows a named comparison and its actual values, where it stops generalising, another plausible route, and a promising account that weakened when one exists. A counterexample stays beside the supporting works. Directly reported distinctions, such as wishing to revisit an unsettling work with moderate appeal, retain their own wording and evidence rather than inheriting the appeal model's thresholds.
 
@@ -81,10 +81,30 @@ Sensitivity removes a whole influential set, withholds a contributing artist, wi
 
 ## Reproducible verification
 
-Run `npm run test:art-atlas` for the full suite, or `node --test tests/art-atlas/taste-inquiry.test.mjs tests/art-atlas/profile-intelligence.test.mjs tests/art-atlas/journey-300.test.mjs` for the focused behaviour checks. Run `node tools/replay-art-atlas-intelligence.mjs` for six synthetic trajectories over real questions and paintings. The latter saves ignored local reports and rendered profile pages at 50, 100, 150 and 300.
+Run `npm run test:art-atlas` for the full suite, or `node --test tests/art-atlas/taste-inquiry.test.mjs tests/art-atlas/profile-intelligence.test.mjs tests/art-atlas/journey-300.test.mjs` for the focused behaviour checks. Run `node tools/replay-art-atlas-intelligence.mjs` for seven synthetic trajectories over real questions and paintings. The latter saves ignored local reports and rendered profile pages at 50, 100, 150 and 300.
 
-The trajectories cover layered space, context-dependent mark-making, sparse images alongside organised dense scenes, modest appeal with unsettling return intentions, all ties, and an isolated response with a later reversal. The answers are explicitly simulated. They are useful for finding selection, binding and interpretation errors; they establish no participant-level predictive accuracy or product calibration.
+The trajectories cover layered space, context-dependent mark-making, sparse images alongside organised dense scenes, modest appeal with unsettling return intentions, all ties, an isolated response, and a separate trajectory with genuine delayed reversals. The answers are explicitly simulated. They are useful for finding selection, binding and interpretation errors; they establish no participant-level predictive accuracy or product calibration.
 
 The original production commit also has catalogue-wide fixture and allocation test failures. A disposable baseline copy reproduces those failures. The six-block allocation assertion is corrected here to distinguish a reserved cohort member from a work receiving its first rating. A supplemental early appearance cannot be counted as a second first rating. Declared early ordinary placements continue to have their separate curation tests.
 
 Before adding more psychological language, the next iteration needs human pilot responses, post-choice reports of which difference mattered, reviewed matched comparisons for specific disputed compositions, and a protected broadly sampled evaluation pool. A second session is needed before describing long-term stability. Nothing in the present annotations identifies a visual scan path, an unconscious motive or a population percentile.
+
+## Targeted interaction types
+
+The last flexible place in each later block can now choose what to measure. A directly recorded separation between appeal and admiration, appeal and attention, understanding and connection, or modest appeal and wish to return can nominate another three-work map under that exact instrument. The group contains an actual focus work, a measured boundary where available, and an artwork already rated for appeal but not yet measured on that axis. No unasked answer is predicted.
+
+The router prices six separate judgments over three paintings, prefers a stronger recorded separation and a real measured boundary, prevents repeated focus anchors, and allows one typed check per block. It preserves the source map, axis definition, values and previous appeal responses. These selected maps never become new independent discovery evidence, including in the admiration channel. When no useful typed question is available, the slot can test an appeal explanation or return to discovery.
+
+## Share screens
+
+The profile now has a Share profile control with a preview and four available aspects: overview, paintings, a recorded contrast, and wish to return. An aspect is absent when it lacks source evidence. The overview uses the site's open artwork constellation, coloured quality threads and separate response highlights. Paintings retain their full compositions. The contrast and return screens keep actual axis scores separate. A positive rating is not relabelled an explicit favourite, and declared favourites remain unranked.
+
+The original export used boxed images, divider lines, a report header and a credits block. The user rejected that direction. The replacement follows the actual live profile composition; subsequent user feedback removed the visible credits block and tightened the return screen. Source URLs and image credits remain in the internal share model and existing artwork views. The downloaded PNG contains only the selected reading, with no raw response archive or notes. Generation occurs locally, and native sharing opens only when the user requests it.
+
+The export is 1080 by 1600 pixels. Browser checks exercised preview changes and downloaded each available aspect using simulated answers. Native sharing to an external destination was not exercised. Saved local previews are ignored artifacts.
+
+## Final verification checkpoint
+
+Seven synthetic trajectories completed all six blocks with 18 ordinary appeal panels per block. Rendered profiles were examined at 50, 100, 150 and 300. The genuine reversal trajectory includes an actual delayed repeat of journey-070 at journey-114, with four substantial rating reversals. At 150 the depth trajectory produces “You tend to favour scenes with depth”; the reversal trajectory withdraws that stronger depth reading and instead leads with the separately measured admiration distinction. These are synthetic behaviour checks, not evidence about a real person's taste.
+
+The full suite checkpoint ran 1127 tests: 1100 passed, 26 inherited failures, and one skipped private-data check. Normalised failure names match the reproduced baseline, with no new failures. The build passed. Subsequent share-copy and layout changes have separate focused checks; the final decision trail records their counts. Independent review found and reproduced forecast and recurrence overclaims; regressions cover the corrections. Human pilot calibration, a protected evaluation pool and later-session stability remain outstanding. The current branch is reviewable work, not a new production deployment.

@@ -13,6 +13,7 @@ import {bindTasteAttribution,captureArtworkExposure} from '../public/art-atlas/r
 import {createSortingRecord,placeSortingWork} from '../public/art-atlas/sorting-table.mjs';
 import {createGalleryRecord,gallerySlots} from '../public/art-atlas/gallery-model.mjs';
 import {renderTastePortrait} from '../public/art-atlas/taste-portrait-view.mjs';
+import {buildProfileShareAspects} from '../public/art-atlas/profile-share.mjs';
 
 const ids=r=>r.works.map(w=>w.id),bounded=n=>Math.max(0,Math.min(100,Math.round(n)));
 const v=(w,k)=>reviews.reviews[w.id]?.attributes[k]?.status==='present'?1:reviews.reviews[w.id]?.attributes[k]?.status==='absent'?0:null;
@@ -22,7 +23,8 @@ const trajectories={
   'sparse-and-organised':w=>v(w,'open-expanse')===1?90:v(w,'narrative-detail')===1&&v(w,'layered-space')===1?85:30,
   'unsettling-returns':w=>40+20*(v(w,'imagined-world')??.5)-10*(v(w,'expressive-distortion')??.5),
   'all-tied':()=>75,
-  'isolated-and-reversing':(w,index)=>w.id==='monet-water-lilies'?(index<100?99:10):50+((w.id.length%5)-2)*2
+  'isolated-and-reversing':(w,index)=>w.id==='monet-water-lilies'?(index<100?99:10):50+((w.id.length%5)-2)*2,
+  'genuine-reversals':(w,index)=>index<100?25+60*(v(w,'layered-space')??.5):75-60*(v(w,'layered-space')??.5)
 };
 
 export async function replay(name,rate=trajectories[name]){
@@ -69,8 +71,10 @@ export async function replay(name,rate=trajectories[name]){
     if(process.argv[1]?.endsWith('replay-art-atlas-intelligence.mjs')&&[50,100,150,300].includes((block+1)*50)){
       const esc=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
       const markup=renderTastePortrait({portrait:profile,works:catalogue,rounds:history,answers:data.answers,esc,image:w=>`<img src="http://127.0.0.1:56124/art-atlas/${esc(w.image)}" alt="${esc(w.title)}">`});
-      const styles=['style','deep-study','taste-portrait','profile-reading','taste-profile','task-signals','mobile-layout'];
-      await fs.writeFile(new URL(`../artifacts/art-atlas/qa-${name}-${(block+1)*50}.html`,import.meta.url),`<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Simulated Art Atlas profile</title>${styles.map(s=>`<link rel="stylesheet" href="http://127.0.0.1:56124/art-atlas/${s}.css">`).join('')}<body><div class="site-shell"><p>SIMULATED ANSWERS · ${esc(name)} · ${(block+1)*50} rounds</p><main>${markup}</main></div></body></html>`);
+      const styles=['style','deep-study','taste-portrait','profile-reading','taste-profile','task-signals','mobile-layout','profile-share'];
+      const shareData=JSON.stringify(buildProfileShareAspects({portrait:profile,works:catalogue,simulation:true})).replaceAll('<','\\u003c');
+      const shareScript=`<script type="module">import {openProfileShare} from 'http://127.0.0.1:56126/art-atlas/profile-share.mjs';const aspects=${shareData};document.querySelector('[data-action="deep-share"]')?.addEventListener('click',()=>openProfileShare({aspects,imageBase:'http://127.0.0.1:56126/art-atlas/'}));</script>`;
+      await fs.writeFile(new URL(`../artifacts/art-atlas/qa-${name}-${(block+1)*50}.html`,import.meta.url),`<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Simulated Art Atlas profile</title>${styles.map(s=>`<link rel="stylesheet" href="http://127.0.0.1:56124/art-atlas/${s}.css">`).join('')}<body><div class="site-shell"><p>SIMULATED ANSWERS · ${esc(name)} · ${(block+1)*50} rounds</p><main>${markup}</main></div>${shareScript}</body></html>`);
     }
     const inquiry=profile.intelligence.inquiry;
     checkpoints.push({round:(block+1)*50,summary:profile.profileSummary,discoverySets:inquiry.discoverySets,discoveryWorks:inquiry.discoveryWorkIds.length,inquiryChecks:inquiry.checks.map(c=>({roundId:c.roundId,actual:c.actual,values:c.values,predictions:c.predictions.map(p=>({id:p.id,prediction:p.prediction})),outcome:c.outcome,sourceChanged:c.sourceChanged})),candidates:inquiry.candidates.slice(0,5).map(c=>({id:c.id,direction:c.direction,status:c.status,support:c.supportingSets,opposing:c.opposingSets,artists:c.artistCount,summaryEligible:c.summaryEligible,outside:c.outsideContext})),prediction:profile.intelligence.predictionEvaluation,sensitivity:profile.intelligence.sensitivity,categories:profile.intelligence.categories.map(c=>({id:c.id,status:c.status,conclusion:c.conclusion})),ordinaryPanels:history.filter(r=>r.evidence?.panelNumber&&r.evidence?.construct==='preference').length,sessionBytes:Buffer.byteLength(JSON.stringify(data))});
@@ -78,7 +82,9 @@ export async function replay(name,rate=trajectories[name]){
     console.log(JSON.stringify({trajectory:name,round:(block+1)*50,discoverySets:inquiry.discoverySets,checks:inquiry.checks.length,title:profile.profileSummary.title}));
     if(block<5){const shownBefore=JSON.stringify(data.shown);data=extendJourneySession(data,catalogue,3000+block);assert.equal(JSON.stringify(data.shown),shownBefore);}
   }
-  return {simulation:true,name,questions,checkpoints};
+  const repeatResponses=history.filter(r=>r.evidence?.repeatOf&&data.answers[r.id]?.positions&&data.answers[r.evidence.repeatOf]?.positions).map(r=>({roundId:r.id,repeatOf:r.evidence.repeatOf,values:ids(r).map(id=>({workId:id,before:data.answers[r.evidence.repeatOf].positions[id],after:data.answers[r.id].positions[id]}))}));
+  if(name==='genuine-reversals')assert.ok(repeatResponses.some(r=>r.values.some(v=>Math.abs(v.before-v.after)>=50&&(v.before-50)*(v.after-50)<0)),'The actual scheduled repeat must contain a genuine reversal.');
+  return {simulation:true,name,questions,checkpoints,repeatResponses};
 }
 
 if(process.argv[1]?.endsWith('replay-art-atlas-intelligence.mjs')){
@@ -86,5 +92,5 @@ if(process.argv[1]?.endsWith('replay-art-atlas-intelligence.mjs')){
   const names=process.argv.slice(2).length?process.argv.slice(2):Object.keys(trajectories),reports=[];
   for(const name of names){assert.ok(trajectories[name],name);reports.push(await replay(name));}
   const filename=names.length===Object.keys(trajectories).length?'intelligence-replays.json':'intelligence-replay-'+names.join('-')+'.json';
-  await fs.writeFile(new URL('../artifacts/art-atlas/'+filename,import.meta.url),JSON.stringify({simulation:true,reports},null,2)+'\n');
+  await fs.writeFile(new URL('../artifacts/art-atlas/'+filename,import.meta.url),JSON.stringify({simulation:true,generatedAt:new Date().toISOString(),reports},null,2)+'\n');
 }

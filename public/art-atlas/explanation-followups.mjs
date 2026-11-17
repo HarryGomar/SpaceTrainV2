@@ -10,6 +10,7 @@ import {sameOrdinalArtworkIdentity} from './ordinal-preference-graph.mjs';
 import {APPEAL_INVESTIGATION_PROTOCOL,selectAppealInvestigation,buildAppealExploration,compareAppealControls} from './appeal-investigations.mjs';
 import {selectTasteInquiry} from './taste-inquiry.mjs';
 import {selectOpeningInquiry} from './opening-inquiries.mjs';
+import {selectResponseInquiry} from './response-inquiries.mjs';
 
 export const DIAGNOSTIC_PROTOCOL='explanation-diagnostic-v1';
 const unique=values=>[...new Set(values)],ids=round=>round.works.map(work=>work.id),pairs=values=>values.flatMap((a,i)=>values.slice(i+1).map(b=>[a,b]));
@@ -106,12 +107,13 @@ export function bindDiagnosticRound({round,works=[],rounds=[],answers={},annotat
     const options={id:round.id,works,rounds:history,answers:earlierAnswers,seed:diagnostic.seed,annotationReviews,...selection};
     const grouping=diagnostic.kind==='grouping'?bindGrouping(round,works,history,earlierAnswers,read,selection):null;
     if(grouping?.evidence?.diagnostic?.kind==='grouping'&&!grouping.unavailable)return grouping;
-    const planned=['explore','breadth'].includes(diagnostic.mode)||grouping?null:round.evidence.batchIndex===0?selectOpeningInquiry({...options,mode:diagnostic.mode}):diagnostic.inquiryMode&&selection?.candidateIds?selectTasteInquiry({...options,mode:diagnostic.inquiryMode}):selectAppealInvestigation({...options,mode:diagnostic.mode});
+    const response=diagnostic.interactionPolicy==='choose-measure'&&selection?.candidateIds?selectResponseInquiry(options):null;
+    const planned=response||(['explore','breadth'].includes(diagnostic.mode)||grouping?null:round.evidence.batchIndex===0?selectOpeningInquiry({...options,mode:diagnostic.mode}):diagnostic.inquiryMode&&selection?.candidateIds?selectTasteInquiry({...options,mode:diagnostic.inquiryMode}):selectAppealInvestigation({...options,mode:diagnostic.mode}));
     const fallback=planned?null:buildAppealExploration({...options,landscapeCheck:diagnostic.mode==='explore'});
     const bound=planned?.round||fallback;
     if(!bound)return {...round,unavailableReason:'The released catalogue could not supply a fresh comparison for this question.'};
     return {...bound,evidence:{...bound.evidence,journeyRevision:round.evidence.journeyRevision,batchIndex:round.evidence.batchIndex,selectionSeed:round.evidence.selectionSeed,
-      diagnostic:{...diagnostic,binding:'bound',kind:planned?'appeal-investigation':'breadth-exploration',...(planned?{sourceRoundIds:planned.sourceRoundIds}:{reason:'No adequately matched comparison was selected for this slot.'})}}};
+      diagnostic:{...diagnostic,binding:'bound',kind:response?'response-inquiry':planned?'appeal-investigation':'breadth-exploration',...(planned?{sourceRoundIds:planned.sourceRoundIds,reason:planned.reason}:{reason:'No adequately matched comparison was selected for this slot.'})}}};
   }
   return diagnostic.kind==='grouping'?bindGrouping(round,works,history,earlierAnswers,read,selection):bindQuality(round,works,history,earlierAnswers,read);
 }

@@ -2,7 +2,7 @@ import REVIEWS from './artwork-attribute-reviews.json' with {type:'json'};
 import {ARTWORK_ATTRIBUTE_DEFINITIONS} from './artwork-attribute-definitions.mjs';
 import {resolveArtworkAttributes} from './artwork-quality-review.mjs';
 import {collectTastePatternSources} from './taste-axes.mjs';
-import {withContinuousPreference,isContinuousPreferenceRound,CONTINUOUS_PROTOCOL} from './continuous-preference.mjs';
+import {withContinuousPreference,isContinuousPreferenceRound} from './continuous-preference.mjs';
 import {sameOrdinalArtworkIdentity,artworkPreviewHashes} from './ordinal-preference-graph.mjs';
 import {isStudyEligibleArtwork} from './study-eligibility.mjs';
 import {compareAppealControls} from './appeal-investigations.mjs';
@@ -13,6 +13,7 @@ const unique=a=>[...new Set(a)];
 const mean=a=>a.length?a.reduce((s,v)=>s+v,0)/a.length:0;
 const clamp=n=>Math.max(0,Math.min(100,n));
 const title=k=>ARTWORK_ATTRIBUTE_DEFINITIONS[k].label.toLowerCase();
+const sentence=s=>s.slice(0,1).toUpperCase()+s.slice(1);
 const short=w=>w.shortTitle||w.title;
 const artist=w=>w.artistKnown!==false&&w.artist&&!/unknown|anonymous|unidentified/i.test(w.artist)?w.artist.trim().toLowerCase():null;
 const pairKey=(a,b)=>JSON.stringify([a,b].sort());
@@ -32,7 +33,7 @@ export const CONDITIONAL_TASTE_QUESTIONS=Object.freeze([
 ].map(([id,driver,context,contextValue])=>Object.freeze({id,driver,context,contextValue})));
 const specs=[...baseSpecs,...CONDITIONAL_TASTE_QUESTIONS];
 const inContext=(spec,v)=>!spec.context||v?.[spec.context]===spec.contextValue;
-const name=spec=>title(spec.driver)+(spec.context?` ${spec.contextValue?'with':'without'} ${title(spec.context)}`:' across subjects');
+const name=spec=>title(spec.driver)+(spec.context?` ${spec.contextValue?'with':'without'} ${title(spec.context)}`:'');
 const score=(spec,v)=>v?.[spec.driver]===null||v?.[spec.driver]===undefined||!inContext(spec,v)?null:spec.direction*(v[spec.driver]-.5)*2;
 const prediction=(spec,a,b)=>{const x=score(spec,a),y=score(spec,b);return x===null||y===null?null:sign(x-y,.5);};
 
@@ -58,14 +59,15 @@ function groupsFor(spec,sets,rows,{omitWorkId,equalVotes=false}={}){
     if(!yes.length||!no.length)return [];
     const gap=mean(yes.map(i=>i.value))-mean(no.map(i=>i.value));
     const ordered=[...yes.flatMap(a=>no.map(b=>({a,b,gap:a.value-b.value})))].sort((a,b)=>Math.abs(b.gap)-Math.abs(a.gap));
-    return [{roundId:set.entry.round.id,gap,vote:sign(gap),weight:equalVotes?sign(gap):Math.max(-1,Math.min(1,gap/40)),workIds:items.map(i=>i.work.id),example:{workIds:[ordered[0].a.work.id,ordered[0].b.work.id],values:[ordered[0].a.value,ordered[0].b.value]},artists:unique(items.map(i=>artist(i.work)).filter(Boolean))}];
+    const example=ordered.find(pair=>Math.sign(pair.gap)===Math.sign(gap))||ordered[0];
+    return [{roundId:set.entry.round.id,gap,vote:sign(gap),weight:equalVotes?sign(gap):Math.max(-1,Math.min(1,gap/40)),workIds:items.map(i=>i.work.id),example:{workIds:[example.a.work.id,example.b.work.id],values:[example.a.value,example.b.value]},artists:unique(items.map(i=>artist(i.work)).filter(Boolean))}];
   });
 }
 
 function summarize(spec,groups){
   const direction=sign(mean(groups.map(g=>g.weight)),.08),support=groups.filter(g=>g.vote===direction&&direction),counter=groups.filter(g=>g.vote===-direction&&direction),close=groups.filter(g=>!g.vote);
   const preferredArtists=unique(support.flatMap(g=>{const high=g.example.values[0]>g.example.values[1]?0:1;return [g.example.workIds[high]];}));
-  return {...spec,direction,title:(direction<0?'Less ':'')+name(spec),groups,support,counter,close,independentSets:groups.length,supportingSets:support.length,opposingSets:counter.length,artistIds:preferredArtists,weight:Math.abs(mean(groups.map(g=>g.weight))),recurring:support.length>=3&&support.length>=2*(counter.length+close.length)};
+  return {...spec,direction,title:sentence((direction<0?'less emphasis on ':'')+name(spec)),groups,support,counter,close,independentSets:groups.length,supportingSets:support.length,opposingSets:counter.length,artistIds:preferredArtists,weight:Math.abs(mean(groups.map(g=>g.weight))),recurring:support.length>=3&&support.length>=2*(counter.length+close.length)};
 }
 
 /** One fresh artwork contributes once. Selected checks never become discovery. */
@@ -73,14 +75,38 @@ export function buildTasteInquiry(options={}){
   const state=options.state||sourceState(options),{sets,rows}=state;
   const candidates=specs.map(spec=>summarize(spec,groupsFor(spec,sets,rows))).filter(c=>c.direction&&c.supportingSets);
   const checks=readTasteInquiryChecks({...options,state});
+  const forecasts=evaluateAppealForecasts({...options,state});
   for(const c of candidates){
     c.artistCount=unique(c.artistIds.map(id=>rows.get(id)?.artist).filter(Boolean)).length;
     c.recurring=c.recurring&&c.artistCount>=3;
     c.prospectiveChecks=checks.filter(check=>!check.sourceChanged&&check.predictions.some(p=>p.id===c.id&&p.direction===c.direction));
     c.confirmations=c.prospectiveChecks.filter(check=>check.outcome==='separated'&&check.predictions.find(p=>p.id===c.id).prediction===check.actual);
     c.reversals=c.prospectiveChecks.filter(check=>check.outcome==='separated'&&check.predictions.find(p=>p.id===c.id).prediction!==check.actual);
-    c.summaryEligible=c.recurring&&c.confirmations.some(check=>check.newArtistTransfer)&&!c.reversals.length;
-    c.status=c.reversals.length?'mixed':c.summaryEligible?'supported':'provisional';
+    c.repeatReversals=state.checks.filter(check=>check.entry.round.evidence?.repeatOf).flatMap(check=>{
+      const ids=r=>r.works.map(w=>w.id).sort().join('|');
+      let source=state.history.find(r=>r.id===check.entry.round.evidence.repeatOf),visited=new Set();
+      while(source?.evidence?.repeatOf&&!visited.has(source.id)){visited.add(source.id);source=state.history.find(r=>r.id===source.evidence.repeatOf);}
+      const original=c.support.find(g=>g.roundId===source?.id);
+      if(!source||ids(source)!==ids(check.entry.round)||!original)return [];
+      // A partially fresh discovery supplied only this subset. Compare the
+      // repeat on that same subset, never on additional previously rated works.
+      const aligned={...check,items:check.items.filter(item=>original.workIds.includes(item.work.id))};
+      return groupsFor(c,[aligned],state.rows).filter(g=>g.vote===-c.direction).map(g=>({...g,sourceRoundId:source.id}));
+    });
+    c.forecastChecks=forecasts.records.flatMap(record=>{
+      const test=record.conditional.find(test=>test.id===c.id&&test.direction===c.direction);
+      if(!test)return [];
+      const informative=test.pairs.filter(pair=>pair.predicted!==0),support=informative.filter(pair=>pair.actual===pair.predicted),opposing=informative.filter(pair=>pair.actual===-pair.predicted);
+      const supporting=support.length>0&&support.length>=2*opposing.length,opposed=opposing.length>0&&opposing.length>=2*support.length;
+      const paired=(opposed?opposing:support)[0],artists=paired?paired.workIds.map(id=>rows.get(id)?.artist):[];
+      if(!paired||artists.some(a=>!a)||artists[0]===artists[1])return [];
+      return [{roundId:record.roundId,workIds:paired.workIds,values:paired.workIds.map(id=>record.values.find(v=>v.workId===id).actual),prediction:paired.predicted,supporting,opposing:opposed,sourceRole:'prospectively-forecast-discovery',independentDiscoveryVotes:1}];
+    });
+    const forecastSupport=c.forecastChecks.filter(t=>t.supporting),forecastCounter=c.forecastChecks.filter(t=>t.opposing);
+    c.forecastSupported=forecastSupport.length>0&&forecastSupport.length>=2*forecastCounter.length;
+    c.forecastReversals=forecastCounter;
+    c.summaryEligible=c.recurring&&(c.confirmations.some(check=>check.newArtistTransfer)||c.forecastSupported)&&!c.reversals.length&&!c.repeatReversals.length&&!forecastCounter.length;
+    c.status=c.reversals.length||c.repeatReversals.length||forecastCounter.length?'mixed':c.summaryEligible?'supported':'provisional';
     c.rivals=candidates.filter(other=>other.id!==c.id&&(other.driver===c.driver||other.support.some(g=>c.support.some(h=>g.roundId===h.roundId)))).sort((a,b)=>b.supportingSets-a.supportingSets).slice(0,4).map(other=>({id:other.id,title:other.title,direction:other.direction}));
     c.unresolved=['Artist, handling, subject and prior familiarity can vary together.','The annotations describe the image; they do not identify what caught your eye.'];
     c.boundary=c.context?`This account concerns works ${c.contextValue?'with':'without'} ${title(c.context)}. Other subjects need their own comparison.`:'A contrast in this sample does not apply to every painting with the same quality.';
@@ -96,7 +122,7 @@ export function qualifyAppealPatterns(patterns,inquiry){
     if(pattern.channel!=='personal-appeal')return pattern;
     const candidate=inquiry.candidates.find(c=>c.id===pattern.qualityKey&&c.direction===pattern.direction);
     const passed=candidate?.summaryEligible||pattern.investigation?.status==='transferred-once';
-    if(passed&&!candidate?.reversals.length)return pattern;
+    if(passed&&candidate?.status!=='mixed')return pattern;
     return {...pattern,status:candidate?.status==='mixed'?'mixed':'provisional',summaryEligible:false,overallEligible:false,prospectiveStatus:candidate?.status==='mixed'?'challenged':'not-yet-established'};
   });
 }
@@ -151,7 +177,7 @@ export function freezeAppealForecast({round,works,rounds=[],answers={},annotatio
 }
 
 export function evaluateAppealForecasts(options={}){
-  const state=sourceState(options),records=[];
+  const state=options.state||sourceState(options),records=[];
   for(const {round,answer}of state.sources.entries){
     const f=round.evidence?.appealForecast;
     if(f?.protocol!==TASTE_INQUIRY_PROTOCOL||!f.frozenBeforeAnswer||!isContinuousPreferenceRound(round)||trainingChanged(f,state,options.answers||{}))continue;
@@ -168,7 +194,7 @@ export function evaluateAppealForecasts(options={}){
     records.push({roundId:round.id,design:f.design,values,mae:mean(values.map(v=>Math.abs(v.actual-v.predicted))),localMae:localValues.length===values.length?mean(localValues.map(v=>Math.abs(v.actual-f.localPredictions[v.workId]))):null,meanOnlyMae:mean(values.map(v=>Math.abs(v.actual-f.meanPrediction))),pairs,conditional,independentSetCount:1});
   }
   const local=records.filter(r=>r.localMae!==null);
-  const conditionalIds=unique(records.flatMap(r=>r.conditional.map(c=>c.id))),conditional=conditionalIds.map(id=>{const sets=records.flatMap(r=>r.conditional.filter(c=>c.id===id&&c.setAgreement!==null));return {id,sets:sets.length,meanSetAgreement:mean(sets.map(s=>s.setAgreement))};});
+  const conditionalIds=unique(records.flatMap(r=>r.conditional.map(c=>c.id))),conditional=conditionalIds.map(id=>{const sets=records.flatMap(r=>r.conditional.filter(c=>c.id===id&&c.setAgreement!==null));return {id,sets:sets.length,meanSetAgreement:sets.length?mean(sets.map(s=>s.setAgreement)):null};});
   return {records,sets:records.length,mae:records.length?mean(records.map(r=>r.mae)):null,localSets:local.length,localMae:local.length?mean(local.map(r=>r.localMae)):null,meanOnlyMae:records.length?mean(records.map(r=>r.meanOnlyMae)):null,conditional,scope:'Prospective error on ordinary curated discovery sets. Not collection-wide accuracy; no calibration claim.'};
 }
 
@@ -243,10 +269,24 @@ export function inquiryObservations(inquiry,works){
     const example=c.support[0]?.example;if(!example)return null;
     const preferred=example.values[0]>example.values[1]?0:1,foil=1-preferred;
     const evidence=g=>({roundId:g.roundId,label:'Captured personal appeal',workIds:g.example.workIds,detail:g.example.workIds.map((id,i)=>`${short(byId.get(id))}: ${g.example.values[i]}`).join('; '),responseGap:Math.abs(g.gap)});
-    const latest=c.reversals.at(-1)||c.confirmations.at(-1),names=example.workIds.map(id=>short(byId.get(id)));
-    const text=`${names[preferred]} appealed more than ${names[foil]} (${example.values[preferred]} and ${example.values[foil]}). ${c.title} is ${c.summaryEligible?'a recurring distinction that also survived a new-artist comparison':c.reversals.length?'an earlier explanation weakened by a later comparison':'a possibility to investigate'}. `+(latest?`${latest.workIds.map(id=>short(byId.get(id))).join(' and ')} ${c.reversals.length?'favoured a different prediction':'provided a prospective check'} (${latest.values.join(' and ')}). `:'')+c.boundary+(c.context&&c.outsideContext.opposing?` Outside this context, ${c.outsideContext.opposing} discovery ${c.outsideContext.opposing===1?'set went':'sets went'} the other way.`:'');
+    const transfer=c.confirmations.findLast(check=>check.newArtistTransfer),confirmation=transfer||c.confirmations.at(-1),forecast=c.forecastChecks.findLast(check=>check.supporting);
+    const latest=c.reversals.at(-1)||confirmation,names=example.workIds.map(id=>short(byId.get(id)));
+    const repeat=c.repeatReversals.at(-1),forecastReversal=c.forecastReversals.at(-1);
+    const account=c.summaryEligible?`The direction recurred in ${c.supportingSets} comparison groups across ${c.artistCount} artists and held up on a later comparison predicted in advance.`:c.status==='mixed'?`Your earlier choices repeatedly favoured ${c.title.toLowerCase()}, but a later ${repeat?'return to the same works':'comparison'} went the other way.`:c.recurring?`Across ${c.supportingSets} comparison groups, your higher ratings repeatedly favoured ${c.title.toLowerCase()}. How far this transfers remains open.`:'This is a clear difference between these paintings, rather than a conclusion about every painting you will like.';
+    const text=`${names[preferred]} appealed more than ${names[foil]} (${example.values[preferred]} and ${example.values[foil]}). ${account} `+(latest?`${latest.workIds.map(id=>short(byId.get(id))).join(' and ')} ${c.reversals.length?'favoured a different prediction':latest.newArtistTransfer?'provided a prospective transfer check':'provided a local check'} (${latest.values.join(' and ')}). `:'')+(repeat?`${repeat.example.workIds.map(id=>short(byId.get(id))).join(' and ')} received ${repeat.example.values.join(' and ')} on the delayed return. `:'')+c.boundary+(c.context&&c.outsideContext.opposing?` Outside this context, ${c.outsideContext.opposing} discovery ${c.outsideContext.opposing===1?'set went':'sets went'} the other way.`:'');
     const counterId=c.counter[0]?.example.workIds[c.direction>0?0:1]||c.reversals.at(-1)?.workIds[0],displayWorkIds=unique([example.workIds[preferred],example.workIds[foil],counterId].filter(Boolean));
-    return {id:'inquiry-'+c.id,module:'conditional-appeal',title:c.title,text,status:c.status,summaryEligible:c.summaryEligible,priority:c.summaryEligible?18:c.status==='mixed'?12:11,channel:'personal-appeal',displayWorkIds,displayRoles:Object.fromEntries(displayWorkIds.map(id=>[id,id===counterId?'counterexample':id===example.workIds[foil]?'comparison':'support'])),support:c.support.slice(0,2).map(evidence),counter:[...c.counter.slice(0,1).map(evidence),...(c.reversals.slice(-1).map(t=>({roundId:t.roundId,label:'Prospective counterexample',workIds:t.workIds,detail:t.values.join(' and ')})))],sourceRoundIds:unique([...c.support,...c.counter].map(g=>g.roundId).concat(c.prospectiveChecks.map(t=>t.roundId))),competingExplanations:c.rivals.map(r=>r.title),alternatives:c.unresolved,boundary:c.boundary,nextQuestion:c.context?`Does ${title(c.driver)} still matter outside this subject?`:`Does ${title(c.driver)} matter within the same artist as well?`};
+    const checkEvidenceFor=(check,label)=>({roundId:check.roundId,label,sourceRole:'probe',workIds:check.workIds,detail:'Before your answer, '+check.predictions.map(p=>p.title+' predicted '+(p.prediction===0?'close appeal':short(byId.get(check.workIds[p.prediction>0?0:1])))).join('; ')+'. Your appeal ratings: '+check.workIds.map((id,i)=>`${short(byId.get(id))}: ${check.values[i]}`).join('; ')+'.'});
+    const checkEvidence=confirmation?[checkEvidenceFor(confirmation,confirmation.newArtistTransfer?'Frozen new-artist transfer check':'Frozen local check')]:[];
+    if(forecast)checkEvidence.push({roundId:forecast.roundId,label:'Direction predicted before a later discovery set',sourceRole:forecast.sourceRole,workIds:forecast.workIds,detail:'The direction was recorded before your answer. '+forecast.workIds.map((id,i)=>`${short(byId.get(id))}: ${forecast.values[i]}`).join('; ')+'. This discovery group is counted once, not as an extra independent confirmation.'});
+    const forecastCounterEvidence=forecastReversal?[{roundId:forecastReversal.roundId,label:'A later forecast went the other way',sourceRole:forecastReversal.sourceRole,workIds:forecastReversal.workIds,detail:'The direction was recorded before your answer. '+forecastReversal.workIds.map((id,i)=>`${short(byId.get(id))}: ${forecastReversal.values[i]}`).join('; ')+'. This discovery group is counted once.'}]:[];
+    const repeatEvidence=repeat?[{...evidence(repeat),label:'Delayed repeat went the other way',sourceRole:'repeat',detail:'Later appeal: '+repeat.example.workIds.map((id,i)=>`${short(byId.get(id))}: ${repeat.example.values[i]}`).join('; ')+'. This is a related return to '+repeat.sourceRoundId+', not another discovery set.'}]:[];
+    const positiveHeadlines={'layered-space':'You tend to favour scenes with depth','open-expanse':'You often favour room and open space','visible-paint-marks':'Visible brushwork recurs in what you like','geometric-structure':'Clear structure recurs in your higher ratings','material-detail':'Finely described surfaces recur in what you like','dramatic-light':'Selective light often leads your comparisons','narrative-detail':'Story-rich scenes recur in your higher ratings',landscape:'Natural settings often lead your comparisons'};
+    const scoped=c.context?`${c.contextValue?'with':'without'} ${title(c.context)}`:'';
+    const tested=c.direction>0?(positiveHeadlines[c.driver]||`Your higher ratings often favour ${title(c.driver)}`):`You tend to rate ${title(c.driver)} lower`;
+    const scopePrefix=c.context?`In works ${scoped}, `:'';
+    const testedHeadline=scopePrefix?scopePrefix+tested[0].toLowerCase()+tested.slice(1):tested;
+    const headline=c.recurring?c.status==='mixed'?`${c.title} recurs, with an important exception`:c.summaryEligible?testedHeadline:`Your higher ratings repeatedly favour ${c.title.toLowerCase()}`:`You preferred ${names[preferred]} to ${names[foil]}`;
+    return {id:'inquiry-'+c.id,module:'conditional-appeal',qualityKey:c.driver,title:c.title,headline,text,status:c.status==='mixed'?'mixed':c.recurring?'supported':'provisional',recurring:c.recurring,summaryEligible:c.summaryEligible,supportingSetCount:c.supportingSets,supportingArtistCount:c.artistCount,profileAnchorId:'profile-category-appeal',claimScope:c.summaryEligible?'recurring-and-prospectively-checked':c.recurring?'observed-recurrence':'named-comparison',priority:c.summaryEligible?18:c.recurring?15:c.status==='mixed'?12:11,channel:'personal-appeal',displayWorkIds,displayRoles:Object.fromEntries(displayWorkIds.map(id=>[id,id===counterId?'counterexample':id===example.workIds[foil]?'comparison':'support'])),support:[...c.support.slice(0,2).map(evidence),...checkEvidence],counter:[...c.counter.slice(0,1).map(evidence),...c.reversals.slice(-1).map(t=>checkEvidenceFor(t,'Prospective counterexample')),...forecastCounterEvidence,...repeatEvidence],sourceRoundIds:unique([...c.support,...c.counter,...c.repeatReversals].map(g=>g.roundId).concat(c.prospectiveChecks.map(t=>t.roundId),c.forecastChecks.map(t=>t.roundId))),competingExplanations:c.rivals.map(r=>r.title),alternatives:c.unresolved,boundary:c.boundary,nextQuestion:c.context?'Would this distinction hold outside this subject?':'Would the same distinction hold within one artist?'};
   }).filter(Boolean);
 }
 
@@ -271,5 +311,6 @@ export function inquirySensitivity(options={}){
     const c=revised.find(c=>c.id===lead.id)||{direction:0,supportingSets:0,recurring:false};
     return {kind,direction:c.direction,supportingSets:c.supportingSets,recurring:c.recurring,leadingCandidateId:revised[0]?.id||null,rank:revised.findIndex(c=>c.id===lead.id)+1,directionChanged:c.direction!==lead.direction,qualificationChanged:c.recurring!==lead.recurring,rankingBasis:'Discovery associations only, holding the question sample fixed.'};
   });
-  return {leadingId:lead.id,direction:lead.direction,influentialRoundId:influential.roundId,influentialArtist,withheldReviewWorkId:workId,variants};
+  const baseline=[...model.candidates].sort((a,b)=>b.supportingSets-a.supportingSets||b.weight-a.weight||a.id.localeCompare(b.id)),baselineRank=baseline.findIndex(c=>c.id===lead.id)+1;
+  return {leadingId:lead.id,direction:lead.direction,discoveryBaselineLeadingId:baseline[0]?.id,discoveryBaselineRank:baselineRank,influentialRoundId:influential.roundId,influentialArtist,withheldReviewWorkId:workId,variants:variants.map(v=>({...v,rankChanged:v.rank!==baselineRank}))};
 }

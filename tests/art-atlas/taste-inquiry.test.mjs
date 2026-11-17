@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {ARTWORK_ATTRIBUTE_VERSION,ARTWORK_ATTRIBUTE_DEFINITIONS} from '../../public/art-atlas/artwork-attribute-definitions.mjs';
 import {withContinuousPreference} from '../../public/art-atlas/continuous-preference.mjs';
 import {withComparisonPreference} from '../../public/art-atlas/comparison-protocol.mjs';
-import {buildTasteInquiry,selectTasteInquiry,freezeAppealForecast,evaluateAppealForecasts,inquirySensitivity,readTasteInquiryChecks} from '../../public/art-atlas/taste-inquiry.mjs';
+import {buildTasteInquiry,selectTasteInquiry,freezeAppealForecast,evaluateAppealForecasts,inquirySensitivity,readTasteInquiryChecks,inquiryObservations} from '../../public/art-atlas/taste-inquiry.mjs';
 import {buildProfileIntelligence} from '../../public/art-atlas/profile-intelligence.mjs';
 import {AXES} from '../../public/art-atlas/engine.mjs';
 import {buildDiagnosticRound,bindDiagnosticRound} from '../../public/art-atlas/explanation-followups.mjs';
@@ -11,6 +11,7 @@ import catalogue from '../../public/art-atlas/artworks.json' with {type:'json'};
 import catalogueReviews from '../../public/art-atlas/artwork-attribute-reviews.json' with {type:'json'};
 import {resolveArtworkAttributes} from '../../public/art-atlas/artwork-quality-review.mjs';
 import {buildTastePortrait} from '../../public/art-atlas/taste-portrait.mjs';
+import {buildTastePatterns} from '../../public/art-atlas/taste-patterns.mjs';
 
 function fixture(count=3){
   const works=Array.from({length:count*4+6},(_,i)=>({id:'q'+i,title:'Synthetic painting '+i,artist:'Fixture artist '+i,image:'assets/q'+i+'.jpg',sourceUrl:'https://fixture.invalid/'+i,sha256:(i+1).toString(16).padStart(64,'0')}));
@@ -32,6 +33,8 @@ test('Recurrence nominates a question; a frozen new-artist success earns promine
   const values=t.predictions[0].prediction===1?[94,12]:[12,94];
   f.rounds.push(next.round);f.answers.check=f.respond(next.round,values);
   const passed=buildTasteInquiry(f),winner=t.predictions[0].id;assert.equal(passed.candidates.find(c=>c.id===winner).summaryEligible,true);
+  const reading=inquiryObservations(passed,f.works).find(o=>o.id==='inquiry-'+winner);
+  assert.ok(reading.support.some(e=>e.roundId==='check'&&e.label==='Frozen new-artist transfer check'&&e.detail.includes('Before your answer')));
   assert.equal(passed.discoverySets,3);assert.equal(passed.checks[0].independentDiscoveryVote,false);
   f.answers.check=f.respond(next.round,[...values].reverse());
   const failed=buildTasteInquiry(f).candidates.find(c=>c.id===winner);assert.equal(failed.summaryEligible,false);assert.equal(failed.status,'mixed');assert.equal(failed.reversals.length,1);
@@ -80,6 +83,8 @@ test('Prospective global predictions are compared to actual held-out levels and 
   const f=fixture(),raw=f.line('heldout',f.works.slice(12,16)),round=freezeAppealForecast({...f,round:raw});
   assert.equal(round.evidence.appealForecast.frozenBeforeAnswer,true);f.rounds.push(round);f.answers.heldout=f.respond(round,[95,85,75,5]);
   const result=evaluateAppealForecasts(f);assert.equal(result.sets,1);assert.ok(result.mae<result.meanOnlyMae);assert.equal(result.records[0].pairs.length,6);
+  const inquiry=buildTasteInquiry(f),driver=inquiry.candidates.find(c=>c.id==='dramatic-light');assert.equal(driver.forecastSupported,true);assert.equal(driver.summaryEligible,true);assert.equal(driver.forecastChecks[0].independentDiscoveryVotes,1);assert.equal(inquiry.discoverySets,4);
+  assert.ok(inquiryObservations(inquiry,f.works).every(o=>o.headline&&!/a distinction to explore/i.test(o.headline)));
   const profile=buildProfileIntelligence(f);assert.equal(profile.predictionEvaluation.sets,1);assert.equal(profile.responseLedger[0].question.title,f.rounds[0].title);assert.deepEqual(profile.responseLedger[0].response,f.answers['source-0']);
   f.answers['source-0'].positions.q0=40;assert.equal(evaluateAppealForecasts(f).sets,0);
 });
@@ -113,6 +118,8 @@ test('A real-catalogue across-set association cannot bypass the advance-predicti
   assert.notEqual(portrait.profileSummary.basis,'recurring-visual-comparisons');
   assert.notEqual(portrait.intelligence.categories.find(c=>c.id==='appeal').status,'supported');
   assert.ok(portrait.tastePatterns.patterns.filter(p=>p.channel==='personal-appeal').every(p=>!p.summaryEligible));
+  const raw=buildTastePatterns({works,rounds,answers,annotationReviews:catalogueReviews});
+  assert.notEqual(buildProfileIntelligence({works,rounds,answers,tastePatterns:raw}).categories.find(c=>c.id==='appeal').status,'supported');
 });
 
 test('A conditional forecast abstains outside its context; counterexample artists are part of the frozen training pool',()=>{
@@ -125,4 +132,46 @@ test('A conditional forecast abstains outside its context; counterexample artist
   const g=fixture(4);g.answers['source-3']=g.respond(g.rounds[3],[5,15,25,95]);g.works.find(w=>w.id===g.candidateIds[0]).artist=g.works[12].artist;
   const probe=selectTasteInquiry({...g,id:'counter-artist'});assert.ok(probe);assert.equal(probe.round.evidence.tasteInquiry.newArtistTransfer,false);
   g.rounds.push(probe.round);g.answers[probe.round.id]=g.respond(probe.round,[95,5]);assert.equal(readTasteInquiryChecks(g)[0].newArtistTransfer,false);
+});
+
+test('An illustrative source pair follows the set direction even when its largest outlier goes the other way',()=>{
+  const f=fixture();f.annotationReviews.reviews.q3.attributes['dramatic-light'].status='present';f.answers['source-0']=f.respond(f.rounds[0],[0,90,50,90]);
+  const candidate=buildTasteInquiry(f).candidates.find(c=>c.id==='dramatic-light');
+  assert.equal(candidate.direction,1);assert.equal(candidate.groups[0].gap,10);
+  assert.ok(candidate.groups[0].example.values[0]>candidate.groups[0].example.values[1]);
+});
+
+test('A genuine later repeat reversal weakens a previously transferred account without becoming a new discovery',()=>{
+  const f=fixture(),probe=selectTasteInquiry({...f,id:'check'}).round,t=probe.evidence.tasteInquiry;
+  f.rounds.push(probe);f.answers.check=f.respond(probe,t.predictions[0].prediction===1?[95,5]:[5,95]);
+  const winning=t.predictions[0].id;assert.equal(buildTasteInquiry(f).candidates.find(c=>c.id===winning).summaryEligible,true);
+  const original=f.rounds[0],repeat={...structuredClone(original),id:'later-repeat',works:[...original.works].reverse(),evidence:{...original.evidence,role:'repeat',repeatOf:original.id}};
+  f.rounds.push(repeat);f.answers[repeat.id]=f.respond(repeat,repeat.works.map(w=>100-f.answers[original.id].positions[w.id]));
+  const model=buildTasteInquiry(f),candidate=model.candidates.find(c=>c.id===winning);
+  assert.equal(model.discoverySets,3);assert.equal(candidate.repeatReversals.length,1);assert.equal(candidate.summaryEligible,false);assert.equal(candidate.status,'mixed');
+  const reading=inquiryObservations(model,f.works).find(o=>o.id==='inquiry-'+winning);assert.match(reading.text,/return to the same works/);assert.ok(reading.counter.some(e=>e.roundId==='later-repeat'&&e.sourceRole==='repeat'));
+  assert.deepEqual(f.answers[original.id].positions,{q0:95,q1:85,q2:75,q3:5});
+});
+
+test('An unchanged repeat of a partially fresh source cannot manufacture a reversal by changing its analysis subset',()=>{
+  const f=fixture(4);f.answers['source-0']=f.respond(f.rounds[0],[0,0,100,100]);
+  f.rounds[3]=f.line('source-3',[f.works[0],f.works[2],f.works[12],f.works[14]]);f.answers['source-3']=f.respond(f.rounds[3],[0,100,90,80]);
+  const before=buildTasteInquiry(f).candidates.find(c=>c.id==='dramatic-light');assert.equal(before.support.find(g=>g.roundId==='source-3').gap,10);
+  const repeat={...structuredClone(f.rounds[3]),id:'unchanged-repeat',evidence:{...f.rounds[3].evidence,role:'repeat',repeatOf:'source-3'}};
+  f.rounds.push(repeat);f.answers[repeat.id]=f.respond(repeat,[0,100,90,80]);
+  const after=buildTasteInquiry(f).candidates.find(c=>c.id==='dramatic-light');assert.equal(after.repeatReversals.length,0);assert.equal(after.status,before.status);assert.equal(after.supportingSets,before.supportingSets);
+});
+
+test('A contrary frozen discovery forecast withdraws an earlier transfer and illustrates the opposing result',()=>{
+  const f=fixture(),probe=selectTasteInquiry({...f,id:'transfer'}).round,t=probe.evidence.tasteInquiry;
+  f.rounds.push(probe);f.answers.transfer=f.respond(probe,t.predictions[0].prediction===1?[95,5]:[5,95]);
+  const id=t.predictions[0].id,before=buildTasteInquiry(f).candidates.find(c=>c.id===id);assert.equal(before.summaryEligible,true);
+  const target=f.line('later-forecast',f.works.slice(15,18)),frozen=freezeAppealForecast({...f,round:target});
+  const test=frozen.evidence.appealForecast.conditionalForecasts.find(c=>c.id===id);assert.ok(test);
+  f.rounds.push(frozen);f.answers[frozen.id]=f.respond(frozen,frozen.works.map(w=>test.scores[w.id]>0?5:95));
+  const after=buildTasteInquiry(f).candidates.find(c=>c.id===id),counter=after.forecastReversals[0];
+  assert.equal(after.summaryEligible,false);assert.equal(after.status,'mixed');assert.ok(counter);
+  assert.equal(Math.sign(counter.values[0]-counter.values[1]),-counter.prediction);
+  const observation=inquiryObservations(buildTasteInquiry(f),f.works).find(o=>o.id==='inquiry-'+id);
+  assert.ok(observation.counter.some(e=>e.roundId===frozen.id));assert.match(observation.text,/went the other way/);
 });

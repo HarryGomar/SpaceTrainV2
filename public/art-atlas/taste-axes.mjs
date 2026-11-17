@@ -34,7 +34,7 @@ export function collectTastePatternSources({works=[],rounds=[],answers={}}={}){
   const makeSets=(entries,channel,coordinate)=>{
     const seenSets=new Set(),seenWorks=new Set(),sets=[],checks=[],levelSets=[];
     for(const entry of entries){
-      const key=artworkSetKey(entry.round),dependent=entry.round.evidence?.repeatOf||channel!=='admiration-of-making'&&EXCLUDED_ROLES.has(entry.round.evidence?.role)||seenSets.has(key);
+      const key=artworkSetKey(entry.round),dependent=entry.round.evidence?.independentDiscovery===false||entry.round.evidence?.repeatOf||channel!=='admiration-of-making'&&EXCLUDED_ROLES.has(entry.round.evidence?.role)||seenSets.has(key);
       const items=entry.round.works.map(work=>({work,value:coordinate(entry,work.id),entry}));
       if(dependent){
         checks.push({entry,items,channel,dependent:true});
