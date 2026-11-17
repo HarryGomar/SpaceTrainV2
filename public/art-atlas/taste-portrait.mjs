@@ -28,7 +28,7 @@ import {buildTastePatterns} from './taste-patterns.mjs';
 import {buildTasteBoundaries} from './taste-boundaries.mjs';
 import ARTWORK_ATTRIBUTE_REVIEWS from './artwork-attribute-reviews.json' with {type:'json'};
 import {buildRecommendationMemory,wasPreviouslyPresented} from './recommendation-memory.mjs';
-import {buildProfileIntelligence} from './profile-intelligence.mjs';
+import {buildProfileIntelligence,appealInvestigationReadings} from './profile-intelligence.mjs';
 
 export const TASTE_PORTRAIT_VERSION=1;
 export const TASTE_THRESHOLDS=Object.freeze({clearPreferenceGap:15,featureContrast:.3,minimumSets:2,minimumWorks:4,taskDirection:.12,meanDirection:.15});
@@ -273,7 +273,7 @@ function discoveryRoutes(works,discovery,seeds,patterns,allPreference=discovery)
 }
 
 /** All calculations are local descriptions. No population model is implied. */
-export function buildTastePortrait({works=[],rounds=[],answers={},records=[],saved={},recommendationHistory=[]}={}){
+export function buildTastePortrait({works=[],rounds=[],answers={},records=[],saved={},recommendationHistory=[],nextRefinement}={}){
   works=Array.isArray(works)?works:[];rounds=Array.isArray(rounds)?rounds:[];answers=plain(answers)?answers:{};records=Array.isArray(records)?records:[];saved=plain(saved)?saved:{};
   const valid=entriesFor(works,rounds,answers),preferences=valid.filter(explicitPreference),discovery=distinctSets(valid.filter(discoveryEntry)),preferenceBasis=buildPreferenceBasis(valid),scopeKeys=unique(discovery.map(entry=>preferenceMeasurementKey(entry.round))),patterns=scopeKeys.flatMap((key,index)=>associations(discovery.filter(entry=>preferenceMeasurementKey(entry.round)===key),preferences.filter(entry=>preferenceMeasurementKey(entry.round)===key),preferenceBasis).map(pattern=>({...pattern,finding:{...pattern.finding,id:pattern.finding.id+(scopeKeys.length>1?'-scope'+index:''),measurementScope:key,comparisonBasis:key===CONTINUOUS_PROTOCOL?CONTINUOUS_SCOPE:key===COMPARISON_PROTOCOL?COMPARISON_SCOPE:key===APPEAL_PROTOCOL?'within-set-overall-appeal':'legacy-within-set-comparisons'}}))),curiosity=curiosityReading(discovery,valid),meaning=meaningReading(discovery,valid),ratings=contextRatings(valid),ratingReading=contextRatingReading(ratings),repeats=repeatComparisons(preferences),contexts=contextComparisons(discovery,valid),seeds=preferredSeeds(discovery,preferenceBasis),lookingAppraisals=buildLookingAppraisals({works,rounds,answers}),symbolism=analyzeSymbolism({works,rounds,answers}),legacyResponseRounds=rounds.filter(round=>!hasComparisonMarker(round)||isContinuousPreferenceRound(round)),responsePortrait=buildResponsePortrait({works,rounds:legacyResponseRounds,answers}),facets=buildFacetReadings({works,rounds,answers}),ordinalPreferenceGraph=buildOrdinalPreferenceGraph({works,rounds,answers});
   // The older matched-map readers use a 15-point gap and a near-top band.
@@ -312,6 +312,15 @@ export function buildTastePortrait({works=[],rounds=[],answers={},records=[],sav
   const summaryBasis=!leadingThemes.length?'observed-comparisons':preferenceBasis.absoluteScaleAvailable||preferenceBasis.favourites.length?'qualified-positive-patterns':leadingThemes.some(theme=>['exact-set-local-choices','matched-preference'].includes(theme.basis))?'qualified-local-comparisons':'qualified-response-patterns';
   const axesProfile=buildTasteAxes({works,rounds,answers}),tastePatterns=buildTastePatterns({works,rounds,answers,annotationReviews:ARTWORK_ATTRIBUTE_REVIEWS,recommendationHistory}),tasteBoundaries=buildTasteBoundaries({works,rounds,answers,annotationReviews:ARTWORK_ATTRIBUTE_REVIEWS}),profileSummary=composeTasteSummary({works,tastePatterns:{...tastePatterns,patterns:linkArrangementPatterns(tastePatterns.patterns,arrangementQualities.findings)},tasteBoundaries,reportedContextChanges,axesProfile,themes:leadingThemes,observations:orderedObservations,legacyBasis:summaryBasis});
   tastePatterns.patterns=linkArrangementPatterns(tastePatterns.patterns,arrangementQualities.findings);
+  const investigations=appealInvestigationReadings(tastePatterns.investigations,works);
+  const local=investigations.filter(item=>item.priority===16).sort((a,b)=>Number(b.status==='provisional')-Number(a.status==='provisional')||Number(b.declaredAnchor)-Number(a.declaredAnchor)||b.responseGap-a.responseGap)[0];
+  if(local&&profileSummary.basis==='insufficient-recurring-patterns'){
+    Object.assign(profileSummary,{title:'Where your choices lead',text:local.text,workIds:local.displayWorkIds,findingIds:[local.id],basis:'local-appeal-investigation'});
+  }else if(local&&profileSummary.basis==='reviewed-quality-patterns'){
+    profileSummary.text+=' '+local.text;
+    profileSummary.findingIds.push(local.id);
+  }
+  observations.push(...investigations);
   observations.push(...axesProfile.responseProfile.observations);orderedObservations.sort((a,b)=>b.priority-a.priority);
   const recommendationMemory=buildRecommendationMemory(recommendationHistory);
   recommendations.paintings=recommendations.paintings.filter(route=>!wasPreviouslyPresented(works.find(work=>work.id===route.workId),recommendationMemory));
@@ -334,7 +343,7 @@ export function buildTastePortrait({works=[],rounds=[],answers={},records=[],sav
     curatorialObservations,arrangementQualities,nextSteps:nextSteps.slice(0,4),unavailable,
     method:'A local descriptive portrait of validated answers and sourced catalogue links. Thresholds are provisional design rules; no population model, personality type, causal explanation or calibrated preference probability is claimed.'
   };
-  portrait.intelligence=buildProfileIntelligence({works,rounds,answers,tastePatterns,responsePortrait,reportedContextChanges,preferenceEvidence:portrait.preferenceEvidence,arrangementQualities,saved,records:validRecords,existingObservations:portrait.observations});
+  portrait.intelligence=buildProfileIntelligence({works,rounds,answers,tastePatterns,responsePortrait,reportedContextChanges,preferenceEvidence:portrait.preferenceEvidence,arrangementQualities,saved,records:validRecords,existingObservations:portrait.observations,nextRefinement});
   portrait.observations.push(...portrait.intelligence.observations);
   portrait.observations.sort((a,b)=>b.priority-a.priority);
   portrait.nextSteps=unique([...portrait.intelligence.nextSteps,...portrait.nextSteps].map(item=>JSON.stringify(item))).map(item=>JSON.parse(item));

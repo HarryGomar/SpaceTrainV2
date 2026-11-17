@@ -23,7 +23,7 @@ import {PANEL_OBJECTIVES,CANONICAL_COMPARISON_OBJECTIVES} from './curation-panel
 import {buildDiagnosticRound} from './explanation-followups.mjs';
 
 export const JOURNEY_PROTOCOL='art-profile-50-v1';
-export const JOURNEY_REVISION='art-profile-50-v17';
+export const JOURNEY_REVISION='art-profile-50-v18';
 export const JOURNEY_VARIETY_POLICY='specific-question-variety-v2';
 export const JOURNEY_LENGTH=50;
 export const JOURNEY_MAX_LENGTH=JOURNEY_BLOCK_LIMIT*JOURNEY_LENGTH;
@@ -210,7 +210,7 @@ export function buildJourneyRounds(works,answers={},options={}){
   if(![CONTINUOUS_PROTOCOL,COMPARISON_PROTOCOL,APPEAL_PROTOCOL].includes(preferenceProtocol))throw Error('Unknown painting-preference protocol.');
   if(!Number.isInteger(offset)||offset<0||offset%JOURNEY_LENGTH||!Number.isInteger(batchIndex)||batchIndex<0)throw Error('Journey batches need a non-negative batch index and an offset in steps of fifty.');
   const at=index=>idAt(offset+index),selectionSeed=String(options.seed??'journey-batch-'+batchIndex);
-  const schedule=SCHEDULE.map((spec,index)=>preferenceProtocol!==CONTINUOUS_PROTOCOL?spec:index===5?V(2,'attention'):index===33?U(12):index===37?V(13,'returnResponse'):spec);
+  const schedule=SCHEDULE.map((spec,index)=>preferenceProtocol!==CONTINUOUS_PROTOCOL?spec:index===5?V(2,'attention'):index===16&&batchIndex>0?G('shortlist','c'):index===33?U(12):index===37?V(13,'returnResponse'):spec);
   const pool=[...works].filter(work=>isStudyEligibleArtwork(work)&&typeof work.id==='string'&&work.title&&work.image&&work.sourceUrl).sort((a,b)=>a.id.localeCompare(b.id));
   if(pool.length<12||new Set(ids(pool)).size!==pool.length)throw Error('The journey needs at least twelve distinct, sourced artworks.');
   const regional=hasRegionalCuration(pool),curationNotes=journeyCurationNotes(pool,options.reservationPlan),activeIds=curationNotes.collectionRouting?new Set(curationNotes.collectionRouting.activeStudyWorkIds):null,activeSourcePool=activeIds?pool.filter(work=>activeIds.has(work.id)):pool,stagePool=regional?activeSourcePool.filter(work=>allowedInCurationStage(work,batchIndex,curationNotes)):activeSourcePool,westernPool=stagePool.filter(work=>isWesternAmericasWork(work,curationNotes)||work.id==='study-hokusai-great-wave'),activityPool=regional&&batchIndex<4&&westernPool.length>=12?westernPool:stagePool,initialFamiliarityIds=regional?INITIAL_FAMILIARITY_IDS.map(id=>id==='hokusai-mount-fuji'?'study-van-gogh-self-portrait':id==='study-rembrandt-night-watch'?'study-monet-japanese-footbridge':id):INITIAL_FAMILIARITY_IDS;
@@ -250,7 +250,7 @@ export function buildJourneyRounds(works,answers={},options={}){
     if(!sourceIndex||Number(sourceIndex[1])<=offset)registerSpecificQuestion(round,sourceIndex?Number(sourceIndex[1])-1:null);
     if(sourceIndex&&Number(sourceIndex[1])<=offset&&round.kind!=='statements')round.works.forEach(work=>lastSeen.set(work.id,Math.max(lastSeen.get(work.id)??-Infinity,Number(sourceIndex[1])-1)));
     const legacyPanel=/^panel-(\d+)$/.exec(round.evidence?.setId||''),number=round.evidence?.panelNumber||(legacyPanel?Number(legacyPanel[1]):null),sourceBatch=round.evidence?.batchIndex??Math.floor((Number(sourceIndex?.[1]||1)-1)/JOURNEY_LENGTH);
-    if((['art-profile-50-v2','art-profile-50-v3','art-profile-50-v4','art-profile-50-v5','art-profile-50-v6','art-profile-50-v7','art-profile-50-v8','art-profile-50-v9','art-profile-50-v10','art-profile-50-v11','art-profile-50-v12','art-profile-50-v13','art-profile-50-v14','art-profile-50-v15','art-profile-50-v16',JOURNEY_REVISION].includes(round.evidence?.journeyRevision)||legacyPanel)&&sourceBatch===batchIndex&&Number.isInteger(number)&&number>=1&&number<=18&&round.works.every(work=>pool.some(item=>item.id===work.id))&&!panels.has(number)){
+    if((['art-profile-50-v2','art-profile-50-v3','art-profile-50-v4','art-profile-50-v5','art-profile-50-v6','art-profile-50-v7','art-profile-50-v8','art-profile-50-v9','art-profile-50-v10','art-profile-50-v11','art-profile-50-v12','art-profile-50-v13','art-profile-50-v14','art-profile-50-v15','art-profile-50-v16','art-profile-50-v17',JOURNEY_REVISION].includes(round.evidence?.journeyRevision)||legacyPanel)&&sourceBatch===batchIndex&&Number.isInteger(number)&&number>=1&&number<=18&&round.works.every(work=>pool.some(item=>item.id===work.id))&&!panels.has(number)){
       panels.set(number,round.works.map(work=>pool.find(item=>item.id===work.id)));
       if(round.evidence?.setId)panelSetIds.set(number,round.evidence.setId);
       round.works.forEach(work=>panelUses.set(work.id,(panelUses.get(work.id)||0)+1));
@@ -299,8 +299,13 @@ export function buildJourneyRounds(works,answers={},options={}){
       continue;
     }
     if(preferenceProtocol===CONTINUOUS_PROTOCOL){
-      const diagnosticKind=index===31?'grouping':([14,17,22,26].includes(index)&&batchIndex<2?'quality':null);
-      if(diagnosticKind){const pending=buildDiagnosticRound({works:activeSourcePool,id,kind:diagnosticKind,seed:selectionSeed});sequence.push({...pending,evidence:{...pending.evidence,journeyRevision:JOURNEY_REVISION,batchIndex,selectionSeed}});continue;}
+      const diagnosticKind=index===31?'grouping':([14,17,22,26,49].includes(index)?'appeal-investigation':null);
+      if(diagnosticKind){
+        const pending=buildDiagnosticRound({works:activeSourcePool,id,kind:diagnosticKind,seed:selectionSeed});
+        pending.evidence.diagnostic.policy='appeal-investigation-v1';
+        pending.evidence.diagnostic.mode=index===17?'transfer':index===26&&batchIndex<3?'explore':'local';
+        sequence.push({...pending,evidence:{...pending.evidence,journeyRevision:JOURNEY_REVISION,batchIndex,selectionSeed}});continue;
+      }
     }
     if(index>=45||earlyRefinements.has(index)){const pending=index>=45?closing[index-45]:buildOrdinalRefinementRound({works:activeSourcePool,id,role:earlyRefinements.get(index),slot:0,offset,seed:selectionSeed,preferenceProtocol});sequence.push({...pending,evidence:{...pending.evidence,journeyRevision:JOURNEY_REVISION,batchIndex,selectionSeed}});continue;}
     const contrastKind=CONTRAST_SLOTS.get(index),contrastContent=contrastKind?contrastContentAt(index):null;
@@ -370,7 +375,7 @@ export function buildJourneyRounds(works,answers={},options={}){
       const available=activityPool.filter(work=>work[field]&&(field!=='artist'||work.artistKnown!==false&&!/unknown|unidentified|anonymous|workshop|circle/i.test(work.artist))),linked=available.filter(work=>earlierAppeal.has(work.id)),eligible=tasteLinked&&new Set(linked.map(work=>work[field])).size>=4?linked:available;
       const avoid=avoidFor(index),audit={independentNeighbourRoundIds:avoid.roundIds},chosen=selectWorks(eligible,4,{uses:recognitionUses,lastSeen,index:globalIndex,seed:selectionSeed,mode:'match',distinctField:field,plannedUses:plannedSpecificUses,plannedLastSeen:plannedSpecificLastSeen,avoidIds:avoid.ids,audit});
       round={kind:'match',field,title:field==='artist'?'Match the paintings to the artists.':'Match the paintings to a style or tradition.',hint:'Move each painting to a label. Use Not sure when you do not know.',works:chosen,options:[...chosen].reverse().map((work,i)=>({id:field+'-'+i,label:work[field]}))};
-      evidence={construct:field==='artist'?'recognition-artist':'recognition-movement',family:'cued-recognition',role:'check',varietyPolicy:JOURNEY_VARIETY_POLICY,varietySelection:audit,...(preferenceProtocol===CONTINUOUS_PROTOCOL?{instrumentRevision:'cued-attribution-v2',selectionMethod:tasteLinked?'taste-linked-artist-check':'cued-label-check'}:{}),limits:[...template.evidence.limits]};
+      evidence={construct:field==='artist'?'recognition-artist':'recognition-movement',family:'cued-recognition',role:'check',varietyPolicy:JOURNEY_VARIETY_POLICY,varietySelection:audit,...(preferenceProtocol===CONTINUOUS_PROTOCOL?{instrumentRevision:'cued-attribution-v2',selectionMethod:tasteLinked?'taste-linked-artist-check':'cued-label-check',...(tasteLinked?{bindFromShownAppeal:true}:{})}:{}),limits:[...template.evidence.limits]};
     }else if(spec.task==='context'||spec.task==='symbolism'){
       template=templateFor(item=>item.kind==='context');
       round={kind:'context',contextMode:'preference-before-after-v1',title:'Look, then read.',hint:'Rate how much you like the painting before reading its story, then rate it again.',works:[noteWork]};

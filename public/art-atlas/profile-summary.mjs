@@ -22,6 +22,7 @@ function qualitySummary(pattern,fallback){
   if(pattern.status==='descriptive-association')return `Your higher ${pattern.channel==='personal-appeal'?'personal-appeal':'overall'} ratings cluster around ${phrase}.`;
   return `Your comparisons repeatedly favour ${phrase}.`;
 }
+const exampleIds=item=>[...(item.recordFit?.favouritesWithQuality?.length?item.recordFit.favouritesWithQuality:item.explanationEvidence?.supportingWorkIds?.length?item.explanationEvidence.supportingWorkIds:item.displayWorkIds||[])];
 
 /** A one-off reversal is evidence to explore, never an overall taste profile. */
 export function composeTasteSummary({works=[],tastePatterns={},tasteBoundaries={},reportedContextChanges={},axesProfile={},themes=[],observations=[],legacyBasis='observed-comparisons'}={}){
@@ -38,11 +39,17 @@ export function composeTasteSummary({works=[],tastePatterns={},tasteBoundaries={
     if(threads.length>1){
       const [first,second]=threads,common=(first.recordFit?.favouritesWithQuality||[]).filter(id=>second.recordFit?.favouritesWithQuality.includes(id)),outside=(threads.find(item=>item.recordFit?.favouriteSpecific)||first).recordFit?.favouritesWithoutQuality||[];
       const broad=threads.find(item=>item.recordFit?.broadAssociationEligible),favouriteSpecific=threads.find(item=>item.recordFit?.favouriteSpecific),tail=favouriteSpecific||first;
-      text=broad&&favouriteSpecific?'Your appeal ratings and favourites both point to '+(qualityPhrases[broad.qualityKey]||broad.title.toLowerCase())+'. '+favouriteSpecific.title+' is especially visible among your favourites'+(favouriteSpecific.recordFit.broadAssociationOpposed?', although paintings without it tended to appeal more across your broader ratings.':', with weaker support as a general preference.'):'Your favourites connect through '+first.title.toLowerCase()+' and '+second.title.toLowerCase()+'.';
+      if(broad&&favouriteSpecific){
+        text='Your appeal ratings and favourites both point to '+(qualityPhrases[broad.qualityKey]||broad.title.toLowerCase())+'. '+favouriteSpecific.title+' recurs among your favourites'+(favouriteSpecific.recordFit.broadAssociationOpposed?', even though other paintings tended to appeal more in your separate ratings.':' with weaker support across your separate ratings.');
+      }else if(threads.every(item=>item.channel==='explicit-favourites')){
+        text='Your favourites connect through '+first.title.toLowerCase()+' and '+second.title.toLowerCase()+'.';
+      }else{
+        text=threads.map(item=>qualitySummary(item,'')).filter(Boolean).join(' ');
+      }
       if(common.length&&common.map(short).every(Boolean))text+=' '+common.slice(0,2).map(short).join(' and ')+' bring the two together.';
-      if(outside.length&&short(outside[0]))text+=' '+short(outside[0])+' is a favourite without '+tail.title.toLowerCase()+', so this is one route into your choices rather than a requirement.';
+      if(outside.length&&short(outside[0]))text+=' '+short(outside[0])+' is a favourite without '+tail.title.toLowerCase()+'. This leaves room for more than one route into your choices.';
     }
-    return {title,text,threads:threads.map(item=>({id:item.id,title:item.title,qualityKey:item.qualityKey,text:item.text,workIds:item.recordFit?.favouritesWithQuality||item.favouriteWorkIds||item.displayWorkIds||[],recordFit:item.recordFit,channel:item.channel})),findingIds:unique([...(threads.length?threads.map(item=>item.id):proposed.patternIds),...(leading.arrangementConnections||[]).map(item=>item.sourceFindingId),...(boundary?[boundary.id]:[])]),workIds:unique(threads.length?threads.flatMap(item=>item.recordFit?.favouritesWithQuality||item.displayWorkIds||[]):proposed.workIds||[]),basis:'reviewed-quality-patterns',...(boundary?{boundaryFindingIds:[boundary.id]}:{})};
+    return {title,text,threads:threads.map(item=>({id:item.id,title:item.title,qualityKey:item.qualityKey,text:item.text,workIds:exampleIds(item),recordFit:item.recordFit,channel:item.channel})),findingIds:unique([...(threads.length?threads.map(item=>item.id):proposed.patternIds),...(leading.arrangementConnections||[]).map(item=>item.sourceFindingId),...(boundary?[boundary.id]:[])]),workIds:unique(threads.length?threads.flatMap(exampleIds):proposed.workIds||[]),basis:'reviewed-quality-patterns',...(boundary?{boundaryFindingIds:[boundary.id]}:{})};
   }
   if(boundary)return {title:boundary.title,text:boundary.text,findingIds:[boundary.id],workIds:unique(boundary.highWorkIds),comparisonWorkIds:[...(boundary.displayWorkIds||[])],basis:'explicit-choice-contrast'};
   if(continuousBoundary)return {title:continuousBoundary.title,text:continuousBoundary.text,findingIds:[continuousBoundary.id],workIds:unique(continuousBoundary.highWorkIds),comparisonWorkIds:[...continuousBoundary.displayWorkIds],basis:'continuous-choice-contrast'};

@@ -5,6 +5,7 @@ import {isReviewedVisualDescriptor} from './visual-descriptor-semantics.mjs';
 import {COMPARISON_PROTOCOL,isComparisonPreferenceRound,responseGapRequired} from './comparison-protocol.mjs';
 import {CONTINUOUS_PROTOCOL,CONTINUOUS_SCOPE,isContinuousPreferenceRound} from './continuous-preference.mjs';
 import {continuousGroupBalance,CONTINUOUS_PROFILE_RULES,buildContinuousResponseProfile} from './continuous-profile.mjs';
+import {sameOrdinalArtworkIdentity} from './ordinal-preference-graph.mjs';
 
 export const TASTE_AXIS_VERSION='taste-axes-v1';
 export const TASTE_PATTERN_THRESHOLDS=Object.freeze({responseGap:15,descriptorGap:.25,minimumSets:3,minimumWorks:6,minimumPreferredArtists:3,dominanceRatio:2});
@@ -24,22 +25,28 @@ export const TASTE_PATTERN_LIMITS=Object.freeze(['These are descriptions of the 
 
 /** Reusable, strict source collection for separate liking and admiration models. */
 export function collectTastePatternSources({works=[],rounds=[],answers={}}={}){
+  const byId=new Map(works.map(work=>[work.id,work]));
   const valid=validatedProfileEntries({works,rounds,answers}).filter(entry=>{
     const a=entry.answer,r=entry.round,workIds=ids(r),values=r.kind==='spectrum'?a.positions:r.kind==='grid'?a.points:null;
-    return (!Object.hasOwn(a,'roundId')||a.roundId===r.id)&&(!values||plain(values)&&Object.keys(values).length===workIds.length)&&a.confirmed===true&&(r.evidence?.comparisonProtocol===undefined||isComparisonPreferenceRound(r));
+    return r.works.every(work=>sameOrdinalArtworkIdentity(work,byId.get(work.id)))&&(!Object.hasOwn(a,'roundId')||a.roundId===r.id)&&(!values||plain(values)&&Object.keys(values).length===workIds.length)&&a.confirmed===true&&(r.evidence?.comparisonProtocol===undefined||isComparisonPreferenceRound(r));
   }),preferences=valid.filter(entry=>isUnconditionalPreference(entry.round)&&FAMILY.has(entry.round.evidence?.family)),scopes=new Map();
   for(const entry of preferences){const key=preferenceMeasurementKey(entry.round);scopes.set(key,[...(scopes.get(key)||[]),entry]);}
   const makeSets=(entries,channel,coordinate)=>{
-    const seenSets=new Set(),seenWorks=new Set(),sets=[],checks=[];
+    const seenSets=new Set(),seenWorks=new Set(),sets=[],checks=[],levelSets=[];
     for(const entry of entries){
       const key=artworkSetKey(entry.round),dependent=entry.round.evidence?.repeatOf||channel!=='admiration-of-making'&&EXCLUDED_ROLES.has(entry.round.evidence?.role)||seenSets.has(key);
       const items=entry.round.works.map(work=>({work,value:coordinate(entry,work.id),entry}));
-      if(dependent){checks.push({entry,items,channel,dependent:true});continue;}
+      if(dependent){
+        checks.push({entry,items,channel,dependent:true});
+        if(channel==='personal-appeal')items.forEach(item=>seenWorks.add(item.work.id));
+        continue;
+      }
       seenSets.add(key);const fresh=items.filter(item=>!seenWorks.has(item.work.id));items.forEach(item=>seenWorks.add(item.work.id));
       if(fresh.length>=2)sets.push({entry,items:fresh,channel,setKey:key});
+      if(fresh.length)levelSets.push({entry,items:fresh,channel,setKey:key});
       if(fresh.length!==items.length)checks.push({entry,items,channel,dependent:true});
     }
-    return {sets,checks,workCount:unique(sets.flatMap(set=>set.items.map(item=>item.work.id))).length};
+    return {sets,checks,levelSets,workCount:unique(levelSets.flatMap(set=>set.items.map(item=>item.work.id))).length};
   };
   const preferenceScopes=[...scopes].map(([key,entries])=>{const channel=key===CONTINUOUS_PROTOCOL?'personal-appeal':key===APPEAL_PROTOCOL?'overall-appeal':key===COMPARISON_PROTOCOL?'ordinal-choice':'relative-choice';return {key,channel,...makeSets(entries,channel,(entry,id)=>entry.answer.positions[id])};});
   const admirationEntries=valid.filter(({round:r})=>r.kind==='grid'&&r.axis==='achievement'&&r.evidence?.construct==='perceived-achievement'&&!r.brief&&!r.evidence.brief&&!r.anchorWorks?.length&&!r.anchorIds?.length&&(!r.axisDefinition||['xName','yName','left','right','bottom','top'].every(key=>r.axisDefinition[key]===({xName:'Personal appeal',yName:'Admiration of making',left:'Not for me',right:'For me',bottom:'Little to admire',top:'Much to admire'})[key])));

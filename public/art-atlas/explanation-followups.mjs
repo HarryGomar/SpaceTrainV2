@@ -7,6 +7,7 @@ import {validSorting,sortingDistance} from './sorting-table.mjs';
 import {isStudyEligibleArtwork} from './study-eligibility.mjs';
 import {mainCollectionWorks} from './collection-routing.mjs';
 import {sameOrdinalArtworkIdentity} from './ordinal-preference-graph.mjs';
+import {APPEAL_INVESTIGATION_PROTOCOL,selectAppealInvestigation,buildAppealExploration,compareAppealControls} from './appeal-investigations.mjs';
 
 export const DIAGNOSTIC_PROTOCOL='explanation-diagnostic-v1';
 const unique=values=>[...new Set(values)],ids=round=>round.works.map(work=>work.id),pairs=values=>values.flatMap((a,i)=>values.slice(i+1).map(b=>[a,b]));
@@ -64,9 +65,10 @@ function bindQuality(round,works,history,answers,read){
   return finish(round,works,chosen.workIds,{kind:'quality',hypotheses:chosen.hypotheses,predictions:chosen.predictions,sourceRoundIds:trainingRoundIds,sourceSnapshots:sources,qualitySnapshots:Object.fromEntries(chosen.workIds.map(id=>[id,read(works.find(work=>work.id===id))])),comparisonNovel:true,holdoutUnit:'new-comparison-of-earlier-rated-works',hypothesisStatus:'frozen-before-answer'});
 }
 
-function bindGrouping(round,works,history,answers,read){
+function bindGrouping(round,works,history,answers,read,selection){
   const sources=history.filter(source=>source.kind==='exercise'&&source.exerciseKind==='sorting').flatMap(source=>{const a=answers[source.id];let valid=false;try{valid=!a?.skipped&&(a?.roundId===undefined||a.roundId===source.id)&&Array.isArray(a?.workIds)&&JSON.stringify(a.workIds)===JSON.stringify(ids(source))&&validSorting(a.record,source.works);}catch{}return valid?[{source,answer:a,record:a.record}]:[];}).reverse();
-  const pool=mainCollectionWorks(works).filter(isStudyEligibleArtwork),byId=new Map(works.map(work=>[work.id,work]));
+  const allowed=selection?.candidateIds?new Set(selection.candidateIds):null,avoid=new Set(selection?.avoidIds||[]);
+  const pool=mainCollectionWorks(works).filter(work=>isStudyEligibleArtwork(work)&&(!allowed||allowed.has(work.id))&&!avoid.has(work.id)),byId=new Map(works.map(work=>[work.id,work]));
   for(const source of sources){
     const offered=ids(source.source),positions=source.record.positions,distances=pairs(offered).map(pair=>({pair,distance:sortingDistance(positions[pair[0]],positions[pair[1]])/Math.hypot(1.5,1)})).sort((a,b)=>a.distance-b.distance);
     if(!distances.length||distances.at(-1).distance<.3)continue;
@@ -75,9 +77,17 @@ function bindGrouping(round,works,history,answers,read){
       for(const [first,second]of pairs(shared)){
         const candidates=quality=>pool.filter(work=>!offered.includes(work.id)&&value(read,work,quality)===1&&value(read,work,quality===first?second:first)===0);
         const a=candidates(first),b=candidates(second);let chosen=null;
-        for(const left of a)for(const right of b){if(left.id===right.id||left.artist===right.artist||anchors.some(work=>work.artist===left.artist||work.artist===right.artist))continue;const difference=qualityKeys.filter(k=>![first,second].includes(k)&&value(read,left,k)!==null&&value(read,right,k)!==null&&value(read,left,k)!==value(read,right,k)).length,score=difference+(left.movement===anchors[0].movement?2:0)+(right.movement===anchors[0].movement?2:0);if(!chosen||score<chosen.score)chosen={left,right,score};}
+        const controls=work=>({values:Object.fromEntries(qualityKeys.map(quality=>[quality,value(read,work,quality)]))});
+        const leftRows=a.map(work=>({work,control:controls(work)})),rightRows=b.map(work=>({work,control:controls(work)}));
+        for(const {work:left,control:l} of leftRows)for(const {work:right,control:r} of rightRows){
+          if(left.artist===right.artist||anchors.some(work=>work.artist===left.artist||work.artist===right.artist))continue;
+          const comparison=compareAppealControls(l,r,[first,second]);
+          if(!comparison.usable)continue;
+          const score=comparison.differences.length*3-comparison.known+(left.movement===anchors[0].movement?2:0)+(right.movement===anchors[0].movement?2:0);
+          if(!chosen||score<chosen.score)chosen={left,right,score,comparison};
+        }
         if(!chosen)continue;
-        return finish(round,works,[chosen.left.id,chosen.right.id],{kind:'grouping',sourceRoundId:source.source.id,sourceRecordId:source.record.id,sourceRoundIds:[source.source.id],sourceSnapshot:{round:structuredClone(source.source),answer:structuredClone(source.answer)},anchorIds:[...near.pair],anchorDistance:near.distance,rivals:[{quality:first,qualityTitle:title(first),workId:chosen.left.id},{quality:second,qualityTitle:title(second),workId:chosen.right.id}],qualitySnapshots:Object.fromEntries([...near.pair,chosen.left.id,chosen.right.id].map(id=>[id,read(byId.get(id))])),predictionKind:'relationship-not-preference'},near.pair);
+        return finish(round,works,[chosen.left.id,chosen.right.id],{kind:'grouping',sourceRoundId:source.source.id,sourceRecordId:source.record.id,sourceRoundIds:[source.source.id],sourceSnapshot:{round:structuredClone(source.source),answer:structuredClone(source.answer)},anchorIds:[...near.pair],anchorDistance:near.distance,rivals:[{quality:first,qualityTitle:title(first),workId:chosen.left.id},{quality:second,qualityTitle:title(second),workId:chosen.right.id}],qualitySnapshots:Object.fromEntries([...near.pair,chosen.left.id,chosen.right.id].map(id=>[id,read(byId.get(id))])),controls:chosen.comparison,predictionKind:'relationship-not-preference'},near.pair);
       }
     }
   }
@@ -85,11 +95,23 @@ function bindGrouping(round,works,history,answers,read){
 }
 
 /** Called only before first presentation. Captured questions are immutable. */
-export function bindDiagnosticRound({round,works=[],rounds=[],answers={},annotationReviews=REVIEWS}={}){
+export function bindDiagnosticRound({round,works=[],rounds=[],answers={},annotationReviews=REVIEWS,selection}={}){
   if(!isDiagnosticRound(round))return round;
   if(round.evidence.diagnostic.binding==='bound')return structuredClone(round);
   const captured=historyBefore(round,rounds,answers),byId=new Map(works.map(work=>[work.id,work])),history=captured.history.filter(source=>source.works?.every(work=>sameOrdinalArtworkIdentity(work,byId.get(work.id),{requireSource:true}))),earlierAnswers=captured.answers,read=reviewsFor(works,annotationReviews);
-  return round.evidence.diagnostic.kind==='grouping'?bindGrouping(round,works,history,earlierAnswers,read):bindQuality(round,works,history,earlierAnswers,read);
+  const diagnostic=round.evidence.diagnostic;
+  if(diagnostic.policy===APPEAL_INVESTIGATION_PROTOCOL){
+    const options={id:round.id,works,rounds:history,answers:earlierAnswers,seed:diagnostic.seed,annotationReviews,...selection};
+    const grouping=diagnostic.kind==='grouping'?bindGrouping(round,works,history,earlierAnswers,read,selection):null;
+    if(grouping?.evidence?.diagnostic?.kind==='grouping'&&!grouping.unavailable)return grouping;
+    const planned=diagnostic.mode==='explore'||grouping?null:selectAppealInvestigation({...options,mode:diagnostic.mode});
+    const fallback=planned?null:buildAppealExploration({...options,landscapeCheck:diagnostic.mode==='explore'});
+    const bound=planned?.round||fallback;
+    if(!bound)return {...round,unavailableReason:'The released catalogue could not supply a fresh comparison for this question.'};
+    return {...bound,evidence:{...bound.evidence,journeyRevision:round.evidence.journeyRevision,batchIndex:round.evidence.batchIndex,selectionSeed:round.evidence.selectionSeed,
+      diagnostic:{...diagnostic,binding:'bound',kind:planned?'appeal-investigation':'breadth-exploration',...(planned?{sourceRoundIds:planned.sourceRoundIds}:{reason:'No adequately matched comparison was selected for this slot.'})}}};
+  }
+  return diagnostic.kind==='grouping'?bindGrouping(round,works,history,earlierAnswers,read,selection):bindQuality(round,works,history,earlierAnswers,read);
 }
 
 /** Test broad candidate explanations from declared favourites against a new

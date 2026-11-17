@@ -3,10 +3,12 @@ import {quizCollectionChoices} from './collection-controls.mjs';
 import {isReviewedVisualDescriptor,FEATURE_SEMANTIC_VERSION} from './visual-descriptor-semantics.mjs';
 import {isDiagnosticRound,bindDiagnosticRound} from './explanation-followups.mjs';
 import {simplifyActiveInteraction} from './quiet-interactions.mjs';
-import {captureArtworkExposure} from './recognition-evidence.mjs';
+import {captureArtworkExposure,bindTasteAttribution} from './recognition-evidence.mjs';
 import {museumOffer,restrictMuseumDraft,MUSEUM_OFFER_SCOPE} from './museum-offer.mjs';
 import {isOverallAppealRound} from './appeal-scale.mjs';
-import {CONTINUOUS_PROTOCOL} from './continuous-preference.mjs';
+import {CONTINUOUS_PROTOCOL,continuousAppealValue} from './continuous-preference.mjs';
+import {allowedInCurationStage} from './curation-sequence.mjs';
+import {APPEAL_INVESTIGATION_PROTOCOL} from './appeal-investigations.mjs';
 import {COMPARISON_PROTOCOL,isComparisonPreferenceRound} from './comparison-protocol.mjs';
 import {isFinalRefinementRound,bindFinalRefinementRound} from './final-refinement.mjs';
 import {createStudyArchiveStore,storeStudyArchives,loadStudyArchives,encodeStudyWithArchives} from './study-archives.mjs';
@@ -55,6 +57,17 @@ export function sanitizeStudyDraft(round,answer={}) {
 export function snapshotStudyRound(round) {
   const {works,anchorWorks,...definition}=round;
   return {...structuredClone(definition),...(round.kind==='grid'?{axisDefinition:structuredClone(round.axisDefinition||AXES[round.axis])}:{}),workIds:ids(round),anchorIds:(anchorWorks||[]).map(w=>w.id)};
+}
+export function recordStudyResponse(data,round,answer,now=Date.now()){
+  const previous=data.answers[round.id];
+  if(previous&&(previous.skipped||validStudyAnswer(round,previous))){
+    const {answeredAt:previousTime,...before}=previous,{answeredAt:newTime,...after}=answer;
+    if(JSON.stringify(before)!==JSON.stringify(after)){
+      data.answerRevisions??=[];
+      data.answerRevisions.push({roundId:round.id,revisedAt:now,question:snapshotStudyRound(round),answer:structuredClone(previous)});
+    }
+  }
+  data.answers[round.id]=structuredClone(answer);
 }
 export function restoreStudyRound(snapshot,works) {
   if(!snapshot||typeof snapshot.id!=='string'||!['spectrum','grid','choice-grid','contrast','statements','match','context','exercise'].includes(snapshot.kind)||!Array.isArray(snapshot.workIds)||!snapshot.workIds.length||unique(snapshot.workIds).length!==snapshot.workIds.length)return null;
@@ -249,8 +262,29 @@ export function sessionRefinementRounds(data){
   const state=profileRefinementState(data);if(!state)return [];
   return state.plan.map((planned,index)=>restoreStudyRound(data.shown[planned.id]||planned,data.manifest.catalogue)||unavailableRound(planned,index,'This saved focused comparison is unavailable.'));
 }
-function journeyRoundIndices(data){const state=profileRefinementState(data),order=state?[...data.plan.slice(0,50),...state.plan,...data.plan.slice(50)]:data.plan;return new Map(order.map((round,index)=>[round.id,index]));}
-export function journeyEvidenceRounds(data){const rounds=sessionJourneyRounds(data),extra=sessionRefinementRounds(data);return [...rounds.slice(0,50),...extra,...rounds.slice(50)];}
+function interleaveRefinements(main,extra){
+  const after=new Map();
+  for(const round of extra){
+    const captured=round.evidence?.profileRefinement?.afterBaseRoundCount;
+    const index=Number.isInteger(captured)?Math.min(main.length,Math.max(50,captured)):50;
+    after.set(index,[...(after.get(index)||[]),round]);
+  }
+  return main.flatMap((round,index)=>[round,...(after.get(index+1)||[])]);
+}
+function journeyRoundIndices(data){return new Map(interleaveRefinements(data.plan,profileRefinementState(data)?.plan||[]).map((round,index)=>[round.id,index]));}
+export function journeyEvidenceRounds(data){return interleaveRefinements(sessionJourneyRounds(data),sessionRefinementRounds(data));}
+
+export function journeyInvestigationPool(data,index,earlier=[]){
+  const works=data.manifest.catalogue,planning=data.manifest.stimulusPlanning,batchIndex=Math.min(JOURNEY_MAX_LENGTH/JOURNEY_LENGTH-1,Math.floor(index/JOURNEY_LENGTH));
+  const reservations=data.batches?.find(batch=>batch.index===batchIndex)?.selection?.reservations||planning?.reservations;
+  const routed=reservations?.collectionRouting?.activeStudyWorkIds,active=routed?new Set(routed):null;
+  const future=new Set(reservationPoolKeys(reservations).filter(name=>Number(name.slice(5))-1>batchIndex).flatMap(name=>reservations[name]));
+  const rated=new Set(earlier.flatMap(round=>round.works.filter(work=>continuousAppealValue(round,data.answers[round.id],work.id)!==null).map(work=>work.id)));
+  const permitted=works.filter(work=>(!active||active.has(work.id))&&allowedInCurationStage(work,batchIndex));
+  const next=data.plan.slice(index+1,index+3).flatMap(snapshot=>[...(snapshot.workIds||[]),...(snapshot.anchorIds||[])]);
+  const past=earlier.at(-1),recent=past&&past.kind!=='exercise'&&past.works.length<=12?ids(past):[];
+  return {batchIndex,candidateIds:permitted.filter(work=>!future.has(work.id)||rated.has(work.id)).map(work=>work.id),earlyIds:permitted.filter(work=>future.has(work.id)&&!rated.has(work.id)).map(work=>work.id),avoidIds:unique([...next,...recent])};
+}
 const fresh=()=>({version:1,target:50,index:0,screen:'home',answers:{},shown:{},startedAt:null,finishedAt:null,archives:[]});
 export function prepareJourneySession(saved,works,now=Date.now()){
   const source=plainObject(saved)?structuredClone(saved):{};
@@ -287,7 +321,7 @@ export function prepareJourneySession(saved,works,now=Date.now()){
           // A shown legacy map can pin a different set than the saved selector.
           // Keep its real works without carrying a prediction or repeat onto them.
           const bindings=new Map();
-          for(const round of history){const match=/^journey-(\d+)$/.exec(round.id),legacy=/^panel-(\d+)$/.exec(round.evidence?.setId||''),number=round.evidence?.panelNumber||(legacy?Number(legacy[1]):null),sourceBatch=round.evidence?.batchIndex??Math.floor((Number(match?.[1]||1)-1)/JOURNEY_LENGTH);if((['art-profile-50-v2','art-profile-50-v3','art-profile-50-v4','art-profile-50-v5','art-profile-50-v6','art-profile-50-v7','art-profile-50-v8','art-profile-50-v9','art-profile-50-v10','art-profile-50-v11','art-profile-50-v12','art-profile-50-v13','art-profile-50-v14','art-profile-50-v15','art-profile-50-v16',JOURNEY_REVISION].includes(round.evidence?.journeyRevision)||legacy)&&sourceBatch===batchIndex&&Number.isInteger(number)&&number>=1&&number<=18&&!bindings.has(number))bindings.set(number,ids(round));}
+          for(const round of history){const match=/^journey-(\d+)$/.exec(round.id),legacy=/^panel-(\d+)$/.exec(round.evidence?.setId||''),number=round.evidence?.panelNumber||(legacy?Number(legacy[1]):null),sourceBatch=round.evidence?.batchIndex??Math.floor((Number(match?.[1]||1)-1)/JOURNEY_LENGTH);if((['art-profile-50-v2','art-profile-50-v3','art-profile-50-v4','art-profile-50-v5','art-profile-50-v6','art-profile-50-v7','art-profile-50-v8','art-profile-50-v9','art-profile-50-v10','art-profile-50-v11','art-profile-50-v12','art-profile-50-v13','art-profile-50-v14','art-profile-50-v15','art-profile-50-v16','art-profile-50-v17',JOURNEY_REVISION].includes(round.evidence?.journeyRevision)||legacy)&&sourceBatch===batchIndex&&Number.isInteger(number)&&number>=1&&number<=18&&!bindings.has(number))bindings.set(number,ids(round));}
           for(const [number,binding] of bindings){const panel=options.panels[number-1];if(!Array.isArray(panel?.workIds)||!sameWorks(panel.workIds,binding)){options.panels[number-1]={workIds:[...binding],construct:'preference',role:'exploration',selectionReason:'Preserve the artwork set in the recorded question. Conflicting repeat or prediction metadata has been removed.',evidenceRoundIds:[]};demotedPanels.push(number);}}
         }
         try{
@@ -351,12 +385,14 @@ export function sessionJourneyRounds(data,{regenerateBlock=buildJourneyRounds}={
     const shown=data.shown[planned.id],round=restoreStudyRound(shown||planned,works);
     if(!round)return unavailableRound(shown||planned,index,'This saved round is unavailable.');
     if(!shown&&data.answers[planned.id])return unavailableRound(planned,index,'The original presentation record is unavailable.');
-    if(!shown&&isDiagnosticRound(round)){
+    if(!shown&&(isDiagnosticRound(round)||round.evidence?.bindFromShownAppeal)){
       if(index>data.index)return round;
       indices??=journeyRoundIndices(data);
       shownHistory??=Object.values(data.shown).map(snapshot=>restoreStudyRound(snapshot,works)).filter(Boolean);
       const earlier=shownHistory.filter(item=>indices.has(item.id)&&indices.get(item.id)<indices.get(planned.id));
-      return bindDiagnosticRound({round,works,rounds:earlier,answers:data.answers});
+      if(round.evidence?.bindFromShownAppeal)return bindTasteAttribution(round,earlier,data.answers);
+      const selection=round.evidence.diagnostic.policy===APPEAL_INVESTIGATION_PROTOCOL?journeyInvestigationPool(data,index,earlier):undefined;
+      return bindDiagnosticRound({round,works,rounds:earlier,answers:data.answers,selection});
     }
     if(!shown&&isFinalRefinementRound(round)){
       indices??=journeyRoundIndices(data);
@@ -414,11 +450,13 @@ export function createDeepStudy({app,getWorks,image,esc,keepButtons,navigate,sho
     rounds??=profileRounds();completed??=data.plan.slice(0,50).every(snapshot=>{const item=rounds.find(round=>round.id===snapshot.id);return item&&resolved(item);});
     if(!completed)return null;
     const attempts=refinementAttempts(),pending=attempts.find(item=>!resolved(item));
-    if(pending)return {round:pending,reason:pending.evidence.profileRefinement?.reason||'Return to your saved focused comparison.',resume:true};
+    if(pending)return {round:pending,reason:pending.evidence.profileRefinement?.reason||'Return to your saved focused comparison.',categoryId:pending.evidence.profileRefinement?.categoryId,resume:true};
     if(attempts.length>=PROFILE_REFINEMENT_LIMIT)return null;
-    const cacheKey=JSON.stringify([data.manifest.id,data.answers,data.profileRefinement?.plan?.map(round=>round.id)]);
+    const saved=getSavedCollection(),shown=rounds.filter(item=>data.shown[item.id]);
+    const afterBaseRoundCount=data.plan.findLastIndex(item=>data.shown[item.id])+1;
+    const cacheKey=JSON.stringify([data.manifest.id,data.answers,shown.map(item=>item.id),data.profileRefinement?.plan?.map(round=>round.id),saved]);
     if(refinementOfferCache?.key===cacheKey)return refinementOfferCache.offer;
-    const offer=nextProfileRefinement({works:sessionWorks(),rounds:rounds.filter(item=>data.shown[item.id]),answers:data.answers,attempts,seed:data.manifest.id});
+    const offer=nextProfileRefinement({works:sessionWorks(),rounds:shown,answers:data.answers,attempts,saved,seed:data.manifest.id,afterBaseRoundCount,selection:journeyInvestigationPool(data,afterBaseRoundCount-1,shown)});
     refinementOfferCache={key:cacheKey,offer};return offer;
   }
   function startRefinement(){
@@ -429,16 +467,14 @@ export function createDeepStudy({app,getWorks,image,esc,keepButtons,navigate,sho
   }
   function stopRefinement(){if(profileRefinementState(data))data.profileRefinement.active=false;data.screen='reading';save();render();focus();}
   function continueRefinement(){
-    const offer=refinementOffer();
-    if(offer){if(!offer.resume)data.profileRefinement.plan.push(snapshotStudyRound(offer.round));data.profileRefinement.active=true;}
-    else{data.profileRefinement.active=false;data.profileRefinement.finishedAt=Date.now();data.screen='reading';}
+    data.profileRefinement.active=false;data.profileRefinement.finishedAt=Date.now();data.screen='reading';
     save();render();focus();
   }
   const resolved=(r)=>r.unavailable||data.answers[r.id]?.skipped||validStudyAnswer(r,data.answers[r.id]);
   const answerCount=(rounds=actualRounds())=>rounds.filter(r=>validStudyAnswer(r,data.answers[r.id])).length;
-  const inputs=createInteractions({app,getRound:()=>round,getDraft:()=>draft,ready:()=>ready,image,esc,workById:lookup,saveDraft:()=>{data.answers[round.id]=structuredClone(draft);if(!refining())data.finishedAt=null;save();},sync:()=>syncImages()});
+  const inputs=createInteractions({app,getRound:()=>round,getDraft:()=>draft,ready:()=>ready,image,esc,workById:lookup,saveDraft:()=>{recordStudyResponse(data,round,draft);if(!refining())data.finishedAt=null;save();},sync:()=>syncImages()});
   const exerciseRecords=(rounds=actualRounds())=>rounds.filter(r=>r.kind==='exercise'&&validStudyAnswer(r,data.answers[r.id])).map(r=>data.answers[r.id].record);
-  const saveExercise=()=>{if(round?.kind!=='exercise'||!draft?.record)return;data.answers[round.id]=structuredClone(draft);data.finishedAt=null;save();};
+  const saveExercise=()=>{if(round?.kind!=='exercise'||!draft?.record)return;recordStudyResponse(data,round,draft);data.finishedAt=null;save();};
   const embeddedOptions={app,getRecord:()=>draft?.record,setRecord:record=>{draft.record=record;},getWorks:sessionWorks,image,esc,save:saveExercise,rerender:()=>{render();},inspect:id=>showArtwork(id,true)};
   const embedded={sorting:createSortingTable(embeddedOptions),'difficult-edit':createDifficultEdit(embeddedOptions),curate:createGalleryStudio(embeddedOptions)};
   const chrome=()=>`<header class="journey-chrome"><button class="text-button" type="button" data-action="deep-back" ${!refining()&&data.index?'':'disabled'} aria-label="Previous round">←</button><span>${refining()?'Refining · '+refinementAttempts().length+' / '+PROFILE_REFINEMENT_LIMIT:data.index+1+' / '+data.target}</span><button class="text-button" type="button" data-action="deep-save" aria-label="Close">×</button></header>`;
@@ -530,8 +566,8 @@ export function createDeepStudy({app,getWorks,image,esc,keepButtons,navigate,sho
     if(!data.shown[r.id])round={...round,evidence:{...round.evidence,exposureHistory:captureArtworkExposure(round,earlierShown,data.answers)}};
     if(!data.shown[r.id])data.shown[r.id]=snapshotStudyRound(round);
     const a=data.answers[round.id];draft=a&&!a.skipped?(validStudyAnswer(round,a)?structuredClone(a):sanitizeStudyDraft(round,a)):sanitizeStudyDraft(round,{});
-    if(round.kind==='choice-grid'&&round.evidence?.instrumentRevision===PAGED_FAVOURITES)data.answers[round.id]=structuredClone(draft);
-    if(round.kind==='contrast')contrastController=createContrastController({app,round,draft,image,esc,saveDraft:answer=>{draft=answer;data.answers[round.id]=structuredClone(answer);data.finishedAt=null;save();},sync:()=>syncImages()});
+    if(round.kind==='choice-grid'&&round.evidence?.instrumentRevision===PAGED_FAVOURITES)recordStudyResponse(data,round,draft);
+    if(round.kind==='contrast')contrastController=createContrastController({app,round,draft,image,esc,saveDraft:answer=>{draft=answer;recordStudyResponse(data,round,answer);data.finishedAt=null;save();},sync:()=>syncImages()});
     statementIndex=round.kind==='statements'?Math.max(0,round.statements.findIndex(s=>draft.claims[s.id]===undefined)):0;
     const body=round.kind==='contrast'?contrastController.markup():round.kind==='choice-grid'?discoveryGridMarkup(round,draft,{image,esc}):['spectrum','grid','match'].includes(round.kind)?inputs.markup():round.kind==='statements'?statementMarkup():isContextChangeRound(round)?directContextMarkup():round.contextMode==='preference-before-after-v1'?contextShiftMarkup():`<div class="deep-context"><figure>${image(round.works[0])}<button class="text-button" type="button" data-action="deep-art" data-work="${esc(round.works[0].id)}">Look closer ↗</button></figure><div><p class="eyebrow">${esc(round.works[0].artist)}</p><h2>${esc(short(round.works[0]))}</h2><p class="deep-note">${esc(round.works[0].note)}</p><div class="deep-context-options">${[['more','More curious'],['same','About the same'],['less','Less curious'],['unsure','Not sure']].map(([value,label])=>`<button class="context-circle" type="button" data-action="deep-context" data-value="${value}" aria-pressed="${draft.change===value}"><span class="context-ring" aria-hidden="true"></span><span>${label}</span></button>`).join('')}</div><a href="${esc(round.works[0].sourceUrl)}" target="_blank" rel="noopener noreferrer">Museum source ↗</a></div></div>`;
     app.innerHTML=`<section class="deep-question ${journey?'journey-question':''}" data-deep-round="${esc(round.id)}" data-kind="${round.kind}">${journey?chrome():`<div class="deep-top"><button class="text-button" type="button" data-action="deep-save">← Back</button><span>${data.index+1} / ${data.target}</span></div>`}<div class="question-head"><h1 id="${journey&&round.kind==='statements'?'round-format-title':'question-title'}">${esc(isContextChangeRound(round)?(draft.storySeen?CONTEXT_CHANGE_PROMPT:round.contextPrompts.before):round.contextMode==='preference-before-after-v1'?(draft.storySeen?(round.contextPrompts?.after||'How much do you like it now?'):(round.contextPrompts?.before||'How much do you like this painting?')):round.title)}</h1>${round.hint?'<p'+(round.contextMode==='preference-before-after-v1'&&draft.storySeen?' aria-hidden="true"':'')+'>'+(round.contextMode==='preference-before-after-v1'&&draft.storySeen?'&nbsp;':esc(round.hint))+'</p>':''}</div><div id="deep-image-status" class="image-status" role="status" hidden></div><div class="deep-round-body">${round.kind!=='contrast'&&round.anchorWorks?.length?`<div class="deep-anchors">${round.anchorWorks.map(w=>`<figure>${image(w)}</figure>`).join('')}</div>`:''}${body}</div><div class="round-actions"><div class="action-side">${!journey?'<button class="text-button" type="button" data-action="deep-back">Back</button>':''}<button class="text-button" type="button" data-action="${refining()?'deep-refine-stop':'deep-skip'}">${refining()?'Finish for now':'Skip'}</button></div><button class="primary-button" type="button" data-action="deep-next" disabled>${isContextChangeRound(round)&&!draft.storySeen?'Reveal note':round.contextMode==='preference-before-after-v1'&&!draft.storySeen?(round.symbolismProtocol?'Read the note':'Read the story'):round.kind==='contrast'&&round.contrastKind==='chronology'&&!draft.confirmed?'Check dates':round.kind==='match'&&!draft.confirmed?'Check':refining()?(refinementAttempts().length===PROFILE_REFINEMENT_LIMIT?'View profile':'Continue'):data.index===data.target-1?'View profile':'Continue'}</button></div></section>`;
@@ -554,7 +590,7 @@ export function createDeepStudy({app,getWorks,image,esc,keepButtons,navigate,sho
     const rounds=profileRounds(Math.max(200,data.plan.length)),activeRounds=journey?rounds:rounds.slice(0,data.target),records=journey?exerciseRecords(rounds):[],result=analyzeStudy(sessionWorks(),rounds,data.answers),leading=result.findings.slice(0,3),rest=result.findings.slice(3);
     const continueButton=activeRounds.some(r=>!resolved(r))?'<button class="primary-button" type="button" data-action="deep-start">Continue the study →</button>':'<button class="primary-button" type="button" data-action="deep-home">Study overview →</button>';
     const markup=f=>`<article class="deep-finding"><h2>${esc(f.title)}</h2><p>${esc(f.text)}</p><details><summary>Works, evidence and limits${f.counter.length?' · including exceptions':''}</summary>${evidenceMarkup(f.support,'Supporting comparisons')}${evidenceMarkup(f.counter,'Comparisons going the other way')}${f.alternatives.map(text=>`<p>${esc(text)}</p>`).join('')}</details></article>`;
-    if(journey){const universe=[...new Map([...getWorks(),...sessionWorks()].map(w=>[w.id,w])).values()],arrangements=analyzeScenarios(sessionWorks(),records),portrait=buildTastePortrait({works:universe,rounds,answers:data.answers,records,saved:getSavedCollection(),recommendationHistory:data.archives||[]});portrait.connections=buildTasteConnections({works:universe,rounds,answers:data.answers,records});const completed=data.plan.every(snapshot=>{const item=rounds.find(round=>round.id===snapshot.id);return item&&resolved(item);}),legacyOnly=completed&&![COMPARISON_PROTOCOL,CONTINUOUS_PROTOCOL].includes(data.manifest.preferenceProtocol)&&!rounds.some(item=>(isComparisonPreferenceRound(item)||isOverallAppealRound(item))&&validStudyAnswer(item,data.answers[item.id]));const atLimit=data.plan.length>=JOURNEY_MAX_LENGTH,continuation={action:legacyOnly?'deep-retake':completed?atLimit?'collection':'deep-extend':'deep-start',label:legacyOnly?'Start updated quiz':completed?atLimit?'Explore your gallery':'Continue with 50 more':'Continue your rounds'};const view=renderTastePortrait({portrait,study:result,arrangements,rounds,answers:data.answers,works:universe,image,esc,keepButtons,continuation,refinementOffer:refinementOffer({rounds,completed:data.plan.slice(0,50).every(snapshot=>{const item=rounds.find(round=>round.id===snapshot.id);return item&&resolved(item);})})});const footer=`<div class="deep-reading-actions tp-footer"><button class="primary-button" type="button" data-action="${esc(continuation.action)}">${esc(continuation.label)}</button><button class="text-button" type="button" data-action="collection">Your collection</button><a class="text-button" href="./maps.html">Your maps ↗</a><a class="text-button" href="./paintings.html">Paintings ↗</a><a class="text-button" href="./profiles.html">Explore profiles ↗</a><button class="text-button" type="button" data-action="deep-retake">Start a new quiz</button><button class="text-button" type="button" data-action="deep-review">Review answers</button><button class="text-button" type="button" data-action="deep-export">Download</button></div>`;const end=view.lastIndexOf('</section>');return view.slice(0,end)+footer+view.slice(end);}
+    if(journey){const offer=refinementOffer({rounds,completed:data.plan.slice(0,50).every(snapshot=>{const item=rounds.find(round=>round.id===snapshot.id);return item&&resolved(item);})});const universe=[...new Map([...getWorks(),...sessionWorks()].map(w=>[w.id,w])).values()],arrangements=analyzeScenarios(sessionWorks(),records),portrait=buildTastePortrait({works:universe,rounds,answers:data.answers,records,saved:getSavedCollection(),recommendationHistory:data.archives||[],nextRefinement:offer});portrait.connections=buildTasteConnections({works:universe,rounds,answers:data.answers,records});const completed=data.plan.every(snapshot=>{const item=rounds.find(round=>round.id===snapshot.id);return item&&resolved(item);}),legacyOnly=completed&&![COMPARISON_PROTOCOL,CONTINUOUS_PROTOCOL].includes(data.manifest.preferenceProtocol)&&!rounds.some(item=>(isComparisonPreferenceRound(item)||isOverallAppealRound(item))&&validStudyAnswer(item,data.answers[item.id]));const atLimit=data.plan.length>=JOURNEY_MAX_LENGTH,continuation={action:legacyOnly?'deep-retake':completed?atLimit?'collection':'deep-extend':'deep-start',label:legacyOnly?'Start updated quiz':completed?atLimit?'Explore your gallery':'Continue with 50 more':'Continue your rounds'};const view=renderTastePortrait({portrait,study:result,arrangements,rounds,answers:data.answers,works:universe,image,esc,keepButtons,continuation,refinementOffer:offer});const footer=`<div class="deep-reading-actions tp-footer"><button class="primary-button" type="button" data-action="${esc(continuation.action)}">${esc(continuation.label)}</button><button class="text-button" type="button" data-action="collection">Your collection</button><a class="text-button" href="./maps.html">Your maps ↗</a><a class="text-button" href="./paintings.html">Paintings ↗</a><a class="text-button" href="./profiles.html">Explore profiles ↗</a><button class="text-button" type="button" data-action="deep-retake">Start a new quiz</button><button class="text-button" type="button" data-action="deep-review">Review answers</button><button class="text-button" type="button" data-action="deep-export">Download</button></div>`;const end=view.lastIndexOf('</section>');return view.slice(0,end)+footer+view.slice(end);}
     return `<section class="deep-reading"><div class="deep-top"><button class="text-button" type="button" data-action="deep-home">← Study overview</button><span>Saved in this browser</span></div><p class="eyebrow">${result.answered} answered rounds · ${result.artworks} distinct works</p><h1>${esc(result.name)}</h1><p class="deep-intro">This reading connects the decisions you actually completed. Specific comparisons, exceptions and task wording stay attached to each observation.</p>${!result.findings.length?'<p class="deep-empty-reading">Complete preference choices and the related response tasks to connect them. An isolated placement stays a response, without an invented explanation.</p>':''}${leading.map(markup).join('')}${rest.length?`<details class="deep-more"><summary>${rest.length} more observations</summary>${rest.map(markup).join('')}</details>`:''}${checksMarkup(result)}${exhibitionsMarkup(markup)}<div class="deep-reading-actions">${continueButton}<button class="text-button" type="button" data-action="deep-export">Download study record ↓</button></div><details class="deep-method"><summary>What this reading can establish</summary><p>${esc(result.basis)}</p><p>${result.skipped} decisions were skipped. Missing answers and ties do not become preferences. Contextual selection tasks and agreement statements do not train the individual preference explanation.</p><p>This prototype has not been psychometrically validated. A long path through ${sessionWorks().length} artworks does not establish an unrestricted profile of taste.</p></details>${result.evidence.length?`<section class="deep-keeps"><h2>Keep works for another look.</h2>${result.evidence.slice(0,12).map(id=>`<div><span>${esc(short(lookup(id)))}</span>${keepButtons(lookup(id))}</div>`).join('')}</section>`:''}</section>`;
   }
   function syncImages() {
@@ -601,22 +637,22 @@ export function createDeepStudy({app,getWorks,image,esc,keepButtons,navigate,sho
   function render(){clearTimeout(statementTimer);contrastController?.dispose();contrastController=null;if(data.screen==='question')question();else app.innerHTML=data.screen==='reading'?reading():home();}
   function changeScreen(screen){if(screen!=='question'&&profileRefinementState(data))data.profileRefinement.active=false;data.screen=screen;save();navigate(journey&&screen==='home'?'intro':'study');}
   function next(skip=false) {
-    if(!skip&&isContextChangeRound(round)&&!draft.storySeen){if(!ready)return;draft=reduceContextChangeDraft(round,draft,{type:'reveal'});data.answers[round.id]=structuredClone(draft);save();render();focus();return;}
-    if(!skip&&round?.contextMode==='preference-before-after-v1'&&!draft.storySeen){if(!ready||![0,25,50,75,100].includes(draft.before))return;if(round.symbolismProtocol)draft=reduceSymbolismDraft(round,draft,{type:'reveal'});else{draft.storySeen=true;draft.stage='after';}data.answers[round.id]=structuredClone(draft);save();render();focus();return;}
+    if(!skip&&isContextChangeRound(round)&&!draft.storySeen){if(!ready)return;draft=reduceContextChangeDraft(round,draft,{type:'reveal'});recordStudyResponse(data,round,draft);save();render();focus();return;}
+    if(!skip&&round?.contextMode==='preference-before-after-v1'&&!draft.storySeen){if(!ready||![0,25,50,75,100].includes(draft.before))return;if(round.symbolismProtocol)draft=reduceSymbolismDraft(round,draft,{type:'reveal'});else{draft.storySeen=true;draft.stage='after';}recordStudyResponse(data,round,draft);save();render();focus();return;}
     if(round?.kind==='exercise'){
-      if(skip)data.answers[round.id]={...structuredClone(draft),skipped:true};
+      if(skip)recordStudyResponse(data,round,{...draft,skipped:true});
       else{
         if(!embedded[round.exerciseKind].mountedReady()||!validScenario(draft.record,sessionWorks(),false))return;
         draft.record={...structuredClone(draft.record),confirmed:true,finishedAt:Date.now()};
-        data.answers[round.id]={...structuredClone(draft),answeredAt:Date.now()};
+        recordStudyResponse(data,round,{...draft,answeredAt:Date.now()});
       }
       if(data.index===data.target-1){data.finishedAt=Date.now();data.screen='reading';}else data.index++;
       save();render();focus();return;
     }
     if(!skip&&(!ready||!validStudyAnswer(round,['spectrum','grid','match','choice-grid','contrast','context'].includes(round.kind)?{...draft,confirmed:true}:draft)))return;
     if(!skip&&round.kind==='contrast'&&!draft.confirmed){const answer=contrastController?.confirm();if(!answer)return;draft=answer;if(round.contrastKind==='chronology'){syncImages();return;}}
-    if(!skip&&round.kind==='match'&&!draft.confirmed){draft.confirmed=true;draft.feedbackSeen=true;data.answers[round.id]=structuredClone(draft);save();render();focus();return;}
-    if(skip)data.answers[round.id]={skipped:true,workIds:ids(round)};else{if(['spectrum','grid','choice-grid','contrast','context'].includes(round.kind))draft.confirmed=true;data.answers[round.id]={...structuredClone(draft),answeredAt:Date.now()};}
+    if(!skip&&round.kind==='match'&&!draft.confirmed){draft.confirmed=true;draft.feedbackSeen=true;recordStudyResponse(data,round,draft);save();render();focus();return;}
+    if(skip)recordStudyResponse(data,round,{skipped:true,workIds:ids(round)});else{if(['spectrum','grid','choice-grid','contrast','context'].includes(round.kind))draft.confirmed=true;recordStudyResponse(data,round,{...draft,answeredAt:Date.now()});}
     if(refining()){continueRefinement();return;}
     if(data.index===data.target-1){data.finishedAt=Date.now();data.screen='reading';}else data.index++;
     save();render();focus();
@@ -625,7 +661,7 @@ export function createDeepStudy({app,getWorks,image,esc,keepButtons,navigate,sho
     ensureSession();
     const rounds=profileRounds(Math.max(200,data.plan.length)),records=journey?exerciseRecords(rounds):[],unavailable=rounds.filter(r=>r.unavailable),universe=[...new Map([...getWorks(),...sessionWorks()].map(w=>[w.id,w])).values()],portrait=journey?buildTastePortrait({works:universe,rounds,answers:data.answers,records,saved:getSavedCollection(),recommendationHistory:data.archives||[]}):null;
     if(portrait)portrait.connections=buildTasteConnections({works:universe,rounds,answers:data.answers,records});
-    return {version:1,target:data.target,index:data.index,startedAt:data.startedAt,finishedAt:data.finishedAt,manifest:structuredClone(data.manifest),answers:structuredClone(data.answers),rounds:structuredClone(Object.values(data.shown)),plannedRounds:structuredClone(data.plan),archives:structuredClone(data.archives),unavailableDecisions:unavailable.map(r=>({id:r.id,workIds:r.unavailableWorkIds,reason:r.unavailableReason})),reading:analyzeStudy(sessionWorks(),rounds,data.answers),...(journey?{...(data.profileRefinement?{profileRefinement:structuredClone(data.profileRefinement)}:{}),batches:structuredClone(data.batches||[]),planRevisions:structuredClone(data.planRevisions||[]),instrumentRevisions:structuredClone(data.instrumentRevisions||[]),portrait}:{}),exhibitionFindings:structuredClone(journey?analyzeScenarios(sessionWorks(),records).findings:getExhibitionFindings()),...(data.unreadableSource?{unreadableSource:data.unreadableSource}:{}),...(data.unmappedAnswers!==undefined?{unmappedAnswers:structuredClone(data.unmappedAnswers)}:{}),...(data.unmappedShown!==undefined?{unmappedShown:structuredClone(data.unmappedShown)}:{}),...(data.retainedSource?{retainedSource:structuredClone(data.retainedSource)}:{})};
+    return {version:1,target:data.target,index:data.index,startedAt:data.startedAt,finishedAt:data.finishedAt,manifest:structuredClone(data.manifest),answers:structuredClone(data.answers),...(data.answerRevisions?.length?{answerRevisions:structuredClone(data.answerRevisions)}:{}),rounds:structuredClone(Object.values(data.shown)),plannedRounds:structuredClone(data.plan),archives:structuredClone(data.archives),unavailableDecisions:unavailable.map(r=>({id:r.id,workIds:r.unavailableWorkIds,reason:r.unavailableReason})),reading:analyzeStudy(sessionWorks(),rounds,data.answers),...(journey?{...(data.profileRefinement?{profileRefinement:structuredClone(data.profileRefinement)}:{}),batches:structuredClone(data.batches||[]),planRevisions:structuredClone(data.planRevisions||[]),instrumentRevisions:structuredClone(data.instrumentRevisions||[]),portrait}:{}),exhibitionFindings:structuredClone(journey?analyzeScenarios(sessionWorks(),records).findings:getExhibitionFindings()),...(data.unreadableSource?{unreadableSource:data.unreadableSource}:{}),...(data.unmappedAnswers!==undefined?{unmappedAnswers:structuredClone(data.unmappedAnswers)}:{}),...(data.unmappedShown!==undefined?{unmappedShown:structuredClone(data.unmappedShown)}:{}),...(data.retainedSource?{retainedSource:structuredClone(data.retainedSource)}:{})};
   }
   async function commitSessionChange(candidate,{navigateTo='study'}={}) {
     if(sessionChangePending)return;sessionChangePending=true;
@@ -651,7 +687,7 @@ export function createDeepStudy({app,getWorks,image,esc,keepButtons,navigate,sho
       if(action==='lab-reading'){changeScreen('reading');return true;}
       if(embedded[round.exerciseKind].handle(action,control,event))return true;
     }
-    if(round?.kind==='choice-grid'&&['deep-grid-pick','deep-grid-none','deep-grid-unsure'].includes(action)){if(!ready)return true;expandKeepSelection();simplifyInteraction(true);draft=action==='deep-grid-pick'?toggleGridChoice(round,draft,control.dataset.work):{...draft,selectedIds:[],explicitNone:action==='deep-grid-none',unsure:action==='deep-grid-unsure',confirmed:false};data.answers[round.id]=structuredClone(draft);save();for(const button of app.querySelectorAll('.discovery-work'))button.setAttribute('aria-pressed',String(draft.selectedIds.includes(button.dataset.work)));app.querySelector('[data-action=deep-grid-none]')?.setAttribute('aria-pressed',String(draft.explicitNone));app.querySelector('[data-action=deep-grid-unsure]')?.setAttribute('aria-pressed',String(draft.unsure));const count=app.querySelector('.discovery-count');if(count)count.textContent=draft.selectedIds.length+(round.selectionMode==='shortlist'&&(round.maxChoices||3)<round.works.length?' / '+(round.maxChoices||3):'')+' selected';syncImages();return true;}
+    if(round?.kind==='choice-grid'&&['deep-grid-pick','deep-grid-none','deep-grid-unsure'].includes(action)){if(!ready)return true;expandKeepSelection();simplifyInteraction(true);draft=action==='deep-grid-pick'?toggleGridChoice(round,draft,control.dataset.work):{...draft,selectedIds:[],explicitNone:action==='deep-grid-none',unsure:action==='deep-grid-unsure',confirmed:false};recordStudyResponse(data,round,draft);save();for(const button of app.querySelectorAll('.discovery-work'))button.setAttribute('aria-pressed',String(draft.selectedIds.includes(button.dataset.work)));app.querySelector('[data-action=deep-grid-none]')?.setAttribute('aria-pressed',String(draft.explicitNone));app.querySelector('[data-action=deep-grid-unsure]')?.setAttribute('aria-pressed',String(draft.unsure));const count=app.querySelector('.discovery-count');if(count)count.textContent=draft.selectedIds.length+(round.selectionMode==='shortlist'&&(round.maxChoices||3)<round.works.length?' / '+(round.maxChoices||3):'')+' selected';syncImages();return true;}
     if(round?.kind==='contrast'&&app.querySelector('.deep-question')&&action?.startsWith('contrast-')){if(ready)contrastController?.handle(action,control,event);return true;}
     if(app.querySelector('.deep-question')&&inputs.click(action,control,event))return true;
     if(app.querySelector('.deep-question')&&action==='zoom'){showArtwork(control.dataset.work,round.kind==='context'&&(!round.contextMode||draft.storySeen)||round.kind==='match'&&draft.confirmed?(round.kind==='match'&&round.field==='artist'?'artist':true):false);return true;}
@@ -661,7 +697,7 @@ export function createDeepStudy({app,getWorks,image,esc,keepButtons,navigate,sho
     if(action==='deep-extend'&&journey){data=extendJourneySession(data,getWorks());save();navigate('study');focus();return true;}
     if(action==='deep-retake'){startNewSession();return true;}
     if(action==='deep-grid-page'&&round?.kind==='choice-grid'&&round.evidence?.instrumentRevision===PAGED_FAVOURITES){
-      if(!ready)return true;draft=setChoiceGridPage(round,draft,Number(control.dataset.page));data.answers[round.id]=structuredClone(draft);save();
+      if(!ready)return true;draft=setChoiceGridPage(round,draft,Number(control.dataset.page));recordStudyResponse(data,round,draft);save();
       const grid=app.querySelector('.discovery-grid');if(grid)grid.outerHTML=discoveryGridMarkup(round,draft,{image,esc});syncImages();return true;
     }
     if(action==='deep-home')changeScreen('home');
@@ -675,11 +711,11 @@ export function createDeepStudy({app,getWorks,image,esc,keepButtons,navigate,sho
     if(action==='deep-reading'){if(refining())stopRefinement();else changeScreen('reading');}
     if(action==='deep-back'&&!refining()&&data.index>0){data.index--;save();render();focus();}
     if(action==='deep-next'&&!inputs.advanceMobileMap?.())next();if(action==='deep-skip')next(true);
-    if(action==='deep-liking'&&ready&&round.contextMode==='preference-before-after-v1'){const phase=draft.storySeen?'after':'before',value=Number(control.dataset.value);if(control.dataset.phase===phase&&[0,25,50,75,100].includes(value)){if(round.symbolismProtocol)draft=reduceSymbolismDraft(round,draft,{type:phase==='before'?'rate-before':'rate-after',value});else draft[phase]=value;data.answers[round.id]=structuredClone(draft);data.finishedAt=null;save();for(const b of app.querySelectorAll('[data-action=deep-liking]'))b.setAttribute('aria-pressed',String(Number(b.dataset.value)===value));syncImages();}}
-    if(action==='deep-context-change'&&ready&&isContextChangeRound(round)){draft=reduceContextChangeDraft(round,draft,control.dataset.value==='unsure'?{type:'unsure'}:{type:'change',value:Number(control.dataset.value)});data.answers[round.id]=structuredClone(draft);data.finishedAt=null;save();for(const button of app.querySelectorAll('[data-action=deep-context-change]'))button.setAttribute('aria-pressed',String(button.dataset.value==='unsure'?draft.uncertain===true:!draft.uncertain&&Number(button.dataset.value)===draft.reportedChange));syncImages();}
-    if(action==='deep-context'&&ready){draft.change=control.dataset.value;data.answers[round.id]=structuredClone(draft);save();for(const b of app.querySelectorAll('[data-action=deep-context]'))b.setAttribute('aria-pressed',String(b.dataset.value===draft.change));syncImages();}
+    if(action==='deep-liking'&&ready&&round.contextMode==='preference-before-after-v1'){const phase=draft.storySeen?'after':'before',value=Number(control.dataset.value);if(control.dataset.phase===phase&&[0,25,50,75,100].includes(value)){if(round.symbolismProtocol)draft=reduceSymbolismDraft(round,draft,{type:phase==='before'?'rate-before':'rate-after',value});else draft[phase]=value;recordStudyResponse(data,round,draft);data.finishedAt=null;save();for(const b of app.querySelectorAll('[data-action=deep-liking]'))b.setAttribute('aria-pressed',String(Number(b.dataset.value)===value));syncImages();}}
+    if(action==='deep-context-change'&&ready&&isContextChangeRound(round)){draft=reduceContextChangeDraft(round,draft,control.dataset.value==='unsure'?{type:'unsure'}:{type:'change',value:Number(control.dataset.value)});recordStudyResponse(data,round,draft);data.finishedAt=null;save();for(const button of app.querySelectorAll('[data-action=deep-context-change]'))button.setAttribute('aria-pressed',String(button.dataset.value==='unsure'?draft.uncertain===true:!draft.uncertain&&Number(button.dataset.value)===draft.reportedChange));syncImages();}
+    if(action==='deep-context'&&ready){draft.change=control.dataset.value;recordStudyResponse(data,round,draft);save();for(const b of app.querySelectorAll('[data-action=deep-context]'))b.setAttribute('aria-pressed',String(b.dataset.value===draft.change));syncImages();}
     if(action==='deep-statement'){statementIndex=Number(control.dataset.index);app.querySelector('.deep-round-body').innerHTML=statementMarkup();syncImages();}
-    if(action==='deep-agreement'&&ready){const id=control.dataset.field;draft.claims[id]=Number(control.dataset.value);data.answers[round.id]=structuredClone(draft);save();for(const b of app.querySelectorAll('[data-action=deep-agreement]'))b.setAttribute('aria-pressed',String(b.dataset.value===control.dataset.value));app.querySelector('.deep-statement-status').textContent='You chose '+AGREEMENT[Number(control.dataset.value)]+'.';syncImages();if(statementIndex<round.statements.length-1){const currentId=round.id,currentIndex=statementIndex;clearTimeout(statementTimer);statementTimer=setTimeout(()=>{if(app.querySelector('.deep-question')&&round.id===currentId&&statementIndex===currentIndex){statementIndex++;app.querySelector('.deep-round-body').innerHTML=statementMarkup();syncImages();}},230);}}
+    if(action==='deep-agreement'&&ready){const id=control.dataset.field;draft.claims[id]=Number(control.dataset.value);recordStudyResponse(data,round,draft);save();for(const b of app.querySelectorAll('[data-action=deep-agreement]'))b.setAttribute('aria-pressed',String(b.dataset.value===control.dataset.value));app.querySelector('.deep-statement-status').textContent='You chose '+AGREEMENT[Number(control.dataset.value)]+'.';syncImages();if(statementIndex<round.statements.length-1){const currentId=round.id,currentIndex=statementIndex;clearTimeout(statementTimer);statementTimer=setTimeout(()=>{if(app.querySelector('.deep-question')&&round.id===currentId&&statementIndex===currentIndex){statementIndex++;app.querySelector('.deep-round-body').innerHTML=statementMarkup();syncImages();}},230);}}
     if(action==='deep-art')showArtwork(control.dataset.work,round?.kind==='context'&&(!round.contextMode||draft.storySeen)||!journey&&data.index>=190);
     if(action==='deep-retry'){for(const img of app.querySelectorAll('.deep-question img'))if(!img.complete||!img.naturalWidth)img.src='./'+lookup(img.dataset.artwork).image+'?retry='+Date.now();syncImages();}
     if(action==='deep-export')download();

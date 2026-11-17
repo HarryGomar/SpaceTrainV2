@@ -18,7 +18,7 @@ export function rankExplanationPatterns(patterns=[],{favouriteIds=[],dislikeIds=
     const selectedKnown=baseline.selectedKnown||item.knownWorkCount||0,total=baseline.ratedKnown||baseline.presentedPoolKnown||0,withQuality=baseline.ratedKnown?baseline.ratedWithQuality:baseline.presentedPoolWithQuality;
     const enrichment=favourite&&selectedKnown&&total?(baseline.selectedWithQuality??item.supportingWorkCount??0)/selectedKnown-(withQuality||0)/total:null;
     const supporting=item.supportingSetCount||0,opposing=item.opposingSetCount||0,mixed=item.mixedSetCount||0,eligible=item.eligibleSetCount||supporting+opposing+mixed;
-    const explicitCounters=unique(item.explicitDislikesWithQuality||[]),counterIds=unique([...explicitCounters,...(item.lowerRatedWithQuality||[]),...(item.ratingAssociation?.lowerRatedFavouredWorkIds||[]),...winners(item.counter)]);
+    const explicitCounters=unique(item.explicitDislikesWithQuality||[]),lowSameQuality=unique([...(item.lowerRatedWithQuality||[]),...(item.ratingAssociation?.lowerRatedFavouredWorkIds||[])]),counterIds=unique([...explicitCounters,...lowSameQuality,...winners(item.counter)]);
     const sourceSupport=item.recurringSupport?.length?item.recurringSupport:item.support||[],supportIds=unique(item.favouriteWorkIds?.length?item.favouriteWorkIds:winners(sourceSupport));
     const supportingExamples=[...supportIds];
     const presence=item.recordQuality||{},present=new Set(presence.presentWorkIds||[]),absent=new Set(presence.absentWorkIds||[]);
@@ -38,12 +38,12 @@ export function rankExplanationPatterns(patterns=[],{favouriteIds=[],dislikeIds=
     const balance=eligible?(supporting-opposing)/eligible:0;
     const strength=(item.support||[]).filter(row=>Number.isFinite(row.responseGap)).reduce((best,row)=>Math.max(best,Math.abs(row.responseGap)),0)/100;
     const score=(discriminating?50:0)+(item.status==='descriptive-association'&&item.summaryEligible?20:0)+(favourite?12+Math.max(0,enrichment||0)*20:0)+balance*12+Math.min(supporting,8)+strength*3-Math.min(counterIds.length,6)*2+(favouriteAgreement?6:0)+(recordFit.broadAssociationEligible&&favouriteAgreement?8:0);
-    const sortedSupport=supportIds.filter(id=>!counterIds.includes(id)).sort((a,b)=>Number(favourites.has(b))-Number(favourites.has(a))+(levels.get(b)||0)/100-(levels.get(a)||0)/100);
+    const sortedSupport=supportIds.filter(id=>!explicitCounters.includes(id)).sort((a,b)=>Number(favourites.has(b))-Number(favourites.has(a))+(levels.get(b)||0)/100-(levels.get(a)||0)/100);
     const exception=explicitCounters[0]||counterIds.find(id=>!sortedSupport.slice(0,2).includes(id));
     item.explanationEvidence={kind:discriminating?'comparative':favourite?'shared-favourites':'association',score,enrichment,distinctSupportingSets:supporting,opposingSets:opposing,mixedSets:mixed,eligibleSets:eligible,explicitCounterWorkIds:explicitCounters,counterWorkIds:counterIds,supportingWorkIds:supportingExamples,selectionRule:'Comparative support, observed separation and exceptions; not statistical confidence.'};
     const foil=!favourite?sourceSupport.find(row=>row.workIds?.[0]===sortedSupport[0]&&row.workIds.length===2)?.workIds[1]:null;
     item.displayWorkIds=unique([sortedSupport[0],foil||sortedSupport[1],exception]);
-    item.displayRoles=Object.fromEntries(item.displayWorkIds.map(id=>[id,explicitCounters.includes(id)?'explicit-dislike':otherFavourites.includes(id)?'favourite-exception':counterIds.includes(id)?'counterexample':id===foil?'comparison':favourites.has(id)?'favourite':'support']));
+    item.displayRoles=Object.fromEntries(item.displayWorkIds.map(id=>[id,id===sortedSupport[0]?favourites.has(id)?'favourite':'support':explicitCounters.includes(id)?'explicit-dislike':otherFavourites.includes(id)?'favourite-exception':lowSameQuality.includes(id)?'counter':counterIds.includes(id)?'counterexample':id===foil?'comparison':favourites.has(id)?'favourite':'support']));
     return item;
   });
   for(const item of ranked){

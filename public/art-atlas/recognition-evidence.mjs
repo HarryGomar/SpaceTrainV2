@@ -1,3 +1,5 @@
+import {continuousAppealValue} from './continuous-preference.mjs';
+
 export const RECOGNITION_PROTOCOL='recognition-certainty-v1';
 export const RECOGNITION_CERTAINTY=Object.freeze(['recognised','inferred','guessed','unsure']);
 export const isRecognitionWithCertainty=round=>round?.kind==='match'&&round.evidence?.instrumentRevision===RECOGNITION_PROTOCOL;
@@ -27,4 +29,31 @@ export function captureArtworkExposure(round,history=[],answers={}){
   }
   for(const target of Object.values(byWork))for(const field of ['imageRoundIds','labelRoundIds','artistLabelRoundIds','movementLabelRoundIds','noteRoundIds','unknownLabelRoundIds'])target[field]=[...new Set(target[field])];
   return {protocol:'artwork-exposure-v1',works:byWork,scope:'Recorded presentation and explicit label/note exposure before this question. No attention or pre-quiz familiarity is inferred.'};
+}
+
+
+
+/** Bind the single cued attribution to actual, answered appeal questions. */
+export function bindTasteAttribution(round,shown,answers){
+  const entries=new Map();
+  for(const source of shown)for(const work of source.works){
+    if(!work.artist||work.artistKnown===false||/unknown|unidentified|anonymous|workshop|circle/i.test(work.artist))continue;
+    const value=continuousAppealValue(source,answers[source.id],work.id);
+    if(value!==null)entries.set(work.id,{work,value,sourceRoundId:source.id});
+  }
+  const rows=[...entries.values()],exposure=captureArtworkExposure({id:round.id,works:rows.map(row=>row.work)},shown,answers).works;
+  const selected=[],artists=new Set();
+  for(const side of [1,-1,1,-1]){
+    const row=rows.filter(item=>!artists.has(item.work.artist)).sort((a,b)=>{
+      const cost=item=>Math.abs(side===1?100-item.value:item.value)+25*Number(!!exposure[item.work.id].artistLabelRoundIds.length)+10*Number(!!exposure[item.work.id].unknownLabelRoundIds.length);
+      return cost(a)-cost(b)||a.work.id.localeCompare(b.work.id);
+    })[0];
+    if(!row)break;
+    selected.push(row);artists.add(row.work.artist);
+  }
+  const {bindFromShownAppeal,...evidence}=round.evidence;
+  if(selected.length<4)return {...round,evidence:{...evidence,selectionMethod:'cued-attribution-catalogue-fallback'}};
+  const works=selected.map(row=>row.work),labels=[works[2],works[0],works[3],works[1]];
+  return {...round,works,workIds:works.map(work=>work.id),options:labels.map((work,index)=>({id:'artist-'+index,label:work.artist})),
+    evidence:{...evidence,selectionMethod:'taste-linked-from-answered-appeal',sourceRoundIds:[...new Set(selected.map(row=>row.sourceRoundId))],earlierAppeal:selected.map(({work,value,sourceRoundId})=>({workId:work.id,value,sourceRoundId}))}};
 }

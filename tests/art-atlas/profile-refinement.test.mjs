@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import {JSDOM} from 'jsdom';
 import {nextProfileRefinement,PROFILE_REFINEMENT_PROTOCOL} from '../../public/art-atlas/profile-refinement.mjs';
 import {withContinuousPreference,isContinuousPreferenceRound} from '../../public/art-atlas/continuous-preference.mjs';
+import {selectAppealInvestigation} from '../../public/art-atlas/appeal-investigations.mjs';
+import {buildTastePatterns} from '../../public/art-atlas/taste-patterns.mjs';
 import {ARTWORK_ATTRIBUTE_VERSION,ARTWORK_ATTRIBUTE_DEFINITIONS} from '../../public/art-atlas/artwork-attribute-definitions.mjs';
 import {createDeepStudy,prepareJourneySession,sessionJourneyRounds,journeyEvidenceRounds,snapshotStudyRound,extendJourneySession} from '../../public/art-atlas/deep-study.mjs';
 import CATALOGUE from '../../public/art-atlas/artworks.json' with {type:'json'};
@@ -17,17 +19,36 @@ function qualityFixture(){
 }
 
 test('Optional questions use frozen rival predictions, avoid already offered pairs and stop rather than padding',()=>{
-  const f=qualityFixture(),original=structuredClone(f),attempts=[];
-  for(let i=0;i<2;i++){
-    const offer=nextProfileRefinement({...f,attempts});assert.ok(offer);const round=offer.round;
-    assert.equal(round.evidence.diagnostic.kind,'quality');assert.notEqual(...round.evidence.diagnostic.predictions);assert.equal(round.evidence.profileRefinement.discoveryVote,false);
-    const priorPairs=f.rounds.flatMap(source=>ids(source).flatMap((id,j)=>ids(source).slice(j+1).map(other=>[id,other].sort().join('|'))));assert.ok(!priorPairs.includes(ids(round).sort().join('|')));
-    attempts.push(round);f.rounds.push(round);f.answers[round.id]={workIds:ids(round),criterion:'preference',positions:Object.fromEntries(ids(round).map(id=>[id,90])),confirmed:true};
-  }
-  assert.equal(nextProfileRefinement({...f,attempts}),null,'Two unresolved checks of the same rival explanations do not trigger endless repeats');
+  const f=qualityFixture(),original=structuredClone(f);
+  const offer=nextProfileRefinement(f);assert.ok(offer);const round=offer.round,check=round.evidence.appealInvestigation;
+  assert.equal(check.scope,'local');
+  assert.notEqual(...check.alternatives.map(item=>item.predictedWorkId));
+  assert.equal(check.frozenBeforeAnswer,true);
+  assert.equal(round.evidence.profileRefinement.discoveryVote,false);
+  const alreadyRated=new Set(f.rounds.flatMap(ids));
+  assert.ok(ids(round).some(id=>!alreadyRated.has(id)));
+  const attempts=[round];f.rounds.push(round);f.answers[round.id]={workIds:ids(round),criterion:'preference',positions:Object.fromEntries(ids(round).map(id=>[id,90])),confirmed:true};
+  assert.equal(nextProfileRefinement({...f,attempts}),null,'No additional well-matched pair with an unrated work remains');
   assert.deepEqual(f.rounds.slice(0,3),original.rounds);assert.deepEqual(Object.fromEntries(original.rounds.map(r=>[r.id,f.answers[r.id]])),original.answers);
   assert.equal(nextProfileRefinement({...f,attempts:Array(10).fill(attempts[0])}),null);
   assert.equal(nextProfileRefinement({...original,annotationReviews:{}}),null,'An ordinary appeal fallback is not a useful extra question');
+});
+
+test('The reader changes a qualified explanation after seeing a preassigned transfer pair',()=>{
+  const f=qualityFixture();
+  const before=buildTastePatterns(f),offer=selectAppealInvestigation({...f,id:'journey-018',mode:'transfer'});
+  assert.ok(offer);
+  const round=offer.round,[preferred,opposed]=round.evidence.appealInvestigation.alternatives;
+  const original=before.patterns.find(item=>item.channel==='personal-appeal'&&item.qualityKey===opposed.quality);
+  assert.equal(original.summaryEligible,true);
+  const answer={workIds:ids(round),criterion:'preference',positions:{[preferred.predictedWorkId]:93,[opposed.predictedWorkId]:10},confirmed:true};
+  const after=buildTastePatterns({...f,rounds:[...f.rounds,round],answers:{...f.answers,[round.id]:answer}});
+  assert.equal(after.investigations[0].independentOfTraining,true);
+  const changed=after.patterns.find(item=>item.id===original.id);
+  assert.equal(changed.investigation.status,'challenged');
+  assert.equal(changed.summaryEligible,false);
+  assert.ok(!after.readingSummary?.principalPatternIds.includes(original.id));
+  assert.equal(after.coverage.continuousSets,before.coverage.continuousSets);
 });
 
 function completedBase(){
