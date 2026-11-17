@@ -26,9 +26,10 @@ function shell(){app.innerHTML=`<header class="atlas-top"><a href="./">← Art A
 function renderControls(){
   for(const button of app.querySelectorAll('[data-mode]'))button.setAttribute('aria-pressed',String(button.dataset.mode===mode));
   const controls=app.querySelector('.atlas-controls'),intro=app.querySelector('#atlas-intro');app.querySelector('.atlas-heading h1').textContent=mode==='collection'?'The collection':mode==='responses'?'Your responses':'Your comparisons';intro.hidden=mode==='collection';
+  controls.dataset.axisControls=String(mode==='collection');
   if(mode==='collection'){
     intro.textContent='';app.style.setProperty('--x',atlasDimensionColour(xId));app.style.setProperty('--y',atlasDimensionColour(yId));
-    controls.innerHTML=`<label><span class="axis-dot x"></span>Across<select id="atlas-x">${atlas.dimensions.filter(d=>d.id!==yId).map(d=>`<option value="${d.id}" ${d.id===xId?'selected':''}>${esc(d.title)}</option>`).join('')}</select></label><label><span class="axis-dot y"></span>Up<select id="atlas-y">${atlas.dimensions.filter(d=>d.id!==xId).map(d=>`<option value="${d.id}" ${d.id===yId?'selected':''}>${esc(d.title)}</option>`).join('')}</select></label><button class="atlas-swap" type="button" data-swap-axes aria-label="Swap horizontal and vertical axes" title="Swap axes">⇄</button>`;
+    controls.innerHTML=`<div class="atlas-axis-controls" role="group" aria-label="Map axes"><label class="atlas-axis-control"><span class="atlas-axis-label x">X →</span><select id="atlas-x">${atlas.dimensions.filter(d=>d.id!==yId).map(d=>`<option value="${d.id}" ${d.id===xId?'selected':''}>${esc(d.title)}</option>`).join('')}</select></label><label class="atlas-axis-control"><span class="atlas-axis-label y">Y ↑</span><select id="atlas-y">${atlas.dimensions.filter(d=>d.id!==xId).map(d=>`<option value="${d.id}" ${d.id===yId?'selected':''}>${esc(d.title)}</option>`).join('')}</select></label><button class="atlas-swap" type="button" data-swap-axes aria-label="Swap horizontal and vertical axes" title="Swap axes">⇄</button></div>`;
   }else if(mode==='responses'){
     intro.textContent='Your placements, with the original questions and scales.';
     const maps=[...atlas.maps,...atlas.matchedPanels];if(!maps.some(map=>map.id===mapId))mapId=(maps.find(map=>['achievement','reading','returnResponse'].includes(map.axisId))||maps[0])?.id||'';

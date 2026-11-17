@@ -165,5 +165,3 @@ body.profile-evidence-open{overflow:hidden}
  .profile-evidence-value{gap:8px;font-size:11px;flex-wrap:wrap}
  .tp-choice-notes>p{font-size:11px}
 }
-.previous-quiz{display:flex;align-items:center;gap:24px;width:100%;border:0;background:transparent;padding:18px 4px;text-align:left;color:inherit;cursor:pointer}
-.previous-quiz strong{font-weight:500}.previous-quiz>span:nth-child(2){color:#857b70}.previous-quiz>span:last-child{margin-left:auto}.previous-quiz:disabled{opacity:.45;cursor:default}
