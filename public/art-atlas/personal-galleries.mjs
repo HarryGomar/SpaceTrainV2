@@ -4,6 +4,7 @@ import {validScenario,SLOT_IDS} from './scenarios.mjs';
 
 export const PERSONAL_GALLERIES_KEY='art-atlas-personal-galleries-v1';
 export const PERSONAL_GALLERIES_PROTOCOL='personal-galleries-v1';
+export const PERSONAL_FLOOR_GRID=Object.freeze({columns:6,rows:5});
 export const PERSONAL_ROOM_SLOTS=Object.freeze([
   {id:'north-left',side:'north',label:'North wall, left',x:33,y:10},
   {id:'north-right',side:'north',label:'North wall, right',x:67,y:10},
@@ -26,6 +27,37 @@ const useful=value=>name(value)&&!/unknown|unidentified|unspecified|anonymous|pr
 const id=(prefix,now)=>prefix+'-'+(typeof now==='number'&&Number.isFinite(now)?now:Date.now()).toString(36)+'-'+(globalThis.crypto?.randomUUID?.()||Math.random().toString(36).slice(2,12));
 const validTime=value=>typeof value==='number'&&Number.isFinite(value)&&value>=0;
 const knownFields=['id','title','shortTitle','artist','artistKnown','date','movement','museum','country','medium','sourceUrl','image','imageLarge','width','height','largeWidth','largeHeight','alt','rights','rightsUrl','credit','sha256'];
+const floorCellKey=({column,row})=>column+':'+row;
+const floorDistance=(a,b)=>Math.abs(a.column-b.column)+Math.abs(a.row-b.row);
+const floorCentre={column:2,row:2};
+const floorCells=Array.from({length:PERSONAL_FLOOR_GRID.columns*PERSONAL_FLOOR_GRID.rows},(_,index)=>({
+  column:index%PERSONAL_FLOOR_GRID.columns,row:Math.floor(index/PERSONAL_FLOOR_GRID.columns)
+})).sort((a,b)=>floorDistance(a,floorCentre)-floorDistance(b,floorCentre));
+const validFloorCell=cell=>plain(cell)&&Number.isInteger(cell.column)&&Number.isInteger(cell.row)&&
+  cell.column>=0&&cell.column<PERSONAL_FLOOR_GRID.columns&&cell.row>=0&&cell.row<PERSONAL_FLOOR_GRID.rows;
+
+/** Older galleries have a default floor plan until their first room edit. */
+export function personalRoomPositions(gallery){
+  return gallery.floorPlan?structuredClone(gallery.floorPlan):
+    Object.fromEntries(gallery.rooms.map((room,index)=>[room.id,{...floorCells[index]}]));
+}
+
+function availableFloorCell(plan,nearRoomId){
+  const occupied=new Set(Object.values(plan).map(floorCellKey));
+  const free=floorCells.filter(cell=>!occupied.has(floorCellKey(cell)));
+  const near=Object.hasOwn(plan,nearRoomId)?plan[nearRoomId]:null;
+  return {...(near&&free.find(cell=>floorDistance(cell,near)===1)||free[0])};
+}
+
+function validFloorPlan(plan,roomIds){
+  if(!plain(plan)||Object.keys(plan).length!==roomIds.size)return false;
+  const occupied=new Set();
+  for(const [id,cell] of Object.entries(plan)){
+    if(!roomIds.has(id)||!validFloorCell(cell)||occupied.has(floorCellKey(cell)))return false;
+    occupied.add(floorCellKey(cell));
+  }
+  return true;
+}
 
 export function personalWorkSnapshot(work){
   if(!plain(work)||!identifier(work.id)||!name(work.title,500)||!image(work.image)||!link(work.sourceUrl))return null;
@@ -55,6 +87,7 @@ export function validPersonalGalleries(state){
       if(!plain(room)||!identifier(room.id)||rooms.has(room.id)||!name(room.name,60)||!plain(room.layout))return false;rooms.add(room.id);
       for(const [slot,workId]of Object.entries(room.layout)){if(!slotIds.has(slot)||!identifier(workId)||paintings.has(workId)||!Object.hasOwn(gallery.workSnapshots,workId))return false;paintings.add(workId);}
     }
+    if(Object.hasOwn(gallery,'floorPlan')&&!validFloorPlan(gallery.floorPlan,rooms))return false;
   }
   return true;
 }
@@ -74,19 +107,49 @@ function edit(state,galleryId,change,now){
 }
 export function addPersonalGallery(state,{title='Untitled gallery',now=Date.now(),galleryId=id('gallery',now),roomId=id('room',now)}={}){
   if(!validPersonalGalleries(state)||state.galleries.length>=100||!name(title)||!validTime(now)||!identifier(galleryId)||state.galleries.some(item=>item.id===galleryId)||!identifier(roomId))return failure(state,'Choose a name for the new gallery.');
-  const next=structuredClone(state);next.galleries.push({id:galleryId,title:title.trim(),createdAt:now,updatedAt:now,rooms:[{id:roomId,name:'Room 1',layout:{}}],workSnapshots:{}});return {ok:true,state:next,galleryId,roomId};
+  const next=structuredClone(state);next.galleries.push({id:galleryId,title:title.trim(),createdAt:now,updatedAt:now,rooms:[{id:roomId,name:'Room 1',layout:{}}],floorPlan:{[roomId]:{...floorCentre}},workSnapshots:{}});return {ok:true,state:next,galleryId,roomId};
 }
 export function renamePersonalGallery(state,galleryId,title,now=Date.now()){
   return edit(state,galleryId,gallery=>{if(!name(title))return {ok:false,message:'Give the gallery a name of up to 80 characters.'};gallery.title=title.trim();},now);
 }
-export function addPersonalRoom(state,galleryId,{roomName:label,now=Date.now(),roomId=id('room',now)}={}){
-  return edit(state,galleryId,gallery=>{if(gallery.rooms.length>=24)return {ok:false,message:'This gallery has 24 rooms. You can start another gallery.'};const title=label||'Room '+(gallery.rooms.length+1);if(!identifier(roomId)||gallery.rooms.some(room=>room.id===roomId)||!name(title,60))return {ok:false,message:'Choose another room name.'};gallery.rooms.push({id:roomId,name:title.trim(),layout:{}});return {roomId};},now);
+export function addPersonalRoom(state,galleryId,{roomName:label,now=Date.now(),roomId=id('room',now),nearRoomId}={}){
+  return edit(state,galleryId,gallery=>{
+    if(gallery.rooms.length>=24)return {ok:false,message:'This gallery has 24 rooms. You can start another gallery.'};
+    const title=label||'Room '+(gallery.rooms.length+1);
+    if(!identifier(roomId)||gallery.rooms.some(room=>room.id===roomId)||!name(title,60))return {ok:false,message:'Choose another room name.'};
+    const plan=personalRoomPositions(gallery);
+    plan[roomId]=availableFloorCell(plan,nearRoomId);
+    gallery.floorPlan=plan;
+    gallery.rooms.push({id:roomId,name:title.trim(),layout:{}});
+    return {roomId};
+  },now);
+}
+export function movePersonalRoom(state,galleryId,roomId,position,now=Date.now()){
+  return edit(state,galleryId,gallery=>{
+    if(!gallery.rooms.some(room=>room.id===roomId))return {ok:false,message:'That room is unavailable.'};
+    if(!validFloorCell(position))return {ok:false,message:'Choose a space inside the floor plan.'};
+    const plan=personalRoomPositions(gallery),destination=floorCellKey(position);
+    const swap=gallery.rooms.find(other=>other.id!==roomId&&floorCellKey(plan[other.id])===destination);
+    if(swap)plan[swap.id]=plan[roomId];
+    plan[roomId]={column:position.column,row:position.row};
+    gallery.floorPlan=plan;
+    return {roomId,swappedRoomId:swap?.id||null};
+  },now);
 }
 export function renamePersonalRoom(state,galleryId,roomId,title,now=Date.now()){
   return edit(state,galleryId,gallery=>{const room=gallery.rooms.find(room=>room.id===roomId);if(!room||!name(title,60))return {ok:false,message:'Give the room a name of up to 60 characters.'};room.name=title.trim();return {roomId};},now);
 }
 export function removePersonalRoom(state,galleryId,roomId,now=Date.now()){
-  return edit(state,galleryId,gallery=>{const room=gallery.rooms.find(room=>room.id===roomId);if(!room)return {ok:false,message:'That room is unavailable.'};if(Object.keys(room.layout).length)return {ok:false,message:'Move or remove the paintings before removing this room.'};gallery.rooms=gallery.rooms.filter(room=>room.id!==roomId);return {roomId:gallery.rooms[0]?.id||null};},now);
+  return edit(state,galleryId,gallery=>{
+    const room=gallery.rooms.find(room=>room.id===roomId);
+    if(!room)return {ok:false,message:'That room is unavailable.'};
+    if(Object.keys(room.layout).length)return {ok:false,message:'Move or remove the paintings before removing this room.'};
+    const plan=personalRoomPositions(gallery);
+    delete plan[roomId];
+    gallery.floorPlan=plan;
+    gallery.rooms=gallery.rooms.filter(room=>room.id!==roomId);
+    return {roomId:gallery.rooms[0]?.id||null};
+  },now);
 }
 export function placePersonalWork(state,galleryId,roomId,slotId,workId,works,{now=Date.now()}={}){
   return edit(state,galleryId,gallery=>{

@@ -1,0 +1,4 @@
+@media (forced-colors: none) and (prefers-contrast: no-preference) {
+  :root { scrollbar-color: #8a7d70 transparent; }
+  * { scrollbar-width: thin; }
+}
