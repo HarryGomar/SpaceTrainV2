@@ -17,6 +17,7 @@ const plain=value=>!!value&&typeof value==='object'&&!Array.isArray(value);
 const ids=round=>round.works.map(work=>work.id);
 const setKey=round=>JSON.stringify([...ids(round)].sort());
 export const INTELLIGENCE_VERSION='response-intelligence-v1';
+import {buildTasteInquiry,inquiryObservations,evaluateAppealForecasts,inquirySensitivity} from './taste-inquiry.mjs';
 const limits=['These are descriptions of this selection of paintings and questions, not population confidence or psychological causes.','Repeated works and different answers about one work remain related evidence.','Unmeasured answers and unknown artwork reviews remain unknown.'];
 
 /** Wider than the preference collector: statements, matches and contexts retain
@@ -71,6 +72,25 @@ function mapReadings(entries){
     observations.push(observation(axis,axis==='connection'?'connection-and-understanding':'attention-and-appeal',axis==='connection'?'Personal before it feels understood':'Attention beyond personal appeal',axis==='connection'?`${short(first.work)} felt personally connected while remaining hard to understand.${workIds.length>1?` This occurred for ${workIds.length} works across ${setCount} map ${setCount===1?'set':'sets'}.`:''} This is your reported connection, not a test of correct interpretation.`:`${short(first.work)} held your reported attention despite limited personal appeal.${workIds.length>1?` ${workIds.length} works showed this distinction across ${setCount} map ${setCount===1?'set':'sets'}.`:''} Attention here is a direct report, not recorded viewing time.`,support,{counter:counter.map(row=>ev(row.entry,[row.work.id],`${short(row.work)}: ${AXES[axis].xName} ${row.point[0]}; ${AXES[axis].yName} ${row.point[1]}.`,'A different response')),displayWorkIds:unique([first.work.id,counter[0]?.work.id]),supportingWorkCount:workIds.length,supportingSetCount:setCount,status:workIds.length>=3&&setCount>=2?'supported':'provisional',measurementScope:axis+'-map',competingExplanations:axis==='connection'?['Personal associations and subject familiarity may contribute.']:['Surprise, subject, visual difficulty and personal interest may contribute.']}));
   }
   return {observations,records};
+}
+
+function returnAppealReadings(entries){
+  const rows=[];
+  for(const entry of entries.filter(e=>e.round.kind==='grid'&&e.round.axis==='returnResponse'))for(const work of entry.round.works){
+    const earlier=entries.findLast(e=>e.index<entry.index&&isContinuousPreferenceRound(e.round)&&e.round.works.some(w=>w.id===work.id));
+    if(!earlier)continue;
+    const point=entry.answer.points[work.id];
+    rows.push({work,entry,earlier,appeal:earlier.answer.positions[work.id],tension:point[0],returnWish:point[1]});
+  }
+  const latest=[...new Map(rows.map(row=>[row.work.id,row])).values()],support=latest.filter(r=>r.tension>=65&&r.returnWish>=65&&r.appeal<=60),counter=latest.filter(r=>r.tension>=65&&r.returnWish<=35);
+  if(!support.length)return [];
+  const pack=row=>[
+    ev(row.earlier,[row.work.id],`${short(row.work)}: anchored personal appeal ${row.appeal}.`,'Earlier anchored appeal'),
+    ev(row.entry,[row.work.id],`${short(row.work)}: felt tension ${row.tension}; wish to return ${row.returnWish}.`,'Later direct report')
+  ];
+  const artists=new Set(support.filter(r=>r.work.artistKnown!==false&&r.work.artist&&!/unknown|anonymous|unidentified/i.test(r.work.artist)).map(r=>r.work.artist.toLowerCase()));
+  const first=support[0],boundary=counter[0];
+  return [observation('return-beyond-appeal','tension-and-return','Worth another look despite modest appeal',`${short(first.work)} received personal appeal ${first.appeal}, then felt unsettling at ${first.tension} with a wish to return of ${first.returnWish}. ${support.length>1?`This separation occurred for ${support.length} distinct works. `:''}${boundary?`${short(boundary.work)} also felt unsettling (${boundary.tension}), but you reported little wish to return (${boundary.returnWish}). `:''}This is a reported wish to revisit, not an observed return or a liking score.`,support.flatMap(pack),{counter:counter.slice(0,2).flatMap(pack),status:support.length>=3&&artists.size>=3&&new Set(support.map(r=>r.entry.round.id)).size>=2?'supported':'provisional',displayWorkIds:[first.work.id,...(boundary?[boundary.work.id]:[])],measurementScope:'anchored-appeal-beside-tension-and-return',competingExplanations:['The subject, personal associations and how the scene unfolds remain possible reasons.'],nextQuestion:`Open ${short(first.work)} again and see whether you still want to stay with it.`})];
 }
 
 function recognitionReadings(entries,basis){
@@ -230,10 +250,43 @@ function categories({patterns,responsePortrait,maps,context,recognition,grouping
   });
 }
 
-export function buildProfileIntelligence({works=[],rounds=[],answers={},tastePatterns={},responsePortrait={},reportedContextChanges={},preferenceEvidence={},arrangementQualities={},saved={},records=[],existingObservations=responsePortrait.observations||[],annotationReviews=REVIEWS,nextRefinement}={}){
+export function buildProfileIntelligence({works=[],rounds=[],answers={},tastePatterns={},responsePortrait={},reportedContextChanges={},preferenceEvidence={},arrangementQualities={},saved={},records=[],existingObservations=responsePortrait.observations||[],annotationReviews=REVIEWS,nextRefinement,inquiryState}={}){
   const entries=collectResponseEvidence({works,rounds,answers}),continuous=entries.filter(e=>isContinuousPreferenceRound(e.round)),maps=mapReadings(entries),recognition=recognitionReadings(entries,preferenceEvidence),claims=claimReadings(entries,reportedContextChanges),grouping=groupingReadings(entries,{works,rounds,annotationReviews}),diagnostics=diagnosticReadings(entries,works,annotationReviews,rounds),museum=museumFitReadings(entries,works,rounds),observations=[...maps.observations,...recognition.observations,...claims.observations,...grouping.observations,...diagnostics.observations,...museum];
   const ledger=entries.map(({round,answer,index})=>({roundId:round.id,index,kind:round.kind,construct:round.evidence?.construct||null,workIds:ids(round),measurementScope:isContinuousPreferenceRound(round)?CONTINUOUS_PROTOCOL:isComparisonPreferenceRound(round)?'order-only':isOverallAppealRound(round)?'captured-overall-appeal':round.kind==='grid'?round.axis:round.evidence?.instrumentRevision||round.kind,...(round.kind==='spectrum'?{positions:structuredClone(answer.positions),gapInterpretation:isContinuousPreferenceRound(round)?'reported-personal-appeal-difference':isComparisonPreferenceRound(round)?'order-and-exact-ties-only':'original-instrument'}:{}),...(round.kind==='grid'?{points:structuredClone(answer.points),axisDefinition:structuredClone(round.axisDefinition||AXES[round.axis])}:{}),...(round.kind==='choice-grid'?{selectedIds:[...answer.selectedIds],explicitNone:answer.explicitNone===true,unsure:answer.unsure===true,selectionMode:round.selectionMode,...(isExplicitFamiliarity(round)?{familiarity:structuredClone(answer.familiarity||{})}:{})}:{}),...(round.kind==='statements'?{claims:structuredClone(answer.claims)}:{})}));
   const result={version:INTELLIGENCE_VERSION,observations,categories:categories({patterns:tastePatterns.patterns||[],responsePortrait,maps,context:reportedContextChanges,recognition,grouping,arrangementQualities,entries,recordCount:records.length,existingObservations:[...existingObservations,...museum],nextRefinement}),recognition,contextExpectations:claims,grouping,diagnostics,maps:maps.records,appealSpacing:continuous.map(spacing),responseLedger:ledger,collectionIntentions:Object.entries(saved).filter(([,value])=>value?.look||value?.study).map(([workId,value])=>({workId,look:value.look===true,study:value.study===true,preferenceVote:false})),limits:[...limits]};
+  const inquiryOptions={works,rounds,answers,annotationReviews};
+  const returnReadings=returnAppealReadings(entries);
+  result.observations.push(...returnReadings);
+  if(returnReadings.length){
+    const reading=returnReadings[0],category=result.categories.find(c=>c.id==='return');
+    Object.assign(category,{readingTitle:reading.title,conclusion:reading.text,status:reading.status,statusLabel:reading.status==='supported'?'Reported across works':'A directly reported distinction',displayWorkIds:reading.displayWorkIds,support:reading.support,counter:reading.counter,sourceRoundIds:reading.sourceRoundIds,findingIds:[reading.id],competingExplanations:reading.competingExplanations});
+    if(!category.nextComparison.roundId)category.nextComparison={title:reading.nextQuestion,reason:reading.nextQuestion};
+  }
+  result.inquiry=inquiryState||buildTasteInquiry(inquiryOptions);
+  result.predictionEvaluation=evaluateAppealForecasts(inquiryOptions);
+  result.sensitivity=inquirySensitivity(inquiryOptions);
+  const threads=inquiryObservations(result.inquiry,works);
+  result.observations.push(...threads);
+  const appealCategory=result.categories.find(c=>c.id==='appeal'),thread=threads[0];
+  if(thread&&result.inquiry.discoverySets>=3){
+    appealCategory.relatedReadings=threads.slice(1);
+    appealCategory.displayRoles=thread.displayRoles;
+    Object.assign(appealCategory,{readingTitle:thread.title,conclusion:thread.text,status:thread.status,statusLabel:thread.summaryEligible?'Tested across artists':thread.status==='mixed'?'An explanation weakened':'A comparison to investigate',displayWorkIds:thread.displayWorkIds,support:thread.support,counter:thread.counter,sourceRoundIds:thread.sourceRoundIds,competingExplanations:thread.competingExplanations,limits:[...limits,thread.boundary],findingIds:threads.map(t=>t.id)});
+    if(!appealCategory.nextComparison.roundId)appealCategory.nextComparison={title:thread.nextQuestion,reason:thread.nextQuestion};
+  }
+  // The ledger is an inspectable account of the actual instrument, not just
+  // numbers detached from their question. Context notes keep their sources.
+  for(const row of result.responseLedger){
+    const {round,answer}=entries.find(e=>e.round.id===row.roundId);
+    row.question={title:round.title||'',hint:round.hint||'',criterion:round.criterion||null,scale:structuredClone(round.scale||null),brief:structuredClone(round.brief||round.evidence?.brief||null),contextNote:structuredClone(round.contextNote||null),works:structuredClone(round.works)};
+    row.response=structuredClone(answer);
+  }
+  for(const round of rounds.filter(r=>r.kind==='exercise')){
+    const record=answers[round.id]?.record;
+    if(!record||!round.works?.every(w=>works.some(current=>sameOrdinalArtworkIdentity(w,current,{requireSource:true}))))continue;
+    if(round.exerciseKind==='sorting'?!validSorting(record,round.works):round.exerciseKind==='curate'?!validGallery(record,round.works):true)continue;
+    result.responseLedger.push({roundId:round.id,kind:'exercise',construct:round.exerciseKind,measurementScope:'arrangement-under-captured-brief',question:{title:round.title||'',hint:round.hint||'',brief:structuredClone(round.brief||null),works:structuredClone(round.works)},response:structuredClone(answers[round.id]),preferenceVote:false});
+  }
   result.nextSteps=result.categories.filter(category=>category.nextComparison.roundId).map(category=>({id:'refine-'+category.id,title:category.nextComparison.title,reason:category.nextComparison.reason,categoryId:category.id,status:category.status,roundIds:category.sourceRoundIds}));
   return result;
 }

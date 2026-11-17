@@ -3,6 +3,7 @@ import {isContinuousPreferenceRound} from './continuous-preference.mjs';
 import {buildDiagnosticRound,bindDiagnosticRound} from './explanation-followups.mjs';
 import {APPEAL_INVESTIGATION_PROTOCOL,selectAppealInvestigation,selectCollectionAppeal} from './appeal-investigations.mjs';
 import {sameOrdinalArtworkIdentity} from './ordinal-preference-graph.mjs';
+import {selectTasteInquiry} from './taste-inquiry.mjs';
 import {museumPreferenceFindings} from './museum-preferences.mjs';
 import {validGallery} from './gallery-model.mjs';
 
@@ -44,7 +45,7 @@ export function nextProfileRefinement({works=[],rounds=[],answers={},attempts=[]
     const round={id,kind:'choice-grid',title:'Which would you place beside this group?',hint:'Imagine the same place is available for either painting. Choose each one that fits the group, or choose None of these or Not sure.',works:workIds.map(id=>byId.get(id)),anchorWorks:anchorIds.map(id=>byId.get(id)),anchorIds,selectionMode:'relatedness',maxChoices:2,allowUnsure:true,evidence:{construct:'museum-fit-check',family:'relationship-followup',role:'probe',unconditional:false,sourceMuseum:{roundId:source.id,workIds:ids(source),record:structuredClone(record),comparison}}};
     return finish(round,focus,`Compare ${byId.get(workIds[0]).shortTitle||byId.get(workIds[0]).title} and ${byId.get(workIds[1]).shortTitle||byId.get(workIds[1]).title} beside the paintings you hung in that room.`,[source.id],'grouping');
   }
-  const transfer=selectAppealInvestigation({...parameters,mode:'transfer'});
+  const transfer=selectTasteInquiry({...parameters,mode:'transfer'})||selectAppealInvestigation({...parameters,mode:'transfer'});
   if(transfer)return finish(transfer.round,transfer.focus,transfer.reason,transfer.sourceRoundIds);
   // A second identical companion task cannot clarify an already tested group.
   const checkedGroups=new Set(history.filter(round=>round.evidence?.diagnostic?.kind==='grouping'&&round.evidence.diagnostic.binding==='bound').map(round=>round.evidence.diagnostic.sourceRoundId));

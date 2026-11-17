@@ -311,6 +311,9 @@ export function buildJourneyRounds(works,answers={},options={}){
         const pending=buildDiagnosticRound({works:activeSourcePool,id,kind:diagnosticKind,seed:selectionSeed});
         pending.evidence.diagnostic.policy='appeal-investigation-v1';
         pending.evidence.diagnostic.mode=index===17?'transfer':index===26&&batchIndex<3?'explore':'local';
+        if(batchIndex>0&&[17,22,49].includes(index))pending.evidence.diagnostic.inquiryMode=index===22?'within-artist':'transfer';
+        // Ordinary discovery keeps its protected allocation. An unavailable
+        // inquiry also spends this flexible slot on wider coverage.
         sequence.push({...pending,evidence:{...pending.evidence,journeyRevision:JOURNEY_REVISION,batchIndex,selectionSeed}});continue;
       }
     }

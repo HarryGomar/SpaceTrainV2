@@ -29,6 +29,7 @@ import {buildTasteBoundaries} from './taste-boundaries.mjs';
 import ARTWORK_ATTRIBUTE_REVIEWS from './artwork-attribute-reviews.json' with {type:'json'};
 import {buildRecommendationMemory,wasPreviouslyPresented} from './recommendation-memory.mjs';
 import {buildProfileIntelligence,appealInvestigationReadings} from './profile-intelligence.mjs';
+import {buildTasteInquiry,qualifyAppealPatterns} from './taste-inquiry.mjs';
 
 export const TASTE_PORTRAIT_VERSION=1;
 export const TASTE_THRESHOLDS=Object.freeze({clearPreferenceGap:15,featureContrast:.3,minimumSets:2,minimumWorks:4,taskDirection:.12,meanDirection:.15});
@@ -310,7 +311,13 @@ export function buildTastePortrait({works=[],rounds=[],answers={},records=[],sav
   const arrangementQualities=analyzeArrangementQualities({works,records:validRecords,annotationReviews:ARTWORK_ATTRIBUTE_REVIEWS});curatorialObservations.push(...arrangementQualities.findings);curatorialObservations.sort((a,b)=>(b.priority||0)-(a.priority||0));
   const themes=[...facets.themes,...responsePortrait.themes].sort((a,b)=>(b.favouriteWorkCount||0)-(a.favouriteWorkCount||0)||b.priority-a.priority),leadingThemes=themes.slice(0,2),orderedObservations=observations.sort((a,b)=>b.priority-a.priority),summaryFinding=leadingThemes.length?orderedObservations.find(item=>item.id===leadingThemes[0].findingIds[0]):orderedObservations.find(item=>item.module!=='exceptions')||curatorialObservations[0];
   const summaryBasis=!leadingThemes.length?'observed-comparisons':preferenceBasis.absoluteScaleAvailable||preferenceBasis.favourites.length?'qualified-positive-patterns':leadingThemes.some(theme=>['exact-set-local-choices','matched-preference'].includes(theme.basis))?'qualified-local-comparisons':'qualified-response-patterns';
-  const axesProfile=buildTasteAxes({works,rounds,answers}),tastePatterns=buildTastePatterns({works,rounds,answers,annotationReviews:ARTWORK_ATTRIBUTE_REVIEWS,recommendationHistory}),tasteBoundaries=buildTasteBoundaries({works,rounds,answers,annotationReviews:ARTWORK_ATTRIBUTE_REVIEWS}),profileSummary=composeTasteSummary({works,tastePatterns:{...tastePatterns,patterns:linkArrangementPatterns(tastePatterns.patterns,arrangementQualities.findings)},tasteBoundaries,reportedContextChanges,axesProfile,themes:leadingThemes,observations:orderedObservations,legacyBasis:summaryBasis});
+  const axesProfile=buildTasteAxes({works,rounds,answers}),tastePatterns=buildTastePatterns({works,rounds,answers,annotationReviews:ARTWORK_ATTRIBUTE_REVIEWS,recommendationHistory}),tasteBoundaries=buildTasteBoundaries({works,rounds,answers,annotationReviews:ARTWORK_ATTRIBUTE_REVIEWS});
+  const inquiryState=buildTasteInquiry({works,rounds,answers,annotationReviews:ARTWORK_ATTRIBUTE_REVIEWS});
+  tastePatterns.patterns=qualifyAppealPatterns(tastePatterns.patterns,inquiryState);
+  for(const field of ['patterns','candidates','associations'])tastePatterns.continuous[field]=qualifyAppealPatterns(tastePatterns.continuous[field],inquiryState);
+  if(tastePatterns.readingSummary&&!tastePatterns.readingSummary.patternIds.every(id=>tastePatterns.patterns.some(p=>p.id===id&&p.summaryEligible)))tastePatterns.readingSummary=null;
+  const summaryAxes=inquiryState.discoverySets?{...axesProfile,axes:axesProfile.axes.map(axis=>({...axis,summaryEligible:false}))}:axesProfile;
+  const profileSummary=composeTasteSummary({works,tastePatterns:{...tastePatterns,patterns:linkArrangementPatterns(tastePatterns.patterns,arrangementQualities.findings)},tasteBoundaries,reportedContextChanges,axesProfile:summaryAxes,themes:leadingThemes,observations:orderedObservations,legacyBasis:summaryBasis});
   tastePatterns.patterns=linkArrangementPatterns(tastePatterns.patterns,arrangementQualities.findings);
   const investigations=appealInvestigationReadings(tastePatterns.investigations,works);
   const local=investigations.filter(item=>item.priority===16).sort((a,b)=>Number(b.status==='provisional')-Number(a.status==='provisional')||Number(b.declaredAnchor)-Number(a.declaredAnchor)||b.responseGap-a.responseGap)[0];
@@ -343,8 +350,14 @@ export function buildTastePortrait({works=[],rounds=[],answers={},records=[],sav
     curatorialObservations,arrangementQualities,nextSteps:nextSteps.slice(0,4),unavailable,
     method:'A local descriptive portrait of validated answers and sourced catalogue links. Thresholds are provisional design rules; no population model, personality type, causal explanation or calibrated preference probability is claimed.'
   };
-  portrait.intelligence=buildProfileIntelligence({works,rounds,answers,tastePatterns,responsePortrait,reportedContextChanges,preferenceEvidence:portrait.preferenceEvidence,arrangementQualities,saved,records:validRecords,existingObservations:portrait.observations,nextRefinement});
+  portrait.intelligence=buildProfileIntelligence({works,rounds,answers,tastePatterns,responsePortrait,reportedContextChanges,preferenceEvidence:portrait.preferenceEvidence,arrangementQualities,saved,records:validRecords,existingObservations:portrait.observations,nextRefinement,inquiryState});
   portrait.observations.push(...portrait.intelligence.observations);
+  const inquiryThread=portrait.intelligence.observations.find(o=>o.module==='conditional-appeal');
+  if(inquiryThread&&portrait.intelligence.inquiry.discoverySets>=3&&!['explicit-choice-contrast','direct-context-reports'].includes(portrait.profileSummary.basis)){
+    // Recurrence alone remains an early reading until an advance prediction
+    // transfers to different artists. A failed check keeps its local examples.
+    portrait.profileSummary={title:inquiryThread.summaryEligible?inquiryThread.title:inquiryThread.status==='mixed'?'Where an explanation stops':'A distinction to explore',text:inquiryThread.text,findingIds:[inquiryThread.id],workIds:inquiryThread.displayWorkIds,basis:inquiryThread.summaryEligible?'prospectively-tested-appeal':'local-conditional-appeal',threads:portrait.intelligence.observations.filter(o=>o.module==='conditional-appeal').slice(0,2)};
+  }
   portrait.observations.sort((a,b)=>b.priority-a.priority);
   portrait.nextSteps=unique([...portrait.intelligence.nextSteps,...portrait.nextSteps].map(item=>JSON.stringify(item))).map(item=>JSON.parse(item));
   return portrait;

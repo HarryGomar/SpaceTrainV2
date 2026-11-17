@@ -2,6 +2,7 @@ import {nextProfileRefinement,renderProfileRefinementPrompt,PROFILE_REFINEMENT_P
 import {quizCollectionChoices} from './collection-controls.mjs';
 import {isReviewedVisualDescriptor,FEATURE_SEMANTIC_VERSION} from './visual-descriptor-semantics.mjs';
 import {isDiagnosticRound,bindDiagnosticRound} from './explanation-followups.mjs';
+import {freezeAppealForecast} from './taste-inquiry.mjs';
 import {simplifyActiveInteraction} from './quiet-interactions.mjs';
 import {captureArtworkExposure,bindTasteAttribution} from './recognition-evidence.mjs';
 import {museumOffer,restrictMuseumDraft,MUSEUM_OFFER_SCOPE} from './museum-offer.mjs';
@@ -568,6 +569,7 @@ export function createDeepStudy({app,getWorks,image,esc,keepButtons,navigate,sho
     }
     if(round.kind==='match'&&!data.shown[r.id]){try{const galleryPreview=captureGalleryPreview(JSON.parse(localStorage.getItem(GALLERY_CONTEXT_KEY)||'null'),ids(round));if(galleryPreview)round={...round,evidence:{...round.evidence,galleryPreview}};}catch{}}
     if(isContextChangeRound(round)&&!data.shown[r.id])round=bindContextChangeRound({round,rounds:earlierShown,answers:data.answers});
+    if(!data.shown[r.id])round=freezeAppealForecast({round,works:sessionWorks(),rounds:earlierShown,answers:data.answers});
     if(!data.shown[r.id])round={...round,evidence:{...round.evidence,exposureHistory:captureArtworkExposure(round,earlierShown,data.answers)}};
     if(!data.shown[r.id])data.shown[r.id]=snapshotStudyRound(round);
     const a=data.answers[round.id];draft=a&&!a.skipped?(validStudyAnswer(round,a)?structuredClone(a):sanitizeStudyDraft(round,a)):sanitizeStudyDraft(round,{});
