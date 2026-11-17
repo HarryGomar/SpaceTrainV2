@@ -41,12 +41,18 @@
 .atlas-picker-options .atlas-coloured-choice>span{line-height:1.5}
 .atlas-picker-options .atlas-coloured-choice small{color:#8a7e70}
 .atlas-controls .atlas-choice-button.atlas-coloured-choice{border:0}
-.atlas-controls[data-axis-controls=true]{justify-content:flex-start;gap:12px;min-height:36px;margin-bottom:14px}
-.atlas-axis-controls{display:flex;align-items:center;flex-wrap:wrap;gap:4px 14px;min-width:0}
-.atlas-axis-control{min-width:0}.atlas-axis-label{white-space:nowrap;font-size:11px;letter-spacing:.02em}.atlas-axis-label.x{color:var(--x)}.atlas-axis-label.y{color:var(--y)}
-.atlas-controls .atlas-axis-controls .atlas-choice-button{padding:5px 0;gap:8px;max-width:220px;font-size:12px}
-.atlas-controls[data-axis-controls=true]>.atlas-extended{margin-left:auto}
-@media(max-width:800px){.atlas-controls[data-axis-controls=true]{gap:4px 16px}.atlas-axis-controls{column-gap:12px}.atlas-controls .atlas-axis-controls .atlas-choice-button{max-width:170px;font-size:11px}.atlas-controls[data-axis-controls=true]>.atlas-extended{margin-left:0}}
+.atlas-controls[data-axis-controls=true]{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:12px;min-height:44px;margin-bottom:14px}
+.atlas-axis-controls{grid-column:2;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:4px 14px;min-width:0}
+.atlas-controls .atlas-axis-control{min-width:0;gap:7px}.atlas-axis-label{white-space:nowrap;font-size:11px;letter-spacing:.02em}.atlas-axis-label.x{color:var(--x)}.atlas-axis-label.y{color:var(--y)}
+.atlas-controls .atlas-axis-controls .atlas-choice-button{padding:5px 9px;gap:6px;max-width:220px;min-height:44px;font-size:12px}
+.atlas-axis-controls .atlas-swap{min-width:44px;min-height:44px}
+.atlas-controls[data-axis-controls=true]>.atlas-extended{grid-column:3;justify-self:end}
+@media(max-width:800px){
+  .atlas-controls[data-axis-controls=true]{grid-template-columns:minmax(0,1fr);gap:3px}
+  .atlas-axis-controls{grid-column:1;column-gap:9px}
+  .atlas-controls .atlas-axis-controls .atlas-choice-button{padding-inline:7px;max-width:170px;font-size:11px}
+  .atlas-controls[data-axis-controls=true]>.atlas-extended{grid-column:1;justify-self:center}
+}
 .atlas-descriptor-list p:first-child{color:var(--x)}.atlas-descriptor-list p:nth-child(2){color:var(--y)}
 
 /* Comparison positions are an index, not estimated coordinates in taste space. */
