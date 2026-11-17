@@ -1,5 +1,7 @@
 # The first 150 Art Atlas questions
 
+The later [opening landscape release](first-50-landscapes-release-20261117.md) advances three existing works and adds earlier response-based comparisons while retaining all 182 first-150 ordinary works. The account below records the preceding release.
+
 The fresh journey uses three declared ordinary appeal cohorts of 72, 55 and 55 paintings. The release adds 17 works, brings nine catalogue works forward, moves three retained works between early blocks, and defers 26 ordinary ratings until after 150. The full catalogue still includes the deferred works. The new [curation manifest](../../public/art-atlas/first-150-curation.json) lists the 182 works and their comparison purposes. The older selection audit describes the decisions at the planning stage.
 
 ## What the quiz shows

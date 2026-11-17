@@ -11,6 +11,7 @@ import {ARTWORK_ATTRIBUTE_VERSION,ARTWORK_ATTRIBUTE_DEFINITIONS} from './artwork
 import REVIEWS from './artwork-attribute-reviews.json' with {type:'json'};
 import {validGallery,roomOf} from './gallery-model.mjs';
 import {museumPreferenceFindings} from './museum-preferences.mjs';
+import {readOpeningInquiries} from './opening-inquiries.mjs';
 
 const unique=values=>[...new Set(values.filter(Boolean))],short=work=>work.shortTitle||work.title;
 const plain=value=>!!value&&typeof value==='object'&&!Array.isArray(value);
@@ -170,6 +171,17 @@ export function appealInvestigationReadings(checks,works){
   return [...readings.values()];
 }
 
+export function openingInquiryReadings(options){
+  const byId=new Map(options.works.map(work=>[work.id,work]));
+  return readOpeningInquiries(options).map(check=>{
+    const names=check.workIds.map(id=>short(byId.get(id))),higher=check.signedGap>=0?0:1;
+    const response=check.sourceChanged?'The earlier answer has changed, so this follow-up belongs with the original response.':check.signedGap===0?`${names.join(' and ')} tied at ${check.values[0]}.`:Math.abs(check.signedGap)<10?`${names.join(' and ')} stayed close at ${check.values.join(' and ')}.`:`${names[higher]} appealed more, at ${check.values[higher]} against ${check.values[1-higher]}.${check.outcome==='both-low'?' Neither rose above neutral.':check.outcome==='both-high'?' Both still appealed.':''}`;
+    const text=`${response} ${check.comparison.reason} This result describes these paintings; the reason remains open.`;
+    const support=[...check.sourceRoundIds.map(roundId=>({roundId,workIds:check.candidate.groups.find(group=>group.roundId===roundId)?.themeWorkIds||[],label:'Earlier appeal',sourceRole:'discovery',detail:'Captured appeal levels nominated this comparison, without establishing a general preference.'})),{roundId:check.roundId,workIds:check.workIds,label:'Selected comparison',sourceRole:'probe',detail:names.map((name,index)=>`${name}: ${check.values[index]}`).join('; ')+'.'}];
+    return observation('opening-'+check.roundId,'appeal-investigation',check.comparison.question,text,support,{status:check.sourceChanged||Math.abs(check.signedGap)<10?'mixed':'provisional',displayWorkIds:check.workIds,priority:check.sourceChanged?2:17,measurementScope:CONTINUOUS_PROTOCOL,discoveryVote:false,sourceRoundIds:[...check.sourceRoundIds,check.roundId],competingExplanations:[check.comparison.reason,'Subject, palette, familiarity and handling can still explain the difference.']});
+  });
+}
+
 function museumFitReadings(entries,works,rounds){
   const result=[];
   for(const entry of entries){
@@ -231,9 +243,9 @@ function categories({patterns,responsePortrait,maps,context,recognition,grouping
 }
 
 export function buildProfileIntelligence({works=[],rounds=[],answers={},tastePatterns={},responsePortrait={},reportedContextChanges={},preferenceEvidence={},arrangementQualities={},saved={},records=[],existingObservations=responsePortrait.observations||[],annotationReviews=REVIEWS,nextRefinement}={}){
-  const entries=collectResponseEvidence({works,rounds,answers}),continuous=entries.filter(e=>isContinuousPreferenceRound(e.round)),maps=mapReadings(entries),recognition=recognitionReadings(entries,preferenceEvidence),claims=claimReadings(entries,reportedContextChanges),grouping=groupingReadings(entries,{works,rounds,annotationReviews}),diagnostics=diagnosticReadings(entries,works,annotationReviews,rounds),museum=museumFitReadings(entries,works,rounds),observations=[...maps.observations,...recognition.observations,...claims.observations,...grouping.observations,...diagnostics.observations,...museum];
+  const entries=collectResponseEvidence({works,rounds,answers}),continuous=entries.filter(e=>isContinuousPreferenceRound(e.round)),maps=mapReadings(entries),recognition=recognitionReadings(entries,preferenceEvidence),claims=claimReadings(entries,reportedContextChanges),grouping=groupingReadings(entries,{works,rounds,annotationReviews}),diagnostics=diagnosticReadings(entries,works,annotationReviews,rounds),museum=museumFitReadings(entries,works,rounds),opening=openingInquiryReadings({works,rounds,answers}),observations=[...maps.observations,...recognition.observations,...claims.observations,...grouping.observations,...diagnostics.observations,...museum,...opening];
   const ledger=entries.map(({round,answer,index})=>({roundId:round.id,index,kind:round.kind,construct:round.evidence?.construct||null,workIds:ids(round),measurementScope:isContinuousPreferenceRound(round)?CONTINUOUS_PROTOCOL:isComparisonPreferenceRound(round)?'order-only':isOverallAppealRound(round)?'captured-overall-appeal':round.kind==='grid'?round.axis:round.evidence?.instrumentRevision||round.kind,...(round.kind==='spectrum'?{positions:structuredClone(answer.positions),gapInterpretation:isContinuousPreferenceRound(round)?'reported-personal-appeal-difference':isComparisonPreferenceRound(round)?'order-and-exact-ties-only':'original-instrument'}:{}),...(round.kind==='grid'?{points:structuredClone(answer.points),axisDefinition:structuredClone(round.axisDefinition||AXES[round.axis])}:{}),...(round.kind==='choice-grid'?{selectedIds:[...answer.selectedIds],explicitNone:answer.explicitNone===true,unsure:answer.unsure===true,selectionMode:round.selectionMode,...(isExplicitFamiliarity(round)?{familiarity:structuredClone(answer.familiarity||{})}:{})}:{}),...(round.kind==='statements'?{claims:structuredClone(answer.claims)}:{})}));
-  const result={version:INTELLIGENCE_VERSION,observations,categories:categories({patterns:tastePatterns.patterns||[],responsePortrait,maps,context:reportedContextChanges,recognition,grouping,arrangementQualities,entries,recordCount:records.length,existingObservations:[...existingObservations,...museum],nextRefinement}),recognition,contextExpectations:claims,grouping,diagnostics,maps:maps.records,appealSpacing:continuous.map(spacing),responseLedger:ledger,collectionIntentions:Object.entries(saved).filter(([,value])=>value?.look||value?.study).map(([workId,value])=>({workId,look:value.look===true,study:value.study===true,preferenceVote:false})),limits:[...limits]};
+  const result={version:INTELLIGENCE_VERSION,observations,categories:categories({patterns:tastePatterns.patterns||[],responsePortrait,maps,context:reportedContextChanges,recognition,grouping,arrangementQualities,entries,recordCount:records.length,existingObservations:[...existingObservations,...museum,...opening],nextRefinement}),recognition,contextExpectations:claims,grouping,diagnostics,maps:maps.records,appealSpacing:continuous.map(spacing),responseLedger:ledger,collectionIntentions:Object.entries(saved).filter(([,value])=>value?.look||value?.study).map(([workId,value])=>({workId,look:value.look===true,study:value.study===true,preferenceVote:false})),limits:[...limits]};
   result.nextSteps=result.categories.filter(category=>category.nextComparison.roundId).map(category=>({id:'refine-'+category.id,title:category.nextComparison.title,reason:category.nextComparison.reason,categoryId:category.id,status:category.status,roundIds:category.sourceRoundIds}));
   return result;
 }

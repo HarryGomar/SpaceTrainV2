@@ -1,6 +1,6 @@
 {
-  "revision": "declared-first-150-20261117-v2",
-  "sourceCommit": "6b24f27d92962872d039b6616e0de5166d9e205d",
+  "revision": "declared-first-150-20261117-v3",
+  "sourceCommit": "9f64a48db30c7bc62d4822adf974eed451866254",
   "minimumQuizBlock": {
     "req-rivera-alameda": 3
   },
@@ -44,18 +44,18 @@
       "panel": 3,
       "workIds": [
         "study-cassatt-child-bath",
-        "study-morisot-cradle",
-        "add-siqueiros-madre-nina",
-        "cassatt-omnibus"
+        "cassatt-omnibus",
+        "opening-cma-106088",
+        "piazza-san-marco"
       ],
-      "title": "Close relationships and public company",
+      "title": "Open views and close relationships",
       "qualities": [
-        "visible-gesture",
-        "theatrical-staging"
+        "open-expanse",
+        "human-relationships"
       ],
       "purposes": [
-        "Compare intimate care with figures sharing a public setting.",
-        "Two Cassatt works offer a limited within-artist contrast; subject and handling still differ."
+        "Compare Homer’s sea and the urban square attributed to Bellotto with two adult-and-child scenes by Cassatt.",
+        "Open space is shared by sea and city. Cassatt’s bathing and public-travel scenes retain a within-artist comparison; activity, medium, light and handling still differ."
       ]
     },
     {
@@ -63,16 +63,17 @@
       "workIds": [
         "study-van-gogh-sunflowers",
         "friedrich-wanderer",
-        "blanchard-still-life",
+        "extended-cma-150693",
         "add-tamayo-still-life-foot"
       ],
-      "title": "Colour in objects and landscapes",
+      "title": "A tree, a distant view and objects",
       "qualities": [
         "landscape",
         "open-expanse"
       ],
       "purposes": [
-        "Compare colour and space in three still-life treatments and an outdoor scene. A landscape response may depend on the figure, distance or handling."
+        "Compare the close, enclosed tree of Segantini and Friedrich’s figure above distant terrain with two still-life treatments.",
+        "Natural setting, open space and conspicuous marks can vary separately."
       ]
     },
     {
@@ -362,7 +363,7 @@
         "add-delaunay-air-iron-water",
         "add-malevich-football-player",
         "add-atl-climatic-eruption",
-        "piazza-san-marco",
+        "study-morisot-cradle",
         "add-kandinsky-impression-concert",
         "add-rivera-flower-vendor",
         "herran-la-ofrenda",
@@ -501,7 +502,7 @@
         "extended-cma-128393",
         "extended-cma-128394",
         "extended-cma-135371",
-        "extended-cma-150693",
+        "blanchard-still-life",
         "extended-cma-154286",
         "extended-cma-171157",
         "extended-cma-83462",
@@ -514,7 +515,7 @@
         "opening-cma-101461",
         "opening-cma-102578",
         "opening-cma-103997",
-        "opening-cma-106088",
+        "add-siqueiros-madre-nina",
         "opening-cma-106094",
         "opening-cma-109245",
         "opening-cma-110180",

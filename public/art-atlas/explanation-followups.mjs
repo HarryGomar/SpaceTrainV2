@@ -8,6 +8,7 @@ import {isStudyEligibleArtwork} from './study-eligibility.mjs';
 import {mainCollectionWorks} from './collection-routing.mjs';
 import {sameOrdinalArtworkIdentity} from './ordinal-preference-graph.mjs';
 import {APPEAL_INVESTIGATION_PROTOCOL,selectAppealInvestigation,buildAppealExploration,compareAppealControls} from './appeal-investigations.mjs';
+import {selectOpeningInquiry} from './opening-inquiries.mjs';
 
 export const DIAGNOSTIC_PROTOCOL='explanation-diagnostic-v1';
 const unique=values=>[...new Set(values)],ids=round=>round.works.map(work=>work.id),pairs=values=>values.flatMap((a,i)=>values.slice(i+1).map(b=>[a,b]));
@@ -104,7 +105,7 @@ export function bindDiagnosticRound({round,works=[],rounds=[],answers={},annotat
     const options={id:round.id,works,rounds:history,answers:earlierAnswers,seed:diagnostic.seed,annotationReviews,...selection};
     const grouping=diagnostic.kind==='grouping'?bindGrouping(round,works,history,earlierAnswers,read,selection):null;
     if(grouping?.evidence?.diagnostic?.kind==='grouping'&&!grouping.unavailable)return grouping;
-    const planned=diagnostic.mode==='explore'||grouping?null:selectAppealInvestigation({...options,mode:diagnostic.mode});
+    const planned=diagnostic.mode==='explore'||grouping?null:(round.evidence.batchIndex===0?selectOpeningInquiry({...options,mode:diagnostic.mode}):selectAppealInvestigation({...options,mode:diagnostic.mode}));
     const fallback=planned?null:buildAppealExploration({...options,landscapeCheck:diagnostic.mode==='explore'});
     const bound=planned?.round||fallback;
     if(!bound)return {...round,unavailableReason:'The released catalogue could not supply a fresh comparison for this question.'};

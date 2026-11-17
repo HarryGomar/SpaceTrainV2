@@ -24,7 +24,7 @@ import {buildDiagnosticRound} from './explanation-followups.mjs';
 import {declaredFirst150,releasedForQuiz} from './first-150-curation.mjs';
 
 export const JOURNEY_PROTOCOL='art-profile-50-v1';
-export const JOURNEY_REVISION='art-profile-50-v19';
+export const JOURNEY_REVISION='art-profile-50-v20';
 export const JOURNEY_VARIETY_POLICY='specific-question-variety-v2';
 export const JOURNEY_LENGTH=50;
 export const JOURNEY_MAX_LENGTH=JOURNEY_BLOCK_LIMIT*JOURNEY_LENGTH;
@@ -257,7 +257,7 @@ export function buildJourneyRounds(works,answers={},options={}){
     if(!sourceIndex||Number(sourceIndex[1])<=offset)registerSpecificQuestion(round,sourceIndex?Number(sourceIndex[1])-1:null);
     if(sourceIndex&&Number(sourceIndex[1])<=offset&&round.kind!=='statements')round.works.forEach(work=>lastSeen.set(work.id,Math.max(lastSeen.get(work.id)??-Infinity,Number(sourceIndex[1])-1)));
     const legacyPanel=/^panel-(\d+)$/.exec(round.evidence?.setId||''),number=round.evidence?.panelNumber||(legacyPanel?Number(legacyPanel[1]):null),sourceBatch=round.evidence?.batchIndex??Math.floor((Number(sourceIndex?.[1]||1)-1)/JOURNEY_LENGTH);
-    if((['art-profile-50-v2','art-profile-50-v3','art-profile-50-v4','art-profile-50-v5','art-profile-50-v6','art-profile-50-v7','art-profile-50-v8','art-profile-50-v9','art-profile-50-v10','art-profile-50-v11','art-profile-50-v12','art-profile-50-v13','art-profile-50-v14','art-profile-50-v15','art-profile-50-v16','art-profile-50-v17','art-profile-50-v18',JOURNEY_REVISION].includes(round.evidence?.journeyRevision)||legacyPanel)&&sourceBatch===batchIndex&&Number.isInteger(number)&&number>=1&&number<=18&&round.works.every(work=>pool.some(item=>item.id===work.id))&&!panels.has(number)){
+    if((['art-profile-50-v2','art-profile-50-v3','art-profile-50-v4','art-profile-50-v5','art-profile-50-v6','art-profile-50-v7','art-profile-50-v8','art-profile-50-v9','art-profile-50-v10','art-profile-50-v11','art-profile-50-v12','art-profile-50-v13','art-profile-50-v14','art-profile-50-v15','art-profile-50-v16','art-profile-50-v17','art-profile-50-v18','art-profile-50-v19',JOURNEY_REVISION].includes(round.evidence?.journeyRevision)||legacyPanel)&&sourceBatch===batchIndex&&Number.isInteger(number)&&number>=1&&number<=18&&round.works.every(work=>pool.some(item=>item.id===work.id))&&!panels.has(number)){
       panels.set(number,round.works.map(work=>pool.find(item=>item.id===work.id)));
       if(round.evidence?.setId)panelSetIds.set(number,round.evidence.setId);
       round.works.forEach(work=>panelUses.set(work.id,(panelUses.get(work.id)||0)+1));
@@ -306,7 +306,7 @@ export function buildJourneyRounds(works,answers={},options={}){
       continue;
     }
     if(preferenceProtocol===CONTINUOUS_PROTOCOL){
-      const diagnosticKind=index===31?'grouping':([14,17,22,26,49].includes(index)?'appeal-investigation':null);
+      const diagnosticKind=index===31?'grouping':([14,17,22,26,49].includes(index)||batchIndex===0&&index===8?'appeal-investigation':null);
       if(diagnosticKind){
         const pending=buildDiagnosticRound({works:activeSourcePool,id,kind:diagnosticKind,seed:selectionSeed});
         pending.evidence.diagnostic.policy='appeal-investigation-v1';
