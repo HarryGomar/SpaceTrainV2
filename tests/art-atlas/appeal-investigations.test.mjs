@@ -55,15 +55,31 @@ test('An exact tie or two low values leave the proposed appeal open. An edited o
   assert.equal(readAppealInvestigations({...base,rounds:[source,wrongSource],answers:{...base.answers,[next.id]:respond(next,[88,12])}}).length,0);
 });
 
-test('Unknown controls withhold the diagnostic and the broader slot keeps three artists',()=>{
+test('An unknown review cannot establish a diagnostic control or justify a fourth painting',()=>{
   const base=args(source,[98,10]),missing=structuredClone(reviews);
   delete missing.reviews[pineId];
   assert.equal(selectAppealInvestigation({...base,annotationReviews:missing}),null);
-  const broad=buildAppealExploration({...base,works:catalogue,candidateIds:[pineId,flowersId,'extended-cma-83462','opening-cma-106088'],landscapeCheck:true});
-  assert.equal(broad.works.length,3);
-  assert.equal(new Set(broad.works.map(work=>work.artist)).size,3);
-  assert.equal(broad.evidence.role,'discovery');
-  assert.equal(broad.evidence.coverageAtSelection.landscapeWorkIds.length,2);
+  const landscapeOptions={...base,works:catalogue,candidateIds:[pineId,flowersId,'extended-cma-83462','opening-cma-106088'],landscapeCheck:true};
+  const quartet=buildAppealExploration(landscapeOptions),coverage=quartet.evidence.coverageAtSelection;
+  assert.equal(quartet.works.length,4);
+  assert.equal(new Set(quartet.works.map(work=>work.artist)).size,4);
+  assert.equal(quartet.evidence.role,'discovery');
+  assert.equal(coverage.landscapeWorkIds.length,3);
+  assert.equal(coverage.fourthPainting.workId,quartet.works[3].id);
+  for(const quality of coverage.fourthPainting.addedQualities){
+    const status=reviews.reviews[coverage.fourthPainting.workId].attributes[quality].status;
+    assert.ok(['present','absent'].includes(status));
+    for(const id of coverage.fourthPainting.comparedWithIds)assert.equal(reviews.reviews[id].attributes[quality].status,status==='present'?'absent':'present');
+  }
+  assert.ok(coverage.fourthPainting.addedQualities.length>0);
+  const undocumented=structuredClone(reviews);
+  delete undocumented.reviews[coverage.fourthPainting.workId];
+  const trio=buildAppealExploration({...landscapeOptions,annotationReviews:undocumented});
+  assert.deepEqual(ids(trio),ids(quartet).slice(0,3));
+  assert.equal(trio.evidence.coverageAtSelection.fourthPainting,undefined);
+  const general=buildAppealExploration({...landscapeOptions,landscapeCheck:false});
+  assert.equal(general.works.length,4);
+  assert.equal(general.evidence.coverageAtSelection.fourthPainting.comparedWithIds.length,3);
 });
 
 test('A failed prospective transfer qualifies the same broad explanation. A selected or repeated comparison adds no discovery votes',()=>{

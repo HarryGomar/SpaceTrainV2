@@ -11,6 +11,10 @@
 .deep-lengths button[aria-pressed=true]>span:first-child::after { content:'•'; margin-left:9px; vertical-align:middle; font-size:15px; }
 .deep-progress-copy { color:var(--soft); font-size:12px; margin-bottom:26px; }
 .deep-home-actions,.deep-reading-actions { display:flex; flex-wrap:wrap; align-items:center; gap:25px; margin:30px 0; }
+.deep-refinement-prompt { max-width:620px; padding-top:clamp(64px,14vh,130px); text-align:center; }
+.deep-refinement-prompt :is(.deep-intro,.deep-small) { margin-inline:auto; }
+.deep-refinement-prompt .deep-home-actions { flex-direction:row; align-items:center; justify-content:center; gap:10px 25px; }
+.deep-refinement-prompt .deep-home-actions .text-button { min-height:44px; }
 .deep-small { color:var(--soft); max-width:700px; font-size:11px; line-height:1.85; margin:25px 0 0; }
 .deep-question .deep-small { margin-top:18px; }
 .deep-question .deep-top { margin-bottom:30px; }

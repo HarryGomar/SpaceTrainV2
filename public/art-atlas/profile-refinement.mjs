@@ -82,7 +82,9 @@ export function nextProfileRefinement({works=[],rounds=[],answers={},attempts=[]
   return null;
 }
 
-export function renderProfileRefinementOffer(offer,{esc}={}){
-  if(!offer)return '';
-  return '<aside class="tp-refinement-offer" aria-label="Optional focused comparisons"><div><small>Optional comparisons · up to 10</small><p>'+esc(offer.reason)+'</p></div><button type="button" class="text-button" data-action="deep-refine">'+(offer.resume?'Continue refining':'Refine reading')+' <span aria-hidden="true">&#8599;</span></button></aside>';
+export function renderProfileRefinementPrompt(offer,{esc}){
+  const title=offer?(offer.resume?'Continue refining your profile?':'Refine your profile?'):'Your profile is ready';
+  const detail=offer?'<p class="deep-intro">'+esc(offer.reason)+'</p><p class="deep-small">Up to '+PROFILE_REFINEMENT_LIMIT+' optional comparisons. You can view your profile at any point.</p>':'';
+  const start=offer?'<button type="button" class="primary-button" data-action="deep-refine">'+(offer.resume?'Resume comparisons':'Start refining')+'</button>':'';
+  return '<section class="deep-home deep-refinement-prompt" aria-labelledby="question-title"><h1 id="question-title">'+title+'</h1>'+detail+'<div class="deep-home-actions">'+start+'<button type="button" class="'+(offer?'text-button':'primary-button')+'" data-action="deep-reveal-profile">View profile</button></div></section>';
 }

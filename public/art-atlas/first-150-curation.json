@@ -1,6 +1,9 @@
 {
-  "revision": "declared-first-150-20261117-v1",
+  "revision": "declared-first-150-20261117-v2",
   "sourceCommit": "6b24f27d92962872d039b6616e0de5166d9e205d",
+  "minimumQuizBlock": {
+    "req-rivera-alameda": 3
+  },
   "openingPanels": [
     {
       "panel": 1,
@@ -180,17 +183,17 @@
       "panel": 11,
       "workIds": [
         "cezanne-mountain",
-        "opening-cma-141639",
+        "monet-water-lilies",
         "velasco-valley-mexico",
         "study-bruegel-hunters-snow"
       ],
-      "title": "Weather, scale and landscape",
+      "title": "How landscapes frame a view",
       "qualities": [
         "landscape",
         "open-expanse"
       ],
       "purposes": [
-        "Compare natural settings through broken colour planes, expansive weather, a receding valley and layered winter activity. The variation makes landscape a more useful subject to test."
+        "Compare Monet’s pond without a horizon with Cézanne’s mountain, Velasco’s receding valley and Bruegel’s winter activity. The four settings organise depth, surface and figures differently."
       ]
     },
     {
@@ -215,17 +218,17 @@
       "panel": 13,
       "workIds": [
         "bosch-garden-delights",
-        "req-rivera-alameda",
+        "opening-cma-141639",
         "goya-saturn",
         "canon-goya-third-may"
       ],
-      "title": "Dense stories and different kinds of tragedy",
+      "title": "Story, weather and tension",
       "qualities": [
         "narrative-detail",
-        "imagined-world"
+        "dramatic-light"
       ],
       "purposes": [
-        "Compare dense storytelling in Bosch and Rivera, then two very different Goya scenes.",
+        "Compare Bosch’s distributed story clues and two very different Goya scenes with the expressive sky in Church’s landscape.",
         "Crowded composition, physically fantastical imagery and depicted violence are distinct candidate explanations.",
         "Report felt unease and willingness to return separately; neither is inferred from the subject."
       ]
@@ -507,7 +510,7 @@
         "klee-tightrope",
         "millais-ophelia",
         "monet-spring-flowers",
-        "monet-water-lilies",
+        "req-rivera-alameda",
         "opening-cma-101461",
         "opening-cma-102578",
         "opening-cma-103997",
@@ -588,6 +591,18 @@
             "theatrical-staging"
           ],
           "purpose": "Compare directed bodily action in two layered group scenes under different circumstances."
+        },
+        {
+          "workIds": [
+            "req-rivera-alameda",
+            "add-velazquez-spinners"
+          ],
+          "title": "Where a second story appears",
+          "qualities": [
+            "narrative-detail",
+            "layered-space"
+          ],
+          "purpose": "Compare how Rivera distributes figures from different times across one park scene with how Velázquez places a myth behind a foreground workshop."
         },
         {
           "workIds": [

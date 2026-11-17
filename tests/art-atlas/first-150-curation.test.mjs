@@ -49,6 +49,7 @@ test('Fresh runs reach every declared ordinary work and paired anchor in its blo
       data.index=index;
       const round=sessionJourneyRounds(data)[index],workIds=ids(round);
       if(!round.unavailable)data.shown[round.id]=snapshotStudyRound(round);
+      if(batch<2)assert.ok(![...workIds,...(round.anchorIds||[])].includes('req-rivera-alameda'),round.id);
       if(!round.unavailable&&isContinuousPreferenceRound(round)){
         assert.ok(workIds.every(id=>!plan.deferrals.includes(id)),round.id);
         const positions=Object.fromEntries(round.works.map(work=>[work.id,work.id==='add-warhol-gold-marilyn'?98:batch===0?49:Math.round(10+work.features.color*85)]));
@@ -62,6 +63,8 @@ test('Fresh runs reach every declared ordinary work and paired anchor in its blo
     assert.equal(ordinary.length,18);
     const shown=new Set(ordinary.flatMap(ids));
     for(const id of manifestSets[batch])assert.ok(shown.has(id),id);
+    if(batch===0)assert.ok(shown.has('monet-water-lilies'));
+    if(batch===2)assert.ok(shown.has('req-rivera-alameda'));
     if(batch){
       for(const pair of plan.laterBlocks[batch-1].comparisons)assert.ok(ordinary.some(round=>pair.workIds.every(id=>ids(round).includes(id))),pair.title);
       assert.deepEqual(data.batches.at(-1).selection.audit.missingDeclaredWorkIds,[]);

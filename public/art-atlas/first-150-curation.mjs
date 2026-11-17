@@ -7,6 +7,10 @@ const openingIds=PLAN.openingPanels.flatMap(panel=>panel.workIds);
 const earlyIds=[...openingIds,...PLAN.laterBlocks.flatMap(block=>block.workIds)];
 const sameIds=(left,right)=>left.length===right.length&&left.every(id=>right.includes(id));
 
+export function releasedForQuiz(workId,batchIndex,reservations){
+  return batchIndex+1>=(reservations?.minimumQuizBlock?.[workId]??1);
+}
+
 /** The release determines ordinary first-150 membership. The allocator can
  * still fill later capacity, and a saved allocation pins its own older design.
  */
@@ -17,7 +21,7 @@ export function declaredFirst150(works,notes,{reservationPlan,firstWorkIds,start
   const byId=new Map(routed.studyWorks.map(work=>[work.id,work]));
   if(earlyIds.some(id=>!byId.get(id)?.image||!byId.get(id)?.sourceUrl))return null;
   const earlyPools=Object.fromEntries(PLAN.laterBlocks.map(block=>['batch'+block.block,[...block.workIds]]));
-  const fixed=reservationPlan||{...earlyPools,earlyCurationRevision:PLAN.revision,deferredUntilAfter150:[...PLAN.deferrals]};
+  const fixed=reservationPlan||{...earlyPools,earlyCurationRevision:PLAN.revision,deferredUntilAfter150:[...PLAN.deferrals],minimumQuizBlock:{...PLAN.minimumQuizBlock}};
   const reservePools=extendStimulusReservations({works:routed.studyWorks,firstWorkIds:openingIds,reservationPlan:fixed,startBatch,preferredOrder:PLAN.deferrals,deferEastAsian:true,curationNotes:notes});
   reservePools.collectionRouting=routed.metadata;
   return {

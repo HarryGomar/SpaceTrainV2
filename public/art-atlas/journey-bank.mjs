@@ -21,7 +21,7 @@ import {isReviewedVisualDescriptor} from './visual-descriptor-semantics.mjs';
 import {routeCollection} from './collection-routing.mjs';
 import {PANEL_OBJECTIVES,CANONICAL_COMPARISON_OBJECTIVES} from './curation-panel-objectives.mjs';
 import {buildDiagnosticRound} from './explanation-followups.mjs';
-import {declaredFirst150} from './first-150-curation.mjs';
+import {declaredFirst150,releasedForQuiz} from './first-150-curation.mjs';
 
 export const JOURNEY_PROTOCOL='art-profile-50-v1';
 export const JOURNEY_REVISION='art-profile-50-v19';
@@ -218,7 +218,9 @@ export function buildJourneyRounds(works,answers={},options={}){
   const schedule=SCHEDULE.map((spec,index)=>preferenceProtocol!==CONTINUOUS_PROTOCOL?spec:index===5?V(2,'attention'):index===16&&batchIndex>0?G('shortlist','c'):index===33?U(12):index===37?V(13,'returnResponse'):spec);
   const pool=[...works].filter(work=>isStudyEligibleArtwork(work)&&typeof work.id==='string'&&work.title&&work.image&&work.sourceUrl).sort((a,b)=>a.id.localeCompare(b.id));
   if(pool.length<12||new Set(ids(pool)).size!==pool.length)throw Error('The journey needs at least twelve distinct, sourced artworks.');
-  const regional=hasRegionalCuration(pool),curationNotes=journeyCurationNotes(pool,options.reservationPlan),activeIds=curationNotes.collectionRouting?new Set(curationNotes.collectionRouting.activeStudyWorkIds):null,activeSourcePool=activeIds?pool.filter(work=>activeIds.has(work.id)):pool,stagePool=regional?activeSourcePool.filter(work=>allowedInCurationStage(work,batchIndex,curationNotes)):activeSourcePool,westernPool=stagePool.filter(work=>isWesternAmericasWork(work,curationNotes)||work.id==='study-hokusai-great-wave'),activityPool=regional&&batchIndex<4&&westernPool.length>=12?westernPool:stagePool,initialFamiliarityIds=regional?INITIAL_FAMILIARITY_IDS.map(id=>id==='hokusai-mount-fuji'?'study-van-gogh-self-portrait':id==='study-rembrandt-night-watch'?'study-monet-japanese-footbridge':id):INITIAL_FAMILIARITY_IDS;
+  const regional=hasRegionalCuration(pool),curationNotes=journeyCurationNotes(pool,options.reservationPlan),activeIds=curationNotes.collectionRouting?new Set(curationNotes.collectionRouting.activeStudyWorkIds):null;
+  const activeSourcePool=pool.filter(work=>(!activeIds||activeIds.has(work.id))&&releasedForQuiz(work.id,batchIndex,curationNotes.reservePools));
+  const stagePool=regional?activeSourcePool.filter(work=>allowedInCurationStage(work,batchIndex,curationNotes)):activeSourcePool,westernPool=stagePool.filter(work=>isWesternAmericasWork(work,curationNotes)||work.id==='study-hokusai-great-wave'),activityPool=regional&&batchIndex<4&&westernPool.length>=12?westernPool:stagePool,initialFamiliarityIds=regional?INITIAL_FAMILIARITY_IDS.map(id=>id==='hokusai-mount-fuji'?'study-van-gogh-self-portrait':id==='study-rembrandt-night-watch'?'study-monet-japanese-footbridge':id):INITIAL_FAMILIARITY_IDS;
   // Bank IDs are backlinks to source instruments, not claims that their old bindings were shown.
   const bank=buildStudyRounds(instrumentPool(pool),200);
   const usedTemplates=new Set();

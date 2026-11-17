@@ -30,6 +30,7 @@ const eligible=work=>isStudyEligibleArtwork(work)&&work.sourceUrl&&work.image;
 // Already sourced works that supply unlike treatments for the supplemental
 // exploration slot. Their main-panel reservations still belong to curation.
 const LANDSCAPE_EXPLORATION_IDS=new Set(['extended-cma-83462','extended-cma-150693','extended-nga-204911','study-monet-japanese-footbridge','opening-cma-106088','extended-nga-52624']);
+const LANDSCAPE_TREATMENTS=['open-expanse','layered-space','dramatic-light','visible-paint-marks','precise-rendering','pattern-rhythm','expressive-distortion','material-detail'];
 
 function reviewRows(works,annotationReviews){
   const rows=new Map();
@@ -239,20 +240,51 @@ export function buildAppealExploration({id,works=[],rounds=[],answers={},candida
     Number(!!landscape(row)&&selected.filter(landscape).length<landscapeTarget)*(landscapeCheck?12:5)+
     Number(!!row.work.country&&!regions.has(row.work.country))*1.5+
     Number(landscapeCheck&&selected.length===1&&!!row.work.movement&&row.work.movement!==selected[0].work.movement)*2;
+  const canCompare=row=>!artists.has(row.artist)&&selected.every(other=>!history.compared.has(pairKey(row.work.id,other.work.id)));
+  const rank=(a,b)=>strength(b)-strength(a)||seedOrder(a.work.id)-seedOrder(b.work.id)||a.work.id.localeCompare(b.work.id);
   for(let index=0;index<3;index++){
-    let proposals=pool.filter(row=>!artists.has(row.artist)&&selected.every(other=>!history.compared.has(pairKey(row.work.id,other.work.id)))&&
+    let proposals=pool.filter(row=>canCompare(row)&&
       (!earlyLandscapes.has(row.work.id)||selected.filter(landscape).length<landscapeTarget&&!selected.some(other=>earlyLandscapes.has(other.work.id))));
     if(landscapeCheck&&selected.filter(landscape).length<landscapeTarget){
       const landscapes=proposals.filter(landscape);
       if(landscapes.length)proposals=landscapes;
     }
-    proposals.sort((a,b)=>strength(b)-strength(a)||seedOrder(a.work.id)-seedOrder(b.work.id)||a.work.id.localeCompare(b.work.id));
+    proposals.sort(rank);
     const row=proposals[0];
     if(!row)break;
     selected.push(row);artists.add(row.artist);regions.add(row.work.country);
   }
   if(selected.length<2)return null;
-  return withContinuousPreference({id,kind:'spectrum',criterion:'preference',works:selected.map(row=>row.work),evidence:{construct:'preference',family:'individual-choice',role:'discovery',unconditional:true,selectionMethod:landscapeCheck?'landscape-exploration':'breadth-after-open-investigation',coverageAtSelection:{answeredSets:scope?.sets.length||0,landscapeArtists:sampledLandscapes.size,landscapeWorkIds:selected.filter(landscape).map(row=>row.work.id),supplementalLandscapeIds:selected.filter(row=>earlyLandscapes.has(row.work.id)).map(row=>row.work.id),validEntries:sources.entries.length}}});
+  let fourthPainting;
+  const peers=landscapeCheck?selected.filter(landscape):[...selected];
+  if(selected.length===3&&peers.length>=2){
+    const usedEarly=selected.some(row=>earlyLandscapes.has(row.work.id));
+    const qualities=landscapeCheck?LANDSCAPE_TREATMENTS:keys;
+    const additions=[];
+    for(const row of pool){
+      const alreadyRated=history.rated.has(row.work.id);
+      if(!canCompare(row)||alreadyRated&&!landscapeCheck||usedEarly&&earlyLandscapes.has(row.work.id)||landscapeCheck&&!landscape(row))continue;
+      // Require shared visual ground and an explicit contrast across the
+      // relevant group. An unknown review cannot establish a new distinction.
+      if(!keys.some(key=>value(row,key)===1&&peers.some(peer=>value(peer,key)===1)))continue;
+      const addedQualities=qualities.filter(key=>{
+        const score=value(row,key);
+        return score!==null&&peers.every(peer=>value(peer,key)===1-score);
+      });
+      if(!addedQualities.length)continue;
+      // A previously rated landscape earns a new place only when it can
+      // provide a closer comparison on the other known visual qualities.
+      if(alreadyRated&&!peers.some(peer=>compareAppealControls(row,peer,addedQualities).usable))continue;
+      additions.push({row,addedQualities,alreadyRated});
+    }
+    additions.sort((a,b)=>Number(a.alreadyRated)-Number(b.alreadyRated)||b.addedQualities.length-a.addedQualities.length||rank(a.row,b.row));
+    if(additions.length){
+      const {row,addedQualities,alreadyRated}=additions[0];
+      fourthPainting={workId:row.work.id,comparedWithIds:peers.map(peer=>peer.work.id),addedQualities,alreadyRated};
+      selected.push(row);
+    }
+  }
+  return withContinuousPreference({id,kind:'spectrum',criterion:'preference',works:selected.map(row=>row.work),evidence:{construct:'preference',family:'individual-choice',role:'discovery',unconditional:true,selectionMethod:landscapeCheck?'landscape-exploration':'breadth-after-open-investigation',coverageAtSelection:{answeredSets:scope?.sets.length||0,landscapeArtists:sampledLandscapes.size,landscapeWorkIds:selected.filter(landscape).map(row=>row.work.id),supplementalLandscapeIds:selected.filter(row=>earlyLandscapes.has(row.work.id)).map(row=>row.work.id),validEntries:sources.entries.length,...(fourthPainting?{fourthPainting}:{})}}});
 }
 
 export function selectCollectionAppeal({id,works=[],rounds=[],answers={},saved={},candidateIds,avoidIds=[],annotationReviews=REVIEWS}={}){
