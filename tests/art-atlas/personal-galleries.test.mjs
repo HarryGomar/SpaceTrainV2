@@ -3,7 +3,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {JSDOM} from 'jsdom';
-import {PERSONAL_GALLERIES_KEY,PERSONAL_GALLERIES_PROTOCOL,PERSONAL_ROOM_SLOTS,emptyPersonalGalleries,readPersonalGalleries,validPersonalGalleries,personalWorkSnapshot,personalGalleryWorkIds,addPersonalGallery,renamePersonalGallery,addPersonalRoom,renamePersonalRoom,removePersonalRoom,placePersonalWork,removePersonalWork,resolvePersonalWork,personalGallerySearch,extractQuizGalleries,personalMuseumConnections} from '../../public/art-atlas/personal-galleries.mjs';
+import {PERSONAL_GALLERIES_KEY,PERSONAL_GALLERIES_PROTOCOL,PERSONAL_ROOM_SLOTS,emptyPersonalGalleries,readPersonalGalleries,validPersonalGalleries,personalWorkSnapshot,personalGalleryWorkIds,addPersonalGallery,renamePersonalGallery,addPersonalRoom,movePersonalRoom,renamePersonalRoom,removePersonalRoom,personalRoomPositions,placePersonalWork,removePersonalWork,resolvePersonalWork,personalGallerySearch,extractQuizGalleries,personalMuseumConnections} from '../../public/art-atlas/personal-galleries.mjs';
 import {createPersonalGalleries} from '../../public/art-atlas/galleries.mjs';
 import {createGalleryRecord,gallerySlots,placePainting} from '../../public/art-atlas/gallery-model.mjs';
 const actual=JSON.parse(fs.readFileSync(new URL('../../public/art-atlas/artworks.json',import.meta.url),'utf8'));
@@ -19,6 +19,28 @@ test('Galleries and real rooms can be created, named and independently retained 
 
 test('An occupied room cannot be removed; the last empty room can be removed and replaced',()=>{
   const state=hang(book()),before=structuredClone(state),rejected=removePersonalRoom(state,'g','r',5);assert.equal(rejected.ok,false);assert.deepEqual(state,before);const empty=removePersonalWork(state,'g','w0',6).state,removed=removePersonalRoom(empty,'g','r',7);assert.ok(removed.ok);assert.deepEqual(saved(removed.state).rooms,[]);const added=addPersonalRoom(removed.state,'g',{roomId:'replacement',now:8});assert.ok(added.ok);assert.equal(saved(added.state).rooms[0].id,'replacement');
+});
+
+test('Legacy rooms have positions, and swapping or removing them preserves the other rooms and wall art',()=>{
+  const state=hang(addPersonalRoom(book(),'g',{roomId:'r2',now:2}).state);
+  delete saved(state).floorPlan;
+  const legacy=readPersonalGalleries(JSON.stringify(state)),before=structuredClone(state);
+  assert.deepEqual(legacy.state,state);
+  const positions=personalRoomPositions(saved(legacy.state));
+  const change=movePersonalRoom(legacy.state,'g','r2',positions.r,4);
+  assert.ok(change.ok);
+  assert.equal(change.swappedRoomId,'r');
+  assert.deepEqual(saved(change.state).floorPlan,{r:positions.r2,r2:positions.r});
+  assert.deepEqual(saved(change.state).rooms,saved(state).rooms);
+  assert.deepEqual(saved(change.state).workSnapshots,saved(state).workSnapshots);
+  assert.deepEqual(legacy.state,before);
+  assert.deepEqual(readPersonalGalleries(JSON.stringify(change.state)).state,change.state);
+  const invalid=movePersonalRoom(change.state,'g','r2',{column:-1,row:0},5);
+  assert.equal(invalid.ok,false);
+  assert.equal(invalid.state,change.state);
+  const removed=removePersonalRoom(change.state,'g','r2',6);
+  assert.ok(removed.ok);
+  assert.deepEqual(saved(removed.state).floorPlan,{r:positions.r2});
 });
 
 test('Click placement, moves between rooms and swaps preserve exactly one instance per gallery',()=>{
@@ -86,6 +108,40 @@ test('The standalone editor creates, renames, places and auto-selects the next p
 
 test('Room editing, moving across rooms and undo are genuine persistent actions',()=>{
   const f=uiFixture();try{f.click('[data-action=pg-new]');f.click('[data-action=pg-place][data-slot=north-left]');const first=f.ui.getState().galleries[0].rooms[0].id;f.click('[data-action=pg-add-room]');const second=f.ui.getState().galleries[0].rooms[1].id;assert.notEqual(first,second);f.click('[data-action=pg-select][data-work="'+museumLibraryOrder(actual)[0].id+'"]');f.click('[data-action=pg-place][data-slot=south-left]');let g=f.ui.getState().galleries[0];assert.equal(g.rooms[0].layout['north-left'],undefined);assert.equal(g.rooms[1].layout['south-left'],museumLibraryOrder(actual)[0].id);assert.equal(f.app.querySelector('[data-action=pg-remove-room]').disabled,true);f.click('[data-action=pg-undo]');g=f.ui.getState().galleries[0];assert.equal(g.rooms[0].layout['north-left'],museumLibraryOrder(actual)[0].id);assert.equal(g.rooms[1].layout['south-left'],undefined);f.click('[data-action=pg-remove-room]');assert.equal(f.ui.getState().galleries[0].rooms.length,1);}finally{f.close();}
+});
+
+test('The floor plan moves rooms by keyboard and button, keeps Undo, and restores the layout after reload',()=>{
+  const f=uiFixture();
+  try{
+    f.click('[data-action=pg-new]');
+    f.click('[data-action=pg-place][data-slot=north-left]');
+    f.click('[data-action=pg-show-plan]');
+    f.click('[data-action=pg-add-room]');
+    const before=f.ui.getState(),[first,second]=saved(before).rooms;
+    const firstTile=()=>[...f.app.querySelectorAll('[data-action=pg-plan-room]')].find(button=>button.dataset.room===first.id);
+    assert.equal(f.app.querySelectorAll('.pg-plan-door').length,2,'new rooms are adjacent');
+    firstTile().focus();
+    firstTile().dispatchEvent(new f.dom.window.KeyboardEvent('keydown',{key:'ArrowRight',bubbles:true,cancelable:true}));
+    const moved=f.ui.getState(),position=saved(moved).floorPlan[first.id],original=saved(before).floorPlan[first.id];
+    assert.deepEqual(position,{column:original.column+1,row:original.row});
+    assert.equal(f.dom.window.document.activeElement,firstTile());
+    f.click('[data-action=pg-plan-step][data-step=ArrowDown]');
+    assert.equal(saved(f.ui.getState()).floorPlan[first.id].row,position.row+1);
+    f.click('[data-action=pg-undo]');
+    assert.deepEqual(f.ui.getState(),moved);
+    assert.equal(saved(moved).rooms[0].layout['north-left'],saved(before).rooms[0].layout['north-left']);
+    assert.deepEqual(saved(moved).floorPlan[second.id],saved(before).floorPlan[second.id]);
+
+    const reload=uiFixture({raw:f.values.get(PERSONAL_GALLERIES_KEY)});
+    try{
+      reload.click('[data-action=pg-open]');
+      reload.click('[data-action=pg-show-plan]');
+      assert.deepEqual(reload.ui.getState(),moved);
+      reload.click('.pg-plan-actions [data-action=pg-show-walls]');
+      assert.equal(reload.app.querySelector('.pg-slot[data-slot=north-left]').classList.contains('occupied'),true);
+      assert.deepEqual(reload.writes,[]);
+    }finally{reload.close();}
+  }finally{f.close();}
 });
 
 test('Quiz gallery browsing never rewrites its source or the separate personal store',()=>{
