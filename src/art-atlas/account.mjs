@@ -59,20 +59,17 @@ function start({url, publishableKey}) {
         ? 'On this device · ' + accountSaveSummary(localCopy)
         : 'The copy on this device could not be read.';
       row.querySelector('[data-account]').textContent = accountSave
-        ? 'Saved to account · ' + new Date(accountSave.updated_at).toLocaleString()
-        : 'No account save yet';
-      const open = row.querySelector('[data-open]');
-      open.href = type.href;
-      open.textContent = 'Open ' + type.label.toLowerCase();
+        ? 'Uploaded · ' + new Date(accountSave.updated_at).toLocaleString()
+        : 'No uploaded copy';
       const saveButton = row.querySelector('[data-save]');
       saveButton.disabled = !localCopy;
-      saveButton.textContent = accountSave ? 'Replace account save' : 'Save to account';
-      saveButton.setAttribute('aria-label', (accountSave ? 'Replace account save for ' : 'Save to account · ') + type.label);
+      saveButton.textContent = accountSave ? 'Update copy' : 'Upload copy';
+      saveButton.setAttribute('aria-label', (accountSave ? 'Update copy of ' : 'Upload copy of ') + type.label.toLowerCase());
       saveButton.addEventListener('click', () => operate(owner, async () => {
         const fresh = await device.capture(type.id);
         if (!fresh) throw Error('There is nothing to save from this device.');
         await database.save(owner.id, type.id, fresh, accountSave?.revision ?? null);
-        return type.label + ' saved to your account.';
+        return type.label + ' uploaded to your account.';
       }));
       const restore = row.querySelector('[data-restore]');
       restore.hidden = !accountSave;
@@ -81,23 +78,27 @@ function start({url, publishableKey}) {
         const snapshot = await database.open(owner.id, type.id, accountSave.revision);
         if (user?.id !== owner.id) throw Error('This account signed out before the save could be restored.');
         const result = await device.restore(owner.id, type.id, snapshot);
-        return result.previous ? 'Restored to this device. Your previous copy is available below.' : 'Restored to this device.';
+        return result.previous ? 'Restored to this device. Find your previous copy under Manage copies.' : 'Restored to this device.';
       }));
+      const options = row.querySelector('.account-options');
+      options.hidden = !prior && !accountSave;
+      options.querySelector('summary').setAttribute('aria-label', 'Manage copies of ' + type.label.toLowerCase());
       const recover = row.querySelector('[data-recover]');
       recover.hidden = !prior;
       recover.addEventListener('click', () => operate(owner, async () => {
         const snapshot = await device.recovery(owner.id, type.id);
         if (!snapshot) throw Error('The previous device copy is unavailable.');
+        if (user?.id !== owner.id) throw Error('This account signed out before the save could be restored.');
         await device.restore(owner.id, type.id, snapshot);
         return 'Previous device copy restored.';
       }));
       const remove = row.querySelector('[data-remove]');
       remove.hidden = !accountSave;
       remove.addEventListener('click', () => {
-        if (window.confirm('Remove the account save for ' + type.label.toLowerCase() + '?')) {
+        if (window.confirm('Delete the uploaded copy of ' + type.label.toLowerCase() + '?')) {
           void operate(owner, async () => {
             await database.remove(owner.id, type.id, accountSave.revision);
-            return 'Account save removed.';
+            return 'Uploaded copy deleted.';
           });
         }
       });

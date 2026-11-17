@@ -6,6 +6,7 @@
   <meta name="theme-color" content="#f5f4f1">
   <title>Account saves · Art Atlas</title>
   <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/art-atlas/scrollbars.css">
   <link rel="stylesheet" href="./account.css">
 </head>
 <body>
@@ -16,13 +17,13 @@
     </header>
 
     <h1>Account saves</h1>
-    <p class="account-intro">Save your galleries, paintings, and quiz progress to your account. You can restore each save on another device.</p>
+    <p class="account-intro">Art Atlas saves on this device as you go. Sign in with your email to upload a copy and restore it on another device.</p>
     <p id="account-status" class="account-status" role="status">Opening account saves…</p>
 
     <form id="sign-in" class="account-login" hidden>
       <label for="email">Email address</label>
       <input id="email" name="email" type="email" autocomplete="email" required maxlength="254">
-      <button class="account-primary" type="submit">Send sign-in link</button>
+      <button class="account-primary" type="submit">Email me a sign-in link</button>
     </form>
 
     <section id="signed-in" aria-label="Your saves" hidden>
@@ -38,11 +39,15 @@
           <p data-account></p>
         </div>
         <div class="account-actions">
-          <button type="button" class="account-primary" data-save>Save to account</button>
+          <button type="button" class="account-primary" data-save>Upload copy</button>
           <button type="button" data-restore>Restore here</button>
-          <button type="button" data-recover>Restore previous device copy</button>
-          <button type="button" data-remove>Remove account save</button>
-          <a data-open>Open</a>
+          <details class="account-options" hidden>
+            <summary>Manage copies</summary>
+            <div>
+              <button type="button" data-recover>Restore previous device copy</button>
+              <button type="button" data-remove>Delete uploaded copy</button>
+            </div>
+          </details>
         </div>
       </article>
     </template>

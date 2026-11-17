@@ -2,7 +2,7 @@
 
 The account page uses a Supabase passwordless email link and stores one versioned document per owner and save type. Galleries include room positions and wall placements. Saved paintings retain their original collection record. Quiz progress includes the recorded question definitions, answers, artwork information and earlier runs. Capturing a quiz resolves local archive references before saving.
 
-Each save is explicit. The account page shows the device and cloud versions and lets people choose which to restore. Replacing a device copy first saves the previous copy in local browser storage. The database enforces account ownership for reads and writes. Revisions prevent a stale page from overwriting a newer cloud save.
+Art Atlas saves on the device as people use it. On the account page, an email sign-in link gives access to optional uploads and restores. Restoring a copy keeps the previous device copy under Manage copies. The database enforces account ownership for reads and writes. Revisions prevent a stale page from overwriting a newer cloud copy.
 
 ## Local verification
 

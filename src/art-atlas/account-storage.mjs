@@ -5,9 +5,9 @@ import {createStudyArchiveStore, loadStudyArchives} from '../../public/art-atlas
 
 export const ACCOUNT_SAVE_FORMAT = 'art-atlas-account-save-v1';
 export const accountSaveTypes = Object.freeze([
-  {id:'galleries', label:'Galleries', key:PERSONAL_GALLERIES_KEY, href:'./galleries.html'},
-  {id:'collection', label:'Saved paintings', key:COLLECTION_STORAGE_KEY, href:'./?view=collection'},
-  {id:'study', label:'Quiz progress', key:COLLECTION_STUDY_KEY, href:'./'}
+  {id:'galleries', label:'Galleries', key:PERSONAL_GALLERIES_KEY},
+  {id:'collection', label:'Saved paintings', key:COLLECTION_STORAGE_KEY},
+  {id:'study', label:'Quiz progress', key:COLLECTION_STUDY_KEY}
 ]);
 const typeById = new Map(accountSaveTypes.map(type => [type.id, type]));
 const record = value => !!value && typeof value === 'object' && !Array.isArray(value);
