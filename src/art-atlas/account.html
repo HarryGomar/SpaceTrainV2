@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f4f1">
+  <title>Account saves · Art Atlas</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="./account.css">
+</head>
+<body>
+  <main class="account-page">
+    <header class="account-top">
+      <a href="./">← Art Atlas</a>
+      <button id="sign-out" type="button" hidden>Sign out</button>
+    </header>
+
+    <h1>Account saves</h1>
+    <p class="account-intro">Save your galleries, paintings, and quiz progress to your account. You can restore each save on another device.</p>
+    <p id="account-status" class="account-status" role="status">Opening account saves…</p>
+
+    <form id="sign-in" class="account-login" hidden>
+      <label for="email">Email address</label>
+      <input id="email" name="email" type="email" autocomplete="email" required maxlength="254">
+      <button class="account-primary" type="submit">Send sign-in link</button>
+    </form>
+
+    <section id="signed-in" aria-label="Your saves" hidden>
+      <p class="account-identity" id="identity"></p>
+      <div id="saves"></div>
+    </section>
+
+    <template id="save-row">
+      <article class="account-save">
+        <div>
+          <h2></h2>
+          <p data-device></p>
+          <p data-account></p>
+        </div>
+        <div class="account-actions">
+          <button type="button" class="account-primary" data-save>Save to account</button>
+          <button type="button" data-restore>Restore here</button>
+          <button type="button" data-recover>Restore previous device copy</button>
+          <button type="button" data-remove>Remove account save</button>
+          <a data-open>Open</a>
+        </div>
+      </article>
+    </template>
+  </main>
+  <script type="module" src="./account.mjs"></script>
+</body>
+</html>

@@ -37,7 +37,7 @@ export function createPersonalGalleries({app,works,storage,quizSessions=[],now=(
   function artButton(work,{origin='library',className='',selected=false,draggable=false}={}){
     return `<button type="button" class="pg-art ${className}" data-action="pg-inspect" data-work="${esc(work.id)}" data-origin="${origin}" ${draggable?`data-pg-drag="${esc(work.id)}"`:''} aria-label="View ${esc(short(work))}" aria-pressed="${selected}"><span class="art-visual">${image(work)}</span></button>`;
   }
-  function header(){return `<header class="pg-top"><a href="./">← Art Atlas</a><nav aria-label="Explore Art Atlas"><a href="./paintings.html">Paintings</a><a href="./maps.html">Maps</a><a href="./profiles.html">Profiles</a></nav></header>`;}
+  function header(){return `<header class="pg-top"><a href="./">← Art Atlas</a><nav aria-label="Explore Art Atlas"><a href="./paintings.html">Paintings</a><a href="./maps.html">Maps</a><a href="./profiles.html">Profiles</a><a href="./account.html">Account saves</a></nav></header>`;}
   function tabs(){return `<nav class="pg-tabs" aria-label="Galleries"><button type="button" data-action="pg-index" aria-pressed="${ui.mode!=='quiz'&&ui.mode!=='quiz-index'}">Your galleries</button><button type="button" data-action="pg-quiz-index" aria-pressed="${ui.mode==='quiz'||ui.mode==='quiz-index'}">Quiz galleries</button></nav>`;}
   function indexMarkup(){
     const isQuiz=ui.mode==='quiz-index',items=isQuiz?quiz.galleries:state.galleries;

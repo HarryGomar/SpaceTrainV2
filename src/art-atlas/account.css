@@ -1,0 +1,31 @@
+:root { color-scheme:light; background:#f5f4f1; color:#332f2b; font-family:Arial,Helvetica,sans-serif; }
+* { box-sizing:border-box; }
+body { margin:0; }
+.account-page { width:min(790px,100%); padding:0 24px 64px; margin:auto; }
+.account-top { min-height:81px; display:flex; justify-content:space-between; align-items:center; }
+a { color:#714c39; text-decoration:none; }
+a:hover { text-decoration:underline; text-underline-offset:3px; }
+a,button,input { font:inherit; }
+button { cursor:pointer; padding:9px 0; border:0; min-height:44px; background:transparent; color:#714c39; }
+button:disabled { opacity:.5; cursor:default; }
+a:focus-visible,button:focus-visible,input:focus-visible { outline:2px solid #a05c43; outline-offset:4px; }
+h1 { font-size:clamp(40px,7vw,66px); letter-spacing:-.055em; line-height:1.07; font-weight:400; margin:32px 0 17px; }
+.account-intro { max-width:58ch; font-size:15px; line-height:1.65; color:#6d6359; margin:0 0 20px; }
+.account-status { min-height:22px; color:#795845; font-size:13px; line-height:1.5; }
+.account-login { display:grid; max-width:390px; justify-items:start; gap:10px; }
+.account-login label { font-size:13px; }
+.account-login input { width:100%; padding:11px 12px; border:1px solid #bbad9b; border-radius:0; background:#fbfaf7; }
+.account-primary { color:#fffaf5; background:#89543e; padding:9px 15px; }
+.account-primary:hover:not(:disabled) { background:#713e2d; }
+.account-identity { margin:20px 0 18px; font-size:13px; color:#6d6359; overflow-wrap:anywhere; }
+.account-save { display:grid; grid-template-columns:minmax(0,1fr) minmax(180px,1fr); gap:12px 20px; align-items:start; border-top:1px solid #ded6cb; padding:20px 0; }
+.account-save h2 { margin:0 0 9px; font-size:23px; font-weight:400; }
+.account-save p { font-size:13px; color:#6d6359; margin:5px 0; }
+.account-actions { display:flex; align-items:center; justify-content:flex-end; flex-wrap:wrap; gap:2px 14px; font-size:13px; }
+.account-actions a { display:inline-flex; min-height:44px; align-items:center; }
+[hidden] { display:none !important; }
+@media(max-width:580px) {
+  .account-page { padding-inline:20px; }
+  .account-save { grid-template-columns:1fr; }
+  .account-actions { justify-content:flex-start; }
+}
