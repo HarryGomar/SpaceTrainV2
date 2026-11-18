@@ -19,6 +19,10 @@ if (settings) {
 }
 
 function start({url, publishableKey}) {
+  const accountUrl = new URL('./account.html', location.href);
+  const callback = new URL(location.href);
+  const fragment = new URLSearchParams(callback.hash.slice(1));
+  const returnedFromSignIn = ['code', 'error', 'error_code'].some(key => callback.searchParams.has(key) || fragment.has(key));
   const client = createClient(url, publishableKey, {auth:{
     flowType:'pkce',
     storageKey:'art-atlas-account-auth-v1:'+new URL(url).host,
@@ -140,24 +144,28 @@ function start({url, publishableKey}) {
     if (user) void renderSaves(user);
   }
 
-  // Running outside the auth callback keeps account queries out of the auth lock.
   client.auth.onAuthStateChange((event, session) => {
-    if (['INITIAL_SESSION', 'SIGNED_IN', 'SIGNED_OUT'].includes(event)) setTimeout(() => showUser(session), 0);
+    if (!['INITIAL_SESSION', 'SIGNED_IN', 'SIGNED_OUT'].includes(event)) return;
+    // Keep account queries outside the auth lock.
+    setTimeout(() => {
+      showUser(session);
+      if (event === 'INITIAL_SESSION' && returnedFromSignIn) {
+        history.replaceState(history.state, '', accountUrl);
+        if (!session) showStatus('Google sign-in did not finish. Try again.');
+      }
+    }, 0);
   });
 
-  signIn.addEventListener('submit', async event => {
-    event.preventDefault();
-    const submit = signIn.querySelector('button');
-    submit.disabled = true;
+  signIn.addEventListener('click', async () => {
+    signIn.disabled = true;
+    showStatus('Opening Google…');
     try {
-      const email = signIn.elements.email.value.trim();
-      const emailRedirectTo = new URL('./account.html', location.href).href;
-      const {error} = await client.auth.signInWithOtp({email, options:{emailRedirectTo}});
-      showStatus(error ? 'The link could not be sent. Check your address and try again.' : 'Check your email for a sign-in link. Open it in this browser.');
+      const {error} = await client.auth.signInWithOAuth({provider:'google', options:{redirectTo:accountUrl.href}});
+      if (error) throw error;
     } catch {
-      showStatus('The sign-in service could not be reached.');
+      showStatus('Google sign-in could not start. Try again.');
     } finally {
-      submit.disabled = false;
+      signIn.disabled = false;
     }
   });
 

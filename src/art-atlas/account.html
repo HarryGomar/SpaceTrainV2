@@ -17,19 +17,20 @@
     </header>
 
     <h1>Account saves</h1>
-    <p class="account-intro">Art Atlas saves on this device as you go. Sign in with your email to upload a copy and restore it on another device.</p>
+    <p class="account-intro">Art Atlas saves on this device as you go. Sign in to upload a copy and restore it on another device.</p>
     <p id="account-status" class="account-status" role="status">Opening account saves…</p>
 
-    <form id="sign-in" class="account-login" hidden>
-      <label for="email">Email address</label>
-      <input id="email" name="email" type="email" autocomplete="email" required maxlength="254">
-      <button class="account-primary" type="submit">Email me a sign-in link</button>
-    </form>
+    <button id="sign-in" class="account-google" type="button" hidden>
+      <img src="/art-atlas/google-g.png" width="18" height="18" alt="">
+      Continue with Google
+    </button>
 
     <section id="signed-in" aria-label="Your saves" hidden>
       <p class="account-identity" id="identity"></p>
       <div id="saves"></div>
     </section>
+
+    <footer class="account-footer"><a href="./privacy.html">Privacy and terms</a></footer>
 
     <template id="save-row">
       <article class="account-save">
