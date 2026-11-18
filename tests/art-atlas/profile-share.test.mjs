@@ -31,3 +31,41 @@ test('A single named comparison does not gain a recurrence claim in the share in
   const p=portrait();p.profileSummary.basis='observed-comparisons';p.observations[0].supportingSetCount=1;p.observations[0].recurring=false;
   assert.equal(buildProfileShareAspects({portrait:p,works})[0].lede,p.profileSummary.text);
 });
+
+test('The profile share shows actual favourites and a return highlight uses supporting scores only',()=>{
+  const p=portrait();
+  p.preferenceEvidence.explicitFavourites=[{workId:'s4'},{workId:'s3'}];
+  p.heroWorks=[{workId:'s0'},{workId:'s4'},{workId:'s3'}];
+  const returning={id:'intelligence-return-beyond-appeal',module:'tension-and-return',title:'Worth another look despite modest appeal',text:'Painting 6 felt unsettling and you wanted to return.',displayWorkIds:['s6','s7'],support:[{roundId:'appeal',workIds:['s6']},{roundId:'return',workIds:['s6']}],counter:[{roundId:'appeal',workIds:['s7']},{roundId:'return',workIds:['s7']}]};
+  p.observations.push(returning);
+  p.intelligence.categories.push({id:'return',readingTitle:returning.title,primaryFindingId:returning.id,status:'provisional',support:returning.support,counter:returning.counter});
+  p.intelligence.responseLedger.push(
+    {roundId:'appeal',measurementScope:'personal-appeal-continuous-v1',positions:{s6:59,s7:35}},
+    {roundId:'return',measurementScope:'returnResponse',axisDefinition:{xName:'Felt tension',yName:'Wish to return'},points:{s6:[91,89],s7:[36,32]}}
+  );
+  const [main]=buildProfileShareAspects({portrait:p,works});
+  assert.deepEqual(main.gallery.map(w=>w.id),['s4','s3']);
+  assert.equal(main.galleryLabel,'Your selected favourites');
+  assert.deepEqual(main.highlights[0].examples.map(w=>w.id),['s6']);
+  assert.deepEqual(main.highlights[0].examples[0].measures.map(m=>m.value),[59,91,89]);
+  const share=buildProfileShareAspects({portrait:p,works}).find(a=>a.id==='return');
+  assert.equal(share.artworks.find(w=>w.id==='s7').role,'counterexample');
+});
+
+test('Paired map highlights retain both paintings and exact values without repeating the profile headline',()=>{
+  const p=portrait();
+  const map={id:'intelligence-connection-contrast',module:'connection-and-understanding',measurementScope:'connection-map',title:'Understanding does not settle connection',text:'Painting 5 drew a more personal response than Painting 6.',displayWorkIds:['s5','s6'],support:[{roundId:'paired',workIds:['s5','s6']},{roundId:'early',workIds:['s5','s7']}]};
+  p.observations.push(map);
+  p.intelligence.categories.push({id:'connection',readingTitle:map.title,primaryFindingId:map.id,status:'supported',support:map.support});
+  const definition={xName:'Understanding',yName:'Connection'};
+  p.intelligence.responseLedger.push(
+    {roundId:'early',index:1,measurementScope:'connection',axisDefinition:definition,points:{s5:[20,40],s7:[25,90]}},
+    {roundId:'paired',index:2,measurementScope:'connection',axisDefinition:definition,points:{s5:[98,100],s6:[95,18]}}
+  );
+  const main=buildProfileShareAspects({portrait:p,works})[0];
+  assert.deepEqual(main.highlights[0].examples.map(w=>[w.id,...w.measures.map(m=>m.value)]),[['s5',98,100],['s6',95,18]]);
+  Object.assign(p.profileSummary,{title:map.title,text:map.text,findingIds:[map.id],threads:[{id:map.id,title:map.title}]});
+  const next=buildProfileShareAspects({portrait:p,works})[0];
+  assert.deepEqual(next.threads,[]);
+  assert.deepEqual(next.highlights,[]);
+});

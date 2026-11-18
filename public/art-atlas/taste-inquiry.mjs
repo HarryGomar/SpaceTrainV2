@@ -263,8 +263,19 @@ export function readTasteInquiryChecks(options={}){
 
 export function inquiryObservations(inquiry,works){
   const byId=new Map(works.map(w=>[w.id,w]));
-  const selected=inquiry.candidates.slice(0,2),weakened=inquiry.candidates.find(c=>c.status==='mixed'&&!selected.includes(c));
-  if(weakened)selected.push(weakened);else if(inquiry.candidates[2])selected.push(inquiry.candidates[2]);
+  const selected=inquiry.candidates.slice(0,1);
+  for (const candidate of inquiry.candidates.slice(1)) {
+    if (selected.length === 3 || !candidate.recurring || candidate.status === 'mixed') continue;
+    const rounds = new Set(candidate.support.map(group => group.roundId));
+    const overlaps = selected.some(other =>
+      other.driver === candidate.driver ||
+      other.support.filter(group => rounds.has(group.roundId)).length /
+        Math.max(candidate.support.length, other.support.length) >= .8);
+    if (!overlaps) selected.push(candidate);
+  }
+  // Keep a genuinely weakened explanation available alongside the stronger ones.
+  const weakened=inquiry.candidates.find(c=>c.status==='mixed'&&!selected.includes(c));
+  if(weakened)selected.push(weakened);
   return selected.map(c=>{
     const example=c.support[0]?.example;if(!example)return null;
     const preferred=example.values[0]>example.values[1]?0:1,foil=1-preferred;

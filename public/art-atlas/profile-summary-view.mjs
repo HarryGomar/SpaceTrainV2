@@ -16,6 +16,6 @@ export function profileSummaryMarkup({summary={},works=[],esc}={}){
     }
     return out;
   };
-  const combined=threads.map(thread=>thread.title).join(' & '),title=combined===summary.title?threads.map((thread,index)=>`<span style="--thread-colour:${profileThreadColour(thread,index)}">${esc(thread.title)}</span>`).join('<span class="tp-title-join"> &amp; </span>'):esc(summary.title||'Art profile');
+  const headingThreads=threads.slice(0,2),combined=headingThreads.map(thread=>thread.title).join(' & '),title=combined===summary.title?headingThreads.map((thread,index)=>`<span style="--thread-colour:${profileThreadColour(thread,index)}">${esc(thread.title)}</span>`).join('<span class="tp-title-join"> &amp; </span>'):esc(summary.title||'Art profile');
   return {title,text:highlight(summary.text)};
 }

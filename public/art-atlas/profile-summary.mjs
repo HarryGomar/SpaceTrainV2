@@ -24,6 +24,56 @@ function qualitySummary(pattern,fallback){
 }
 const exampleIds=item=>[...(item.recordFit?.favouritesWithQuality?.length?item.recordFit.favouritesWithQuality:item.explanationEvidence?.supportingWorkIds?.length?item.explanationEvidence.supportingWorkIds:item.displayWorkIds||[])];
 
+export function composeFavouriteSummary({works, favourites, patterns}) {
+  const byId = new Map(works.map(work => [work.id, work]));
+  const workIds = unique(favourites.map(item => item.workId)).filter(id => byId.has(id));
+  if (!workIds.length) return null;
+  const chosen = new Set(workIds);
+  const name = id => byId.get(id).shortTitle || byId.get(id).title;
+  const candidates = patterns.flatMap(pattern => {
+    const examples = (pattern.favouriteWorkIds || []).filter(id => chosen.has(id));
+    if (examples.length < 2) return [];
+    const baseline = pattern.exposureBaseline;
+    const prevalence = baseline.presentedPoolKnown >= 6
+      ? baseline.presentedPoolWithQuality / baseline.presentedPoolKnown : null;
+    if (prevalence === 1) return [];
+    const lift = prevalence === null ? 0 : examples.length / baseline.selectedKnown - prevalence;
+    return [{pattern, examples, lift}];
+  });
+  const threads = [];
+  const represented = new Set();
+  while (threads.length < 3 && candidates.length) {
+    const priority = item => item.examples.length + 2 * item.examples.filter(id => !represented.has(id)).length + 4 * item.lift;
+    candidates.sort((a, b) => priority(b) - priority(a) || a.pattern.title.localeCompare(b.pattern.title));
+    const {pattern, examples} = candidates.shift();
+    // A second label for almost the same group of paintings adds little.
+    if (threads.some(thread => examples.filter(id => thread.workIds.includes(id)).length /
+        Math.max(examples.length, thread.workIds.length) >= .8)) continue;
+    const phrasing = qualityPhrases[pattern.qualityKey] || pattern.title.toLowerCase();
+    const listed = [...examples].sort((a, b) => Number(represented.has(a)) - Number(represented.has(b)));
+    listed.forEach(id => represented.add(id));
+    threads.push({
+      id: pattern.id,
+      title: pattern.title,
+      qualityKey: pattern.qualityKey,
+      channel: 'explicit-favourites',
+      profileAnchorId: 'profile-favourites',
+      text: `${name(listed[0])} and ${name(listed[1])} share ${phrasing}.`,
+      workIds: listed,
+      supportingWorkCount: examples.length,
+      knownFavouriteCount: pattern.exposureBaseline.selectedKnown,
+      support: pattern.support,
+      counter: pattern.counter
+    });
+  }
+  const title = threads.length ? threads.slice(0, 2).map(thread => thread.title).join(' & ')
+      : workIds.length === 1 ? 'Your chosen favourite' : 'The paintings you chose';
+  const text = threads.length ? threads[0].text
+    : workIds.length === 1 ? `You selected ${name(workIds[0])} as your favourite.`
+      : `You selected ${workIds.length} paintings as favourites.`;
+  return {title, text, workIds, findingIds:threads.map(thread => thread.id), basis:'chosen-favourites', threads};
+}
+
 /** A one-off reversal is evidence to explore, never an overall taste profile. */
 export function composeTasteSummary({works=[],tastePatterns={},tasteBoundaries={},reportedContextChanges={},axesProfile={},themes=[],observations=[],legacyBasis='observed-comparisons'}={}){
   const contextSummary=reportedContextChanges.summary?.measurementScope===CONTEXT_CHANGE_PROTOCOL&&reportedContextChanges.summary.distinctWorkCount>=2&&new Set(reportedContextChanges.summary.workIds||[]).size>=2&&reportedContextChanges.summary.sourceRoundIds?.length>=2?reportedContextChanges.summary:null;

@@ -483,7 +483,7 @@ export function createDeepStudy({app,getWorks,image,esc,keepButtons,navigate,sho
   const exerciseRecords=(rounds=actualRounds())=>rounds.filter(r=>r.kind==='exercise'&&validStudyAnswer(r,data.answers[r.id])).map(r=>data.answers[r.id].record);
   const saveExercise=()=>{if(round?.kind!=='exercise'||!draft?.record)return;recordStudyResponse(data,round,draft);data.finishedAt=null;save();};
   const embeddedOptions={app,getRecord:()=>draft?.record,setRecord:record=>{draft.record=record;},getWorks:sessionWorks,image,esc,save:saveExercise,rerender:()=>{render();},inspect:id=>showArtwork(id,true)};
-  const embedded={sorting:createSortingTable(embeddedOptions),'difficult-edit':createDifficultEdit(embeddedOptions),curate:createGalleryStudio(embeddedOptions)};
+  const embedded={sorting:createSortingTable(embeddedOptions),'difficult-edit':createDifficultEdit(embeddedOptions),curate:createGalleryStudio({...embeddedOptions,inJourney:true})};
   const chrome=()=>`<header class="journey-chrome"><button class="text-button" type="button" data-action="deep-back" ${!refining()&&data.index?'':'disabled'} aria-label="Previous round">←</button><span>${refining()?'Extra comparison '+refinementAttempts().length:data.index+1+' / '+data.target}</span><button class="text-button" type="button" data-action="deep-save" aria-label="Close">×</button></header>`;
   function earlierPreferenceOptions(){
     const rounds=actualRounds(),index=rounds.findIndex(item=>item.id===round.id);
@@ -520,7 +520,7 @@ export function createDeepStudy({app,getWorks,image,esc,keepButtons,navigate,sho
     const heading=app.querySelector('#question-title');if(heading&&(round.exerciseKind!=='difficult-edit'||draft.record.phase==='edit'))heading.textContent=round.title;
     const instruction=app.querySelector('.sorting-instruction');if(instruction)instruction.textContent='Drag related paintings together. You can stack them.';
     const empty=app.querySelector('.sorting-empty');if(empty)empty.textContent='Place the painting here';
-    if(round.exerciseKind==='curate'&&draft.record.phase!=='walkthrough')app.querySelector('.gallery-task').innerHTML='<p>Group the paintings across the rooms.</p><p class="gallery-input-hint">Choose a painting, then a + on a wall.</p>';
+    if(round.exerciseKind==='curate'&&draft.record.phase!=='walkthrough')app.querySelector('.gallery-task > p').textContent=round.hint;
     if(round.exerciseKind==='curate'&&draft.record.phase==='walkthrough'){heading?.removeAttribute('id');app.querySelector('.gallery-task h2')?.setAttribute('id','question-title');}
     applyTaskSignals(app,round);
     const next=app.querySelector('[data-action="lab-finish"]');if(next)next.textContent='Continue';

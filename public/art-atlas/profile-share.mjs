@@ -1,63 +1,111 @@
 import {profileThreadColour} from './profile-summary-view.mjs';
 import {TASK_COLOURS} from './task-signals.mjs';
+import {CONTINUOUS_PROTOCOL} from './continuous-preference.mjs';
 const unique=a=>[...new Set(a.filter(Boolean))],short=w=>w.shortTitle||w.title;
 const sentences=(text,count=2)=>(String(text||'').match(/[^.!?]+[.!?]+(?:\s|$)|[^.!?]+$/g)||[]).slice(0,count).join(' ').trim();
 const compact=(text,max=280)=>{text=String(text||'').replace(/\s+/g,' ').trim();return text.length<=max?text:text.slice(0,max-1).replace(/\s+\S*$/,'')+'…';};
 const esc=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
+const headlineKey=text=>String(text||'').toLowerCase().replace(/[^\p{L}\p{N}]+/gu,' ').trim();
+const highlightKinds={
+  appeal:['Personal appeal','preference'],admiration:['Admiration','making'],attention:['Attention','curiosity'],
+  connection:['Connection','connection'],return:['Returning','emotion']
+};
 export const PROFILE_SHARE_SIZE=Object.freeze({width:1080,height:1600});
 
 /** A share page uses the earned reading and its actual source responses. It
  * contains no raw answer archive, inferred personality type or population rank. */
 export function buildProfileShareAspects({portrait={},works=[],simulation=false}={}){
-  const byId=new Map(works.map(w=>[w.id,w])),ledger=portrait.intelligence?.responseLedger||[],observations=portrait.observations||[],summary=portrait.profileSummary||{};
+  const byId=new Map(works.map(w=>[w.id,w]));
+  const ledger=new Map((portrait.intelligence?.responseLedger||[]).map(row=>[row.roundId,row]));
+  const observations=portrait.observations||[],summary=portrait.profileSummary||{};
+  const byFinding=new Map(observations.map(observation=>[observation.id,observation]));
   const metrics=[{label:'paintings compared',value:portrait.coverage?.uniquePreferenceWorks||0},{label:'responses recorded',value:portrait.coverage?.validRounds||0}].filter(m=>m.value>0);
   const identity=id=>{const w=byId.get(id);return w?{id:w.id,title:short(w),artist:w.artist||'',image:w.image,sourceUrl:w.sourceUrl,credit:w.imageCredit||[w.museum,w.rights].filter(Boolean).join(' · ')}:null;};
-  function cards(finding,limit=2){
-    const evidence=[...(finding?.support||[]),...(finding?.counter||[])],chosen=unique([...(finding?.displayWorkIds||[]),...evidence.flatMap(e=>e.workIds||[])]).filter(id=>byId.has(id)).slice(0,limit);
+  function cards(finding,{includeCounter=false}={}){
+    const support=finding?.support||[];
+    const evidence=includeCounter?[...support,...(finding?.counter||[])]:support;
+    const sourceIds=unique(evidence.flatMap(row=>row.workIds||[]));
+    const chosen=unique([...(finding?.displayWorkIds||[]).filter(id=>sourceIds.includes(id)),...sourceIds]).filter(id=>byId.has(id)).slice(0,2);
+    const shared=chosen.length===2?evidence.filter(row=>chosen.every(id=>row.workIds?.includes(id))):[];
+    const isMap=row=>row?.axisDefinition&&(finding?.measurementScope?.endsWith('-map')
+      ? row.measurementScope===finding.measurementScope.slice(0,-4)
+      : finding?.module==='tension-and-return'?row.measurementScope==='returnResponse':true);
+    const matchedMap=shared.map(row=>ledger.get(row.roundId)).find(row=>isMap(row)&&chosen.every(id=>row.points?.[id]));
     return chosen.map(id=>{
-      const sources=evidence.filter(e=>e.workIds?.includes(id)).map(e=>ledger.find(r=>r.roundId===e.roundId)).filter(Boolean).sort((a,b)=>a.index-b.index),measures=[];
-      const lines=sources.filter(r=>r.measurementScope==='personal-appeal-continuous-v1'&&Number.isFinite(r.positions?.[id]));
-      if(lines.length){measures.push({label:'Appeal',value:lines[0].positions[id]});if(lines.at(-1).positions[id]!==lines[0].positions[id])measures.push({label:'Later appeal',value:lines.at(-1).positions[id]});}
-      const map=sources.find(r=>r.points?.[id]&&r.axisDefinition);
+      const supporting=support.some(row=>row.workIds?.includes(id));
+      const ownEvidence=(supporting?support:evidence).filter(row=>row.workIds?.includes(id));
+      const sources=ownEvidence.map(row=>ledger.get(row.roundId)).filter(Boolean),measures=[];
+      const map=matchedMap||sources.find(row=>isMap(row)&&row.points?.[id]);
+      const line=sources.find(row=>row.measurementScope===CONTINUOUS_PROTOCOL&&Number.isFinite(row.positions?.[id]));
+      if(line&&!['achievement','attention'].includes(map?.measurementScope))measures.push({label:'Appeal',value:line.positions[id]});
       if(map){const d=map.axisDefinition;for(const [i,label]of [d.xName,d.yName].entries())if(!measures.some(m=>m.label.toLowerCase()===label.toLowerCase()))measures.push({label,value:map.points[id][i]});}
-      return {...identity(id),measures:measures.slice(0,3)};
+      return {...identity(id),measures:measures.slice(0,3),...(!supporting?{role:'counterexample'}:{})};
     });
   }
   const base={metrics,simulation,footer:'A personal reading of these comparisons',size:{...PROFILE_SHARE_SIZE}},aspects=[];
-  const primary=observations.find(o=>summary.findingIds?.includes(o.id))||observations.find(o=>summary.threads?.some(t=>t.id===o.id));
+  const primary=summary.findingIds?.map(id=>byFinding.get(id)).find(Boolean)
+    ||summary.threads?.map(thread=>byFinding.get(thread.id)).find(Boolean);
   let mainCards=cards(primary);
   if(!mainCards.length)mainCards=unique([...(summary.workIds||[]),...(portrait.heroWorks?.map(w=>w.workId)||[]),...(portrait.preferenceEvidence?.negativeWorkIds||[]),...(portrait.preferenceEvidence?.overallRatings||[]).map(r=>r.workId)]).filter(id=>byId.has(id)).slice(0,2).map(id=>({...identity(id),measures:(portrait.preferenceEvidence?.overallRatings||[]).some(r=>r.workId===id&&r.measurementScope==='personal-appeal-continuous-v1')?[{label:'Appeal',value:portrait.preferenceEvidence.overallRatings.find(r=>r.workId===id&&r.measurementScope==='personal-appeal-continuous-v1').score}]:[]}));
   if(mainCards.length&&summary.text)aspects.push({...base,id:'profile',label:'Your profile',eyebrow:'Your Art Atlas',headline:summary.title||'Your Art Atlas',lede:compact(sentences(summary.text,2),310),accent:profileThreadColour(primary||{}),scopeNote:primary?.counter?.length?'A different result: '+primary.counter[0].detail:primary?.boundary||sentences(primary?.alternatives?.[0]||'',1),nextQuestion:portrait.intelligence?.categories?.find(c=>c.nextComparison?.roundId)?.nextComparison?.reason||primary?.nextQuestion||'',artworks:mainCards,badge:simulation?'Simulated answers':summary.basis==='prospectively-tested-appeal'?'Checked on later work':summary.basis==='recurring-observed-appeal'?'Recurring in your answers':summary.basis==='direct-response-reading'?'Your reported response':'From your answers'});
   const favourites=unique((portrait.preferenceEvidence?.explicitFavourites||[]).map(w=>w.workId)).filter(id=>byId.has(id));
   const positive=(portrait.preferenceEvidence?.overallRatings||[]).filter(r=>r.measurementScope==='personal-appeal-continuous-v1'&&r.score>=65&&byId.has(r.workId)).sort((a,b)=>b.score-a.score),chosen=favourites.length?favourites:unique(positive.map(r=>r.workId));
   if(chosen.length)aspects.push({...base,id:'paintings',label:'Your paintings',eyebrow:'Paintings to keep close',headline:favourites.length?'From your favourites':'Paintings that appealed',lede:favourites.length?'Paintings you explicitly chose as favourites. Their arrangement here is not a ranking.':'These paintings received positive personal-appeal ratings.',badge:simulation?'Simulated answers':favourites.length?'Selected by you':'Personally rated',artworks:chosen.slice(0,6).map(id=>({...identity(id),measures:favourites.length?[]:[{label:'Appeal',value:positive.find(r=>r.workId===id).score}]})),scopeNote:favourites.length?`${favourites.length} explicitly selected favourite${favourites.length===1?'':'s'}.`:'An appeal rating is separate from an explicit favourite choice.',nextQuestion:''});
-  const contrast=observations.find(o=>['making-and-taste','attention-and-appeal','connection-and-understanding'].includes(o.module)&&o.support?.length&&o.displayWorkIds?.length>=2);
+  const contrast=observations.find(observation=>{
+    if(!['making-and-taste','attention-and-appeal','connection-and-understanding'].includes(observation.module))return false;
+    const [first,second]=observation.displayWorkIds||[];
+    return first&&second&&observation.support?.some(row=>{
+      const source=ledger.get(row.roundId);
+      return row.workIds?.includes(first)&&row.workIds.includes(second)&&source?.axisDefinition&&source.points?.[first]&&source.points?.[second];
+    });
+  });
   if(contrast)aspects.push({...base,id:'contrast',label:'A revealing contrast',eyebrow:'Two judgments, different answers',headline:contrast.title,lede:compact(sentences(contrast.text,2),310),badge:simulation?'Simulated answers':'A recorded contrast',artworks:cards(contrast),scopeNote:contrast.alternatives?.find(s=>/report|not a test|different/i.test(s))||'These are separate judgments under the original questions.',nextQuestion:''});
-  const returning=observations.find(o=>o.module==='tension-and-return'&&o.id?.includes('return-beyond-appeal'))||observations.find(o=>o.module==='tension-and-return'&&o.support?.length&&o.displayWorkIds?.length);
-  if(returning)aspects.push({...base,id:'return',label:'Worth another look',eyebrow:'What invites a return',headline:returning.title,lede:compact(sentences(returning.text,2),310),badge:simulation?'Simulated answers':'Your reported wish',artworks:cards(returning),scopeNote:'Wish to return is your reported intention, separate from appeal and from an observed return visit.',nextQuestion:returning.nextQuestion||''});
-  const galleryIds=unique([...(portrait.heroWorks||[]).map(w=>w.workId),...chosen]).filter(id=>byId.has(id)).slice(0,5);
-  const highlights=(portrait.intelligence?.categories||[]).filter(c=>['admiration','attention','return','connection'].includes(c.id)&&c.support?.length&&['supported','provisional','mixed'].includes(c.status)).slice(0,3).map(c=>({label:({admiration:'Admiration',attention:'Attention',return:'Returning',connection:'Connection'})[c.id],title:c.readingTitle||c.title,text:compact(sentences(c.conclusion,1),135),colour:TASK_COLOURS[({admiration:'making',attention:'curiosity',return:'emotion',connection:'connection'})[c.id]],status:c.status}));
-  for(const h of highlights){
-    const category=(portrait.intelligence?.categories||[]).find(c=>({admiration:'Admiration',attention:'Attention',return:'Returning',connection:'Connection'})[c.id]===h.label);
-    const examples=cards(category),example=examples.find(w=>w.measures.length>=2&&w.measures.some(m=>/appeal/i.test(m.label)&&m.value<=60))||examples.find(w=>w.measures.length>=2);
-    h.example=example||null;
-    if(example)h.text=example.title.length<=42?example.title:'One recorded response';else h.text=sentences(category.conclusion,1).length<=135?sentences(category.conclusion,1):'';
-  }
+  const returnCategory=portrait.intelligence?.categories?.find(category=>category.id==='return');
+  const returning=observations.find(o=>o.id===returnCategory?.primaryFindingId)
+    ||observations.find(o=>o.module==='tension-and-return'&&o.id?.includes('return-beyond-appeal'))
+    ||observations.find(o=>o.module==='tension-and-return'&&o.support?.length&&o.displayWorkIds?.length);
+  if(returning)aspects.push({...base,id:'return',label:'Worth another look',eyebrow:'What invites a return',headline:returning.title,lede:compact(sentences(returning.text,2),310),badge:simulation?'Simulated answers':'Your reported wish',artworks:cards(returning,{includeCounter:true}),scopeNote:'Wish to return is your reported intention, separate from appeal and from an observed return visit.',nextQuestion:returning.nextQuestion||''});
+  const illustratedRating=mainCards.find(work=>positive.some(rating=>rating.workId===work.id))?.id;
+  const galleryIds=(favourites.length?favourites:unique([illustratedRating,...chosen,...(portrait.heroWorks||[]).map(w=>w.workId)]).filter(id=>byId.has(id))).slice(0,5);
   const main=aspects.find(a=>a.id==='profile');
   if(main){
     main.accent=profileThreadColour(summary.threads?.[0]||primary||{});
-    main.threads=(summary.threads||[]).slice(0,2).map((t,i)=>({title:t.title,colour:profileThreadColour(t,i),detail:t.supportingSetCount?`${t.supportingSetCount} comparison groups${t.supportingArtistCount?' · '+t.supportingArtistCount+' artists':''}`:''}));
+    const headings=new Set([headlineKey(summary.title)]);
+    const threads=[...(summary.threads||[]),...(portrait.favouriteSummary?.threads||[])];
+    main.threads=threads.flatMap((thread,index)=>{
+      const title=headlineKey(thread.title);
+      if(!title||headings.has(title))return [];
+      headings.add(title);
+      const detail=thread.knownFavouriteCount
+        ?`${thread.supportingWorkCount} of ${thread.knownFavouriteCount} reviewed favourites`
+        :thread.supportingSetCount?`${thread.supportingSetCount} comparison groups`:'';
+      return detail?[{title:thread.title,colour:profileThreadColour(thread,index),detail}]:[];
+    }).slice(0,3);
     main.gallery=galleryIds.length?galleryIds.map(identity):main.artworks;
-    main.galleryLabel=galleryIds.length?'Paintings at the heart of your choices':'One of your comparisons';
-    main.highlights=highlights;
-    if(primary?.recurring&&primary.supportingSetCount)main.lede=summary.basis==='prospectively-tested-appeal'?'A recurring thread, checked on later paintings.':'A recurring thread in your comparisons.';
+    main.galleryLabel=favourites.length?(favourites.length>galleryIds.length?`${galleryIds.length} of your ${favourites.length} selected favourites`:'Your selected favourites'):galleryIds.length?(galleryIds.every(id=>chosen.includes(id))?'Paintings you rated highly':'Paintings that appealed'):'One of your comparisons';
+    const categories=portrait.intelligence?.categories||[];
+    main.highlights=categories.flatMap(category=>{
+      if(!Object.hasOwn(highlightKinds,category.id)||!['supported','provisional'].includes(category.status))return [];
+      const finding=byFinding.get(category.primaryFindingId)
+        ||{...category,module:category.id==='return'?'tension-and-return':undefined};
+      if(category.id==='appeal'&&!finding.recurring)return [];
+      const title=category.readingTitle||category.title,key=headlineKey(title);
+      if(!key||headings.has(key)||category.primaryFindingId&&summary.findingIds?.includes(category.primaryFindingId))return [];
+      const examples=cards(finding).filter(work=>work.measures.length>=(category.id==='appeal'?1:2));
+      if(!examples.length)return [];
+      if(category.id==='return'&&!examples.some(work=>['Felt tension','Wish to return'].every(label=>
+        work.measures.some(measure=>measure.label===label&&measure.value>=65))))return [];
+      headings.add(key);
+      const [label,tone]=highlightKinds[category.id];
+      return [{label,title,colour:TASK_COLOURS[tone],status:category.status,examples}];
+    }).sort((a,b)=>Number(b.status==='supported')-Number(a.status==='supported')).slice(0,3);
     main.exception=primary?.status==='mixed'?compact(sentences(primary.counter?.[0]?.detail,1),170):'';
   }
   for(const a of aspects){
     a.threads||=[];a.highlights||=[];
     if(a.id==='paintings'){a.gallery=a.artworks.slice(0,5);a.galleryLabel=favourites.length?'Selected favourites · unranked':'Positively rated by you';a.accent='#55759a';}
     if(a.id==='contrast'){a.accent=TASK_COLOURS[contrast.module==='connection-and-understanding'?'connection':contrast.module==='attention-and-appeal'?'curiosity':'making'];a.lede=sentences(contrast.text,1);}
-    if(a.id==='return'){a.accent=TASK_COLOURS.emotion;a.lede='A reported wish to return can coexist with modest appeal.';const tensions=a.artworks.map(w=>w.measures.find(m=>m.label==='Felt tension')?.value),returns=a.artworks.map(w=>w.measures.find(m=>m.label==='Wish to return')?.value);if(tensions.length===2&&tensions.every(v=>v>=65)&&returns.every(Number.isFinite)&&Math.abs(returns[0]-returns[1])>=30){a.lede='Both paintings felt unsettling. The wish to return was different.';a.responseContrast='Similar tension. Different pull to return.';}}
+    if(a.id==='return')a.accent=TASK_COLOURS.emotion;
   }
   return aspects.filter(a=>a.artworks.length);
 }
@@ -99,7 +147,7 @@ export async function renderProfileShareCanvas({aspect,document=globalThis.docum
     let bottom=top+height;
     if(image){const scale=Math.min(width/image.width,height/image.height),w=image.width*scale,h=image.height*scale;ctx.drawImage(image,x+(width-w)/2,top+(height-h)/2,w,h);}
     else textBlock(ctx,'Artwork unavailable',{x,y:top+height/2,width,size:18,color:soft});
-    if(caption){ctx.textAlign='center';const titleLines=wrapped(ctx,work.title,width,18);ctx.fillStyle=ink;titleLines.slice(0,2).forEach((line,i)=>ctx.fillText(line,x+width/2,bottom+14+i*23));bottom+=14+Math.min(2,titleLines.length)*23;ctx.fillStyle=soft;ctx.font='400 15px Inter, system-ui, sans-serif';ctx.fillText(compact(work.artist,46),x+width/2,bottom+3);ctx.textAlign='left';}
+    if(caption){ctx.textAlign='center';const titleLines=wrapped(ctx,work.title,width,18);ctx.fillStyle=ink;titleLines.slice(0,2).forEach((line,i)=>ctx.fillText(line,x+width/2,bottom+14+i*23));bottom+=14+Math.min(2,titleLines.length)*23;ctx.fillStyle=soft;ctx.font='400 15px Inter, system-ui, sans-serif';ctx.fillText(compact(work.artist,46),x+width/2,bottom+3);if(work.role==='counterexample'){ctx.fillStyle=accent;ctx.fillText('A different response',x+width/2,bottom+23);bottom+=20;}ctx.textAlign='left';}
     if(measures){const ms=work.measures||[],mw=width/ms.length,my=bottom+48;for(let j=0;j<ms.length;j++){const m=ms[j],mx=x+j*mw;const colour=/appeal/i.test(m.label)?TASK_COLOURS.preference:/attention|understanding/i.test(m.label)?TASK_COLOURS.curiosity:/admiration|making/i.test(m.label)?TASK_COLOURS.making:/connection/i.test(m.label)?TASK_COLOURS.connection:TASK_COLOURS.emotion;textBlock(ctx,String(m.value),{x:mx,y:my,width:mw-10,size:51,color:colour,maxLines:1});textBlock(ctx,m.label,{x:mx,y:my+62,width:mw-12,size:17,lineHeight:23,color:soft,maxLines:2});}}
   }
   if(aspect.gallery){
@@ -115,12 +163,24 @@ export async function renderProfileShareCanvas({aspect,document=globalThis.docum
     }else if(count===3){picture(0,328,top+20,424,410);picture(1,72,top+105,220,285);picture(2,788,top+105,220,285);y=top+525;}
     else{const w=count===1?650:435;for(let i=0;i<count;i++)picture(i,count===1?215:72+i*501,top,w,430);y=top+535;}
     const hs=aspect.highlights||[];
-    if(hs.length){const start=Math.max(y+5,1160),colWidth=900/hs.length;for(let i=0;i<hs.length;i++){const h=hs[i],x=90+i*colWidth;let hy=textBlock(ctx,h.label,{x,y:start,width:colWidth-35,size:18,color:h.colour,maxLines:1});hy=textBlock(ctx,h.title,{x,y:hy+13,width:colWidth-35,size:29,lineHeight:34,color:h.colour,maxLines:3});hy=textBlock(ctx,h.text,{x,y:hy+13,width:colWidth-35,size:18,lineHeight:25,maxLines:2,color:soft});if(h.example)textBlock(ctx,h.example.measures.map(m=>m.label+' '+m.value).join(' · '),{x,y:hy+8,width:colWidth-35,size:17,lineHeight:24,maxLines:3,color:soft});}y=start+255;}
+    if(hs.length){
+      const start=Math.max(y+24,1050),colWidth=900/hs.length;
+      y=start;
+      for(let i=0;i<hs.length;i++){
+        const highlight=hs[i],x=90+i*colWidth,width=colWidth-28;
+        let baseline=textBlock(ctx,highlight.label,{x,y:start,width,size:18,color:highlight.colour,maxLines:1});
+        baseline=textBlock(ctx,highlight.title,{x,y:baseline+10,width,size:26,lineHeight:30,color:highlight.colour,maxLines:3});
+        for(const work of highlight.examples){
+          baseline=textBlock(ctx,work.title,{x,y:baseline+12,width,size:18,lineHeight:22,color:ink,weight:500,maxLines:2});
+          baseline=textBlock(ctx,work.measures.map(m=>m.label+' '+m.value).join(' · '),{x,y:baseline+2,width,size:16,lineHeight:20,color:soft,maxLines:3});
+        }
+        y=Math.max(y,baseline);
+      }
+    }
     if(aspect.exception)centre(aspect.exception,Math.max(y,1390),19,soft,880,2);
   }else{
     const top=Math.max(430,y+55),count=Math.min(2,gallery.length),width=count===1?680:432;
     for(let i=0;i<count;i++)picture(i,count===1?200:78+i*492,top,width,540,{measures:true});
-    if(aspect.responseContrast)centre(aspect.responseContrast,1300,32,accent);
     if(aspect.id==='return')centre('Wish to return is a reported intention.',1360,20,soft);
   }
   centre('Art Atlas'+(aspect.simulation?' · Simulated answers':''),1550,18,soft);

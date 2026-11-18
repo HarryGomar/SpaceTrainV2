@@ -41,6 +41,8 @@ test('Exact overall anchors make independently high paintings eligible even with
 test('Explicit favourites outrank numeric appeal without inventing order within the selected set',()=>{
   const f=fixture(),a=f.pref('a',[0,1,2,3]),chosen=f.favourites('favourites');const result=portrait(f,[a,chosen],{a:f.spectrum(a,[99,90,20,10]),favourites:f.selection(chosen,[2,3])});
   assert.deepEqual(result.heroWorks.slice(0,2).map(item=>item.workId),['w2','w3']);assert.ok(result.heroWorks.slice(0,2).every(item=>item.basis==='overall-favourites'));assert.equal(result.heroWorks[0].score,20);assert.ok(result.heroWorks[0].counter.some(item=>item.roundId==='a'));assert.equal(result.preferenceEvidence.basis,'overall-favourites');
+  assert.equal(result.profileSummary.basis,'chosen-favourites');
+  assert.deepEqual(result.profileSummary.workIds,['w2','w3']);
   const later={...chosen,id:'later'};const revised=portrait(f,[a,chosen,later],{a:f.spectrum(a,[99,90,20,10]),favourites:f.selection(chosen,[2,3]),later:f.selection(later,[])});assert.equal(revised.heroWorks[0].workId,'w0');assert.ok(revised.heroWorks.every(item=>item.basis!=='overall-favourites'));assert.equal(revised.discovery.artists.some(item=>item.workIds.includes('w3')),false);
 });
 

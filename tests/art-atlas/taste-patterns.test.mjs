@@ -4,6 +4,7 @@ import {buildTastePatterns,resolveArtworkAttributes,TASTE_QUALITY_BUNDLES} from 
 import {ARTWORK_ATTRIBUTE_VERSION,ARTWORK_ATTRIBUTE_DEFINITIONS} from '../../public/art-atlas/artwork-attribute-definitions.mjs';
 import {withOverallAppeal} from '../../public/art-atlas/appeal-scale.mjs';
 import {AXES} from '../../public/art-atlas/engine.mjs';
+import {composeFavouriteSummary} from '../../public/art-atlas/profile-summary.mjs';
 
 function fixture(setCount=3){
   const works=Array.from({length:setCount*4},(_,i)=>({id:'w'+i,title:'Painting '+i,artist:'Artist '+i,image:'assets/w'+i+'.jpg',sourceUrl:'https://museum.example/w'+i,sha256:(i+1).toString(16).padStart(64,'0')}));
@@ -87,6 +88,21 @@ test('Explicit favourites produce descriptive connections with rated-pool baseli
 test('Recommendations match exact reviewed qualities and link to supporting present works, excluding recorded exposure',()=>{
   const f=fixture(4),model=buildTastePatterns({...f,rounds:f.rounds.slice(0,3),answers:{p0:f.answers.p0,p1:f.answers.p1,p2:f.answers.p2}});assert.ok(model.recommendations.length);for(const item of model.recommendations){assert.ok(['w12','w14'].includes(item.workId));assert.ok(item.sourceWorkIds.length);assert.ok(item.sourceWorkIds.every(id=>Number(id.slice(1))%2===0));assert.equal(item.matchBasis,'source-bound-reviewed-visual-qualities');assert.equal('probability' in item,false);}
   const viewed={id:'curate',kind:'exercise',exerciseKind:'curate',works:f.rounds[3].works},answer={workIds:viewed.works.map(w=>w.id),record:{presentedIds:['w12'],placements:{}}},after=buildTastePatterns({...f,rounds:[...f.rounds.slice(0,3),viewed],answers:{p0:f.answers.p0,p1:f.answers.p1,p2:f.answers.p2,curate:answer}});assert.equal(after.recommendations.some(item=>item.workId==='w12'),false);assert.equal(after.recommendations.some(item=>item.workId==='w14'),true);
+});
+
+test('Favourite readings show distinct reviewed groups, including a pair, without promoting them to overall taste',()=>{
+  const f=fixture(3);
+  for(const id of ['w0','w4'])setStatus(f,id,'visible-gesture','present');
+  for(const id of ['w3','w7'])setStatus(f,id,'imagined-world','present');
+  const grid={id:'favs',kind:'choice-grid',selectionMode:'shortlist',maxChoices:5,title:'Your favourites',works:f.works,evidence:{construct:'overall-favourites',explicitFavourites:true}};
+  const selectedIds=['w0','w4','w3','w7','w9'];
+  const answer={workIds:f.works.map(w=>w.id),selectionMode:'shortlist',selectedIds,explicitNone:false,unsure:false,confirmed:true};
+  const patterns=buildTastePatterns({...f,rounds:[...f.rounds,grid],answers:{...f.answers,favs:answer}}).favouriteConnections.patterns;
+  const summary=composeFavouriteSummary({works:f.works,favourites:selectedIds.map(workId=>({workId})),patterns});
+  assert.deepEqual(summary.workIds,selectedIds);
+  assert.ok(patterns.find(item=>item.qualityKey==='imagined-world'&&!item.summaryEligible));
+  assert.ok(summary.threads.some(thread=>thread.qualityKey==='imagined-world'&&thread.workIds.length===2));
+  assert.equal(summary.threads.filter(thread=>thread.workIds.includes('w0')&&thread.workIds.includes('w4')).length,1);
 });
 
 test('An earlier quiz excludes prior low-rated paintings from rediscovery without changing the current quality reading',()=>{

@@ -23,7 +23,7 @@ import {buildResponsePortrait} from './response-portrait.mjs';
 import {buildFacetReadings} from './facet-readings.mjs';
 import {buildClosingReadings} from './closing-readings.mjs';
 import {buildTasteAxes} from './taste-axes.mjs';
-import {composeTasteSummary} from './profile-summary.mjs';
+import {composeFavouriteSummary,composeTasteSummary} from './profile-summary.mjs';
 import {buildTastePatterns} from './taste-patterns.mjs';
 import {buildTasteBoundaries} from './taste-boundaries.mjs';
 import ARTWORK_ATTRIBUTE_REVIEWS from './artwork-attribute-reviews.json' with {type:'json'};
@@ -365,6 +365,15 @@ export function buildTastePortrait({works=[],rounds=[],answers={},records=[],sav
   if(portrait.profileSummary.basis==='insufficient-recurring-patterns'&&portrait.intelligence.appealSpacing.length>=3){
     const spacing=portrait.intelligence.appealSpacing,flat=spacing.filter(s=>s.range<=10).length>=spacing.length*.75,levels=spacing.flatMap(s=>s.values.map(v=>v.value));
     if(flat)portrait.profileSummary={title:levels.every(v=>v>=65)?'Broad appeal, few dividing lines':levels.every(v=>v<=35)?'Few of these paintings appealed':'Your ratings stayed close together',text:'Your anchored ratings kept most paintings close together. The answers describe their absolute appeal, but do not support a dividing visual preference.',findingIds:[],workIds:[],basis:'recorded-appeal-range'};
+  }
+  const favouriteSummary = composeFavouriteSummary({
+    works,
+    favourites: portrait.preferenceEvidence.explicitFavourites,
+    patterns: tastePatterns.favouriteConnections?.patterns || []
+  });
+  if (favouriteSummary) {
+    portrait.favouriteSummary = favouriteSummary;
+    if (portrait.profileSummary.basis !== 'explicit-choice-contrast') portrait.profileSummary = favouriteSummary;
   }
   portrait.observations.sort((a,b)=>b.priority-a.priority);
   portrait.nextSteps=unique([...portrait.intelligence.nextSteps,...portrait.nextSteps].map(item=>JSON.stringify(item))).map(item=>JSON.parse(item));
