@@ -12,6 +12,7 @@ import REVIEWS from './artwork-attribute-reviews.json' with {type:'json'};
 import {validGallery,roomOf} from './gallery-model.mjs';
 import {museumPreferenceFindings} from './museum-preferences.mjs';
 import {readOpeningInquiries} from './opening-inquiries.mjs';
+import {compareResponsePoints} from './response-portrait.mjs';
 import {buildTasteInquiry,qualifyAppealPatterns,inquiryObservations,evaluateAppealForecasts,inquirySensitivity} from './taste-inquiry.mjs';
 
 const unique=values=>[...new Set(values.filter(Boolean))],short=work=>work.shortTitle||work.title;
@@ -59,9 +60,13 @@ function mapReadings(entries){
     const selected=rows.filter(row=>axis==='connection'?row.point[0]<=35&&row.point[1]>=65:row.point[0]<=35&&row.point[1]>=65);
     const counter=rows.filter(row=>axis==='connection'?row.point[0]<=35&&row.point[1]<=35:row.point[0]>=65&&row.point[1]<=35);
     const contrasts=[...seen.values()].flatMap(entry=>{
-      const local=rows.filter(row=>row.entry===entry),pairs=local.flatMap((a,i)=>local.slice(i+1).map(b=>({a,b,xGap:Math.abs(a.point[axis==='achievement'?1:0]-b.point[axis==='achievement'?1:0]),yGap:Math.abs(a.point[axis==='achievement'?0:1]-b.point[axis==='achievement'?0:1])}))).filter(pair=>pair.xGap<=12&&pair.yGap>=30).sort((a,b)=>(b.yGap-b.xGap)-(a.yGap-a.xGap));
+      const local = rows.filter(row => row.entry === entry);
+      const pairs = local.flatMap((a, i) => local.slice(i + 1).flatMap(b => {
+        const contrast = compareResponsePoints(axis, a.point, b.point);
+        return contrast ? [{a, b, strength: Math.abs(contrast.responseGap) - contrast.heldGap}] : [];
+      })).sort((a, b) => b.strength - a.strength);
       return pairs.length?[pairs[0]]:[];
-    }).sort((a,b)=>(b.yGap-b.xGap)-(a.yGap-a.xGap));
+    }).sort((a, b) => b.strength - a.strength);
     if(contrasts.length){
       const first=contrasts[0],high=first.a.point[axis==='achievement'?0:1]>first.b.point[axis==='achievement'?0:1]?first.a:first.b,low=high===first.a?first.b:first.a,attention=axis==='attention';
       const text=axis==='achievement'?`${short(high.work)} and ${short(low.work)} received similar admiration for how they were made (${high.point[1]} and ${low.point[1]}), but their personal appeal differed strongly (${high.point[0]} and ${low.point[0]}). Similar admiration did not make both equally appealing to you.`:attention?`${short(high.work)} held much more of your reported attention than ${short(low.work)}, although you gave them similar personal appeal (${high.point[0]} and ${low.point[0]}). Your attention responses were ${high.point[1]} and ${low.point[1]}. Liking and the pull to keep looking separate in this comparison.`:`You felt more personally connected to ${short(high.work)} than to ${short(low.work)}, although you found them similarly understandable. This is a difference in your reported connection, not a test of correct interpretation.`;

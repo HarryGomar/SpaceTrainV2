@@ -12,6 +12,16 @@ const EXPECTED={
 };
 const limits=['These connect your recorded judgments of specific works. They do not identify a cause, objective artistic merit or a personality type.','The 15-point order gap, 20-point appraisal gap and 65/35 descriptive bands are provisional rules. They are not calibrated probabilities.','Different pairs within a set and repeated appearances of one painting are dependent evidence. Counts distinguish actual works and artwork sets.'];
 const axisDefinition=round=>round.axisDefinition||AXES[round.axis];
+
+/** Compare two validated points on the same response map. */
+export function compareResponsePoints(axis, first, second) {
+  const heldAxis = axis === 'achievement' ? 1 : 0;
+  const responseAxis = 1 - heldAxis;
+  const heldGap = Math.abs(first[heldAxis] - second[heldAxis]);
+  const responseGap = first[responseAxis] - second[responseAxis];
+  return heldGap <= 12 && Math.abs(responseGap) >= 30 ? {heldGap, responseGap} : null;
+}
+
 function interpretable(entry){
   const expected=EXPECTED[entry.round.axis],definition=axisDefinition(entry.round);
   return !!expected&&entry.round.evidence?.construct===expected.construct&&definition&&['xName','yName','left','right','bottom','top'].every(key=>definition[key]===expected[key]);

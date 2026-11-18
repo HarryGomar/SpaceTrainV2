@@ -28,6 +28,42 @@ test('The later flexible slot can bind a response interaction rather than anothe
   const frozen=structuredClone(bound);f.answers.map.points.m0=[50,50];assert.deepEqual(bindDiagnosticRound({...f,round:bound}),frozen,'The question already shown remains frozen');
 });
 
+test('Similar appeal with different attention can choose the later map even when both paintings appeal', () => {
+  const f = fixture('attention');
+  Object.assign(f.answers.p0.positions, {m0:71, m1:68});
+  Object.assign(f.answers.p1.positions, {m4:70});
+  f.answers.map.points = {m0:[71,82], m1:[68,27]};
+  const pending = buildDiagnosticRound({works:f.works, id:f.id});
+  pending.evidence.batchIndex = 1;
+  Object.assign(pending.evidence.diagnostic, {
+    policy:'appeal-investigation-v1', inquiryMode:'transfer', interactionPolicy:'choose-measure'
+  });
+  const bound = bindDiagnosticRound({...f, round:pending, selection:{batchIndex:1, candidateIds:f.candidateIds}});
+  assert.equal(bound.axis, 'attention');
+  assert.equal(bound.evidence.diagnostic.kind, 'response-inquiry');
+  const inquiry = bound.evidence.responseInquiry;
+  assert.deepEqual(bound.works.map(work => work.id), ['m0', 'm1', 'm4']);
+  assert.deepEqual(inquiry.sourceMap.points, f.answers.map.points);
+  assert.deepEqual(inquiry.unmeasuredWorkIds, ['m4']);
+  assert.match(inquiry.question, /appeal about equally/);
+  assert.equal(inquiry.prediction, null);
+
+  // Same order, but the small attention gap leaves no reason to repeat the map.
+  f.answers.map.points.m1 = [68,79];
+  assert.equal(selectResponseInquiry(f), null);
+});
+
+test('A matched admiration comparison holds admiration steady while appeal varies', () => {
+  const f = fixture('achievement');
+  f.answers.map.points = {m0:[77,75], m1:[42,71]};
+  const inquiry = selectResponseInquiry(f)?.round.evidence.responseInquiry;
+  assert.equal(inquiry?.boundaryId, 'm1');
+  assert.match(inquiry.question, /admire about equally/);
+  // The same appeal gap with a much larger admiration gap is a different result.
+  f.answers.map.points.m1 = [42,42];
+  assert.equal(selectResponseInquiry(f), null);
+});
+
 test('A selected admiration check is related evidence, never a second independent discovery group',()=>{
   const f=fixture('achievement'),offer=selectResponseInquiry(f);assert.ok(offer);const initial=collectTastePatternSources(f);assert.equal(initial.admiration.sets.length,1);
   f.rounds.push(offer.round);f.answers[offer.round.id]={workIds:offer.round.works.map(w=>w.id),axis:'achievement',confirmed:true,points:Object.fromEntries(offer.round.works.map(w=>[w.id,[30,90]]))};
