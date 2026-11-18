@@ -15,6 +15,9 @@ body{background:var(--paper)}
 .opening-motion{position:absolute;right:28px;bottom:24px;z-index:2;display:grid;place-items:center;width:34px;height:34px;border:0;border-radius:50%;background:#f5f4f1b3;color:#77736e}
 .opening-motion svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.2}
 .opening-motion:hover{color:#272625;background:#eeece6}
+.opening-policies{position:absolute;left:clamp(18px,2.2vw,28px);bottom:clamp(18px,2vw,24px);z-index:2;display:flex;border-radius:18px;background:#f5f4f1ed}
+.opening-policies a{display:inline-grid;place-items:center;min-height:34px;padding:0 10px;color:#51483d;font-size:11px;text-decoration:none}
+.opening-policies a:is(:hover,:focus-visible){text-decoration:underline;text-underline-offset:3px}
 .journey-question{padding-top:0!important;max-width:1180px;margin:auto}
 .journey-chrome{height:74px;display:grid;grid-template-columns:40px 1fr 40px;align-items:center;gap:25px;color:#8b8780;font-size:11px;font-variant-numeric:tabular-nums;text-align:center}
 .journey-chrome>button{font-size:23px;line-height:1;min-height:40px;min-width:40px;color:#79756e}
