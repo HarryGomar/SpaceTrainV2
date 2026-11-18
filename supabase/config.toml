@@ -1,0 +1,43 @@
+project_id = "art-atlas-accounts"
+
+[api]
+port = 56431
+
+[db]
+port = 56432
+shadow_port = 56430
+major_version = 17
+
+[db.seed]
+enabled = false
+
+[studio]
+enabled = false
+
+[realtime]
+enabled = false
+
+[storage]
+enabled = false
+
+[edge_runtime]
+enabled = false
+
+[analytics]
+enabled = false
+
+[local_smtp]
+enabled = true
+port = 56434
+
+[auth]
+site_url = "http://127.0.0.1:5173/art-atlas/account.html"
+additional_redirect_urls = [
+  "http://127.0.0.1:56439/art-atlas/account.html",
+  "http://localhost:5173/art-atlas/account.html",
+]
+enable_signup = true
+
+[auth.email]
+enable_signup = true
+enable_confirmations = true
