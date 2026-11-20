@@ -353,7 +353,9 @@ export function buildTastePortrait({works=[],rounds=[],answers={},records=[],sav
   portrait.intelligence=buildProfileIntelligence({works,rounds,answers,tastePatterns,responsePortrait,reportedContextChanges,preferenceEvidence:portrait.preferenceEvidence,arrangementQualities,saved,records:validRecords,existingObservations:portrait.observations,nextRefinement,inquiryState});
   portrait.observations.push(...portrait.intelligence.observations);
   const inquiryThread=portrait.intelligence.observations.find(o=>o.module==='conditional-appeal');
-  if(inquiryThread&&portrait.intelligence.inquiry.discoverySets>=3&&!['explicit-choice-contrast','direct-context-reports'].includes(portrait.profileSummary.basis)){
+  const summaryBasisBeforeInquiry=portrait.profileSummary.basis;
+  if(inquiryThread&&portrait.intelligence.inquiry.discoverySets>=3&&summaryBasisBeforeInquiry!=='explicit-choice-contrast'
+    &&(summaryBasisBeforeInquiry!=='direct-context-reports'||inquiryThread.contextComparisons)){
     // Recurrence alone remains an early reading until an advance prediction
     // transfers to different artists. A failed check keeps its local examples.
     portrait.profileSummary={title:inquiryThread.headline,text:inquiryThread.text,findingIds:[inquiryThread.id],workIds:inquiryThread.displayWorkIds,basis:inquiryThread.summaryEligible?'prospectively-tested-appeal':inquiryThread.recurring?'recurring-observed-appeal':'local-conditional-appeal',threads:portrait.intelligence.observations.filter(o=>o.module==='conditional-appeal').slice(0,2)};

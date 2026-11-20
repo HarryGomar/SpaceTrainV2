@@ -289,6 +289,8 @@ export function buildProfileIntelligence({works=[],rounds=[],answers={},tastePat
   if(thread&&result.inquiry.discoverySets>=3){
     appealCategory.relatedReadings=threads.slice(1);
     appealCategory.displayRoles=thread.displayRoles;
+    appealCategory.displayNotes=thread.displayNotes||{};
+    appealCategory.contextComparisons=thread.contextComparisons;
     Object.assign(appealCategory,{readingTitle:thread.headline||thread.title,primaryFindingId:thread.id,measurementScope:thread.measurementScope,conclusion:thread.text,status:thread.status,statusLabel:thread.summaryEligible?'Checked on later work':thread.recurring?'Recurring in your ratings':thread.status==='mixed'?'A boundary in the pattern':'A named comparison',displayWorkIds:thread.displayWorkIds,support:thread.support,counter:thread.counter,sourceRoundIds:thread.sourceRoundIds,competingExplanations:thread.competingExplanations,limits:[...limits,thread.boundary],findingIds:threads.map(t=>t.id)});
     if(!appealCategory.nextComparison.roundId)appealCategory.nextComparison={title:thread.nextQuestion,reason:thread.nextQuestion};
   }

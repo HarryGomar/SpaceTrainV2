@@ -70,7 +70,26 @@ test('Conditional accounts retain the opposite result outside their context inst
   const model=buildTasteInquiry(f),conditional=model.candidates.find(c=>c.id==='marks-in-landscapes');
   assert.equal(conditional.direction,1);assert.equal(conditional.supportingSets,3);assert.equal(conditional.outsideContext.opposing,3);assert.equal(conditional.summaryEligible,false);
   assert.equal(model.candidates.find(c=>c.id==='visible-paint-marks'),undefined);
+  const [reading]=inquiryObservations(model,f.works);
+  assert.equal(reading.claimScope,'observed-context-contrast');
+  assert.match(reading.headline,/visible mark-making drew higher ratings in natural settings/i);
+  assert.equal(reading.summaryEligible,false);
+  assert.equal(reading.supportingSetCount,6);
+  assert.deepEqual(reading.contextComparisons.map(group=>[group.label,group.supportingSets,group.comparedSets]),[
+    ['With natural settings',3,3],['Without natural settings',3,3]
+  ]);
+  for(const side of reading.contextComparisons){
+    assert.ok(side.works[0].value>side.works[1].value);
+    for(const {workId,value} of side.works)assert.equal(value,f.answers[side.roundId].positions[workId]);
+  }
+  const appeal=buildProfileIntelligence(f).categories.find(category=>category.id==='appeal');
+  assert.equal(appeal.readingTitle,reading.headline);
+  assert.equal(appeal.displayWorkIds.length,4);
+  assert.equal(appeal.displayNotes[reading.displayWorkIds[2]].basis,'Without natural settings');
   const sensitivity=inquirySensitivity(f);assert.equal(sensitivity.variants.length,4);assert.ok(sensitivity.variants.every(v=>typeof v.directionChanged==='boolean'));
+  f.answers['source-5']=f.respond(f.rounds[5],[50,50,50,50]);
+  const incomplete=inquiryObservations(buildTasteInquiry(f),f.works);
+  assert.ok(incomplete.every(item=>item.claimScope!=='observed-context-contrast'));
 });
 
 test('A within-artist comparison remains local and cannot count as new-artist transfer',()=>{

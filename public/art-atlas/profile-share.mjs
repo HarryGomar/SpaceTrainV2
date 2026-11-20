@@ -91,13 +91,14 @@ export function buildProfileShareAspects({portrait={},works=[],simulation=false}
       if(category.id==='appeal'&&!finding.recurring)return [];
       const title=category.readingTitle||category.title,key=headlineKey(title);
       if(!key||headings.has(key)||category.primaryFindingId&&summary.findingIds?.includes(category.primaryFindingId))return [];
-      const examples=cards(finding).filter(work=>work.measures.length>=(category.id==='appeal'?1:2));
-      if(!examples.length)return [];
+      const contrasts=finding.contextComparisons?.map(group=>`${group.label} · ${group.supportingSets}/${group.comparedSets} groups favoured ${group.interest}`);
+      const examples=contrasts?[]:cards(finding).filter(work=>work.measures.length>=(category.id==='appeal'?1:2));
+      if(!examples.length&&!contrasts?.length)return [];
       if(category.id==='return'&&!examples.some(work=>['Felt tension','Wish to return'].every(label=>
         work.measures.some(measure=>measure.label===label&&measure.value>=65))))return [];
       headings.add(key);
       const [label,tone]=highlightKinds[category.id];
-      return [{label,title,colour:TASK_COLOURS[tone],status:category.status,examples}];
+      return [{label,title,colour:TASK_COLOURS[tone],status:category.status,examples,contrasts}];
     }).sort((a,b)=>Number(b.status==='supported')-Number(a.status==='supported')).slice(0,3);
     main.exception=primary?.status==='mixed'?compact(sentences(primary.counter?.[0]?.detail,1),170):'';
   }
@@ -170,6 +171,9 @@ export async function renderProfileShareCanvas({aspect,document=globalThis.docum
         const highlight=hs[i],x=90+i*colWidth,width=colWidth-28;
         let baseline=textBlock(ctx,highlight.label,{x,y:start,width,size:18,color:highlight.colour,maxLines:1});
         baseline=textBlock(ctx,highlight.title,{x,y:baseline+10,width,size:26,lineHeight:30,color:highlight.colour,maxLines:3});
+        for(const group of highlight.contrasts||[]){
+          baseline=textBlock(ctx,group,{x,y:baseline+10,width,size:17,lineHeight:21,color:ink,maxLines:4});
+        }
         for(const work of highlight.examples){
           baseline=textBlock(ctx,work.title,{x,y:baseline+12,width,size:18,lineHeight:22,color:ink,weight:500,maxLines:2});
           baseline=textBlock(ctx,work.measures.map(m=>m.label+' '+m.value).join(' · '),{x,y:baseline+2,width,size:16,lineHeight:20,color:soft,maxLines:3});

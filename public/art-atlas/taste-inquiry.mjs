@@ -2,7 +2,7 @@ import REVIEWS from './artwork-attribute-reviews.json' with {type:'json'};
 import {ARTWORK_ATTRIBUTE_DEFINITIONS} from './artwork-attribute-definitions.mjs';
 import {resolveArtworkAttributes} from './artwork-quality-review.mjs';
 import {collectTastePatternSources} from './taste-axes.mjs';
-import {withContinuousPreference,isContinuousPreferenceRound} from './continuous-preference.mjs';
+import {CONTINUOUS_PROTOCOL,withContinuousPreference,isContinuousPreferenceRound} from './continuous-preference.mjs';
 import {sameOrdinalArtworkIdentity,artworkPreviewHashes} from './ordinal-preference-graph.mjs';
 import {isStudyEligibleArtwork} from './study-eligibility.mjs';
 import {compareAppealControls} from './appeal-investigations.mjs';
@@ -70,6 +70,8 @@ function summarize(spec,groups){
   return {...spec,direction,title:sentence((direction<0?'less emphasis on ':'')+name(spec)),groups,support,counter,close,independentSets:groups.length,supportingSets:support.length,opposingSets:counter.length,artistIds:preferredArtists,weight:Math.abs(mean(groups.map(g=>g.weight))),recurring:support.length>=3&&support.length>=2*(counter.length+close.length)};
 }
 
+const supportingArtists=(candidate,rows)=>unique(candidate.artistIds.map(id=>rows.get(id)?.artist).filter(Boolean)).length;
+
 /** One fresh artwork contributes once. Selected checks never become discovery. */
 export function buildTasteInquiry(options={}){
   const state=options.state||sourceState(options),{sets,rows}=state;
@@ -77,7 +79,7 @@ export function buildTasteInquiry(options={}){
   const checks=readTasteInquiryChecks({...options,state});
   const forecasts=evaluateAppealForecasts({...options,state});
   for(const c of candidates){
-    c.artistCount=unique(c.artistIds.map(id=>rows.get(id)?.artist).filter(Boolean)).length;
+    c.artistCount=supportingArtists(c,rows);
     c.recurring=c.recurring&&c.artistCount>=3;
     c.prospectiveChecks=checks.filter(check=>!check.sourceChanged&&check.predictions.some(p=>p.id===c.id&&p.direction===c.direction));
     c.confirmations=c.prospectiveChecks.filter(check=>check.outcome==='separated'&&check.predictions.find(p=>p.id===c.id).prediction===check.actual);
@@ -112,6 +114,14 @@ export function buildTasteInquiry(options={}){
     c.boundary=c.context?`This account concerns works ${c.contextValue?'with':'without'} ${title(c.context)}. Other subjects need their own comparison.`:'A contrast in this sample does not apply to every painting with the same quality.';
     const outside=c.context?groupsFor({...c,contextValue:1-c.contextValue},sets,rows):[];
     c.outsideContext={sets:outside.length,agreeing:outside.filter(g=>g.vote===c.direction).length,opposing:outside.filter(g=>g.vote===-c.direction).length,open:outside.filter(g=>!g.vote).length};
+    if(c.recurring&&c.status!=='mixed'&&c.outsideContext.opposing>=3){
+      const opposite=summarize({...c,contextValue:1-c.contextValue},outside);
+      const artistCount=supportingArtists(opposite,rows);
+      if(opposite.recurring&&opposite.direction===-c.direction&&artistCount>=3){
+        c.contextContrast={direction:opposite.direction,contextValue:opposite.contextValue,
+          support:opposite.support,counter:opposite.counter,artistCount,independentSets:opposite.independentSets};
+      }
+    }
   }
   candidates.sort((a,b)=>Number(b.summaryEligible)-Number(a.summaryEligible)||Number(a.status==='mixed')-Number(b.status==='mixed')||b.supportingSets-a.supportingSets||b.weight-a.weight||a.id.localeCompare(b.id));
   return {protocol:TASTE_INQUIRY_PROTOCOL,candidates,checks,discoverySets:sets.length,discoveryWorkIds:unique(sets.flatMap(s=>s.items.map(i=>i.work.id))),limits:['These reporting gates and comparison costs are editorial starting rules, not probabilities.','Discovery associations and selected prospective checks have separate denominators.']};
@@ -261,10 +271,55 @@ export function readTasteInquiryChecks(options={}){
   return out;
 }
 
+function groupEvidence(group,byId,label='Captured personal appeal'){
+  return {roundId:group.roundId,label,workIds:group.example.workIds,
+    detail:group.example.workIds.map((id,i)=>`${short(byId.get(id))} ${group.example.values[i]} / 100`).join(' · '),
+    responseGap:Math.abs(group.gap)};
+}
+
+function describeContextContrast(candidate,byId){
+  const opposite=candidate.contextContrast;
+  const sides=[candidate,opposite].sort((a,b)=>b.contextValue-a.contextValue);
+  const feature=title(candidate.driver);
+  const figures=sides.map(side=>{
+    const qualifier=side.contextValue?'with':'without';
+    const label=sentence(`${qualifier} ${title(candidate.context)}`);
+    const interest=`paintings ${side.direction>0?'with':'without'} ${feature}`;
+    const preferred=side.direction>0?0:1,example=side.support[0].example;
+    const works=[preferred,1-preferred].map(index=>({workId:example.workIds[index],value:example.values[index]}));
+    return {label,interest,works,roundId:side.support[0].roundId,
+      supportingSets:side.support.length,comparedSets:side.independentSets};
+  });
+  const support=sides.flatMap((side,i)=>side.support.map(group=>groupEvidence(group,byId,figures[i].label)));
+  const counter=sides.flatMap((side,i)=>side.counter.map(group=>groupEvidence(group,byId,`Other result in ${figures[i].label.toLowerCase()}`)));
+  const headline=candidate.context==='landscape'
+    ?`${sentence(feature)} drew ${sides[0].direction>0?'higher':'lower'} ratings in natural settings`
+    :`${sentence(feature)} drew different ratings with ${title(candidate.context)}`;
+  const text=figures.map(group=>`${group.label}, ${group.interest} scored higher in ${group.supportingSets} of ${group.comparedSets} comparison groups.`).join(' ');
+  return {
+    id:'inquiry-context-contrast-'+candidate.context+'-'+candidate.driver,
+    module:'conditional-appeal',qualityKey:candidate.driver,title:headline,headline,text,
+    status:'supported',recurring:true,summaryEligible:false,claimScope:'observed-context-contrast',
+    supportingSetCount:unique(support.map(group=>group.roundId)).length,
+    profileAnchorId:'profile-category-appeal',priority:19,channel:'personal-appeal',
+    measurementScope:CONTINUOUS_PROTOCOL,contextComparisons:figures,
+    displayWorkIds:figures.flatMap(group=>group.works.map(work=>work.workId)),
+    displayNotes:Object.fromEntries(figures.flatMap(group=>group.works.map(work=>[
+      work.workId,{description:`Personal appeal ${work.value} / 100`,basis:group.label}
+    ]))),
+    support,counter,sourceRoundIds:unique([...support,...counter].map(group=>group.roundId)),
+    competingExplanations:candidate.rivals.map(rival=>rival.title),alternatives:candidate.unresolved,
+    boundary:'Each comparison uses the original appeal scores within one setting.',
+    nextQuestion:'Does this difference hold when the paintings are more closely matched?'
+  };
+}
+
 export function inquiryObservations(inquiry,works){
   const byId=new Map(works.map(w=>[w.id,w]));
-  const selected=inquiry.candidates.slice(0,1);
-  for (const candidate of inquiry.candidates.slice(1)) {
+  const balance=candidate=>candidate.contextContrast?Math.min(candidate.support.length,candidate.contextContrast.support.length):0;
+  const ranked=[...inquiry.candidates].sort((a,b)=>balance(b)-balance(a));
+  const selected=ranked.slice(0,1);
+  for (const candidate of ranked.slice(1)) {
     if (selected.length === 3 || !candidate.recurring || candidate.status === 'mixed') continue;
     const rounds = new Set(candidate.support.map(group => group.roundId));
     const overlaps = selected.some(other =>
@@ -277,9 +332,10 @@ export function inquiryObservations(inquiry,works){
   const weakened=inquiry.candidates.find(c=>c.status==='mixed'&&!selected.includes(c));
   if(weakened)selected.push(weakened);
   return selected.map(c=>{
+    if(c.contextContrast)return describeContextContrast(c,byId);
     const example=c.support[0]?.example;if(!example)return null;
     const preferred=example.values[0]>example.values[1]?0:1,foil=1-preferred;
-    const evidence=g=>({roundId:g.roundId,label:'Captured personal appeal',workIds:g.example.workIds,detail:g.example.workIds.map((id,i)=>`${short(byId.get(id))}: ${g.example.values[i]}`).join('; '),responseGap:Math.abs(g.gap)});
+    const evidence=group=>groupEvidence(group,byId);
     const transfer=c.confirmations.findLast(check=>check.newArtistTransfer),confirmation=transfer||c.confirmations.at(-1),forecast=c.forecastChecks.findLast(check=>check.supporting);
     const latest=c.reversals.at(-1)||confirmation,names=example.workIds.map(id=>short(byId.get(id)));
     const repeat=c.repeatReversals.at(-1),forecastReversal=c.forecastReversals.at(-1);
@@ -316,7 +372,7 @@ export function inquirySensitivity(options={}){
   ].map(([kind,sets,rows,args])=>{
     const revised=specs.map(spec=>{
       const c=summarize(spec,groupsFor(spec,sets,rows,args));
-      c.artistCount=unique(c.artistIds.map(id=>rows.get(id)?.artist).filter(Boolean)).length;
+      c.artistCount=supportingArtists(c,rows);
       c.recurring=c.recurring&&c.artistCount>=3;return c;
     }).filter(c=>c.direction&&c.supportingSets).sort((a,b)=>b.supportingSets-a.supportingSets||b.weight-a.weight||a.id.localeCompare(b.id));
     const c=revised.find(c=>c.id===lead.id)||{direction:0,supportingSets:0,recurring:false};

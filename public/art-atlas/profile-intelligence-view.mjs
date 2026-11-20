@@ -11,7 +11,7 @@ export function renderProfileIntelligence({intelligence={},works=[],image,esc,ev
   function artworkIds(category){
     const sourceIds=[...new Set([...(category.support||[]),...(category.counter||[])].flatMap(row=>row.workIds||[]))];
     const selected=[...new Set(category.displayWorkIds||[])].filter(id=>sourceIds.includes(id)&&byId.has(id));
-    return (selected.length?selected:sourceIds.filter(id=>byId.has(id))).slice(0,3);
+    return (selected.length?selected:sourceIds.filter(id=>byId.has(id))).slice(0,category.contextComparisons?4:3);
   }
   function picture(id,peek=false,category={}){
     const work=byId.get(id),title=work.shortTitle||work.title;
