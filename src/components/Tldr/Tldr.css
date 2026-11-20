@@ -1,0 +1,100 @@
+.tldr-page {
+    min-height: 100svh;
+    background: #fff;
+    color: #242026;
+    font: 1rem/1.55 system-ui, sans-serif;
+}
+
+.tldr-content {
+    max-width: 48rem;
+    margin-inline: auto;
+    padding: 2.75rem 1.25rem 3rem;
+}
+
+.tldr-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    column-gap: 0.75rem;
+}
+
+.tldr-header > p,
+.tldr-header > nav {
+    grid-column: 1 / -1;
+}
+
+.tldr-page h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 0.25rem;
+}
+
+.tldr-page h2 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 0.4rem;
+}
+
+.tldr-page nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.15rem;
+    margin-top: 0.65rem;
+}
+
+.tldr-page section {
+    margin-top: 1.6rem;
+}
+
+.tldr-page ul {
+    list-style: disc;
+    padding-inline-start: 1.25rem;
+}
+
+.tldr-page li + li {
+    margin-top: 0.3rem;
+}
+
+.tldr-meta {
+    color: #5d5660;
+}
+
+.tldr-page a {
+    color: #633d7b;
+    text-decoration: underline;
+    text-underline-offset: 0.12em;
+}
+
+.tldr-page a:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+}
+
+.tldr-toggle {
+    min-width: 5.5rem;
+    min-height: 2.75rem;
+    padding: 0.5rem 0.875rem;
+    border: 0;
+    border-radius: 0;
+    background: #eee6f0;
+    color: var(--home-link, #633d7b);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.tldr-toggle:hover {
+    background: #e9ddeb;
+}
+
+.tldr-toggle[aria-checked="true"] {
+    background: #e4d7e8;
+    font-weight: 600;
+}
+
+.tldr-toggle:focus-visible {
+    outline: 2px solid #71458b;
+    outline-offset: 3px;
+}

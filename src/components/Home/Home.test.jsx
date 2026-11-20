@@ -36,7 +36,7 @@ describe('Live academic homepage',()=>{
         for(const item of originalProjects)expect(links.some(link=>link.getAttribute('href')===`/projects/${item.id}`)).toBe(true);
         expect(container.querySelectorAll('.home-graph-node')).toHaveLength(originalProjects.length);
         expect(container.querySelectorAll('.home-map-hub')).toHaveLength(topics.length);
-        expect(screen.getByRole('link',{name:'Explore the interactive experience'}).getAttribute('href')).toBe('/experience');
+        expect(screen.getByRole('link',{name:'Space Train · 3D portfolio'}).getAttribute('href')).toBe('/experience');
         expect(container.querySelector('.home-header a[download]').getAttribute('href')).toBe('/home/harry-gomar-cv.pdf');
     });
     it('limits current work to the ongoing research, Mantis and MAKERS roles',()=>{

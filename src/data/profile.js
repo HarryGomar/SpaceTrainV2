@@ -53,10 +53,10 @@ export const profile = {
   ],
   experience:[
     {organization:'Kellis Lab · MIT CSAIL',role:'Collaborating Researcher',dates:'Aug 2025 to present',summary:'Embedding methods for law, patents and political science.',description:'Interdisciplinary research on representation learning and embedding-based methods across law, patents, political science, and other applied domains.'},
-    {organization:'Mantis',role:'Founding Team',dates:'Present'},
-    {organization:'MAKERS · ITAM',role:'Coordinator, Computer Science Division',dates:'Aug 2023 to present',summary:'Mentoring 15 students across 16 projects.',description:'Led and mentored 15 students across 7 development and 9 research projects. Coordinated recruitment and work in data science and software development.'},
+    {organization:'Mantis',role:'Founding Team',dates:'Present',url:'https://mantis.csail.mit.edu/'},
+    {organization:'MAKERS · ITAM',role:'Coordinator, Computer Science Division',dates:'Aug 2023 to present',url:'https://makers.itam.mx/',summary:'Mentoring 15 students across 16 projects.',description:'Led and mentored 15 students across 7 development and 9 research projects. Coordinated recruitment and work in data science and software development.'},
     {organization:'Universo de Leyes',role:'Lead Researcher',dates:'Nov 2022 to 2025',description:'Built the annotated dataset, information-extraction pipeline, and citation graphs for Mexican legal texts.'},
-    {organization:'Spingere',role:'Research Intern',dates:'Jun to Aug 2022; Jun to Jul 2023',description:'Research and prototyping of NLP methods for COSMIC software functional size analysis.'},
+    {organization:'Spingere',role:'Research Intern',dates:'Jun to Aug 2022 and Jun to Jul 2023',description:'Research and prototyping of NLP methods for COSMIC software functional size analysis.'},
   ],
   publication:{
     title:'Comparative Analysis of Information Extraction Techniques in the Mexican Legal System',

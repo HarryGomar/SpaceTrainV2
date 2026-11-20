@@ -11,12 +11,27 @@ vi.mock('./components/Experience/Experience',()=>{
 import App from './App';
 afterEach(()=>{cleanup();window.history.replaceState({},'','/');});
 
+it('switches between the homepage and TLDR mode in both directions',()=>{
+    render(<App/>);
+    const toggle=()=>screen.getByRole('switch',{name:'TLDR mode'});
+
+    expect(toggle().getAttribute('aria-checked')).toBe('false');
+    fireEvent.click(toggle());
+    expect(window.location.pathname).toBe('/tldr');
+    expect(screen.getByRole('heading',{name:'Selected projects'})).not.toBeNull();
+    expect(toggle().getAttribute('aria-checked')).toBe('true');
+
+    fireEvent.click(toggle());
+    expect(window.location.pathname).toBe('/');
+    expect(toggle().getAttribute('aria-checked')).toBe('false');
+});
+
 describe('Homepage and train boundary',()=>{
     it('does not import the 3D experience until the visitor follows its link',async()=>{
         window.history.replaceState({},'','/');
         render(<App/>);
         expect(loadExperience).not.toHaveBeenCalled();
-        fireEvent.click(screen.getByRole('link',{name:'Explore the interactive experience'}));
+        fireEvent.click(screen.getByRole('link',{name:'Space Train · 3D portfolio'}));
         expect(await screen.findByText('Original train experience')).not.toBeNull();
         expect(loadExperience).toHaveBeenCalledTimes(1);
         fireEvent.click(screen.getByRole('link',{name:'Main screen'}));
